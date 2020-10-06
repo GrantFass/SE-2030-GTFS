@@ -82,4 +82,14 @@ public class Route {
 	public URL getRouteURL(){
 		return null;
 	}
+
+	/**
+	 * Method to output data as a single concatenated string
+	 * @author GrantFass,
+	 * @return string of data
+	 */
+	@Override
+	public String toString() {
+		return "Method Not Implemented Yet";
+	}
 }//end Route

@@ -6,6 +6,7 @@ Everything in this file has been setup in code.
 -->
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 <VBox fx:id="vBox" maxHeight="-Infinity" minHeight="-Infinity" maxWidth="-Infinity"
       minWidth="-Infinity" prefHeight="800.0" prefWidth="661.0"
       xmlns="http://javafx.com/javafx/8.0.171"
@@ -40,7 +41,11 @@ Everything in this file has been setup in code.
                 </Menu>
             </menus>
         </MenuBar>
-
-
+        <Label fx:id="topLabel" alignment="CENTER" prefHeight="38.0" prefWidth="661.0" text="" textAlignment="CENTER">
+            <font>
+                <Font name="Courier New" size="14.0" />
+            </font>
+        </Label>
+        <TextArea fx:id="textArea" text="" editable="false" prefHeight="700"/>
     </children>
 </VBox>

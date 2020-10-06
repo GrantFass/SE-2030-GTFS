@@ -2,6 +2,9 @@ package SE2030TransitProject;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -14,6 +17,9 @@ import java.util.Collection;
 import java.util.InputMismatchException;
 
 public class Controller {
+	public Label topLabel;
+	public VBox vBox;
+	public TextArea textArea;
 	private Data data;
 	private Stage stage;
 
@@ -161,6 +167,7 @@ public class Controller {
 	 * Method to handle the loading of GTFS files
 	 * Activates when load menu button is clicked
 	 * Handles exceptions relating to loading files
+	 * Displays a snapshot of data after the files are loaded.
 	 * @author Grant Fass
 	 */
 	public void load() {
@@ -184,6 +191,7 @@ public class Controller {
 					data.getTrips().loadTrips(file);
 					break;
 			}
+			displayDataSnapshot();
 		} catch (IllegalArgumentException e) {
 			errorAlert("IllegalArgumentException", e.getMessage());
 		} catch (InputMismatchException e) {
@@ -312,5 +320,14 @@ public class Controller {
 		alert.setHeaderText(header);
 		alert.setContentText(content);
 		alert.showAndWait();
+	}
+
+	/**
+	 * Method to output a snapshot of the information in the Data class
+	 * @author Grant Fass
+	 */
+	private void displayDataSnapshot() {
+		topLabel.setText("Data Snapshot:");
+		textArea.setText(data.toString());
 	}
 }

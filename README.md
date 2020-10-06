@@ -16,6 +16,7 @@
             <li>Implement file loading and parsing</li>
             <li>Add ability to load multiple GTFS files in succession (Delete old data)</li>
             <li>Display alert to user when overwriting data during file load</li>
+            <li>Implement toString method override</li>
         </ul>
     </li>
 </ul>
@@ -31,6 +32,7 @@
             <li>Implement file loading and parsing</li>
             <li>Add ability to load multiple GTFS files in succession (Delete old data)</li>
             <li>Display alert to user when overwriting data during file load</li>
+            <li>Implement toString method override</li>
         </ul>
     </li>
 </ul>
@@ -46,6 +48,7 @@
             <li>Implement file loading and parsing</li>
             <li>Add ability to load multiple GTFS files in succession (Delete old data)</li>
             <li>Display alert to user when overwriting data during file load</li>
+            <li>Implement toString method override</li>
         </ul>
     </li>
     
@@ -53,12 +56,6 @@
 <h5>Grant Fass:</h5>
 <h6>TODO</h6>
 <ul>
-    <li>
-        Implement GTFS file load capabilities
-        <ul>
-            <li>Show snapshot of data structures in GUI</li>
-        </ul>
-    </li>
 </ul>
 <h6>Completed</h6>
 <s>
@@ -82,6 +79,7 @@
         <li>
             Implement GTFS file load capabilities
             <ul>
+                <li>Show snapshot of data structures in GUI</li>
                 <li>Implement FileChooser dialogue to load files</li>
                 <li>Implement File Load Exception handling</li>
             </ul>
@@ -106,11 +104,13 @@
             <li>Implement getters</li>
             <li>Implement setters</li>
             <li>Implement constructors</li>
+            <li>Update toString method override</li>
         </ul>
     </li>
     <li>
         Implement GTFS file load capabilities
         <ul>
+            <li>Update displayed snapshot of data structures in GUI</li>
             <li>Verify GTFS file load passes acceptance tests</li>
         </ul>
     </li>

@@ -55,4 +55,14 @@ public class Routes {
 	public boolean loadRoutes(File file) throws FileNotFoundException, IOException, InputMismatchException {
 		return false;
 	}
+
+	/**
+	 * Method to output data as a single concatenated string
+	 * @author GrantFass,
+	 * @return string of data
+	 */
+	@Override
+	public String toString() {
+		return "Method Not Implemented Yet";
+	}
 }//end Routes

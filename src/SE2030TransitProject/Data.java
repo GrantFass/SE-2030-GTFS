@@ -58,4 +58,15 @@ public class Data {
 	public void notifyObservers(){
 
 	}
+
+	/**
+	 * Method to output data as a single concatenated string
+	 * @author GrantFass,
+	 * @return string of data
+	 */
+	@Override
+	public String toString() {
+		return getStopTimes().toString() + getStops().toString()
+				+ getTrips().toString() + getRoutes().toString();
+	}
 }//end Data
