@@ -1,6 +1,8 @@
 package SE2030TransitProject;
 
 
+import java.sql.Time;
+
 /**
  * @author ericksons
  * @version 1.0
@@ -19,9 +21,10 @@ public class BusMap {
 	}
 	/**
 	 * 
-	 * @param route: Route, time: Time
+	 * @param route
+	 * @param time
 	 */
-	public boolean plotBus(route: Route, time: Time route: Route, time: Time){
+	public boolean plotBus(Route route, Time time){
 		return false;
 	}
 

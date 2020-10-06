@@ -1,6 +1,7 @@
 package SE2030TransitProject;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.Observer;
 
 /**
  * @author ericksons
@@ -9,7 +10,7 @@ import java.util.List;
  */
 public class Data {
 
-	private List<Observer> observers;
+	private Collection<Observer> observers;
 	private Routes routes;
 	private StopTimes stop_times;
 	private Stops stops;
@@ -28,17 +29,17 @@ public class Data {
 	}
 	/**
 	 * 
-	 * @param obs: Observer
+	 * @param observer
 	 */
-	public void attach(obs: Observer obs: Observer){
+	public void attach(java.util.Observer observer){
 
 	}
 
 	/**
 	 * 
-	 * @param obs: Observer
+	 * @param observer
 	 */
-	public void detach(obs: Observer obs: Observer){
+	public void detach(java.util.Observer observer){
 
 	}
 

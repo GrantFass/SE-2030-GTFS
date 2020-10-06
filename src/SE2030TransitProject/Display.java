@@ -12,7 +12,7 @@ import javafx.scene.control.TextField;
  */
 public class Display {
 
-	private View maps;
+	//private View maps;
 	private TextField route_IdFeild;
 	private MenuItem routesByStop;
 	private MenuButton search;

@@ -19,49 +19,49 @@ public class RouteMap {
 	}
 	/**
 	 * 
-	 * @param route: Route
+	 * @param route
 	 */
-	private boolean plotRoute(route: Route route: Route){
+	private boolean plotRoute(Route route){
 		return false;
 	}
 
 	/**
 	 * 
-	 * @param routes: Routes
+	 * @param routes
 	 */
-	public boolean plotRoutes(routes: Routes routes: Routes){
+	public boolean plotRoutes(Routes routes){
 		return false;
 	}
 
 	/**
 	 * 
-	 * @param stop: Stop
+	 * @param stop
 	 */
-	private boolean plotStop(stop: Stop stop: Stop){
+	private boolean plotStop(Stop stop){
 		return false;
 	}
 
 	/**
 	 * 
-	 * @param stops: Stops
+	 * @param stops
 	 */
-	public boolean plotStops(stops: Stops stops: Stops){
+	public boolean plotStops(Stops stops){
 		return false;
 	}
 
 	/**
 	 * 
-	 * @param trip: Trip
+	 * @param trip
 	 */
-	private boolean plotTrip(trip: Trip trip: Trip){
+	private boolean plotTrip(Trip trip){
 		return false;
 	}
 
 	/**
 	 * 
-	 * @param trips: Trips
+	 * @param trips
 	 */
-	public boolean plotTrips(trips: Trips trips: Trips){
+	public boolean plotTrips(Trips trips){
 		return false;
 	}
 
