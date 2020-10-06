@@ -1,6 +1,7 @@
 package SE2030TransitProject;
 
 import java.net.URL;
+import java.util.TimeZone;
 
 /**
  * @author ericksons
@@ -16,10 +17,10 @@ public class Stop {
 	private String stop_code;
 	private String stop_description;
 	private String stop_id;
-	private Latitude stop_latitude;
-	private Longitude stop_longitude;
+	private double stop_latitude;
+	private double stop_longitude;
 	private String stop_name;
-	private Timezone stop_timezone;
+	private TimeZone stop_timezone;
 	private URL stop_url;
 	private WheelchairBoardingEnum wheelchair_boarding;
 	private String zone_id;
@@ -61,23 +62,19 @@ public class Stop {
 		return "";
 	}
 
-	public Latitude getStopLatitude(){
-		return null;
+	public double getStopLatitude(){
+		return 0;
 	}
 
-	public Location getStopLocation(){
-		return null;
-	}
-
-	public Longitude getStopLongitude(){
-		return null;
+	public double getStopLongitude(){
+		return 0;
 	}
 
 	public String getStopName(){
 		return "";
 	}
 
-	public Timezone getStopTimezone(){
+	public TimeZone getStopTimezone(){
 		return null;
 	}
 

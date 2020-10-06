@@ -1,6 +1,8 @@
 package SE2030TransitProject;
 
 
+import java.util.HashMap;
+
 /**
  * @author ericksons
  * @version 1.0
@@ -8,7 +10,7 @@ package SE2030TransitProject;
  */
 public class Trips {
 
-	private HashMap<Trips> trips;
+	private HashMap<String, Trips> trips;
 	public Trip m_Trip;
 
 	public Trips(){
@@ -20,9 +22,9 @@ public class Trips {
 	}
 	/**
 	 * 
-	 * @param trip: Trip
+	 * @param trip
 	 */
-	public boolean addTrip(trip: Trip trip: Trip){
+	public boolean addTrip(Trip trip){
 		return false;
 	}
 
@@ -32,9 +34,9 @@ public class Trips {
 
 	/**
 	 * 
-	 * @param trip: Trip
+	 * @param trip
 	 */
-	public boolean removeTrip(trip: Trip trip: Trip){
+	public boolean removeTrip(Trip trip){
 		return false;
 	}
 }//end Trips

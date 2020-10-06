@@ -10,7 +10,7 @@ import java.util.HashMap;
  */
 public class Stops {
 
-	private HashMap<Stop> stops;
+	private HashMap<String, Stop> stops;
 	public Stop m_Stop;
 
 	public Stops(){
@@ -22,7 +22,7 @@ public class Stops {
 	}
 	/**
 	 * 
-	 * @param stop: Stop
+	 * @param stop
 	 */
 	public boolean addStop(Stop stop){
 		return false;
@@ -34,7 +34,7 @@ public class Stops {
 
 	/**
 	 * 
-	 * @param stop: Stop
+	 * @param stop
 	 */
 	public boolean removeStop(Stop stop){
 		return false;

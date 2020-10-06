@@ -1,6 +1,8 @@
 package SE2030TransitProject;
 
 
+import java.util.HashMap;
+
 /**
  * @author ericksons
  * @version 1.0
@@ -8,7 +10,7 @@ package SE2030TransitProject;
  */
 public class Routes {
 
-	private HashMap<Routes> routes;
+	private HashMap<String, Routes> routes;
 	public Route m_Route;
 
 	public Routes(){
@@ -20,9 +22,9 @@ public class Routes {
 	}
 	/**
 	 * 
-	 * @param route: Route
+	 * @param route
 	 */
-	public boolean addRoute(route: Route route: Route){
+	public boolean addRoute(Route route){
 		return false;
 	}
 
@@ -32,9 +34,9 @@ public class Routes {
 
 	/**
 	 * 
-	 * @param route: Route
+	 * @param route
 	 */
-	public boolean removeRoute(route: Route route: Route){
+	public boolean removeRoute(Route route){
 		return false;
 	}
 }//end Routes

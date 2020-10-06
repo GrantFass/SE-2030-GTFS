@@ -10,7 +10,7 @@ import java.util.HashMap;
  */
 public class StopTimes {
 
-	private HashMap<StopTime> stop_times;
+	private HashMap<String, StopTime> stop_times;
 	public StopTime m_StopTime;
 
 	public StopTimes(){
@@ -22,7 +22,7 @@ public class StopTimes {
 	}
 	/**
 	 * 
-	 * @param stopTime: StopTime
+	 * @param stopTime
 	 */
 	public boolean addStopTime(StopTime stopTime){
 		return false;
@@ -34,7 +34,7 @@ public class StopTimes {
 
 	/**
 	 * 
-	 * @param stopTime: StopTime
+	 * @param stopTime
 	 */
 	public boolean removeStopTIme(StopTime stopTime){
 		return false;
