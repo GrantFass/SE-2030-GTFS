@@ -1,6 +1,10 @@
 package SE2030TransitProject;
 
 
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
+
 /**
  * @author ericksons
  * @version 1.0
@@ -9,12 +13,12 @@ package SE2030TransitProject;
 public class Display {
 
 	private View maps;
-	private TextFeild route_IdFeild;
+	private TextField route_IdFeild;
 	private MenuItem routesByStop;
 	private MenuButton search;
-	private TextFeild stop_IdFeild;
+	private TextField stop_IdFeild;
 	private MenuItem stopByRoutes;
-	private TextFeild trip_IdFeild;
+	private TextField trip_IdFeild;
 	private MenuItem tripsByRoutes;
 	public Controller m_Controller;
 
