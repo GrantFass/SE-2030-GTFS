@@ -1,7 +1,11 @@
 package SE2030TransitProject;
 
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.InputMismatchException;
 
 /**
  * @author ericksons
@@ -11,7 +15,6 @@ import java.util.HashMap;
 public class Routes {
 
 	private HashMap<String, Routes> routes;
-	public Route m_Route;
 
 	public Routes(){
 
@@ -37,6 +40,19 @@ public class Routes {
 	 * @param route
 	 */
 	public boolean removeRoute(Route route){
+		return false;
+	}
+
+	/**
+	 * Method to parse Route data from a routes.txt file
+	 * @author Grant Fass,
+	 * @param file the routes.txt file to be parsed
+	 * @return true if file was loaded, false otherwise
+	 * @throws FileNotFoundException if the file was not found
+	 * @throws IOException for general File IO errors.
+	 * @throws InputMismatchException if there is an issue parsing the file
+	 */
+	public boolean loadRoutes(File file) throws FileNotFoundException, IOException, InputMismatchException {
 		return false;
 	}
 }//end Routes

@@ -3,7 +3,11 @@
 package SE2030TransitProject;
 
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.InputMismatchException;
 
 /**
  * @author ericksons
@@ -13,7 +17,6 @@ import java.util.HashMap;
 public class Stops {
 
 	private HashMap<String, Stop> stops;
-	public Stop m_Stop;
 
 	public Stops(){
 
@@ -39,6 +42,20 @@ public class Stops {
 	 * @param stop
 	 */
 	public boolean removeStop(Stop stop){
+		return false;
+	}
+
+	/**
+	 * Method to parse Stop data from a stops.txt file
+	 * @author Grant Fass,
+	 * @param file the stops.txt file to be parsed
+	 * @return true if file was loaded, false otherwise
+	 * @throws FileNotFoundException if the file was not found
+	 * @throws IOException for general File IO errors.
+	 * @throws InputMismatchException if there is an issue parsing the file
+	 */
+	public boolean loadStops(File file) throws FileNotFoundException, IOException,
+			InputMismatchException {
 		return false;
 	}
 }//end Stops

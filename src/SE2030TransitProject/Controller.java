@@ -1,14 +1,21 @@
 package SE2030TransitProject;
 
 import javafx.event.ActionEvent;
+import javafx.scene.control.Alert;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.sql.Time;
 import java.util.Collection;
+import java.util.InputMismatchException;
 
 public class Controller {
-	public Data m_Data;
-
+	private Data data;
+	private Stage stage;
 
 	/**
 	 * 
@@ -138,21 +145,136 @@ public class Controller {
 
 	}
 
-    public void close(ActionEvent actionEvent) {
+    public void close() {
     }
 
-	public void save(ActionEvent actionEvent) {
+	public void save() {
 	}
 
-	public void load(ActionEvent actionEvent) {
+	/**
+	 * Method to handle the loading of GTFS files
+	 * Activates when load menu button is clicked
+	 * Handles exceptions relating to loading files
+	 * @author Grant Fass
+	 */
+	public void load() {
+		try {
+			File file = getGTFSFileUsingFileChooser();
+			checkNullFile(file);
+			checkFileExtension(file.toString().substring(file.toString().indexOf('.')));
+			String prefix = checkFilePrefix(file.toString().substring(0,
+					file.toString().indexOf('.')));
+			switch (prefix) {
+				case "stop_times":
+					data.getStopTimes().loadStopTimes(file);
+					break;
+				case "stops":
+					data.getStops().loadStops(file);
+					break;
+				case "routes":
+					data.getRoutes().loadRoutes(file);
+					break;
+				case "trips":
+					data.getTrips().loadTrips(file);
+					break;
+			}
+		} catch (IllegalArgumentException e) {
+			errorAlert("IllegalArgumentException", e.getMessage());
+		} catch (InputMismatchException e) {
+			errorAlert("InputMismatchException", e.getMessage());
+		} catch (FileNotFoundException e) {
+			errorAlert("FileNotFoundException",
+					e.getMessage() + " or operation was canceled");
+		} catch (IOException e) {
+			errorAlert("IOException", e.getMessage());
+		}
 	}
 
-	public void undo(ActionEvent actionEvent) {
+	public void undo() {
 	}
 
-	public void reload(ActionEvent actionEvent) {
+	public void reload() {
 	}
 
-	public void displayHelp(ActionEvent actionEvent) {
+	public void displayHelp() {
+		String aboutInfo = String.format("");
+	}
+
+	/**
+	 * Method to query the user to retrieve a GTFS file from the computer using a FileChooser
+	 * @author Grant Fass
+	 * @return The selected GTFS file from the program
+	 */
+	private File getGTFSFileUsingFileChooser() {
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.getExtensionFilters().addAll(
+				new FileChooser.ExtensionFilter("STOPS", "stops.txt".toLowerCase()),
+				new FileChooser.ExtensionFilter("TRIPS", "trips.txt".toLowerCase()),
+				new FileChooser.ExtensionFilter("ROUTES", "routes.txt".toLowerCase()),
+				new FileChooser.ExtensionFilter("STOP_TIMES", "stop_times.txt".toLowerCase()),
+				new FileChooser.ExtensionFilter("TXT", "*.txt".toLowerCase()),
+				new FileChooser.ExtensionFilter("ALL FILES", "*.*".toLowerCase()));
+		fileChooser.setTitle("Load GTFS files");
+		fileChooser.setInitialDirectory(new File("C:\\\\users\\\\" +
+				System.getProperty("user.name") + "\\\\Documents"));
+		return fileChooser.showOpenDialog(stage);
+	}
+
+	/**
+	 * error if no file is loaded or file is null
+	 * @author Grant Fass
+	 * @param file the file to check
+	 * @throws FileNotFoundException null file
+	 */
+	private void checkNullFile(File file) throws FileNotFoundException {
+		if (file == null) {
+			throw new FileNotFoundException("File was not found at specified address");
+		}
+	}
+
+	/**
+	 * method to check the extension of a file and make sure it matches one of the valid formats
+	 * @author Grant Fass
+	 * @param extension the extension to check
+	 * @return the extension on the file
+	 * @throws IllegalArgumentException if extension is not one of the listed ones.
+	 */
+	private void checkFileExtension(String extension) throws IllegalArgumentException {
+		if(!extension.toLowerCase().equals(".txt")) {
+			throw new IllegalArgumentException("The file of type "
+					+ extension + " is not supported." +
+					"Supported file types are \'.txt\'.");
+		}
+	}
+
+	private String checkFilePrefix(String prefix) throws InputMismatchException {
+		if (prefix.toLowerCase().contains("stop_times")) {
+			return "stop_times";
+		} else if (prefix.toLowerCase().contains("stops")) {
+			return "stops";
+		} else if (prefix.toLowerCase().contains("trips")) {
+			return "trips";
+		} else if (prefix.toLowerCase().contains("routes")) {
+			return "routes";
+		} else {
+			throw new InputMismatchException(String.format("The file with name %s is not " +
+					"supported. Please make sure that your file matches the expected naming" +
+					"convention of \'stops.txt\', \'stop_times.txt\', \'trips.txt\', &" +
+					" \'routes.txt\'."));
+		}
+	}
+
+	/**
+	 * method to display an alert with the error format
+	 * @author Grant Fass
+	 * @param header the header text to be displayed
+	 * @param content the content text to be displayed
+	 */
+	private void errorAlert(String header, String content) {
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.setTitle("Error Dialog");
+		alert.setHeaderText(header);
+		alert.setContentText(content);
+		alert.showAndWait();
 	}
 }

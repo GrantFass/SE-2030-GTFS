@@ -15,10 +15,6 @@ public class Data {
 	private StopTimes stop_times;
 	private Stops stops;
 	private Trips trips;
-	public Routes m_Routes;
-	public Stops m_Stops;
-	public Trips m_Trips;
-	public StopTimes m_StopTimes;
 
 	public Data(){
 
