@@ -1,5 +1,9 @@
 package SE2030TransitProject;
 
+import java.nio.file.Path;
+import java.sql.Time;
+import java.util.Collection;
+
 public class Controller {
 	public Data m_Data;
 
@@ -8,15 +12,55 @@ public class Controller {
 	 * 
 	 * @param trip_id
 	 */
-	public void displayDistance(trip_id: String trip_id){
+	public void displayDistance(String trip_id){
 
 	}
 
 	/**
 	 * 
-	 * @param trip_id: String
+	 * @param trip_id
 	 */
-	public void displaySpeeds(trip_id: String trip_id: String){
+	public void displaySpeeds(String trip_id){
+
+	}
+
+	/**
+	 * 
+	 * @param stop_id
+	 */
+	public void displayTrips(String stop_id){
+
+	}
+
+	/**
+	 * 
+	 * @param outputLocation
+	 */
+	public void exportGTFSfiles(Path outputLocation){
+
+	}
+
+	/**
+	 * 
+	 * @param gtfsFileLocation
+	 */
+	public void importGTFSfiles(Path gtfsFileLocation){
+
+	}
+
+	/**
+	 * 
+	 * @param route_id
+	 */
+	public void plotBus(String route_id){
+
+	}
+
+	/**
+	 * 
+	 * @param route_id
+	 */
+	public void plotGPSCoordinates(String route_id){
 
 	}
 
@@ -24,47 +68,7 @@ public class Controller {
 	 * 
 	 * @param stop_id: String
 	 */
-	public void displayTrips(stop_id: String stop_id: String){
-
-	}
-
-	/**
-	 * 
-	 * @param outputLocation: path
-	 */
-	public void exportGTFSfiles(outputLocation: path outputLocation: path){
-
-	}
-
-	/**
-	 * 
-	 * @param gtfsFileLocation: Path
-	 */
-	public void importGTFSfiles(gtfsFileLocation: Path gtfsFileLocation: Path){
-
-	}
-
-	/**
-	 * 
-	 * @param route_id: String
-	 */
-	public void plotBus(route_id: String route_id: String){
-
-	}
-
-	/**
-	 * 
-	 * @param route_id: String
-	 */
-	public void plotGPSCoordinates(route_id: String route_id: String){
-
-	}
-
-	/**
-	 * 
-	 * @param stop_id: String
-	 */
-	public List<route_ids> searchRoutesByStop(stop_id: String stop_id: String){
+	public Collection<Route> searchRoutesByStop(String stop_id){
 		return null;
 	}
 
@@ -72,7 +76,7 @@ public class Controller {
 	 * 
 	 * @param route_id: String
 	 */
-	public List<stop_ids> searchStopsByRoute(route_id: String route_id: String){
+	public Collection<Stop> searchStopsByRoute(String route_id){
 		return null;
 	}
 
@@ -80,7 +84,7 @@ public class Controller {
 	 * 
 	 * @param route_id: String
 	 */
-	public List<trip_ids> searchTripsByRoute(route_id: String route_id: String){
+	public Collection<Trip> searchTripsByRoute(String route_id){
 		return null;
 	}
 
@@ -88,7 +92,7 @@ public class Controller {
 	 * 
 	 * @param stop_id: String
 	 */
-	public List<trip_ids> searchTripsByStop(stop_id: String stop_id: String){
+	public Collection<Trip> searchTripsByStop(String stop_id){
 		return null;
 	}
 
@@ -96,7 +100,7 @@ public class Controller {
 	 * 
 	 * @param route_id: String, attributes
 	 */
-	public void updateRoute(route_id: String, attributes route_id: String, attributes){
+	public void updateRoute(String route_id){
 
 	}
 
@@ -104,7 +108,7 @@ public class Controller {
 	 * 
 	 * @param stop_id: String, attributes
 	 */
-	public void updateStop(stop_id: String, attributes stop_id: String, attributes){
+	public void updateStop(String stop_id){
 
 	}
 
@@ -112,7 +116,7 @@ public class Controller {
 	 * 
 	 * @param stop_ids: List<Strings>, attributes
 	 */
-	public void updateStops(stop_ids: List<Strings>, attributes stop_ids: List<Strings>, attributes){
+	public void updateStops(Collection<String> stop_ids){
 
 	}
 
@@ -120,7 +124,7 @@ public class Controller {
 	 * 
 	 * @param stop_id: String, trip_id: String, time
 	 */
-	public void updateStopTime(stop_id: String, trip_id: String, time stop_id: String, trip_id: String, time){
+	public void updateStopTime(String stop_id, String trip_id, Time time){
 
 	}
 
@@ -128,7 +132,7 @@ public class Controller {
 	 * 
 	 * @param trip_id: String, attributes
 	 */
-	public void updateTrip(trip_id: String, attributes trip_id: String, attributes){
+	public void updateTrip(String trip_id){
 
 	}
 }
