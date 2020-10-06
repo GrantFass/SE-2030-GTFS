@@ -1,5 +1,7 @@
 package SE2030TransitProject;
 
+import javafx.event.ActionEvent;
+
 import java.nio.file.Path;
 import java.sql.Time;
 import java.util.Collection;
@@ -134,5 +136,23 @@ public class Controller {
 	 */
 	public void updateTrip(String trip_id){
 
+	}
+
+    public void close(ActionEvent actionEvent) {
+    }
+
+	public void save(ActionEvent actionEvent) {
+	}
+
+	public void load(ActionEvent actionEvent) {
+	}
+
+	public void undo(ActionEvent actionEvent) {
+	}
+
+	public void reload(ActionEvent actionEvent) {
+	}
+
+	public void displayHelp(ActionEvent actionEvent) {
 	}
 }
