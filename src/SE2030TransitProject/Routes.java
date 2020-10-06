@@ -1,6 +1,8 @@
 package SE2030TransitProject;
 
 
+import java.util.HashMap;
+
 /**
  * @author ericksons
  * @version 1.0

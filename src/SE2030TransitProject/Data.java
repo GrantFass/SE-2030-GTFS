@@ -1,5 +1,6 @@
 package SE2030TransitProject;
 
+import java.util.List;
 
 /**
  * @author ericksons
@@ -49,7 +50,7 @@ public class Data {
 		return null;
 	}
 
-	public StopsTimes getStopTimes(){
+	public StopTimes getStopTimes(){
 		return null;
 	}
 
