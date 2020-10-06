@@ -1,6 +1,8 @@
 package SE2030TransitProject;
 
 
+import java.util.HashMap;
+
 /**
  * @author ericksons
  * @version 1.0
@@ -22,7 +24,7 @@ public class StopTimes {
 	 * 
 	 * @param stopTime: StopTime
 	 */
-	public boolean addStopTime(stopTime: StopTime stopTime: StopTime){
+	public boolean addStopTime(StopTime stopTime){
 		return false;
 	}
 
@@ -34,7 +36,7 @@ public class StopTimes {
 	 * 
 	 * @param stopTime: StopTime
 	 */
-	public boolean removeStopTIme(stopTime: StopTime stopTime: StopTime){
+	public boolean removeStopTIme(StopTime stopTime){
 		return false;
 	}
 }//end StopTimes

@@ -1,6 +1,8 @@
 package SE2030TransitProject;
 
 
+import java.sql.Time;
+
 /**
  * @author ericksons
  * @version 1.0
@@ -24,7 +26,7 @@ public class StopTime {
 	public DropOffTypeEnum m_DropOffTypeEnum;
 	public TimepointEnum m_TimepointEnum;
 	public ContinuousPickupEnum m_ContinuousPickupEnum;
-	public ContinousDropDffEnum m_ContinousDropDffEnum;
+	public ContinuousDropOffEnum m_ContinuousDropOffEnum;
 
 	public StopTime(){
 
@@ -58,7 +60,7 @@ public class StopTime {
 	}
 
 	public float getShapeDistTraveled(){
-		return null;
+		return 0;
 	}
 
 	public String getStopHeadsign(){

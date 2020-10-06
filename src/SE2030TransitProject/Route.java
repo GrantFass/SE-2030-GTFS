@@ -1,6 +1,10 @@
 package SE2030TransitProject;
 
 
+import javafx.scene.paint.Color;
+
+import java.net.URL;
+
 /**
  * @author ericksons
  * @version 1.0
@@ -22,7 +26,7 @@ public class Route {
 	private URL route_url;
 	public RouteTypeEnum m_RouteTypeEnum;
 	public ContinuousPickupEnum m_ContinuousPickupEnum;
-	public ContinousDropDffEnum m_ContinousDropDffEnum;
+	public ContinuousDropOffEnum m_ContinuousDropOffEnum;
 
 	public Route(){
 
