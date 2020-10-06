@@ -14,6 +14,8 @@
             <li>Implement setters</li>
             <li>Implement constructors</li>
             <li>Implement file loading and parsing</li>
+            <li>Add ability to load multiple GTFS files in succession (Delete old data)</li>
+            <li>Display alert to user when overwriting data during file load</li>
         </ul>
     </li>
 </ul>
@@ -27,6 +29,8 @@
             <li>Implement setters</li>
             <li>Implement constructors</li>
             <li>Implement file loading and parsing</li>
+            <li>Add ability to load multiple GTFS files in succession (Delete old data)</li>
+            <li>Display alert to user when overwriting data during file load</li>
         </ul>
     </li>
 </ul>
@@ -40,6 +44,8 @@
             <li>Implement setters</li>
             <li>Implement constructors</li>
             <li>Implement file loading and parsing</li>
+            <li>Add ability to load multiple GTFS files in succession (Delete old data)</li>
+            <li>Display alert to user when overwriting data during file load</li>
         </ul>
     </li>
     
@@ -51,14 +57,6 @@
         Implement GTFS file load capabilities
         <ul>
             <li>Show snapshot of data structures in GUI</li>
-        </ul>
-    </li>
-    <li>
-        Implement Help Menu
-        <ul>
-            <li>Implement about information</li>
-            <li>Implement accepted files information</li>
-            <li>Implement introduction information</li>
         </ul>
     </li>
 </ul>
@@ -88,6 +86,14 @@
                 <li>Implement File Load Exception handling</li>
             </ul>
         </li>
+        <li>
+            Implement Help Menu
+            <ul>
+                <li>Implement about information</li>
+                <li>Implement accepted files information</li>
+                <li>Implement introduction information</li>
+            </ul>
+        </li>
     </ul>
 </s>
 <h5>Unassigned:</h5>
@@ -105,17 +111,13 @@
     <li>
         Implement GTFS file load capabilities
         <ul>
-            <li>Show snapshot of data structures in GUI</li>
-            <li>Add ability to load multiple GTFS files in succession (Delete old data)</li>
             <li>Verify GTFS file load passes acceptance tests</li>
         </ul>
     </li>
     <li>
-        Implement Help Menu
+        Update Help Menu
         <ul>
-            <li>Implement about information</li>
-            <li>Implement accepted files information</li>
-            <li>Implement introduction information</li>
+            <li>Update introduction information</li>
         </ul>
     </li>
     <li>

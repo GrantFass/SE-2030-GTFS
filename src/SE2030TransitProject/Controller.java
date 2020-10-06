@@ -145,7 +145,13 @@ public class Controller {
 
 	}
 
+	/**
+	 * Method to safely close and exit the program.
+	 * Any connections that have a possibility of being open are verified to be closed here.
+	 * @author Grant Fass
+	 */
     public void close() {
+		System.exit(0);
     }
 
 	public void save() {
@@ -196,8 +202,30 @@ public class Controller {
 	public void reload() {
 	}
 
+	/**
+	 * Method to display help values to the program
+	 * Activates when help menu button is clicked
+	 * @author Grant Fass
+	 */
 	public void displayHelp() {
-		String aboutInfo = String.format("");
+		String aboutInfo = String.format("Authors: SE 2030 - 021 Group G\n" +
+				"Members: Grant Fass, Joy Cross, Simon Erickson, & Ryan Becker\n" +
+				"Affiliation: Milwaukee School of Engineering (MSOE)\n" +
+				"Term: Fall 2020\n\n");
+		String acceptedFiles = String.format("This program currently accepts four files:\n" +
+				"\'stops.txt\', \'stop_times.txt\', \'routes.txt\', & \'trips.txt\'.\n" +
+				"All other files will not work with the program.\n" +
+				"Files are expected to be formatted matching the documentation found\n" +
+				"here: https://developers.google.com/transit/gtfs/reference and\n" +
+				"here: https://developers.google.com/transit/gtfs/examples/gtfs-feed.\n\n");
+		String introductionInformation = String.format("This program is designed to allow " +
+				"the user to import, view, and manipulate GTFS files for a General " +
+				"Transit Feed Specification Tool.\n\n");
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		alert.setTitle("General Transit Feed Specification Tool");
+		alert.setHeaderText(null);
+		alert.setContentText(introductionInformation + acceptedFiles + aboutInfo);
+		alert.showAndWait();
 	}
 
 	/**
@@ -247,6 +275,14 @@ public class Controller {
 		}
 	}
 
+	/**
+	 * method to check the name of a file and make sure it matches the expected format
+	 * so that the file can be passed on to the correct class for parsing.
+	 * @author Grant Fass
+	 * @param prefix the name of the file
+	 * @return a simplified name of the file to be used for comparing
+	 * @throws InputMismatchException if the file does not match the expected name
+	 */
 	private String checkFilePrefix(String prefix) throws InputMismatchException {
 		if (prefix.toLowerCase().contains("stop_times")) {
 			return "stop_times";
