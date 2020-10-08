@@ -6,7 +6,7 @@ package SE2030TransitProject;
 import java.sql.Time;
 
 /**
- * @author ericksons
+ * @author
  * @version 1.0
  * @created 06-Oct-2020 10:28:42 AM
  */

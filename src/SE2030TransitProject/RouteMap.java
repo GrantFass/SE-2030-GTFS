@@ -2,7 +2,7 @@ package SE2030TransitProject;
 
 
 /**
- * @author ericksons
+ * @author
  * @version 1.0
  * @created 06-Oct-2020 10:28:38 AM
  */

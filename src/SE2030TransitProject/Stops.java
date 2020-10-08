@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.InputMismatchException;
 
 /**
- * @author ericksons
+ * @author
  * @version 1.0
  * @created 06-Oct-2020 10:28:41 AM
  */
