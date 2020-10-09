@@ -1,11 +1,14 @@
 package SE2030TransitProject;
 
 
+import javafx.scene.control.Alert;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.InputMismatchException;
+import java.util.Scanner;
 
 /**
  * Class that holds multiple routes stored within a hash map where a Route's route_id is the key,
@@ -65,6 +68,24 @@ public class Routes {
 	 * @throws InputMismatchException if there is an issue parsing the file
 	 */
 	public boolean loadRoutes(File file) throws FileNotFoundException, IOException, InputMismatchException {
+
+		//	Alerts user of overwriting files
+		Alert overwriteAlert = new Alert(Alert.AlertType.CONFIRMATION);
+		overwriteAlert.setTitle("Overwrite Warning");
+		overwriteAlert.setHeaderText("You are about to overwrite all existing files");
+		overwriteAlert.showAndWait();
+
+		//creates new routes
+		routes = new HashMap<>();
+
+//		try(Scanner in = new Scanner(new File(String.valueOf(file)))){
+//			while(in.hasNextLine()){
+//				String line = in.nextLine();
+//				line.split("\\D*");
+//
+//			}
+//			in.nextLine();
+//		}
 		return false;
 	}
 

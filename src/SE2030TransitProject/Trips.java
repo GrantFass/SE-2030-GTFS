@@ -1,11 +1,14 @@
 package SE2030TransitProject;
 
 
+import javafx.scene.control.Alert;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.InputMismatchException;
+import java.util.Scanner;
 
 /**
  * @author ericksons
@@ -14,10 +17,10 @@ import java.util.InputMismatchException;
  */
 public class Trips {
 
-	private HashMap<String, Trips> trips;
+	private HashMap<String, Trip> trips;
 
 	public Trips(){
-
+		trips = new HashMap<String, Trip>();
 	}
 
 	public void finalize() throws Throwable {
@@ -28,11 +31,12 @@ public class Trips {
 	 * @param trip
 	 */
 	public boolean addTrip(Trip trip){
-		return false;
+		trips.put(trip.getRouteID(), trip);
+		return true;
 	}
 
-	public Trip getTrip(){
-		return null;
+	public Trip getTrip(String trip_id){
+		return trips.get(trip_id);
 	}
 
 	/**
@@ -40,7 +44,8 @@ public class Trips {
 	 * @param trip
 	 */
 	public boolean removeTrip(Trip trip){
-		return false;
+		trips.remove(trip.getTripID());
+		return true;
 	}
 
 	/**
@@ -54,6 +59,14 @@ public class Trips {
 	 */
 	public boolean loadTrips(File file) throws FileNotFoundException, IOException,
 			InputMismatchException {
+		try(Scanner in = new Scanner(new File(String.valueOf(file)))){
+			while(in.hasNextLine()){
+				String line = in.nextLine();
+				line.split("\\D*");
+
+			}
+			in.nextLine();
+		}
 		return false;
 	}
 

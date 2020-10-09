@@ -22,51 +22,70 @@ public class Trip {
 	public WheelchairAccessibleEnum m_WheelchairAccessibleEnum;
 	public BikesAllowedEnum m_BikesAllowedEnum;
 
-	public Trip(){
+	public Trip(BikesAllowedEnum bikes_allowed, String block_id, DirectionIDEnum direction_id,
+				String route_id, String service_id, String shape_id, String trip_headsign,
+				String trip_id, String trip_short_name,
+				WheelchairAccessibleEnum wheelchair_accessible,
+				DirectionIDEnum m_DirectionIDEnum,
+				WheelchairAccessibleEnum m_WheelchairAccessibleEnum,
+				BikesAllowedEnum m_BikesAllowedEnum){
 
+		this.bikes_allowed = bikes_allowed;
+		this.block_id = block_id;
+		this.direction_id = direction_id;
+		this.route_id = route_id;
+		this.service_id = service_id;
+		this.shape_id = shape_id;
+		this.trip_headsign = trip_headsign;
+		this.trip_id = trip_id;
+		this.trip_short_name = trip_short_name;
+		this.wheelchair_accessible = wheelchair_accessible;
+		this.m_DirectionIDEnum = m_DirectionIDEnum;
+		this.m_WheelchairAccessibleEnum = m_WheelchairAccessibleEnum;
+		this.m_BikesAllowedEnum = m_BikesAllowedEnum;
 	}
 
 	public void finalize() throws Throwable {
 
 	}
 	public BikesAllowedEnum getBikesAllowed(){
-		return null;
+		return bikes_allowed;
 	}
 
 	public String getBlockID(){
-		return "";
+		return block_id;
 	}
 
 	public DirectionIDEnum getDirectionID(){
-		return null;
+		return direction_id;
 	}
 
 	public String getRouteID(){
-		return "";
+		return route_id;
 	}
 
 	public String getServiceID(){
-		return "";
+		return service_id;
 	}
 
 	public String getShapeID(){
-		return "";
+		return shape_id;
 	}
 
 	public String getTripHeadsign(){
-		return "";
+		return trip_headsign;
 	}
 
 	public String getTripID(){
-		return "";
+		return trip_id;
 	}
 
 	public String getTripShortName(){
-		return "";
+		return trip_short_name;
 	}
 
 	public WheelchairAccessibleEnum getWheelchairAccessible(){
-		return null;
+		return wheelchair_accessible;
 	}
 
 	/**
