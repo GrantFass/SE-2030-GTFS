@@ -1,8 +1,5 @@
 package SE2030TransitProject;
 
-
-import javafx.scene.input.DataFormat;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -24,7 +21,8 @@ public class StopTimes {
 	private HashMap<String, StopTime> stop_times;
 
 	/**
-	 * StopTimes Constructor
+	 * StopTimes Constructor: creates empty instance of stop_times object
+	 * @author Joy Cross
 	 */
 	public StopTimes(){
 		stop_times = new HashMap<String, StopTime>();
@@ -33,6 +31,7 @@ public class StopTimes {
 	/**
 	 * Adds a StopTime object to the hashmap, returns false if could not be added to hashmap
 	 * Key is in format "stopid;tripid"
+	 * @author Joy Cross
 	 * @param stop_id stop id associated with stoptime
 	 * @param trip_id trip id associated with stoptime
 	 * @param stopTime stopTime to be added
@@ -49,6 +48,7 @@ public class StopTimes {
 
 	/**
 	 * Gets the stop time from the hashmap by "stop_id;route_id"
+	 * @author Joy Cross
 	 * @param stop_id stop_id associated with stoptime
 	 * @param trip_id trip_id associated with stoptime
 	 * @return StopTime object related to stop_id and trip_id
@@ -59,6 +59,7 @@ public class StopTimes {
 
 	/**
 	 * Removes stop from data
+	 * @author Joy Cross
 	 * @param stop_id stop_id associated with stoptime
 	 * @param trip_id trip_id associated with stoptime
 	 * @return true if removal was completed
@@ -74,16 +75,17 @@ public class StopTimes {
 
 	/**
 	 * Removes all stopTimes in database
+	 * @author Joy Cross
 	 * @return true if removed stopTimes
 	 */
-	public boolean removeStopTimes(){
+	public boolean clearStopTimes(){
 		stop_times = new HashMap<String, StopTime>();
 		return true;
 	}
 
 	/**
-	 * Method to parse StopTime data from a stop_times.txt file
-	 * @author Joy Cross,
+	 * Method to parse StopTime data from a stop_times.txt file, resets database for every file
+	 * @author Joy Cross
 	 * @param file the stop_times.txt file to be parsed
 	 * @return true if file was loaded, false otherwise
 	 * @throws FileNotFoundException if the file was not found
@@ -91,49 +93,40 @@ public class StopTimes {
 	 * @throws InputMismatchException if there is an issue parsing the file
 	 * @throws DataFormatException if data will be overwritten
 	 */
-	public boolean loadStopTimes(File file) throws FileNotFoundException, IOException,
-			InputMismatchException, DataFormatException {
+	public boolean loadStopTimes(File file) throws DataFormatException, IOException {
 		try {
+			boolean emptyBefore = stop_times.isEmpty();
+			clearStopTimes();
 			Scanner sc = new Scanner(file);
 			String line = sc.nextLine();
 			String[] headers = line.split(",");
 
 			// Finding location of each parameter in headers list
 			int arrival_time_array = -1;
-			int continuous_drop_off_array = -1;
-			int continuous_pickup_array = -1;
 			int departure_time_array = -1;
 			int drop_off_type_array = -1;
 			int pickup_type_array = -1;
-			int shape_dist_traveled_array = -1;
 			int stop_headsign_array = -1;
 			int stop_id_array = -1;
+			int trip_id_array = -1;
 			int stop_sequence_array = -1;
 			int timepoint_array = -1;
-			int trip_id_array = -1;
-			int m_PickupTypeEnum_array = -1;
-			int m_DropOffTypeEnum_array = -1;
-			int m_TimepointEnum_array = -1;
-			int m_ContinuousPickupEnum_array = -1;
-			int m_ContinuousDropOffEnum_array = -1;
+			int continuous_drop_off_array = -1;
+			int continuous_pickup_array = -1;
+			int shape_dist_traveled_array = -1;
+
 			Timestamp arrival_time = null;
 			Timestamp departure_time = null;
 			float shape_dist_traveled = 0;
 			String stop_headsign = null;
 			String stop_id = null;
 			int stop_sequence = 0;
-			TimepointEnum timepoint = null;
+			TimepointEnum timepoint = TimepointEnum.EXACT_TIME;
 			String trip_id = null;
-			DropOffTypeEnum drop_off_type = null;
-			PickupTypeEnum pickup_type = null;
-			ContinuousDropOffEnum continuous_drop_off = null;
-			ContinuousPickupEnum continuous_pickup = null;
-			PickupTypeEnum m_PickupTypeEnum = null;
-			DropOffTypeEnum m_DropOffTypeEnum = null;
-			TimepointEnum m_TimepointEnum = null;
-			ContinuousPickupEnum m_ContinuousPickupEnum = null;
-			ContinuousDropOffEnum m_ContinuousDropOffEnum = null;
-
+			DropOffTypeEnum drop_off_type = DropOffTypeEnum.REGULARLY_SCHEDULED_DROP_OFF;
+			PickupTypeEnum pickup_type = PickupTypeEnum.REGULARLY_SCHEDULED_PICKUP;
+			ContinuousDropOffEnum continuous_drop_off = ContinuousDropOffEnum.NO_CONTINUOUS_DROP_OFF;
+			ContinuousPickupEnum continuous_pickup = ContinuousPickupEnum.NO_CONTINUOUS_PICKUP;
 
 			// loop to find location of all headers to create stop
 			for (int i = 0; i < headers.length; i++) {
@@ -174,26 +167,12 @@ public class StopTimes {
 					case "timepoint":
 						timepoint_array = i;
 						break;
-					case "m_PickupTypeEnum":
-						m_PickupTypeEnum_array = i;
-						break;
-					case "m_DropOffTypeEnum":
-						m_DropOffTypeEnum_array = i;
-						break;
-					case "m_TimepointEnum":
-						m_TimepointEnum_array = i;
-						break;
-					case "m_ContinuousPickupEnum":
-						m_ContinuousPickupEnum_array = i;
-						break;
-					case "m_ContinuousDropOffEnum":
-						m_ContinuousDropOffEnum_array = i;
-						break;
 				}
 			}
 
 			// loop through file
 			SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
+			int lineNumber = 1;
 			while (sc.hasNextLine()) {
 				line = sc.nextLine();
 				String[] data = line.split(",");
@@ -205,20 +184,22 @@ public class StopTimes {
 					if (trip_id_array != -1 && stop_id_array != -1) {
 						trip_id = data[trip_id_array];
 					} else {
-						throw new IOException("No Stop ID/Route ID given");
+						throw new IOException("No Stop ID/Route ID given for line: " + lineNumber);
 					}
 					if (arrival_time_array != -1) {
 						try {
 							arrival_time = new Timestamp(df.parse(data[arrival_time_array]).getTime());
 						} catch (ParseException parse) {
-							throw new IOException("Arrival Time not correct format should be hh:mm:ss");
+							throw new IOException("Arrival Time not correct format should be hh:mm:ss " +
+									"for line: " + lineNumber);
 						}
 					}
 					if (departure_time_array != -1) {
 						try {
 							departure_time = new Timestamp(df.parse(data[departure_time_array]).getTime());
 						} catch (ParseException parse) {
-							throw new IOException("Departure Time not correct format should be hh:mm:ss");
+							throw new IOException("Departure Time not correct format should " +
+									"be hh:mm:ss for line: " + lineNumber);
 						}
 					}
 					if (drop_off_type_array != -1) {
@@ -233,10 +214,12 @@ public class StopTimes {
 							} else if (drop_off_type_int == 0) {
 								drop_off_type = DropOffTypeEnum.REGULARLY_SCHEDULED_DROP_OFF;
 							} else {
-								throw new IOException("Drop off type should be between 0-3");
+								throw new IOException("Drop off type should be between 0-3 for line: "
+										+ lineNumber);
 							}
 						} catch (NumberFormatException number) {
-							throw new IOException("Stop Sequence not correct data should be integer");
+							throw new IOException("Stop Sequence not correct data should be integer" +
+									"for line: " + lineNumber);
 						}
 					}
 					if (pickup_type_array != -1) {
@@ -251,17 +234,20 @@ public class StopTimes {
 							} else if (pickup_type_int == 0) {
 								pickup_type = PickupTypeEnum.REGULARLY_SCHEDULED_PICKUP;
 							} else {
-								throw new IOException("Drop off type should be between 0-3");
+								throw new IOException("Drop off type should be between 0-3 for line: "
+										+ lineNumber);
 							}
 						} catch (NumberFormatException number) {
-							throw new IOException("Stop Sequence not correct data should be integer");
+							throw new IOException("Stop Sequence not correct data should be integer for line: "
+									+ lineNumber);
 						}
 					}
 					if (stop_sequence_array != -1) {
 						try {
 							stop_sequence = Integer.parseInt(data[stop_sequence_array]);
 						} catch (NumberFormatException number) {
-							throw new IOException("Stop Sequence not correct data should be integer");
+							throw new IOException("Stop Sequence not correct data should be integer for line: "
+									+ lineNumber);
 						}
 					}
 					if (stop_headsign_array != -1) {
@@ -278,22 +264,6 @@ public class StopTimes {
 					if (shape_dist_traveled_array != -1) {
 						shape_dist_traveled = data[shape_dist_traveled_array];
 					}
-					if (m_PickupTypeEnum_array != -1) {
-						m_PickupTypeEnum = data[m_PickupTypeEnum_array];
-					}
-					if (m_DropOffTypeEnum_array != -1) {
-						m_DropOffTypeEnum = data[m_DropOffTypeEnum_array];
-					}
-					if (m_TimepointEnum_array != -1) {
-						m_TimepointEnum = data[m_TimepointEnum_array]
-					}
-					if(m_ContinuousPickupEnum_array != -1){
-						TimeZone time;
-						m_ContinuousPickupEnum = time.data[m_ContinuousPickupEnum_array];
-					}
-					if(m_ContinuousDropOffEnum_array != -1){
-						m_ContinuousDropOffEnum = data[m_ContinuousDropOffEnum_array];
-					}
 					*/
 
 					StopTime stopTime = new StopTime(arrival_time, continuous_drop_off, continuous_pickup,
@@ -301,37 +271,25 @@ public class StopTimes {
 							stop_sequence, timepoint, trip_id);
 
 					addStopTime(stop_id, trip_id, stopTime);
+					lineNumber++;
 				} catch (IOException e){
 					// Error handling for later, right now will skip corrupted data
 				}
-
 			}
-			//TODO: note you do not need to catch the IOException, FileNotFoundException, or InputMismatchException.
-			//Just throw them because I already deal with them in the controller for exception handling
-			//- Grant
-        /*
-        TODO: DataFormatException should be thrown after everything else is done and let the user know that previous data was overwritten
-        Note: For the exception text put in the name of the text file ie: stops.txt I will do the rest in the controller
-        - Grant
-         */
 
-		} catch (FileNotFoundException fnfe){
-			return false;
-		} catch (InputMismatchException ime){
-			return false;
+			if(!emptyBefore){
+				throw new DataFormatException(file.getName());
+			}
+		} catch (DataFormatException dfe){
+			throw new DataFormatException(dfe.getMessage());
 		}
-		/*
-		catch (IOException ioe){
-			return false;
-		}
-		*/
 
 		return true;
 	}
 
 	/**
 	 * Method to output data as a single concatenated string
-	 * @author Joy Cross,
+	 * @author Joy Cross
 	 * @return string of data
 	 */
 	@Override

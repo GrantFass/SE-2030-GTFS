@@ -25,6 +25,23 @@ public class Stop {
 	private WheelchairBoardingEnum wheelchair_boarding;
 	// private String zone_id; // used if we have fares.txt so I don't think we should include it
 
+	/**
+	 * Stop Constructor
+	 * @author Joy Cross
+	 * @param level_id level ID of the location
+	 * @param location_type type of location
+	 * @param parent_station defines hierarchy between the different locations in stops
+	 * @param platform_code platform Identifier for a platform stop
+	 * @param stop_code short text that identifies location to rider
+	 * @param stop_description description of stop
+	 * @param stop_id unique id of stop
+	 * @param stop_latitude latitude coordinate of location of stop
+	 * @param stop_longitude longitude coordinate of location of stop
+	 * @param stop_name name of stop
+	 * @param stop_timezone timezone of the location
+	 * @param stop_url url of web page about the location
+	 * @param wheelchair_boarding indicates whether wheelchair boardings are possible from the location
+	 */
 	public Stop(String level_id, LocationTypeEnum location_type, String parent_station,
 				String platform_code, String stop_code, String stop_description, String stop_id,
 				double stop_latitude, double stop_longitude, String stop_name, TimeZone stop_timezone,
@@ -47,102 +64,177 @@ public class Stop {
 		//this.zone_id = zone_id;
 	}
 
+	/**
+	 * @author Joy Cross
+	 */
 	public String getLevelID(){
 		return level_id;
 	}
 
+	/**
+	 * @author Joy Cross
+	 */
 	public LocationTypeEnum getLocationType(){
 		return location_type;
 	}
 
+	/**
+	 * @author Joy Cross
+	 */
 	public String getParentStation(){
 		return parent_station;
 	}
 
+	/**
+	 * @author Joy Cross
+	 */
 	public String getPlatformCode(){
 		return platform_code;
 	}
 
+	/**
+	 * @author Joy Cross
+	 */
 	public String getStopCode(){
 		return stop_code;
 	}
 
+	/**
+	 * @author Joy Cross
+	 */
 	public String getStopDescription(){
 		return stop_description;
 	}
 
+	/**
+	 * @author Joy Cross
+	 */
 	public String getStopID(){
 		return stop_id;
 	}
 
+	/**
+	 * @author Joy Cross
+	 */
 	public double getStopLatitude(){
 		return stop_latitude;
 	}
 
+	/**
+	 * @author Joy Cross
+	 */
 	public double getStopLongitude(){
 		return stop_longitude;
 	}
 
+	/**
+	 * @author Joy Cross
+	 */
 	public String getStopName(){
 		return stop_name;
 	}
 
+	/**
+	 * @author Joy Cross
+	 */
 	public TimeZone getStopTimezone(){
 		return stop_timezone;
 	}
 
+	/**
+	 * @author Joy Cross
+	 */
 	public URL getStopURL(){
 		return stop_url;
 	}
 
+	/**
+	 * @author Joy Cross
+	 */
 	public WheelchairBoardingEnum getWheelchairBoarding(){
 		return wheelchair_boarding;
 	}
 
+	/**
+	 * @author Joy Cross
+	 */
 	public void setLevelID(String level_id){
 		this.level_id = level_id;
 	}
 
+	/**
+	 * @author Joy Cross
+	 */
 	public void setLocationType(LocationTypeEnum location_type){
 		this.location_type = location_type;
 	}
 
+	/**
+	 * @author Joy Cross
+	 */
 	public void setParentStation(String parent_station){
 		this.parent_station = parent_station;
 	}
 
+	/**
+	 * @author Joy Cross
+	 */
 	public void setPlatformCode(String platform_code){
 		this.platform_code = platform_code;
 	}
 
+	/**
+	 * @author Joy Cross
+	 */
 	public void setStopCode(String stop_code){
 		this.stop_code = stop_code;
 	}
 
+	/**
+	 * @author Joy Cross
+	 */
 	public void setStopDescription(String stop_description){
 		this.stop_description = stop_description;
 	}
 
+	/**
+	 * @author Joy Cross
+	 */
 	public void setStopLatitude(double stop_latitude){
 		this.stop_latitude = stop_latitude;
 	}
 
+	/**
+	 * @author Joy Cross
+	 */
 	public void setStopLongitude(double stop_longitude){
 		this.stop_longitude = stop_longitude;
 	}
 
+	/**
+	 * @author Joy Cross
+	 */
 	public void setStopName(String stop_name){
 		this.stop_name = stop_name;
 	}
 
+	/**
+	 * @author Joy Cross
+	 */
 	public void setStopTimezone(TimeZone stop_timezone){
 		this.stop_timezone = stop_timezone;
 	}
 
+	/**
+	 * @author Joy Cross
+	 */
 	public void setStopURL(URL stop_url){
 		this.stop_url = stop_url;
 	}
 
+	/**
+	 * @author Joy Cross
+	 */
 	public void setWheelchairBoarding(WheelchairBoardingEnum wheelchair_boarding){
 		this.wheelchair_boarding = wheelchair_boarding;
 	}
