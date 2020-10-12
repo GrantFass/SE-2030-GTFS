@@ -3,9 +3,7 @@ package SE2030TransitProject;
 
 import javafx.scene.control.Alert;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 import java.util.zip.DataFormatException;
 
@@ -60,31 +58,38 @@ public class Trips {
     public boolean loadTrips(File file) throws FileNotFoundException, IOException,
             InputMismatchException, DataFormatException {
 
-        //	Alerts user of overwriting files
-        Alert overwriteAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        overwriteAlert.setTitle("Overwrite Warning");
-        overwriteAlert.setHeaderText("You are about to overwrite all existing trip files");
-        overwriteAlert.showAndWait();
-
         //clears trips hash map
         trips = new HashMap<>();
 
         //writes the items of the file to the hash map
         try (Scanner in = new Scanner(file)) {
 
-            //read header
-            in.nextLine();
+            //read header: route_id,service_id,trip_id,trip_headsign,direction_id,block_id,shape_id
+            in.next("route_id,service_id,trip_id,trip_headsign,direction_id,block_id,shape_id");
+
 
             //read body
-            while (in.hasNextLine()) {
-                in.useDelimiter("\\D*,\\D*");
-                trips.put(in.next(), new Trip(BikesAllowedEnum.valueOf(in.next()), in.next(),
-                        DirectionIDEnum.valueOf(in.next()), in.next(), in.next(), in.next(),
-                        in.next(), in.next(), in.next(),
-                        WheelchairAccessibleEnum.valueOf(in.next()),
-                        DirectionIDEnum.valueOf(in.next()),
-                        WheelchairAccessibleEnum.valueOf(in.next()),
-                        BikesAllowedEnum.valueOf(in.next())));
+            while (in.hasNext()) {
+                int i = 0;
+                in.useDelimiter(",");
+                //trip data given from file
+                String route_id = in.next();
+                String service_id = in.next();
+                String trip_id = in.next();
+                String trip_headsign = in.next();
+                DirectionIDEnum direction_id = DirectionIDEnum.valueOf(in.next());
+                String block_id = in.next();
+                String shape_id = in.next();
+
+                //trip data not given by file
+                BikesAllowedEnum bikes_allowed = BikesAllowedEnum.valueOf("0");
+                String trip_short_name = "Trip "+ i; i++;
+                WheelchairAccessibleEnum wheelchair_accessible =
+                        WheelchairAccessibleEnum.valueOf("0");
+
+                trips.put(trip_id + ";" + route_id, new Trip(bikes_allowed, block_id, direction_id,
+                        route_id, service_id, shape_id, trip_headsign, trip_id, trip_short_name,
+                        wheelchair_accessible));
             }
         }
         return true;
@@ -103,11 +108,16 @@ public class Trips {
      */
     @Override
     public String toString() {
-        String concatenatedString = "";
-        Set<String> setKeys = trips.keySet();
-        for (String key : setKeys) {
-            concatenatedString += key;
+        StringBuilder toReturn = new StringBuilder();
+        toReturn.append("Trips\n");
+        for(String key : trips.keySet()){
+            Trip trip = trips.get(key);
+            toReturn.append(trip.toString()).append("\n");
         }
-        return concatenatedString;
+        return toReturn.toString();
     }
+
 }//end Trips
+
+
+//throw new data format exception
