@@ -81,7 +81,6 @@ public class Routes {
 	 * @throws InputMismatchException if there is an issue parsing the file
 	 * @throws DataFormatException if data will be overwritten
 	 */
-	//TODO incorporate try and catches
 	public boolean loadRoutes(File file) throws FileNotFoundException, IOException,
 			InputMismatchException, DataFormatException {
 		try {
@@ -119,11 +118,10 @@ public class Routes {
 						ContinuousDropOffEnum.values()[Integer.parseInt(fields.get("continuous_drop_off"))]);
 
 				addRoute(new_route);
-
-				if(!emptyPrior){
-					throw new DataFormatException(file.getName());
-				}
 			}
+            if(!emptyPrior){
+                throw new DataFormatException(file.getName());
+            }
 		} catch (DataFormatException dfe){
 			throw new DataFormatException(dfe.getMessage());
 		}
