@@ -3,59 +3,87 @@
 -->
 <h1>SE2030TeamG</h1>
 <hr>
+<h3>Program Status:</h3>
+<ul>
+    <li>Stops Loads and Displays</li>
+    <li>Stop_Times does not load the full length file, but will load shorter versions</li>
+    <li>Java SDK: 1.8.0_232</li>
+</ul>
+<hr>
 <h3 style="color:red">TODO:</h3>
 <h5>Joy Cross:</h5>
+<h6>TODO</h6>
 <ul>
     <li>
         Implement Stop, StopTime, Stops, & StopTimes
         <ul>
             <li>Add JavaDoc comments</li>
-            <li>Implement getters</li>
-            <li>Implement setters</li>
-            <li>Implement constructors</li>
-            <li>Implement file loading and parsing</li>
+            <li>update constructor</li>
             <li>Add ability to load multiple GTFS files in succession (Delete old data)</li>
-            <li>Display alert to user when overwriting data during file load</li>
-            <li>Implement toString method override</li>
+            <li>Display alert to user when overwriting data during file load, Done by throwing DataFormatException</li>
         </ul>
     </li>
 </ul>
+<h6>Completed</h6>
+<s>
+    <ul>
+        <li>Implement getters</li>
+        <li>Implement setters</li>
+        <li>Implement constructors</li>
+        <li>Implement file loading and parsing</li>
+        <li>Implement toString method override</li>
+    </ul>
+</s>
 <h5>Ryan Becker:</h5>
+<h6>TODO</h6>
 <ul>
     <li>
         Implement Route & Routes
         <ul>
             <li>Add JavaDoc comments</li>
-            <li>Implement getters</li>
             <li>Implement setters</li>
-            <li>Implement constructors</li>
             <li>Implement file loading and parsing</li>
             <li>Add ability to load multiple GTFS files in succession (Delete old data)</li>
-            <li>Display alert to user when overwriting data during file load</li>
+            <li>Display alert to user when overwriting data during file load, Done by throwing DataFormatException</li>
             <li>Implement toString method override</li>
         </ul>
     </li>
 </ul>
+<h6>Completed</h6>
+<s>
+    <ul>
+        <li>Implement constructors</li>
+        <li>Implement getters</li>
+    </ul>
+</s>
 <h5>Simon Erickson:</h5>
+<h6>TODO</h6>
 <ul>
     <li>
         Implement Trip & Trips
         <ul>
             <li>Add JavaDoc comments</li>
-            <li>Implement getters</li>
-            <li>Implement setters</li>
-            <li>Implement constructors</li>
             <li>Implement file loading and parsing</li>
             <li>Add ability to load multiple GTFS files in succession (Delete old data)</li>
-            <li>Display alert to user when overwriting data during file load</li>
-            <li>Implement toString method override</li>
+            <li>Display alert to user when overwriting data during file load, Done by throwing DataFormatException</li>
+            <li>update toString method override</li>
         </ul>
     </li>
-    
 </ul>
+<h6>Completed</h6>
+<s>
+    <ul>
+        <li>Implement getters</li>
+        <li>Implement setters</li>
+        <li>Implement constructors</li>
+        <li>Implement toString method override</li>
+        <li></li>
+    </ul>
+</s>
 <h5>Grant Fass:</h5>
 <h6>TODO</h6>
 <ul>
+    <li></li>
 </ul>
 <h6>Completed</h6>
 <s>
@@ -102,7 +130,6 @@
             <li>Add JavaDoc comments</li>
             <li>Implement subject interface</li>
             <li>Implement getters</li>
-            <li>Implement setters</li>
             <li>Implement constructors</li>
             <li>Update toString method override</li>
         </ul>
@@ -112,6 +139,7 @@
         <ul>
             <li>Update displayed snapshot of data structures in GUI</li>
             <li>Verify GTFS file load passes acceptance tests</li>
+            <li>Allow loading of multiple files at same time</li>
         </ul>
     </li>
     <li>

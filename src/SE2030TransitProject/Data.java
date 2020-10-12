@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Observer;
 
 /**
- * @author ericksons
+ * @author ericksons, Grant Fass,
  * @version 1.0
  * @created 06-Oct-2020 10:28:30 AM
  */
@@ -19,6 +19,8 @@ public class Data {
 	public Data(){
 		stops = new Stops();
 		stop_times = new StopTimes();
+		routes = new Routes();
+		trips = new Trips();
 	}
 
 	public void finalize() throws Throwable {
@@ -54,22 +56,6 @@ public class Data {
 
 	public Trips getTrips(){
 		return trips;
-	}
-
-	public void setRoutes(Routes routes) {
-		this.routes = routes;
-	}
-
-	public void setStops(Stops stops){
-		this.stops = stops;
-	}
-
-	public void setStop_times(StopTimes stop_times) {
-		this.stop_times = stop_times;
-	}
-
-	public void setTrips(Trips trips) {
-		this.trips = trips;
 	}
 
 	public void notifyObservers(){

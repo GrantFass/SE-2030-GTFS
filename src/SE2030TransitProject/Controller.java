@@ -177,6 +177,7 @@ public class Controller {
 			checkFileExtension(file.toString().substring(file.toString().indexOf('.')));
 			String prefix = checkFilePrefix(file.toString().substring(0,
 					file.toString().indexOf('.')));
+
 			switch (prefix) {
 				case "stop_times":
 					data.getStopTimes().loadStopTimes(file);
@@ -216,19 +217,19 @@ public class Controller {
 	 * @author Grant Fass
 	 */
 	public void displayHelp() {
-		String aboutInfo = String.format("Authors: SE 2030 - 021 Group G\n" +
+		String aboutInfo = "Authors: SE 2030 - 021 Group G\n" +
 				"Members: Grant Fass, Joy Cross, Simon Erickson, & Ryan Becker\n" +
 				"Affiliation: Milwaukee School of Engineering (MSOE)\n" +
-				"Term: Fall 2020\n\n");
-		String acceptedFiles = String.format("This program currently accepts four files:\n" +
-				"\'stops.txt\', \'stop_times.txt\', \'routes.txt\', & \'trips.txt\'.\n" +
+				"Term: Fall 2020\n\n";
+		String acceptedFiles = "This program currently accepts four files:\n" +
+				"'stops.txt', 'stop_times.txt', 'routes.txt', & 'trips.txt'.\n" +
 				"All other files will not work with the program.\n" +
 				"Files are expected to be formatted matching the documentation found\n" +
 				"here: https://developers.google.com/transit/gtfs/reference and\n" +
-				"here: https://developers.google.com/transit/gtfs/examples/gtfs-feed.\n\n");
-		String introductionInformation = String.format("This program is designed to allow " +
+				"here: https://developers.google.com/transit/gtfs/examples/gtfs-feed.\n\n";
+		String introductionInformation = "This program is designed to allow " +
 				"the user to import, view, and manipulate GTFS files for a General " +
-				"Transit Feed Specification Tool.\n\n");
+				"Transit Feed Specification Tool.\n\n";
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		alert.setTitle("General Transit Feed Specification Tool");
 		alert.setHeaderText(null);
@@ -272,14 +273,13 @@ public class Controller {
 	 * method to check the extension of a file and make sure it matches one of the valid formats
 	 * @author Grant Fass
 	 * @param extension the extension to check
-	 * @return the extension on the file
 	 * @throws IllegalArgumentException if extension is not one of the listed ones.
 	 */
 	private void checkFileExtension(String extension) throws IllegalArgumentException {
 		if(!extension.toLowerCase().equals(".txt")) {
 			throw new IllegalArgumentException("The file of type "
 					+ extension + " is not supported." +
-					"Supported file types are \'.txt\'.");
+					"Supported file types are '.txt'.");
 		}
 	}
 
