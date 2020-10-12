@@ -41,7 +41,7 @@ public class Data {
 	}
 
 	public Routes getRoutes(){
-		return null;
+		return routes;
 	}
 
 	public Stops getStops(){
@@ -53,7 +53,23 @@ public class Data {
 	}
 
 	public Trips getTrips(){
-		return null;
+		return trips;
+	}
+
+	public void setRoutes(Routes routes) {
+		this.routes = routes;
+	}
+
+	public void setStops(Stops stops){
+		this.stops = stops;
+	}
+
+	public void setStop_times(StopTimes stop_times) {
+		this.stop_times = stop_times;
+	}
+
+	public void setTrips(Trips trips) {
+		this.trips = trips;
 	}
 
 	public void notifyObservers(){
