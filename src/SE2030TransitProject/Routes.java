@@ -29,9 +29,6 @@ public class Routes {
 		routes = new HashMap<>();
 	}
 
-	public void finalize() throws Throwable {
-
-	}
 	/**
 	 * adds route parameter to routes hash map
 	 * with the route_id of route as the key, and route as the value
@@ -72,80 +69,53 @@ public class Routes {
 	 * @throws InputMismatchException if there is an issue parsing the file
 	 * @throws DataFormatException if data will be overwritten
 	 */
-	//TODO Still needs tweaking regarding conditional check for new lines for the read_header, and process overall
+	//TODO incorporate try and catches
 	public boolean loadRoutes(File file) throws FileNotFoundException, IOException,
 			InputMismatchException, DataFormatException {
-		//try {
+		try {
+
+			if (!routes.isEmpty()) {
+				routes.clear();
+				throw new DataFormatException("Routes.txt");
+			}
+
+		} finally {
 			Scanner read_data = new Scanner(file);
 			read_data.useDelimiter(",");
 			read_data.nextLine(); //consumes header line to start at data to be parsed
-
-
-
-			//ArrayList<String> header = new ArrayList<>();
 
 			Scanner read_header = new Scanner(file);
 			String full_header = read_header.nextLine();
 			String[] split_header = full_header.split(",");
 
-
-
-			while(read_data.hasNextLine()){
+			while (read_data.hasNextLine()) {
 				HashMap<String, String> fields = new HashMap<>();
 				initializeKeys(fields);
 
-				//Scanner read_header = new Scanner(file);
-				//read_header.useDelimiter(",");
-
 				String full_data = read_data.nextLine();
+				//splits while ignoring commas within description
 				String[] split_data = full_data.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
 
-
-
-				for(int i = 0; i < split_header.length; ++i){
-					if(!split_data[i].equals("")){
-						System.out.println(split_header[i] + ": " + split_data[i]);
+				for (int i = 0; i < split_header.length; ++i) {
+					if (!split_data[i].equals("")) {
 						fields.put(split_header[i], split_data[i]);
-
 					}
 				}
 
-
-
-
-				/*for (String element : split_header) {
-					String test = read_data.next();
-					//System.out.println(test);
-					if(!test.equals("")){
-						fields.put(element, test);
-					}
-
-				}*/
-
-				/*while (read_header.hasNext()){
-					//System.out.println(read_header.next());
-					fields.put(read_header.next(), read_data.next());
-				}*/
-
-
-
-				Route new_route = new Route(fields.get("route_id"), fields.get("agency_id"), fields.get("route_short_name"),
-						fields.get("route_long_name"), fields.get("route_desc"),
-
-						RouteTypeEnum.values()[Integer.parseInt(fields.get("route_type"))]
-
-						, new URL(fields.get("route_url")),
-						Color.valueOf(fields.get("route_color")), Color.valueOf(fields.get("route_text_color")),
-						Integer.parseInt(fields.get("route_sort_order")),
+				Route new_route = new Route(fields.get("route_id"), fields.get("agency_id"),
+						fields.get("route_short_name"), fields.get("route_long_name"), fields.get("route_desc"),
+						RouteTypeEnum.values()[Integer.parseInt(fields.get("route_type"))],
+						new URL(fields.get("route_url")), Color.valueOf(fields.get("route_color")),
+						Color.valueOf(fields.get("route_text_color")), Integer.parseInt(fields.get("route_sort_order")),
 						ContinuousPickupEnum.values()[Integer.parseInt(fields.get("continuous_pickup"))],
 						ContinuousDropOffEnum.values()[Integer.parseInt(fields.get("continuous_drop_off"))]);
 
 				addRoute(new_route);
-
-
 			}
-
 			return true;
+		}
+		//return false;
+
 		/*} finally {
 			throw new DataFormatException("Routes.txt");
 		}*/
@@ -157,31 +127,6 @@ public class Routes {
         Note: For the exception text put in the name of the text file ie: stops.txt I will do the rest in the controller
         - Grant
          */
-	}
-
-	private void initializeKeys(HashMap<String, String> fields){
-		final String DEFAULT_TYPE = "3"; //bus routes
-		final String DEFAULT_COLOR = "FFFFFF";
-		final String DEFAULT_TEXT_COLOR = "000000";
-		final String DEFAULT_SORT_ORDER = "0";
-		final String DEFAULT_CONTINUOUS = "0"; //continuous stopping pickup or drop-off
-
-		final String DEFAULT_URL = "http://";
-
-		fields.put("route_id", null);
-		fields.put("agency_id", null);
-		fields.put("route_short_name", null);
-		fields.put("route_long_name", null);
-		fields.put("route_desc", null);
-		fields.put("route_type", DEFAULT_TYPE);
-		fields.put("route_url", DEFAULT_URL);
-		fields.put("route_color", DEFAULT_COLOR);
-		fields.put("route_text_color", DEFAULT_TEXT_COLOR);
-		fields.put("route_sort_order", DEFAULT_SORT_ORDER);
-		fields.put("continuous_pickup", DEFAULT_CONTINUOUS);
-		fields.put("continuous_drop_off", DEFAULT_CONTINUOUS);
-
-
 	}
 
 	/**
@@ -197,4 +142,36 @@ public class Routes {
 		}
 		return sb.toString();
 	}
+
+	/**
+	 * Helper method for loadRoutes(). Refreshes hashmap to default parameters for use in a new line of data
+	 * @author Ryan Becker
+	 * @param fields hash-map where the key value is stored as a String of a header element,
+	 *               and the value is a String of the data element associated with the key
+	 */
+	private void initializeKeys(HashMap<String, String> fields){
+		final String DEFAULT_TYPE = "3"; //bus routes
+		final String DEFAULT_COLOR = "FFFFFF";
+		final String DEFAULT_TEXT_COLOR = "000000";
+		final String DEFAULT_SORT_ORDER = "0";
+		final String DEFAULT_CONTINUOUS = "0"; //continuous stopping pickup or drop-off
+
+		final String DEFAULT_URL = "http://"; //Error is thrown otherwise
+
+		fields.put("route_id", null);
+		fields.put("agency_id", null);
+		fields.put("route_short_name", null);
+		fields.put("route_long_name", null);
+		fields.put("route_desc", null);
+		fields.put("route_type", DEFAULT_TYPE);
+		fields.put("route_url", DEFAULT_URL);
+		fields.put("route_color", DEFAULT_COLOR);
+		fields.put("route_text_color", DEFAULT_TEXT_COLOR);
+		fields.put("route_sort_order", DEFAULT_SORT_ORDER);
+		fields.put("continuous_pickup", DEFAULT_CONTINUOUS);
+		fields.put("continuous_drop_off", DEFAULT_CONTINUOUS);
+	}
+
+
+
 }//end Routes
