@@ -62,13 +62,22 @@ public class StopTimes {
 	 * @param trip_id trip_id associated with stoptime
 	 * @return true if removal was completed
 	 */
-	public boolean removeStopTIme(String stop_id, String trip_id){
+	public boolean removeStopTime(String stop_id, String trip_id){
 		StopTime stopTimeDeleted = stop_times.remove(stop_id + ";" + trip_id);
 		boolean delete = false;
 		if(stopTimeDeleted == null){
 			delete = true;
 		}
 		return delete;
+	}
+
+	/**
+	 * Removes all stopTimes in database
+	 * @return true if removed stopTimes
+	 */
+	public boolean removeStopTimes(){
+		stop_times = new HashMap<String, StopTime>();
+		return true;
 	}
 
 	/**

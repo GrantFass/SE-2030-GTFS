@@ -180,9 +180,11 @@ public class Controller {
 
 			switch (prefix) {
 				case "stop_times":
+					data.getStopTimes().removeStopTimes();
 					data.getStopTimes().loadStopTimes(file);
 					break;
 				case "stops":
+					data.getStops().removeStops();
 					data.getStops().loadStops(file);
 					break;
 				case "routes":

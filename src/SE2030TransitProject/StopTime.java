@@ -22,11 +22,6 @@ public class StopTime {
 	private int stop_sequence;
 	private TimepointEnum timepoint;
 	private String trip_id;
-	public PickupTypeEnum m_PickupTypeEnum; // do I need to add this? //////////////////////////////////////////
-	public DropOffTypeEnum m_DropOffTypeEnum;
-	public TimepointEnum m_TimepointEnum;
-	public ContinuousPickupEnum m_ContinuousPickupEnum;
-	public ContinuousDropOffEnum m_ContinuousDropOffEnum;
 
 	public StopTime(Timestamp arrival_time, ContinuousDropOffEnum continuous_drop_off, ContinuousPickupEnum
 					continuous_pickup, Timestamp departure_time, DropOffTypeEnum drop_off_type, PickupTypeEnum
@@ -44,13 +39,6 @@ public class StopTime {
 		this.stop_sequence = stop_sequence;
 		this.timepoint = timepoint;
 		this.trip_id = trip_id;
-		/*
-		this.m_PickupTypeEnum = m_PickupTypeEnum;
-		this.m_DropOffTypeEnum = m_DropOffTypeEnum;
-		this.m_TimepointEnum = m_TimepointEnum;
-		this.m_ContinuousPickupEnum = m_ContinuousPickupEnum;
-		this.m_ContinuousDropOffEnum = m_ContinuousDropOffEnum;
-		*/
 	}
 
 	public Timestamp getArrivalTime(){

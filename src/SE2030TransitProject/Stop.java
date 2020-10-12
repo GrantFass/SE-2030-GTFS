@@ -24,8 +24,6 @@ public class Stop {
 	private URL stop_url;
 	private WheelchairBoardingEnum wheelchair_boarding;
 	// private String zone_id; // used if we have fares.txt so I don't think we should include it
-	public LocationTypeEnum m_LocationTypeEnum;
-	public WheelchairBoardingEnum m_WheelchairBoardingEnum; //??? what is m_WheelchairBoardingEnum???? also do I need javadoc for getter/setter?
 
 	public Stop(String level_id, LocationTypeEnum location_type, String parent_station,
 				String platform_code, String stop_code, String stop_description, String stop_id,
@@ -47,8 +45,6 @@ public class Stop {
 		this.wheelchair_boarding = wheelchair_boarding;
 		this.stop_name = stop_name;
 		//this.zone_id = zone_id;
-		this.m_LocationTypeEnum = null;
-		this.m_WheelchairBoardingEnum = null;
 	}
 
 	public String getLevelID(){
@@ -57,10 +53,6 @@ public class Stop {
 
 	public LocationTypeEnum getLocationType(){
 		return location_type;
-	}
-
-	public LocationTypeEnum getM_LocationTypeEnum(){
-		return m_LocationTypeEnum;
 	}
 
 	public String getParentStation(){
@@ -107,20 +99,12 @@ public class Stop {
 		return wheelchair_boarding;
 	}
 
-	public WheelchairBoardingEnum getM_WheelchairBoarding(){
-		return m_WheelchairBoardingEnum;
-	}
-
 	public void setLevelID(String level_id){
 		this.level_id = level_id;
 	}
 
 	public void setLocationType(LocationTypeEnum location_type){
 		this.location_type = location_type;
-	}
-
-	public void setM_LocationTypeEnum(LocationTypeEnum m_LocationTypeEnum){
-		this.m_LocationTypeEnum = m_LocationTypeEnum;
 	}
 
 	public void setParentStation(String parent_station){
@@ -161,10 +145,6 @@ public class Stop {
 
 	public void setWheelchairBoarding(WheelchairBoardingEnum wheelchair_boarding){
 		this.wheelchair_boarding = wheelchair_boarding;
-	}
-
-	public void setM_WheelchairBoarding(WheelchairBoardingEnum m_WheelchairBoardingEnum){
-		this.m_WheelchairBoardingEnum = m_WheelchairBoardingEnum;
 	}
 
 	/**

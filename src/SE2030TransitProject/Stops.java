@@ -5,11 +5,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Time;
 import java.util.*;
 
 /**
  * Class for a Stops database, which is the main database storing all stop objects
+ * Fix enum values, throw data format exception, get rid of all m_enum types, add remove method that removes all data in Stops, StopTimes
+ * add javadoc comments to getters and setters
  * @author Joy Cross
  * @version 1.0
  */
@@ -48,9 +49,8 @@ public class Stops {
 		return stops.get(stop_id);
 	}
 
-	// Should we have this as stop_id or stop object??????????????
 	/**
-	 * Removes stop from data
+	 * Removes one stop from data by stop_id
 	 * @param stop_id remove stop by stop_id
 	 */
 	public boolean removeStop(String stop_id){
@@ -60,6 +60,15 @@ public class Stops {
 			delete = true;
 		}
 		return delete;
+	}
+
+	/**
+	 * Removes all stops in database
+	 * @return true if removed stops
+	 */
+	public boolean removeStops(){
+		stops = new HashMap<String, Stop>();
+		return true;
 	}
 
 	/**
