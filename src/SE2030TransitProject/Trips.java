@@ -6,10 +6,7 @@ import javafx.scene.control.Alert;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.InputMismatchException;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * @author ericksons
@@ -99,6 +96,11 @@ public class Trips {
      */
     @Override
     public String toString() {
-        return "Method Not Implemented Yet";
+        String concatenatedString = "";
+        Set<String> setKeys = trips.keySet();
+        for (String key : setKeys) {
+            concatenatedString += key;
+        }
+        return concatenatedString;
     }
 }//end Trips
