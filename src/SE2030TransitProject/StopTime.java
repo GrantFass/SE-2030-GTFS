@@ -1,97 +1,167 @@
-/* Joy Cross */
-
 package SE2030TransitProject;
 
-
-import java.sql.Time;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 /**
- * @author
+ * Class for a StopTime object, which is stop trip relationship for routes
+ * @author Joy Cross
  * @version 1.0
- * @created 06-Oct-2020 10:28:42 AM
  */
 public class StopTime {
 
-	private Time arrival_time;
+	private Timestamp arrival_time;
 	private ContinuousDropOffEnum continuous_drop_off;
 	private ContinuousPickupEnum continuous_pickup;
-	private Time departure_time;
+	private Timestamp departure_time;
 	private DropOffTypeEnum drop_off_type;
 	private PickupTypeEnum pickup_type;
 	private float shape_dist_traveled;
 	private String stop_headsign;
 	private String stop_id;
 	private int stop_sequence;
-	private Enum timepoint;
+	private TimepointEnum timepoint;
 	private String trip_id;
-	public PickupTypeEnum m_PickupTypeEnum;
+	public PickupTypeEnum m_PickupTypeEnum; // do I need to add this? //////////////////////////////////////////
 	public DropOffTypeEnum m_DropOffTypeEnum;
 	public TimepointEnum m_TimepointEnum;
 	public ContinuousPickupEnum m_ContinuousPickupEnum;
 	public ContinuousDropOffEnum m_ContinuousDropOffEnum;
 
-	public StopTime(){
-
+	public StopTime(Timestamp arrival_time, ContinuousDropOffEnum continuous_drop_off, ContinuousPickupEnum
+					continuous_pickup, Timestamp departure_time, DropOffTypeEnum drop_off_type, PickupTypeEnum
+					pickup_type, float shape_dist_traveled, String stop_headsign, String stop_id, int stop_sequence,
+					TimepointEnum timepoint, String trip_id){
+		this.arrival_time = arrival_time;
+		this.continuous_drop_off = continuous_drop_off;
+		this.continuous_pickup = continuous_pickup;
+		this.departure_time = departure_time;
+		this.drop_off_type = drop_off_type;
+		this.pickup_type = pickup_type;
+		this.shape_dist_traveled = shape_dist_traveled;
+		this.stop_headsign = stop_headsign;
+		this.stop_id = stop_id;
+		this.stop_sequence = stop_sequence;
+		this.timepoint = timepoint;
+		this.trip_id = trip_id;
+		/*
+		this.m_PickupTypeEnum = m_PickupTypeEnum;
+		this.m_DropOffTypeEnum = m_DropOffTypeEnum;
+		this.m_TimepointEnum = m_TimepointEnum;
+		this.m_ContinuousPickupEnum = m_ContinuousPickupEnum;
+		this.m_ContinuousDropOffEnum = m_ContinuousDropOffEnum;
+		*/
 	}
 
-	public void finalize() throws Throwable {
-
-	}
-	public Time getArrivalTime(){
-		return null;
+	public Timestamp getArrivalTime(){
+		return arrival_time;
 	}
 
 	public ContinuousDropOffEnum getContinuousDropOff(){
-		return null;
+		return continuous_drop_off;
 	}
 
 	public ContinuousPickupEnum getContinuousPickup(){
-		return null;
+		return continuous_pickup;
 	}
 
-	public Time getDepartureTime(){
-		return null;
+	public Timestamp getDepartureTime(){
+		return departure_time;
 	}
 
 	public DropOffTypeEnum getDropOffType(){
-		return null;
+		return drop_off_type;
 	}
 
 	public PickupTypeEnum getPickupType(){
-		return null;
+		return pickup_type;
 	}
 
 	public float getShapeDistTraveled(){
-		return 0;
+		return shape_dist_traveled;
 	}
 
 	public String getStopHeadsign(){
-		return "";
+		return stop_headsign;
 	}
 
 	public String getStopID(){
-		return "";
+		return stop_id;
 	}
 
 	public int getStopSequence(){
-		return 0;
+		return stop_sequence;
 	}
 
 	public TimepointEnum getTimepoint(){
-		return null;
+		return timepoint;
 	}
 
 	public String getTripID(){
-		return "";
+		return trip_id;
+	}
+
+	public void setArrivalTime(Timestamp arrival_time){
+		this.arrival_time = arrival_time;
+	}
+
+	public void setContinuousDropOff(ContinuousDropOffEnum continuous_drop_off){
+		this.continuous_drop_off = continuous_drop_off;
+	}
+
+	public void setContinuousPickup(ContinuousPickupEnum continuous_pickup){
+		this.continuous_pickup = continuous_pickup;
+	}
+
+	public void setDepartureTime(Timestamp departure_time){
+		this.departure_time = departure_time;
+	}
+
+	public void setDropOffType(DropOffTypeEnum drop_off_type){
+		this.drop_off_type = drop_off_type;
+	}
+
+	public void setPickupType(PickupTypeEnum pickup_type){
+		this.pickup_type = pickup_type;
+	}
+
+	public void setShapeDistTraveled(float shape_dist_traveled){
+		this.shape_dist_traveled = shape_dist_traveled;
+	}
+
+	public void setStopHeadsign(String stop_headsign){
+		this.stop_headsign = stop_headsign;
+	}
+
+	public void setStopID(String stop_id){
+		this.stop_id = stop_id;
+	}
+
+	public void setStopSequence(int stop_sequence){
+		this.stop_sequence = stop_sequence;
+	}
+
+	public void setTimepoint(TimepointEnum timepoint){
+		this.timepoint = timepoint;
+	}
+
+	public void setTripID(String trip_id){
+		this.trip_id = trip_id;
 	}
 
 	/**
-	 * Method to output data as a single concatenated string
-	 * @author GrantFass,
+	 * Method to output data as a single concatenated string for StopTime
+	 * @author Joy Cross,
 	 * @return string of data
 	 */
 	@Override
 	public String toString() {
-		return "Method Not Implemented Yet";
+		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+		return "Trip ID: " + trip_id + "; Stop ID: " + stop_id + "\n\tarrival_time: " + dateFormat.format(arrival_time)
+				+ "; continuous_drop_off: "	+ continuous_drop_off + "; continuous_pickup: " + continuous_pickup
+				+ "; departure_time: " + dateFormat.format(departure_time) + "; drop_off_type: " + drop_off_type.toString()
+				+ "; pickup_type: " + pickup_type.toString() + "; shape_dist_traveled: " +	shape_dist_traveled
+				+ "; stop_headsign: " + stop_headsign + "; stop_sequence: " + stop_sequence + "; timepoint: "
+				+ timepoint;
 	}
 }//end StopTime

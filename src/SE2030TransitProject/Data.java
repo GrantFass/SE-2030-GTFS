@@ -17,7 +17,8 @@ public class Data {
 	private Trips trips;
 
 	public Data(){
-
+		stops = new Stops();
+		stop_times = new StopTimes();
 	}
 
 	public void finalize() throws Throwable {
@@ -44,11 +45,11 @@ public class Data {
 	}
 
 	public Stops getStops(){
-		return null;
+		return stops;
 	}
 
 	public StopTimes getStopTimes(){
-		return null;
+		return stop_times;
 	}
 
 	public Trips getTrips(){

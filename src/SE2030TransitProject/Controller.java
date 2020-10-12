@@ -20,7 +20,7 @@ public class Controller {
 	public Label topLabel;
 	public VBox vBox;
 	public TextArea textArea;
-	private Data data;
+	private Data data = new Data();
 	private Stage stage;
 
 	/**
