@@ -21,7 +21,7 @@ public class Controller {
 	public Label topLabel;
 	public VBox vBox;
 	public TextArea textArea;
-	private Data data = new Data();
+	private final Data data = new Data();
 	private Stage stage;
 
 	/**
@@ -52,7 +52,7 @@ public class Controller {
 	 * 
 	 * @param outputLocation
 	 */
-	public void exportGTFSfiles(Path outputLocation){
+	public void exportGTFSFiles(Path outputLocation){
 
 	}
 
@@ -60,7 +60,7 @@ public class Controller {
 	 * 
 	 * @param gtfsFileLocation
 	 */
-	public void importGTFSfiles(Path gtfsFileLocation){
+	public void importGTFSFiles(Path gtfsFileLocation){
 
 	}
 
@@ -197,16 +197,20 @@ public class Controller {
 			}
 			displayDataSnapshot();
 		} catch (IllegalArgumentException e) {
-			errorAlert("IllegalArgumentException", e.getMessage());
+			displayAlert(Alert.AlertType.ERROR, "Error","IllegalArgumentException",
+					e.getMessage());
 		} catch (InputMismatchException e) {
-			errorAlert("InputMismatchException", e.getMessage());
+			displayAlert(Alert.AlertType.ERROR, "Error","InputMismatchException",
+					e.getMessage());
 		} catch (FileNotFoundException e) {
-			errorAlert("FileNotFoundException",
+			displayAlert(Alert.AlertType.ERROR, "Error","FileNotFoundException",
 					e.getMessage() + " or operation was canceled");
 		} catch (IOException e) {
-			errorAlert("IOException", e.getMessage());
+			displayAlert(Alert.AlertType.ERROR, "Error","IOException",
+					e.getMessage());
 		} catch (DataFormatException e) {
-			warningAlert("Data Overwritten", String.format("The data from the" +
+			displayAlert(Alert.AlertType.WARNING, "Warning", "Data Overwritten",
+					String.format("The data from the" +
 					" previous '%s' file was overwritten with the new data. The program" +
 					" may work unexpectedly if the new data from '%s' does not match" +
 					" the existing data in the remaining files.", e.getMessage(), e.getMessage()));
@@ -311,34 +315,22 @@ public class Controller {
 		} else {
 			throw new InputMismatchException(String.format("The file with name %s is not " +
 					"supported. Please make sure that your file matches the expected naming" +
-					"convention of \'stops.txt\', \'stop_times.txt\', \'trips.txt\', &" +
-					" \'routes.txt\'."));
+					"convention of 'stops.txt', 'stop_times.txt', 'trips.txt', &" +
+					" 'routes.txt'.", prefix));
 		}
-	}
-
-	/**
-	 * method to display an alert with the error format
-	 * @author Grant Fass
-	 * @param header the header text to be displayed
-	 * @param content the content text to be displayed
-	 */
-	private void errorAlert(String header, String content) {
-		Alert alert = new Alert(Alert.AlertType.ERROR);
-		alert.setTitle("Error Dialog");
-		alert.setHeaderText(header);
-		alert.setContentText(content);
-		alert.showAndWait();
 	}
 
 	/**
 	 * method to display an alert with the warning format
 	 * @author Grant Fass
+	 * @param alertType The type of alert to generate
+	 * @param title The title of the alert
 	 * @param header the header text to be displayed
 	 * @param content the content text to be displayed
 	 */
-	private void warningAlert(String header, String content) {
-		Alert alert = new Alert(Alert.AlertType.WARNING);
-		alert.setTitle("Warning Dialog");
+	private void displayAlert(Alert.AlertType alertType, String title, String header, String content) {
+		Alert alert = new Alert(alertType);
+		alert.setTitle(title);
 		alert.setHeaderText(header);
 		alert.setContentText(content);
 		alert.showAndWait();

@@ -97,12 +97,13 @@
 <h5>Grant Fass:</h5>
 <h6>TODO</h6>
 <ul>
-    <li>Add controller method for DataFormatException</li>
-    <li>Refactor the alert methods to take an AlertType parameter for less repeat code</li>
+    <li></li>
 </ul>
 <h6>Completed</h6>
 <s>
     <ul>
+        <li>Refactor the alert methods to take an AlertType parameter for less repeat code</li>
+        <li>Add controller method for DataFormatException</li>
         <li>
             Implement all enumerators
             <ul>
