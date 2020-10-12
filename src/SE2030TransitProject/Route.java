@@ -50,6 +50,7 @@ public class Route {
 
 	}
 
+	//Getters
 	public String getRouteID() {
 		return route_id;
 	}
@@ -98,6 +99,55 @@ public class Route {
 		return continuous_drop_off;
 	}
 
+	//Setters
+	public void setRouteID(String route_id) {
+		this.route_id = route_id;
+	}
+
+	public void setAgencyID(String agency_id) {
+		this.agency_id = agency_id;
+	}
+
+	public void setRouteShortName(String route_short_name) {
+		this.route_short_name = route_short_name;
+	}
+
+	public void setRouteLongName(String route_long_name) {
+		this.route_long_name = route_long_name;
+	}
+
+	public void setRouteDesc(String route_desc) {
+		this.route_desc = route_desc;
+	}
+
+	public void setRouteType(RouteTypeEnum route_type) {
+		this.route_type = route_type;
+	}
+
+	public void setRouteURL(URL route_url) {
+		this.route_url = route_url;
+	}
+
+	public void setRouteColor(Color route_color) {
+		this.route_color = route_color;
+	}
+
+	public void setRouteTextColor(Color route_text_color) {
+		this.route_text_color = route_text_color;
+	}
+
+	public void setRouteSortOrder(int route_sort_order) {
+		this.route_sort_order = route_sort_order;
+	}
+
+	public void setContinuousPickup(ContinuousPickupEnum continuous_pickup) {
+		this.continuous_pickup = continuous_pickup;
+	}
+
+	public void setContinuousDropOff(ContinuousDropOffEnum continuous_drop_off) {
+		this.continuous_drop_off = continuous_drop_off;
+	}
+
 	/**
 	 * Method to output data as a single concatenated string
 	 * @author GrantFass, Ryan Becker
@@ -105,6 +155,10 @@ public class Route {
 	 */
 	@Override
 	public String toString() {
-		return "Method Not Implemented Yet";
+		return "ROUTE ID: " + route_id + "; AGENCY ID: " + agency_id + "; Short Name: " + route_short_name
+                + "; Long Name: " + route_long_name + "\n\tDescription: " + route_desc + "\n\tRoute_type: "
+                + route_type + "\n\tRoute_url: " + route_url + "\n\tRoute_color: " + route_color +"\n\tRoute_text_color: "
+                + route_text_color + "\n\tSort_order: " + route_sort_order + "\n\tContinuous_pickup: " + continuous_pickup
+                + "\n\tContinuous_drop-off: " + continuous_drop_off;
 	}
 }//end Route

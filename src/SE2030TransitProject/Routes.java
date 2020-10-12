@@ -1,12 +1,14 @@
 package SE2030TransitProject;
 
 
+import com.sun.javafx.image.IntPixelGetter;
 import javafx.scene.paint.Color;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -73,39 +75,83 @@ public class Routes {
 	//TODO Still needs tweaking regarding conditional check for new lines for the read_header, and process overall
 	public boolean loadRoutes(File file) throws FileNotFoundException, IOException,
 			InputMismatchException, DataFormatException {
-		Scanner read_data = new Scanner(file);
-		read_data.useDelimiter(",");
-		read_data.nextLine(); //consumes header line to start at data to be parsed
-
-		HashMap<String, String> fields = new HashMap<>();
-
+		//try {
+			Scanner read_data = new Scanner(file);
+			read_data.useDelimiter(",");
+			read_data.nextLine(); //consumes header line to start at data to be parsed
 
 
-		while(read_data.hasNextLine()){
-			initializeKeys(fields);
+
+			//ArrayList<String> header = new ArrayList<>();
 
 			Scanner read_header = new Scanner(file);
-			read_header.useDelimiter(",");
+			String full_header = read_header.nextLine();
+			String[] split_header = full_header.split(",");
 
 
-			while (read_header.hasNext()){
-				fields.put(read_header.next(), read_data.next());
+
+			while(read_data.hasNextLine()){
+				HashMap<String, String> fields = new HashMap<>();
+				initializeKeys(fields);
+
+				//Scanner read_header = new Scanner(file);
+				//read_header.useDelimiter(",");
+
+				String full_data = read_data.nextLine();
+				String[] split_data = full_data.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+
+
+
+				for(int i = 0; i < split_header.length; ++i){
+					if(!split_data[i].equals("")){
+						System.out.println(split_header[i] + ": " + split_data[i]);
+						fields.put(split_header[i], split_data[i]);
+
+					}
+				}
+
+
+
+
+				/*for (String element : split_header) {
+					String test = read_data.next();
+					//System.out.println(test);
+					if(!test.equals("")){
+						fields.put(element, test);
+					}
+
+				}*/
+
+				/*while (read_header.hasNext()){
+					//System.out.println(read_header.next());
+					fields.put(read_header.next(), read_data.next());
+				}*/
+
+
+
+				Route new_route = new Route(fields.get("route_id"), fields.get("agency_id"), fields.get("route_short_name"),
+						fields.get("route_long_name"), fields.get("route_desc"),
+
+						RouteTypeEnum.values()[Integer.parseInt(fields.get("route_type"))]
+
+						, new URL(fields.get("route_url")),
+						Color.valueOf(fields.get("route_color")), Color.valueOf(fields.get("route_text_color")),
+						Integer.parseInt(fields.get("route_sort_order")),
+						ContinuousPickupEnum.values()[Integer.parseInt(fields.get("continuous_pickup"))],
+						ContinuousDropOffEnum.values()[Integer.parseInt(fields.get("continuous_drop_off"))]);
+
+				addRoute(new_route);
+
+
 			}
 
-			Route new_route = new Route(fields.get("route_id"), fields.get("agency_id"), fields.get("route_short_name"),
-					fields.get("route_long_name"), fields.get("route_desc"),
-					RouteTypeEnum.valueOf(fields.get("route_type")), new URL(fields.get("route_url")),
-					Color.valueOf(fields.get("route_color")), Color.valueOf("route_text_color"),
-					Integer.parseInt(fields.get("route_sort_order")),
-					ContinuousPickupEnum.valueOf(fields.get("continous.pickup")),
-					ContinuousDropOffEnum.valueOf(fields.get("continuous_drop_off")));
-			addRoute(new_route);
+			return true;
+		/*} finally {
+			throw new DataFormatException("Routes.txt");
+		}*/
 
 
-		}
 
-
-		return false;
         /*
         TODO: DataFormatException should be thrown after everything else is done and let the user know that previous data was overwritten
         Note: For the exception text put in the name of the text file ie: stops.txt I will do the rest in the controller
@@ -114,18 +160,26 @@ public class Routes {
 	}
 
 	private void initializeKeys(HashMap<String, String> fields){
+		final String DEFAULT_TYPE = "3"; //bus routes
+		final String DEFAULT_COLOR = "FFFFFF";
+		final String DEFAULT_TEXT_COLOR = "000000";
+		final String DEFAULT_SORT_ORDER = "0";
+		final String DEFAULT_CONTINUOUS = "0"; //continuous stopping pickup or drop-off
+
+		final String DEFAULT_URL = "http://";
+
 		fields.put("route_id", null);
 		fields.put("agency_id", null);
 		fields.put("route_short_name", null);
 		fields.put("route_long_name", null);
 		fields.put("route_desc", null);
-		fields.put("route_type", null);
-		fields.put("route_url", null);
-		fields.put("route_color", null);
-		fields.put("route_text_color", null);
-		fields.put("route_sort_order", null);
-		fields.put("continuous_pickup", null);
-		fields.put("continuous_drop_off", null);
+		fields.put("route_type", DEFAULT_TYPE);
+		fields.put("route_url", DEFAULT_URL);
+		fields.put("route_color", DEFAULT_COLOR);
+		fields.put("route_text_color", DEFAULT_TEXT_COLOR);
+		fields.put("route_sort_order", DEFAULT_SORT_ORDER);
+		fields.put("continuous_pickup", DEFAULT_CONTINUOUS);
+		fields.put("continuous_drop_off", DEFAULT_CONTINUOUS);
 
 
 	}
@@ -137,6 +191,10 @@ public class Routes {
 	 */
 	@Override
 	public String toString() {
-		return "Method Not Implemented Yet";
+		StringBuilder sb = new StringBuilder();
+		for(String key_ID : routes.keySet()){
+			sb.append(routes.get(key_ID).toString()).append("\n");
+		}
+		return sb.toString();
 	}
 }//end Routes
