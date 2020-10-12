@@ -1,10 +1,12 @@
 package SE2030TransitProject;
 
 
-import javafx.scene.control.Alert;
-
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.InputMismatchException;
+import java.util.Scanner;
 import java.util.zip.DataFormatException;
 
 /**
@@ -52,7 +54,7 @@ public class Trips {
      * @throws FileNotFoundException  if the file was not found
      * @throws IOException            for general File IO errors.
      * @throws InputMismatchException if there is an issue parsing the file
-     * @throws DataFormatException if data will be overwritten
+     * @throws DataFormatException    if data will be overwritten
      * @author Grant Fass, ericksons
      */
     public boolean loadTrips(File file) throws FileNotFoundException, IOException,
@@ -74,18 +76,61 @@ public class Trips {
                 in.useDelimiter(",");
                 //trip data given from file
                 String route_id = in.next();
-                String service_id = in.next();
-                String trip_id = in.next();
-                String trip_headsign = in.next();
-                DirectionIDEnum direction_id = DirectionIDEnum.valueOf(in.next());
-                String block_id = in.next();
-                String shape_id = in.next();
+                String service_id;
+
+                if (in.hasNext()) {
+                    service_id = in.next();
+                } else {
+                    service_id = "";
+                }
+
+                String trip_id;
+                if (in.hasNext()) {
+                    trip_id = in.next();
+                } else {
+                    trip_id = "";
+                }
+
+                String trip_headsign;
+                if (in.hasNext()) {
+                    trip_headsign = in.next();
+                } else {
+                    trip_headsign = "";
+                }
+
+                DirectionIDEnum direction_id;
+
+                if (in.hasNext()) {
+                    String next = in.next();
+                    if (next.equals("0")) {
+                        direction_id = DirectionIDEnum.OUTBOUND_TRAVEL;
+                    } else {
+                        direction_id = DirectionIDEnum.INBOUND_TRAVEL;
+                    }
+                } else {
+                    direction_id = DirectionIDEnum.OUTBOUND_TRAVEL;
+                }
+
+                String block_id;
+                if (in.hasNext()) {
+                    block_id = in.next();
+                } else {
+                    block_id = "";
+                }
+
+                String shape_id;
+                if (in.hasNext()) {
+                    shape_id = in.next();
+                } else {
+                    shape_id = "";
+                }
 
                 //trip data not given by file
-                BikesAllowedEnum bikes_allowed = BikesAllowedEnum.valueOf("0");
-                String trip_short_name = "Trip "+ i; i++;
+                BikesAllowedEnum bikes_allowed = BikesAllowedEnum.NO_INFORMATION;
+                String trip_short_name = "Trip " + i;
+                i++;
                 WheelchairAccessibleEnum wheelchair_accessible =
-                        WheelchairAccessibleEnum.valueOf("0");
+                        WheelchairAccessibleEnum.NO_ACCESSIBILITY_INFORMATION;
 
                 trips.put(trip_id + ";" + route_id, new Trip(bikes_allowed, block_id, direction_id,
                         route_id, service_id, shape_id, trip_headsign, trip_id, trip_short_name,
@@ -93,11 +138,6 @@ public class Trips {
             }
         }
         return true;
-        /*
-        TODO: DataFormatException should be thrown after everything else is done and let the user know that previous data was overwritten
-        Note: For the exception text put in the name of the text file ie: stops.txt I will do the rest in the controller
-        - Grant
-         */
     }
 
     /**
@@ -110,7 +150,7 @@ public class Trips {
     public String toString() {
         StringBuilder toReturn = new StringBuilder();
         toReturn.append("Trips\n");
-        for(String key : trips.keySet()){
+        for (String key : trips.keySet()) {
             Trip trip = trips.get(key);
             toReturn.append(trip.toString()).append("\n");
         }
