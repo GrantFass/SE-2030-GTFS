@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
+import java.util.zip.DataFormatException;
 
 /**
  * @author ericksons
@@ -53,10 +54,11 @@ public class Trips {
      * @throws FileNotFoundException  if the file was not found
      * @throws IOException            for general File IO errors.
      * @throws InputMismatchException if there is an issue parsing the file
-     * @author Grant Fass,
+     * @throws DataFormatException if data will be overwritten
+     * @author Grant Fass, ericksons
      */
     public boolean loadTrips(File file) throws FileNotFoundException, IOException,
-            InputMismatchException {
+            InputMismatchException, DataFormatException {
 
         //	Alerts user of overwriting files
         Alert overwriteAlert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -86,6 +88,11 @@ public class Trips {
             }
         }
         return true;
+        /*
+        TODO: DataFormatException should be thrown after everything else is done and let the user know that previous data was overwritten
+        Note: For the exception text put in the name of the text file ie: stops.txt I will do the rest in the controller
+        - Grant
+         */
     }
 
     /**

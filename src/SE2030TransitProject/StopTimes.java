@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.zip.DataFormatException;
 
 /**
  * Class for a StopTimes database, which is the main database storing all stopTime objects
@@ -88,9 +89,10 @@ public class StopTimes {
 	 * @throws FileNotFoundException if the file was not found
 	 * @throws IOException for general File IO errors.
 	 * @throws InputMismatchException if there is an issue parsing the file
+	 * @throws DataFormatException if data will be overwritten
 	 */
 	public boolean loadStopTimes(File file) throws FileNotFoundException, IOException,
-			InputMismatchException {
+			InputMismatchException, DataFormatException {
 		try {
 			Scanner sc = new Scanner(file);
 			String line = sc.nextLine();
@@ -304,6 +306,14 @@ public class StopTimes {
 				}
 
 			}
+			//TODO: note you do not need to catch the IOException, FileNotFoundException, or InputMismatchException.
+			//Just throw them because I already deal with them in the controller for exception handling
+			//- Grant
+        /*
+        TODO: DataFormatException should be thrown after everything else is done and let the user know that previous data was overwritten
+        Note: For the exception text put in the name of the text file ie: stops.txt I will do the rest in the controller
+        - Grant
+         */
 
 		} catch (FileNotFoundException fnfe){
 			return false;

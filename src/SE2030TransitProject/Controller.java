@@ -15,6 +15,7 @@ import java.nio.file.Path;
 import java.sql.Time;
 import java.util.Collection;
 import java.util.InputMismatchException;
+import java.util.zip.DataFormatException;
 
 public class Controller {
 	public Label topLabel;
@@ -204,6 +205,11 @@ public class Controller {
 					e.getMessage() + " or operation was canceled");
 		} catch (IOException e) {
 			errorAlert("IOException", e.getMessage());
+		} catch (DataFormatException e) {
+			warningAlert("Data Overwritten", String.format("The data from the" +
+					" previous '%s' file was overwritten with the new data. The program" +
+					" may work unexpectedly if the new data from '%s' does not match" +
+					" the existing data in the remaining files.", e.getMessage(), e.getMessage()));
 		}
 	}
 
@@ -319,6 +325,20 @@ public class Controller {
 	private void errorAlert(String header, String content) {
 		Alert alert = new Alert(Alert.AlertType.ERROR);
 		alert.setTitle("Error Dialog");
+		alert.setHeaderText(header);
+		alert.setContentText(content);
+		alert.showAndWait();
+	}
+
+	/**
+	 * method to display an alert with the warning format
+	 * @author Grant Fass
+	 * @param header the header text to be displayed
+	 * @param content the content text to be displayed
+	 */
+	private void warningAlert(String header, String content) {
+		Alert alert = new Alert(Alert.AlertType.WARNING);
+		alert.setTitle("Warning Dialog");
 		alert.setHeaderText(header);
 		alert.setContentText(content);
 		alert.showAndWait();

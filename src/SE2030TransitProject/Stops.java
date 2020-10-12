@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.zip.DataFormatException;
 
 /**
  * Class for a Stops database, which is the main database storing all stop objects
@@ -78,9 +79,11 @@ public class Stops {
 	 * @throws FileNotFoundException if the file was not found
 	 * @throws IOException for general File IO errors.
 	 * @throws InputMismatchException if there is an issue parsing the file
+	 * @throws DataFormatException if data will be overwritten
+	 * @author Joy Cross, Grant Fass
 	 */
 	public boolean loadStops(File file) throws FileNotFoundException, IOException,
-			InputMismatchException {
+			InputMismatchException, DataFormatException {
 		try {
 			Scanner sc = new Scanner(file);
 			String line = sc.nextLine();
@@ -249,7 +252,14 @@ public class Stops {
 		} catch (IOException ioe){
 			return false;
 		}
-
+//TODO: note you do not need to catch the IOException, FileNotFoundException, or InputMismatchException.
+		//Just throw them because I already deal with them in the controller for exception handling
+		//- Grant
+        /*
+        TODO: DataFormatException should be thrown after everything else is done and let the user know that previous data was overwritten
+        Note: For the exception text put in the name of the text file ie: stops.txt I will do the rest in the controller
+        - Grant
+         */
 		return true;
 	}
 

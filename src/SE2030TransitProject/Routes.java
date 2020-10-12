@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.zip.DataFormatException;
 
 /**
  * Class that holds multiple routes stored within a hash map where a Route's route_id is the key,
@@ -67,9 +68,11 @@ public class Routes {
 	 * @throws FileNotFoundException if the file was not found
 	 * @throws IOException for general File IO errors.
 	 * @throws InputMismatchException if there is an issue parsing the file
+	 * @throws DataFormatException if data will be overwritten
 	 */
 	//TODO Still needs tweaking regarding conditional check for new lines for the read_header, and process overall
-	public boolean loadRoutes(File file) throws FileNotFoundException, IOException, InputMismatchException {
+	public boolean loadRoutes(File file) throws FileNotFoundException, IOException,
+			InputMismatchException, DataFormatException {
 		Scanner read_data = new Scanner(file);
 		read_data.useDelimiter(",");
 		read_data.nextLine(); //consumes header line to start at data to be parsed
@@ -103,6 +106,11 @@ public class Routes {
 
 
 		return false;
+        /*
+        TODO: DataFormatException should be thrown after everything else is done and let the user know that previous data was overwritten
+        Note: For the exception text put in the name of the text file ie: stops.txt I will do the rest in the controller
+        - Grant
+         */
 	}
 
 	private void initializeKeys(HashMap<String, String> fields){

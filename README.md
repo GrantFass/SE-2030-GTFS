@@ -27,11 +27,16 @@
 <h6>Completed</h6>
 <s>
     <ul>
-        <li>Implement getters</li>
-        <li>Implement setters</li>
-        <li>Implement constructors</li>
-        <li>Implement file loading and parsing</li>
-        <li>Implement toString method override</li>
+        <li>
+            Implement Stop, StopTime, Stops, & StopTimes
+            <ul>
+                <li>Implement getters</li>
+                <li>Implement setters</li>
+                <li>Implement constructors</li>
+                <li>Implement file loading and parsing</li>
+                <li>Implement toString method override</li>
+            </ul>
+        </li>
     </ul>
 </s>
 <h5>Ryan Becker:</h5>
@@ -52,8 +57,13 @@
 <h6>Completed</h6>
 <s>
     <ul>
-        <li>Implement constructors</li>
-        <li>Implement getters</li>
+        <li>
+            Implement Route & Routes
+            <ul>
+                <li>Implement constructors</li>
+                <li>Implement getters</li>
+            </ul>
+        </li>
     </ul>
 </s>
 <h5>Simon Erickson:</h5>
@@ -73,17 +83,22 @@
 <h6>Completed</h6>
 <s>
     <ul>
-        <li>Implement getters</li>
-        <li>Implement setters</li>
-        <li>Implement constructors</li>
-        <li>Implement toString method override</li>
-        <li></li>
+        <li>
+            Implement Trip & Trips
+            <ul>
+                <li>Implement getters</li>
+                <li>Implement setters</li>
+                <li>Implement constructors</li>
+                <li>Implement toString method override</li>
+            </ul>
+        </li>
     </ul>
 </s>
 <h5>Grant Fass:</h5>
 <h6>TODO</h6>
 <ul>
-    <li></li>
+    <li>Add controller method for DataFormatException</li>
+    <li>Refactor the alert methods to take an AlertType parameter for less repeat code</li>
 </ul>
 <h6>Completed</h6>
 <s>
