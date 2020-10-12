@@ -18,17 +18,11 @@ public class Trip {
     private String trip_id;
     private String trip_short_name;
     private WheelchairAccessibleEnum wheelchair_accessible;
-    public DirectionIDEnum m_DirectionIDEnum;
-    public WheelchairAccessibleEnum m_WheelchairAccessibleEnum;
-    public BikesAllowedEnum m_BikesAllowedEnum;
 
     public Trip(BikesAllowedEnum bikes_allowed, String block_id, DirectionIDEnum direction_id,
                 String route_id, String service_id, String shape_id, String trip_headsign,
                 String trip_id, String trip_short_name,
-                WheelchairAccessibleEnum wheelchair_accessible,
-                DirectionIDEnum m_DirectionIDEnum,
-                WheelchairAccessibleEnum m_WheelchairAccessibleEnum,
-                BikesAllowedEnum m_BikesAllowedEnum) {
+                WheelchairAccessibleEnum wheelchair_accessible) {
 
         this.bikes_allowed = bikes_allowed;
         this.block_id = block_id;
@@ -40,9 +34,6 @@ public class Trip {
         this.trip_id = trip_id;
         this.trip_short_name = trip_short_name;
         this.wheelchair_accessible = wheelchair_accessible;
-        this.m_DirectionIDEnum = m_DirectionIDEnum;
-        this.m_WheelchairAccessibleEnum = m_WheelchairAccessibleEnum;
-        this.m_BikesAllowedEnum = m_BikesAllowedEnum;
     }
 
     public void finalize() throws Throwable {
@@ -98,7 +89,6 @@ public class Trip {
     @Override
     public String toString() {
         return bikes_allowed + block_id + direction_id + route_id + service_id + shape_id
-                + trip_headsign + trip_id + trip_short_name + wheelchair_accessible
-                + m_DirectionIDEnum + m_WheelchairAccessibleEnum + m_BikesAllowedEnum;
+                + trip_headsign + trip_id + trip_short_name + wheelchair_accessible;
     }
 }//end Trip
