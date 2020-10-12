@@ -29,7 +29,7 @@ public class Stops {
 	 * Adds a stop object to the hashmap, returns false if could not be added to hashmap
 	 * @author Joy Cross
 	 * @param stop_id, stop add stop using stop_id for key and stop object for data
-	 * @param stop stop to be added
+	 * @param stop stop to be added to stops
 	 * @return true if added correctly
 	 */
 	public boolean addStop(String stop_id, Stop stop){
