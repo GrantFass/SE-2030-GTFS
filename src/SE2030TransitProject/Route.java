@@ -13,93 +13,94 @@ import java.net.URL;
  */
 public class Route {
 
-	private String agency_id;
-	private ContinuousDropOffEnum continuous_drop_off;
-	private ContinuousPickupEnum continuous_pickup;
-	private Color route_color;
-	private String route_desc;
 	private String route_id;
-	private String route_long_name;
+	private String agency_id;
 	private String route_short_name;
-	private int route_sort_order;
-	private Color route_text_color;
+	private String route_long_name;
+	private String route_desc;
 	private RouteTypeEnum route_type;
 	private URL route_url;
+	private Color route_color;
+	private Color route_text_color;
+	private int route_sort_order;
+	private ContinuousPickupEnum continuous_pickup;
+	private ContinuousDropOffEnum continuous_drop_off;
 
 
-	public Route(String agency_id, ContinuousDropOffEnum continuous_drop_off, ContinuousPickupEnum continuous_pickup,
-				 Color route_color, String route_desc, String route_id, String route_long_name,
-				 String route_short_name, int route_sort_order, Color route_text_color, RouteTypeEnum route_type,
-				 URL route_url){
+	public Route(String route_id, String agency_id, String route_short_name, String route_long_name, String route_desc,
+				 RouteTypeEnum route_type, URL route_url, Color route_color, Color route_text_color,
+				 int route_sort_order, ContinuousPickupEnum continuous_pickup,
+				 ContinuousDropOffEnum continuous_drop_off){
 
-		this.agency_id = agency_id;
-		this.continuous_drop_off = continuous_drop_off;
-		this.continuous_pickup = continuous_pickup;
-		this.route_color = route_color;
-		this.route_desc = route_desc;
 		this.route_id = route_id;
-		this.route_long_name = route_long_name;
+		this.agency_id = agency_id;
 		this.route_short_name = route_short_name;
-		this.route_sort_order = route_sort_order;
-		this.route_text_color = route_text_color;
+		this.route_long_name = route_long_name;
+		this.route_desc = route_desc;
 		this.route_type = route_type;
 		this.route_url = route_url;
+		this.route_color = route_color;
+		this.route_text_color = route_text_color;
+		this.route_sort_order = route_sort_order;
+		this.continuous_pickup = continuous_pickup;
+		this.continuous_drop_off = continuous_drop_off;
 	}
 
 	public void finalize() throws Throwable {
 
 	}
-	public String getAgencyID(){
-		return agency_id;
-	}
 
-	public ContinuousDropOffEnum getContinuousDropOffStatus(){
-		return continuous_drop_off;
-	}
-
-	public ContinuousPickupEnum getContinuousPickupStatus(){
-		return continuous_pickup;
-	}
-
-	public Color getRouteColor(){
-		return route_color;
-	}
-
-	public String getRouteDescription(){
-		return route_desc;
-	}
-
-	public String getRouteID(){
+	public String getRouteID() {
 		return route_id;
 	}
 
-	public String getRouteLongName(){
-		return route_long_name;
+	public String getAgencyID() {
+		return agency_id;
 	}
 
-	public String getRouteShortName(){
+	public String getRouteShortName() {
 		return route_short_name;
 	}
 
-	public int getRouteSortOrder(){
-		return route_sort_order;
+	public String getRouteLongName() {
+		return route_long_name;
 	}
 
-	public Color getRouteTextColor(){
-		return route_text_color;
+	public String getRouteDesc() {
+		return route_desc;
 	}
 
-	public RouteTypeEnum getRouteType(){
+	public RouteTypeEnum getRouteType() {
 		return route_type;
 	}
 
-	public URL getRouteURL(){
+	public URL getRouteURL() {
 		return route_url;
+	}
+
+	public Color getRouteColor() {
+		return route_color;
+	}
+
+	public Color getRouteTextColor() {
+		return route_text_color;
+	}
+
+	public int getRouteSortOrder() {
+		return route_sort_order;
+	}
+
+	public ContinuousPickupEnum getContinuousPickup() {
+		return continuous_pickup;
+	}
+
+	public ContinuousDropOffEnum getContinuousDropOff() {
+		return continuous_drop_off;
 	}
 
 	/**
 	 * Method to output data as a single concatenated string
-	 * @author GrantFass,
+	 * @author GrantFass, Ryan Becker
 	 * @return string of data
 	 */
 	@Override
