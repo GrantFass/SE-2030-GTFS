@@ -2,13 +2,15 @@ package SE2030TransitProject;
 
 
 import java.sql.Time;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * @author ericksons
  * @version 1.0
  * @created 06-Oct-2020 10:28:23 AM
  */
-public class BusMap {
+public class BusMap implements Observer {
 
 	public Data m_Data;
 
@@ -16,9 +18,6 @@ public class BusMap {
 
 	}
 
-	public void finalize() throws Throwable {
-
-	}
 	/**
 	 * 
 	 * @param route
@@ -29,6 +28,11 @@ public class BusMap {
 	}
 
 	public void update(){
+
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
 
 	}
 }//end BusMap

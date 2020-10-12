@@ -1,12 +1,15 @@
 package SE2030TransitProject;
 
 
+import java.util.Observable;
+import java.util.Observer;
+
 /**
  * @author
  * @version 1.0
  * @created 06-Oct-2020 10:28:38 AM
  */
-public class RouteMap {
+public class RouteMap implements Observer {
 
 	public Data m_Data;
 
@@ -14,9 +17,6 @@ public class RouteMap {
 
 	}
 
-	public void finalize() throws Throwable {
-
-	}
 	/**
 	 * 
 	 * @param route
@@ -66,6 +66,16 @@ public class RouteMap {
 	}
 
 	public void update(){
+
+	}
+
+	/**
+	 * Method to be run when subject provides information
+	 * @param o
+	 * @param arg
+	 */
+	@Override
+	public void update(Observable o, Object arg) {
 
 	}
 }//end RouteMap

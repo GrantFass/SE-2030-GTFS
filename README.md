@@ -97,7 +97,14 @@
 <h5>Grant Fass:</h5>
 <h6>TODO</h6>
 <ul>
-    <li></li>
+    <li>
+        Implement Data View Window
+        <ul>
+            <li>Implement Data View FXML file</li>
+            <li>Implement Data View controller</li>
+            <li>Implement observer interface into data view controller</li>
+        </ul>
+    </li>
 </ul>
 <h6>Completed</h6>
 <s>

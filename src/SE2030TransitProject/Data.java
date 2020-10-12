@@ -1,6 +1,7 @@
 package SE2030TransitProject;
 
 import java.util.Collection;
+import java.util.Observable;
 import java.util.Observer;
 
 /**
@@ -8,7 +9,7 @@ import java.util.Observer;
  * @version 1.0
  * @created 06-Oct-2020 10:28:30 AM
  */
-public class Data {
+public class Data extends Observable {
 
 	private Collection<Observer> observers;
 	private Routes routes;
@@ -16,50 +17,27 @@ public class Data {
 	private Stops stops;
 	private Trips trips;
 
-	public Data(){
+	public Data() {
 		stops = new Stops();
 		stop_times = new StopTimes();
 		routes = new Routes();
 		trips = new Trips();
 	}
 
-	public void finalize() throws Throwable {
-
-	}
-	/**
-	 * 
-	 * @param observer
-	 */
-	public void attach(java.util.Observer observer){
-
-	}
-
-	/**
-	 * 
-	 * @param observer
-	 */
-	public void detach(java.util.Observer observer){
-
-	}
-
-	public Routes getRoutes(){
+	public Routes getRoutes() {
 		return routes;
 	}
 
-	public Stops getStops(){
+	public Stops getStops() {
 		return stops;
 	}
 
-	public StopTimes getStopTimes(){
+	public StopTimes getStopTimes() {
 		return stop_times;
 	}
 
-	public Trips getTrips(){
+	public Trips getTrips() {
 		return trips;
-	}
-
-	public void notifyObservers(){
-
 	}
 
 	/**
