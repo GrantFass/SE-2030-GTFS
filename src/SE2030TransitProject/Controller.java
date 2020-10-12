@@ -192,9 +192,9 @@ public class Controller {
 					break;
 			}
 			displayDataSnapshot();
-		} /*catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 			errorAlert("IllegalArgumentException", e.getMessage());
-		}*/ catch (InputMismatchException e) {
+		} catch (InputMismatchException e) {
 			errorAlert("InputMismatchException", e.getMessage());
 		} catch (FileNotFoundException e) {
 			errorAlert("FileNotFoundException",

@@ -72,13 +72,8 @@ public class Routes {
 	public boolean loadRoutes(File file) throws FileNotFoundException, IOException,
 			InputMismatchException, DataFormatException {
 		try {
+			boolean emptyPrior = routes.isEmpty();
 
-			if (!routes.isEmpty()) {
-				routes.clear();
-				throw new DataFormatException("Routes.txt");
-			}
-
-		} finally {
 			Scanner read_data = new Scanner(file);
 			read_data.useDelimiter(",");
 			read_data.nextLine(); //consumes header line to start at data to be parsed
@@ -110,16 +105,15 @@ public class Routes {
 						ContinuousDropOffEnum.values()[Integer.parseInt(fields.get("continuous_drop_off"))]);
 
 				addRoute(new_route);
+
+				if(!emptyPrior){
+					throw new DataFormatException(file.getName());
+				}
 			}
-			return true;
+		} catch (DataFormatException dfe){
+			throw new DataFormatException(dfe.getMessage());
 		}
-		//return false;
-
-		/*} finally {
-			throw new DataFormatException("Routes.txt");
-		}*/
-
-
+		return true;
 
         /*
         TODO: DataFormatException should be thrown after everything else is done and let the user know that previous data was overwritten
@@ -155,7 +149,7 @@ public class Routes {
 		final String DEFAULT_SORT_ORDER = "0";
 		final String DEFAULT_CONTINUOUS = "0"; //continuous stopping pickup or drop-off
 
-		final String DEFAULT_URL = "http://"; //Error is thrown otherwise
+		final String DEFAULT_URL = "http://NULL_URL"; //Error is thrown otherwise
 
 		fields.put("route_id", null);
 		fields.put("agency_id", null);
