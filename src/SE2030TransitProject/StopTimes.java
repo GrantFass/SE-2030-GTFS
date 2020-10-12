@@ -275,16 +275,13 @@ public class StopTimes {
 				} catch (IOException e){
 					// Error handling for later, right now will skip corrupted data
 				}
-
 			}
 
 			if(!emptyBefore){
 				throw new DataFormatException(file.getName());
 			}
-		} catch (IOException ioe){
-			throw new IOException(ioe);// need to throw due to use of Scanner
 		} catch (DataFormatException dfe){
-			throw new DataFormatException(dfe + ".txt");
+			throw new DataFormatException(dfe.getMessage());
 		}
 
 		return true;

@@ -10,8 +10,6 @@ import java.util.zip.DataFormatException;
 
 /**
  * Class for a Stops database, which is the main database storing all stop objects
- * Fix enum values, throw data format exception, get rid of all m_enum types, add remove method that removes all data in Stops, StopTimes
- * add javadoc comments to getters and setters
  * @author Joy Cross
  * @version 1.0
  */
@@ -20,7 +18,8 @@ public class Stops {
 	private HashMap<String, Stop> stops;
 
 	/**
-	 * Stops Constructor
+	 * Stops Constructor: creates empty instance of stops object
+	 * @author Joy Cross
 	 */
 	public Stops(){
 		stops = new HashMap<String, Stop>();
@@ -28,6 +27,7 @@ public class Stops {
 
 	/**
 	 * Adds a stop object to the hashmap, returns false if could not be added to hashmap
+	 * @author Joy Cross
 	 * @param stop_id, stop add stop using stop_id for key and stop object for data
 	 * @param stop stop to be added
 	 * @return true if added correctly
@@ -43,6 +43,7 @@ public class Stops {
 
 	/**
 	 * Gets the stop from the hashmap by stop_id
+	 * @author Joy Cross
 	 * @param stop_id unique identifier for stop
 	 * @return Stop object
 	 */
@@ -52,6 +53,7 @@ public class Stops {
 
 	/**
 	 * Removes one stop from data by stop_id
+	 * @author Joy Cross
 	 * @param stop_id remove stop by stop_id
 	 */
 	public boolean removeStop(String stop_id){
@@ -65,15 +67,17 @@ public class Stops {
 
 	/**
 	 * Removes all stops in database
+	 * @author Joy Cross
 	 * @return true if removed stops
 	 */
-	public boolean removeStops(){
+	public boolean clearStops(){
 		stops = new HashMap<String, Stop>();
 		return true;
 	}
 
 	/**
 	 * Method to parse Stop data from a stops.txt file
+	 * @author Joy Cross
 	 * @param file the stops.txt file to be parsed
 	 * @return true if file was loaded, false otherwise
 	 * @throws FileNotFoundException if the file was not found
@@ -82,9 +86,10 @@ public class Stops {
 	 * @throws DataFormatException if data will be overwritten
 	 * @author Joy Cross, Grant Fass
 	 */
-	public boolean loadStops(File file) throws FileNotFoundException, IOException,
-			InputMismatchException, DataFormatException {
+	public boolean loadStops(File file) throws IOException, DataFormatException {
 		try {
+			boolean emptyBefore = stops.isEmpty();
+			clearStops();
 			Scanner sc = new Scanner(file);
 			String line = sc.nextLine();
 			String[] headers = line.split(",");
@@ -104,8 +109,7 @@ public class Stops {
 			int stop_url_array = -1;
 			int wheelchair_boarding_array = -1;
 			// int zone_id_array = -1;
-			int m_LocationTypeEnum_array = -1;
-			int m_WheelchairBoardingEnum_array = -1;
+
 			String level_id = null;
 			LocationTypeEnum location_type = null;
 			String parent_station = null;
@@ -120,9 +124,6 @@ public class Stops {
 			URL stop_url = null;
 			WheelchairBoardingEnum wheelchair_boarding = null;
 			// String zone_id;
-			LocationTypeEnum m_LocationTypeEnum = null;
-			WheelchairBoardingEnum m_WheelchairBoardingEnum = null; //??? what is m_WheelchairBoardingEnum????
-
 
 			// loop to find location of all headers to create stop
 			for (int i = 0; i < headers.length; i++) {
@@ -169,12 +170,6 @@ public class Stops {
 					case "wheelchair_boarding":
 						wheelchair_boarding_array = i;
 						break;
-					case "m_LocationTypeEnum":
-						m_LocationTypeEnum_array = i;
-						break;
-					case "m_WheelchairBoardingEnum":
-						m_WheelchairBoardingEnum_array = i;
-						break;
 				}
 			}
 
@@ -182,7 +177,7 @@ public class Stops {
 			while (sc.hasNextLine()) {
 				line = sc.nextLine();
 				String[] data = line.split(",");
-
+				try {
 				// setting attributes, default values if not in file
 				if (stop_id_array != -1) {
 					stop_id = data[stop_id_array];
@@ -225,12 +220,6 @@ public class Stops {
 				if(wheelchair_boarding_array != -1){
 					wheelchair_boarding = data[wheelchair_boarding_array];
 				}
-				if(m_LocationTypeEnum_array != -1){
-					m_LocationTypeEnum = data[m_LocationTypeEnum_array];
-				}
-				if(m_WheelchairBoardingEnum_array != -1){
-					m_WheelchairBoardingEnum = data[m_WheelchairBoardingEnum_array];
-				}
 				if(location_type_array != -1){
 					location_type = data[location_type_array];
 				}
@@ -242,30 +231,23 @@ public class Stops {
 						stop_url, wheelchair_boarding);
 
 				addStop(stop_id, stop);
-
+				} catch (IOException e){
+					// Error handling for later, right now will skip corrupted data
+				}
 			}
 
-		} catch (FileNotFoundException fnfe){
-			return false;
-		} catch (InputMismatchException ime){
-			return false;
-		} catch (IOException ioe){
-			return false;
+			if(!emptyBefore){
+				throw new DataFormatException(file.getName());
+			}
+		} catch (DataFormatException dfe){
+			throw new DataFormatException(dfe.getMessage());
 		}
-//TODO: note you do not need to catch the IOException, FileNotFoundException, or InputMismatchException.
-		//Just throw them because I already deal with them in the controller for exception handling
-		//- Grant
-        /*
-        TODO: DataFormatException should be thrown after everything else is done and let the user know that previous data was overwritten
-        Note: For the exception text put in the name of the text file ie: stops.txt I will do the rest in the controller
-        - Grant
-         */
 		return true;
 	}
 
 	/**
 	 * Method to output data as a single concatenated string
-	 * @author GrantFass,
+	 * @author Joy Cross
 	 * @return string of data
 	 */
 	@Override
