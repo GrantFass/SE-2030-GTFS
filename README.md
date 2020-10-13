@@ -46,12 +46,9 @@
     <li>
         Implement Route & Routes
         <ul>
-            <li>Add JavaDoc comments</li>
-            <li>Implement setters</li>
-            <li>Implement file loading and parsing</li>
+            
             <li>Add ability to load multiple GTFS files in succession (Delete old data)</li>
-            <li>Display alert to user when overwriting data during file load, Done by throwing DataFormatException</li>
-            <li>Implement toString method override</li>
+            
         </ul>
     </li>
 </ul>
@@ -61,8 +58,13 @@
         <li>
             Implement Route & Routes
             <ul>
+                <li>Add JavaDoc comments</li>
+                <li>Implement setters</li>
+                <li>Implement file loading and parsing</li>
                 <li>Implement constructors</li>
                 <li>Implement getters</li>
+                <li>Display alert to user when overwriting data during file load, Done by throwing DataFormatException</li>
+                <li>Implement toString method override</li>
             </ul>
         </li>
     </ul>
