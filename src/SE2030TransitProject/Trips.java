@@ -2,9 +2,8 @@ package SE2030TransitProject;
 
 import javafx.scene.control.TextArea;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -24,6 +23,7 @@ public class Trips {
 
     /**
      * Trips constructor initialized with empty hash map
+     *
      * @author Simon Erickson
      */
     public Trips() {
@@ -31,24 +31,26 @@ public class Trips {
     }
 
     /**
-     * adds trip parameter to trips hash map with the trip_id of trip as the key, and trip as the value.
-     * @author Simon Erickson
+     * adds trip parameter to trips hash map with the trip_id of trip as the key,
+     * and trip as the value.
+     *
      * @param trip Trip object to be added to trips
      * @return true if new trip was added, false otherwise
+     * @author Simon Erickson
      */
     public boolean addTrip(Trip trip) {
         Trip tripAdded = trips.put(trip.getTripID(), trip);
         boolean added = false;
-        if(tripAdded == null){
+        if (tripAdded == null) {
             added = true;
         }
         return added;
     }
 
     /**
-     * @author Simon Erickson
      * @param trip_id string identifying requested trip
      * @return trip associated with the specified trip_id
+     * @author Simon Erickson
      */
     public Trip getTrip(String trip_id) {
         return trips.get(trip_id);
@@ -56,14 +58,15 @@ public class Trips {
 
     /**
      * Removes specified Trip object from trips
-     * @author Simon Erickson
+     *
      * @param trip Trip to be removed
      * @return true if deleted, false otherwise
+     * @author Simon Erickson
      */
     public boolean removeTrip(Trip trip) {
         Trip tripRemoved = trips.remove(trip.getTripID());
         boolean deleted = false;
-        if(tripRemoved != null){
+        if (tripRemoved != null) {
             deleted = true;
         }
         return deleted;
@@ -127,13 +130,45 @@ public class Trips {
                         wheelchair_accessible));
             }
 
-            if(!emptyPrior){
+            if (!emptyPrior) {
                 throw new DataFormatException(file.getName());
             }
-        } catch (DataFormatException dfe){
+        } catch (DataFormatException dfe) {
             throw new DataFormatException(dfe.getMessage());
         }
         return true;
+    }
+
+    /**
+     * Method to write Trip data to a trips.txt file
+     *
+     * @param path the trips.txt file desired location
+     * @return true if file was written successfully, false otherwise
+     * @author Simon Erickson
+     */
+    public boolean exportTrips(Path path) throws FileNotFoundException {
+
+        //writes the items of the file to the hash map
+        try (PrintWriter write = new PrintWriter(new BufferedOutputStream(new FileOutputStream(String.valueOf(path))))) {
+
+            //write header: route_id,service_id,trip_id,trip_headsign,direction_id,block_id,shape_id
+            write.println("route_id,service_id,trip_id,trip_headsign,direction_id,block_id,shape_id");
+
+            //write body
+            int i = 0;
+            for (String key : trips.keySet()) {
+                if (i == 7) {
+                    write.print(trips.get(key) + "\n");
+                    i = 0;
+                } else {
+                    write.print(trips.get(key) + ",");
+                    i++;
+                }
+            }
+
+        }
+        return true;
+
     }
 
     /**
@@ -153,6 +188,7 @@ public class Trips {
 
     /**
      * Method to print all of the individual trip objects to the textArea
+     *
      * @param textArea the textArea to print the trip objects to
      * @author Grant Fass
      */

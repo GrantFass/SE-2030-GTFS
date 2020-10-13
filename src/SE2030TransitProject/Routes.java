@@ -83,16 +83,23 @@ public class Routes {
 	public boolean loadRoutes(File file) throws FileNotFoundException, IOException,
 			InputMismatchException, DataFormatException {
 		try {
+
+			Scanner read_header = new Scanner(file);
+			String full_header = read_header.nextLine();
+
+			if(!validHeader(full_header)){
+				throw new InputMismatchException("Invalid Header:\nFile was not loaded");
+			}
+
 			boolean emptyPrior = routes.isEmpty();
 			routes.clear();
+
+
+			String[] split_header = full_header.split(",");
 
 			Scanner read_data = new Scanner(file);
 			read_data.useDelimiter(",");
 			read_data.nextLine(); //consumes header line to start at data to be parsed
-
-			Scanner read_header = new Scanner(file);
-			String full_header = read_header.nextLine();
-			String[] split_header = full_header.split(",");
 
 			while (read_data.hasNextLine()) {
 				HashMap<String, String> fields = new HashMap<>();
@@ -118,6 +125,10 @@ public class Routes {
 
 				addRoute(new_route);
 			}
+
+			read_header.close();
+			read_data.close();
+
             if(!emptyPrior){
                 throw new DataFormatException(file.getName());
             }
@@ -185,5 +196,28 @@ public class Routes {
 		fields.put("continuous_pickup", DEFAULT_CONTINUOUS);
 		fields.put("continuous_drop_off", DEFAULT_CONTINUOUS);
 	}
+
+	/**
+	 * Checks if a header of a routes.txt file is valid
+	 * @author Ryan Becker
+	 * @param full_header String of entire line containing header
+	 * @return True if valid, false otherwise
+	 */
+	public boolean validHeader(String full_header){
+		boolean valid = false;
+		final String TARGET_HEADER = "route_id,agency_id,route_short_name,route_long_name," +
+				"route_desc,route_type,route_url,route_color,route_text_color";
+
+		if(full_header.equals(TARGET_HEADER)){
+			valid = true;
+		}
+		return valid;
+	}
+
+	public boolean validData(){
+		return false;
+	}
+
+
 
 }//end Routes
