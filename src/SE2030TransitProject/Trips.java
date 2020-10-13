@@ -1,5 +1,7 @@
 package SE2030TransitProject;
 
+import javafx.scene.control.TextArea;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -164,4 +166,22 @@ public class Trips {
         }
         return returnValue;
     }
-}
+
+    /**
+     * Method to print all of the individual trip objects to the textArea
+     * @param textArea the textArea to print the trip objects to
+     * @author Grant Fass
+     */
+    public void printDataToTextArea(TextArea textArea) {
+        textArea.clear();
+        textArea.setText(toString());
+        /*
+        for (String key : trips.keySet()) {
+            textArea.appendText(trips.get(key).toString() + "\n");
+        }
+
+         */
+    }
+
+
+}//end Trips

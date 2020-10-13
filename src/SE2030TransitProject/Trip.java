@@ -152,7 +152,7 @@ public class Trip {
                 + "\n\tBolck ID: " + block_id + "\n\tDirection ID: " + direction_id
                 + "\n\tRoute ID: " + route_id + "\n\tService ID: " + service_id
                 + "\n\tShape ID: " + shape_id + "\n\tTrip ID: " + trip_id
-                + "\n\tTrip Short Name: " + trip_short_name + "Trip Head Sign: " + trip_headsign
+                + "\n\tTrip Short Name: " + trip_short_name + "\n\tTrip Head Sign: " + trip_headsign
                 + "\n\tWheel Chair Accessible: " + wheelchair_accessible;
     }
 }//end Trip
