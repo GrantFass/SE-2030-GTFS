@@ -70,7 +70,8 @@ public class Trips {
         try (Scanner in = new Scanner(file)) {
 
             //read header: route_id,service_id,trip_id,trip_headsign,direction_id,block_id,shape_id
-            in.next("route_id,service_id,trip_id,trip_headsign,direction_id,block_id,shape_id");
+            in.next("route_id,service_id,trip_id,trip_headsign,direction_id," +
+                    "block_id,shape_id");
 
 
             //read body
