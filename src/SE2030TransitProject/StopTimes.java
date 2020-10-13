@@ -297,8 +297,10 @@ public class StopTimes {
 	@Override
 	public String toString() {
 		StringBuilder toReturn = new StringBuilder();
-		for(String key : stop_times.keySet()){
-			toReturn.append(stop_times.get(key).toString() + "\n");
+		int maxDisplay = 1000;
+		Object[] keys = stop_times.keySet().toArray();
+		for(int i = 0; i < maxDisplay; i++){
+			toReturn.append(stop_times.get(keys[i]).toString() + "\n");
 		}
 		return toReturn.toString();
 	}
