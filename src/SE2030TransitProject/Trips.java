@@ -93,8 +93,7 @@ public class Trips {
             trips = new HashMap<>();
 
             //read header: route_id,service_id,trip_id,trip_headsign,direction_id,block_id,shape_id
-            in.next("route_id,service_id,trip_id,trip_headsign,direction_id," +
-                    "block_id,shape_id");
+            in.nextLine();
 
             //read body
             int i = 0;
