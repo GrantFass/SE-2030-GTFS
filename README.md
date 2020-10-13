@@ -6,6 +6,7 @@
 <h3>Program Status:</h3>
 <ul>
     <li>Stops Loads and Displays</li>
+    <li>Routes Loads and Displays</li>
     <li>Stop_Times does not load the full length file, but will load shorter versions</li>
     <li>Java SDK: 1.8.0_242</li>
     <li>Junit 5.4.2 used for testing</li>
@@ -46,12 +47,7 @@
     <li>
         Implement Route & Routes
         <ul>
-            <li>Add JavaDoc comments</li>
-            <li>Implement setters</li>
-            <li>Implement file loading and parsing</li>
             <li>Add ability to load multiple GTFS files in succession (Delete old data)</li>
-            <li>Display alert to user when overwriting data during file load, Done by throwing DataFormatException</li>
-            <li>Implement toString method override</li>
         </ul>
     </li>
 </ul>
@@ -61,8 +57,13 @@
         <li>
             Implement Route & Routes
             <ul>
+                <li>Add JavaDoc comments</li>
+                <li>Implement setters</li>
+                <li>Implement file loading and parsing</li>
                 <li>Implement constructors</li>
                 <li>Implement getters</li>
+                <li>Display alert to user when overwriting data during file load, Done by throwing DataFormatException</li>
+                <li>Implement toString method override</li>
             </ul>
         </li>
     </ul>

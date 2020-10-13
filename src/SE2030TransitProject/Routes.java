@@ -1,9 +1,7 @@
 package SE2030TransitProject;
 
 
-import com.sun.javafx.image.IntPixelGetter;
 import javafx.scene.paint.Color;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -24,19 +22,27 @@ public class Routes {
 
 	private HashMap<String, Route> routes;
 
+	/**
+	 * Routes constructor initialized with empty hash map
+	 * @author Ryan Becker
+	 */
 	public Routes(){
 		routes = new HashMap<>();
 	}
 
 	/**
-	 * adds route parameter to routes hash map
-	 * with the route_id of route as the key, and route as the value
+	 * adds route parameter to routes hash map with the route_id of route as the key, and route as the value.
 	 * @author Ryan Becker
 	 * @param route Route object to be added to routes
+     * @return true if new route was added, false otherwise
 	 */
 	public boolean addRoute(Route route){
-		routes.put(route.getRouteID(), route);
-		return true;
+		Route routeAdded = routes.put(route.getRouteID(), route);
+		boolean added = false;
+		if(routeAdded == null){
+			added = true;
+		}
+		return added;
 	}
 
 	/**
@@ -52,10 +58,15 @@ public class Routes {
 	 * Removes specified Route object from routes
 	 * @author Ryan Becker
 	 * @param route Route to be removed
+     * @return true if deleted, false otherwise
 	 */
 	public boolean removeRoute(Route route){
-		routes.remove(route.getRouteID());
-		return true;
+		Route routeRemoved = routes.remove(route.getRouteID());
+		boolean deleted = false;
+		if(routeRemoved != null){
+			deleted = true;
+		}
+		return deleted;
 	}
 
 	/**
@@ -68,11 +79,11 @@ public class Routes {
 	 * @throws InputMismatchException if there is an issue parsing the file
 	 * @throws DataFormatException if data will be overwritten
 	 */
-	//TODO incorporate try and catches
 	public boolean loadRoutes(File file) throws FileNotFoundException, IOException,
 			InputMismatchException, DataFormatException {
 		try {
 			boolean emptyPrior = routes.isEmpty();
+			routes.clear();
 
 			Scanner read_data = new Scanner(file);
 			read_data.useDelimiter(",");
@@ -105,21 +116,14 @@ public class Routes {
 						ContinuousDropOffEnum.values()[Integer.parseInt(fields.get("continuous_drop_off"))]);
 
 				addRoute(new_route);
-
-				if(!emptyPrior){
-					throw new DataFormatException(file.getName());
-				}
 			}
+            if(!emptyPrior){
+                throw new DataFormatException(file.getName());
+            }
 		} catch (DataFormatException dfe){
 			throw new DataFormatException(dfe.getMessage());
 		}
 		return true;
-
-        /*
-        TODO: DataFormatException should be thrown after everything else is done and let the user know that previous data was overwritten
-        Note: For the exception text put in the name of the text file ie: stops.txt I will do the rest in the controller
-        - Grant
-         */
 	}
 
 	/**
