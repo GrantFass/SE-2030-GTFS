@@ -1,5 +1,7 @@
 package SE2030TransitProject;
 
+import javafx.scene.control.TextArea;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -295,11 +297,26 @@ public class StopTimes {
 	@Override
 	public String toString() {
 		StringBuilder toReturn = new StringBuilder();
-		toReturn.append("StopTimes\n");
 		for(String key : stop_times.keySet()){
-			StopTime stopTime = stop_times.get(key);
-			toReturn.append(stopTime.toString()).append("\n");
+			toReturn.append(stop_times.get(key).toString() + "\n");
 		}
 		return toReturn.toString();
 	}
+
+	/**
+	 * Method to print all of the individual stopTime objects to the textArea
+	 * @param textArea the textArea to print the stopTime objects to
+	 * @author Grant Fass
+	 */
+	public void printDataToTextArea(TextArea textArea) {
+		textArea.clear();
+		textArea.setText(toString());
+        /*
+		for (String key : stop_times.keySet()) {
+			textArea.appendText(stop_times.get(key).toString() + "\n");
+		}
+
+         */
+	}
+
 }//end StopTimes

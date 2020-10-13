@@ -1,6 +1,8 @@
 package SE2030TransitProject;
 
 
+import javafx.scene.control.TextArea;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -247,17 +249,31 @@ public class Stops {
 
 	/**
 	 * Method to output data as a single concatenated string
-	 * @author Joy Cross
+	 * @author Joy Cross, Grant Fass
 	 * @return string of data
 	 */
 	@Override
 	public String toString() {
 		StringBuilder toReturn = new StringBuilder();
-		toReturn.append("Stops\n");
 		for(String key : stops.keySet()){
-			Stop stop = stops.get(key);
-			toReturn.append(stop.toString()).append("\n");
+			toReturn.append(stops.get(key).toString() + "\n");
 		}
 		return toReturn.toString();
+	}
+
+	/**
+	 * Method to print all of the individual stop objects to the textArea
+	 * @param textArea the textArea to print the stop objects to
+	 * @author Grant Fass
+	 */
+	public void printDataToTextArea(TextArea textArea) {
+		textArea.clear();
+		textArea.setText(toString());
+        /*
+		for (String key : stops.keySet()) {
+			textArea.appendText(stops.get(key).toString() + "\n");
+		}
+
+         */
 	}
 }//end Stops

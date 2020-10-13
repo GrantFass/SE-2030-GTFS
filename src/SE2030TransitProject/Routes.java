@@ -1,6 +1,7 @@
 package SE2030TransitProject;
 
 
+import javafx.scene.control.TextArea;
 import javafx.scene.paint.Color;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -128,16 +129,32 @@ public class Routes {
 
 	/**
 	 * Method to output data as a single concatenated string
-	 * @author GrantFass,
+	 * @author GrantFass, Ryan Becker
 	 * @return string of data
 	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		for(String key_ID : routes.keySet()){
-			sb.append(routes.get(key_ID).toString()).append("\n");
+			sb.append(routes.get(key_ID).toString() + "\n");
 		}
 		return sb.toString();
+	}
+
+	/**
+	 * Method to print all of the individual route objects to the textArea
+	 * @param textArea the textArea to print the route objects to
+	 * @author Grant Fass
+	 */
+	public void printDataToTextArea(TextArea textArea) {
+		textArea.clear();
+		textArea.setText(toString());
+        /*
+		for (String key : routes.keySet()) {
+			textArea.appendText(routes.get(key).toString() + "\n");
+		}
+
+         */
 	}
 
 	/**
