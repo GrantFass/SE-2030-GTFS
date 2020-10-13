@@ -8,7 +8,7 @@
     <li>Stops loads and displays</li>
     <li>Routes loads and displays</li>
     <li>Stop_Times loads and displays 1000 entries</li>
-    <li>Trips loads and displays with minor formatting errors</li>
+    <li>Trips loads and displays</li>
     <li>Java SDK: 1.8.0_242</li>
     <li>Junit 5.4.2 used for testing</li>
 </ul>
@@ -73,9 +73,8 @@
 <h6>TODO</h6>
 <ul>
     <li>
-        Implement Trip & Trips
         <ul>
-            <li>Update File Parsing</li>
+            <li></li>
         </ul>
     </li>
 </ul>
@@ -85,6 +84,7 @@
         <li>
             Implement Trip & Trips
             <ul>
+                <li>Update File Parsing</li>
                 <li>Display alert to user when overwriting data during file load, Done by throwing DataFormatException</li>
                 <li>update toString method override</li>
                 <li>Add JavaDoc comments</li>
