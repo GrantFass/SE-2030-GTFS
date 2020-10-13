@@ -5,9 +5,10 @@
 <hr>
 <h3>Program Status:</h3>
 <ul>
-    <li>Stops Loads and Displays</li>
-    <li>Routes Loads and Displays</li>
-    <li>Stop_Times does not load the full length file, but will load shorter versions</li>
+    <li>Stops loads and displays</li>
+    <li>Routes loads and displays</li>
+    <li>Stop_Times loads and displays 1000 entries</li>
+    <li>Trips loads and displays with minor formatting errors</li>
     <li>Java SDK: 1.8.0_242</li>
     <li>Junit 5.4.2 used for testing</li>
 </ul>
@@ -17,12 +18,8 @@
 <h6>TODO</h6>
 <ul>
     <li>
-        Implement Stop, StopTime, Stops, & StopTimes
         <ul>
-            <li>Add JavaDoc comments</li>
-            <li>update constructor</li>
-            <li>Add ability to load multiple GTFS files in succession (Delete old data)</li>
-            <li>Display alert to user when overwriting data during file load, Done by throwing DataFormatException</li>
+            <li></li>
         </ul>
     </li>
 </ul>
@@ -37,6 +34,10 @@
                 <li>Implement constructors</li>
                 <li>Implement file loading and parsing</li>
                 <li>Implement toString method override</li>
+                <li>Add JavaDoc comments</li>
+                <li>update constructor</li>
+                <li>Add ability to load multiple GTFS files in succession (Delete old data)</li>
+                <li>Display alert to user when overwriting data during file load, Done by throwing DataFormatException</li>
             </ul>
         </li>
     </ul>
@@ -45,9 +46,8 @@
 <h6>TODO</h6>
 <ul>
     <li>
-        Implement Route & Routes
         <ul>
-            <li>Add ability to load multiple GTFS files in succession (Delete old data)</li>
+            <li></li>
         </ul>
     </li>
 </ul>
@@ -57,6 +57,7 @@
         <li>
             Implement Route & Routes
             <ul>
+                <li>Add ability to load multiple GTFS files in succession (Delete old data)</li>
                 <li>Add JavaDoc comments</li>
                 <li>Implement setters</li>
                 <li>Implement file loading and parsing</li>
@@ -74,11 +75,7 @@
     <li>
         Implement Trip & Trips
         <ul>
-            <li>Add JavaDoc comments</li>
-            <li>Implement file loading and parsing</li>
-            <li>Add ability to load multiple GTFS files in succession (Delete old data)</li>
-            <li>Display alert to user when overwriting data during file load, Done by throwing DataFormatException</li>
-            <li>update toString method override</li>
+            <li>Update File Parsing</li>
         </ul>
     </li>
 </ul>
@@ -88,6 +85,11 @@
         <li>
             Implement Trip & Trips
             <ul>
+                <li>Display alert to user when overwriting data during file load, Done by throwing DataFormatException</li>
+                <li>update toString method override</li>
+                <li>Add JavaDoc comments</li>
+                <li>Implement file loading and parsing</li>
+                <li>Add ability to load multiple GTFS files in succession (Delete old data)</li>
                 <li>Implement getters</li>
                 <li>Implement setters</li>
                 <li>Implement constructors</li>
@@ -102,10 +104,6 @@
     <li>
         Implement Data View Window
         <ul>
-            <li>Implement Data View FXML file</li>
-            <li>Implement Data View controller</li>
-            <li>Implement observer interface into data view controller</li>
-            <li>Add method in Stops, Routes, Trips, and StopTimes that is passed a textArea to display to</li>
             <li>Update help section</li>
         </ul>
     </li>
@@ -114,6 +112,18 @@
 <h6>Completed</h6>
 <s>
     <ul>
+        <li>Update help documentation in Main window</li>
+        <li>Create initial test suites and directory</li>
+        <li>
+            Implement Data View Window
+                <ul>
+                    <li>Implement Data View FXML file</li>
+                    <li>Implement Data View controller</li>
+                    <li>Implement observer interface into data view controller</li>
+                    <li>Add method in Stops, Routes, Trips, and StopTimes that is passed a textArea to display to</li>
+                    <li>Update help section</li>
+                </ul>
+        </li>
         <li>Refactor the alert methods to take an AlertType parameter for less repeat code</li>
         <li>Add controller method for DataFormatException</li>
         <li>
@@ -135,7 +145,7 @@
         <li>
             Implement GTFS file load capabilities
             <ul>
-                <li>Show snapshot of data structures in GUI</li>
+                <li>Show snapshot of data structures in GUI in new window</li>
                 <li>Implement FileChooser dialogue to load files</li>
                 <li>Implement File Load Exception handling</li>
             </ul>
@@ -148,6 +158,7 @@
                 <li>Implement introduction information</li>
             </ul>
         </li>
+        <li>Implement initial subject and observer framework</li>
     </ul>
 </s>
 <h5>Unassigned:</h5>
@@ -155,25 +166,15 @@
     <li>
         Implement Data class
         <ul>
-            <li>Add JavaDoc comments</li>
-            <li>Implement subject interface</li>
-            <li>Implement getters</li>
-            <li>Implement constructors</li>
-            <li>Update toString method override</li>
+            <li>Update getters</li>
+            <li>Update constructors</li>
         </ul>
     </li>
     <li>
         Implement GTFS file load capabilities
         <ul>
-            <li>Update displayed snapshot of data structures in GUI</li>
             <li>Verify GTFS file load passes acceptance tests</li>
             <li>Allow loading of multiple files at same time</li>
-        </ul>
-    </li>
-    <li>
-        Update Help Menu
-        <ul>
-            <li>Update introduction information</li>
         </ul>
     </li>
     <li>

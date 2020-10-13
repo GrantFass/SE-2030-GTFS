@@ -32,6 +32,7 @@ public class Controller {
 	/**
 	 * used to set some default values
 	 * called from Main
+	 * @author Grant Fass
 	 */
 	public void setDefaultValues() {
 		textArea.setText("How To Use:\n\n" +
