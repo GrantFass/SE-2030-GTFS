@@ -225,6 +225,7 @@ public class Controller {
     }
 
 	public void save() {
+		displayAlert(Alert.AlertType.INFORMATION, "Information", null, "Not Yet Implemented!");
 	}
 
 	/**
@@ -277,9 +278,11 @@ public class Controller {
 	}
 
 	public void undo() {
+		displayAlert(Alert.AlertType.INFORMATION, "Information", null, "Not Yet Implemented!");
 	}
 
 	public void reload() {
+		displayAlert(Alert.AlertType.INFORMATION, "Information", null, "Not Yet Implemented!");
 	}
 
 	/**
