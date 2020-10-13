@@ -3,9 +3,7 @@ package SE2030TransitProject;
 
 import javafx.scene.control.TextArea;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.util.*;
 import java.util.zip.DataFormatException;
@@ -94,83 +92,53 @@ public class Stops {
 			clearStops();
 			Scanner sc = new Scanner(file);
 			String line = sc.nextLine();
-			String[] headers = line.split(",");
-
-			// Finding location of each parameter in headers list
-			int stop_id_array = -1;
-			int level_id_array = -1;
-			int location_type_array = -1;
-			int parent_station_array = -1;
-			int platform_code_array = -1;
-			int stop_code_array = -1;
-			int stop_description_array = -1;
-			int stop_latitude_array = -1;
-			int stop_longitude_array = -1;
-			int stop_name_array = -1;
-			int stop_timezone_array = -1;
-			int stop_url_array = -1;
-			int wheelchair_boarding_array = -1;
-			// int zone_id_array = -1;
-
-			String level_id = null;
-			LocationTypeEnum location_type = null;
-			String parent_station = null;
-			String platform_code = null;
-			String stop_code = null;
-			String stop_description = null;
-			String stop_id = null;
-			double stop_latitude = 0;
-			double stop_longitude = 0;
-			String stop_name = null;
-			TimeZone stop_timezone = null;
-			URL stop_url = null;
-			WheelchairBoardingEnum wheelchair_boarding = null;
-			// String zone_id;
+			String[] headersData = line.split(",");
+			Headers headers = new Headers();
 
 			// loop to find location of all headers to create stop
-			for (int i = 0; i < headers.length; i++) {
-				switch (headers[i].trim().toLowerCase()) {
+			for (int i = 0; i < headersData.length; i++) {
+				switch (headersData[i].trim().toLowerCase()) {
 					case "stop_id":
-						stop_id_array = i;
+						headers.addHeader(new Header("stop_id", i));
 						break;
 					case "level_id":
-						level_id_array = i;
+						headers.addHeader(new Header("level_id", i));
 						break;
 					case "location_type":
-						location_type_array = i;
+						headers.addHeader(new Header("location_type", i));
 						break;
 					case "parent_station":
-						parent_station_array = i;
+						headers.addHeader(new Header("parent_station", i));
 						break;
 					case "platform_code":
-						platform_code_array = i;
+						headers.addHeader(new Header("platform_code", i));
 						break;
 					case "stop_code":
-						stop_code_array = i;
+						headers.addHeader(new Header("stop_code", i));
 						break;
 					case "stop_description":
 					case "stop_desc":
-						stop_description_array = i;
+						headers.addHeader(new Header("stop_desc", i));
 						break;
 					case "stop_latitude":
 					case "stop_lat":
-						stop_latitude_array = i;
+						headers.addHeader(new Header("stop_lat", i));
 						break;
 					case "stop_longitude":
 					case "stop_lon":
-						stop_longitude_array = i;
+						headers.addHeader(new Header("stop_lon", i));
 						break;
 					case "stop_name":
-						stop_name_array = i;
+						headers.addHeader(new Header("stop_name", i));
 						break;
 					case "stop_timezone":
-						stop_timezone_array = i;
+						headers.addHeader(new Header("stop_timezone", i));
 						break;
 					case "stop_url":
-						stop_url_array = i;
+						headers.addHeader(new Header("stop_url", i));
 						break;
 					case "wheelchair_boarding":
-						wheelchair_boarding_array = i;
+						headers.addHeader(new Header("wheelchair_boarding", i));
 						break;
 				}
 			}
@@ -179,61 +147,60 @@ public class Stops {
 			while (sc.hasNextLine()) {
 				line = sc.nextLine();
 				String[] data = line.split(",");
-				try {
-				// setting attributes, default values if not in file
-				if (stop_id_array != -1) {
-					stop_id = data[stop_id_array];
+
+				// create and initialize stop object
+				Stop stop;
+				if (headers.getHeaderIndex("stop_id") != -1) {
+					stop = new Stop(data[headers.getHeaderIndex("stop_id")]);
 				} else {
 					throw new IOException("No Stop ID given");
 				}
-				if (level_id_array != -1) {
-					level_id = data[level_id_array];
+
+				try {
+				// setting attributes, default values if not in file
+				if (headers.getHeaderIndex("level_id") != -1) {
+					stop.setLevelID(data[headers.getHeaderIndex("level_id")]);
 				}
-				if (stop_name_array != -1) {
-					stop_name = data[stop_name_array];
+				if (headers.getHeaderIndex("stop_name") != -1) {
+					stop.setStopName(data[headers.getHeaderIndex("stop_name")]);
 				}
-				if (parent_station_array != -1) {
-					parent_station = data[parent_station_array];
+				if (headers.getHeaderIndex("parent_station") != -1) {
+					stop.setParentStation(data[headers.getHeaderIndex("parent_station")]);
 				}
-				if (platform_code_array != -1) {
-					platform_code = data[platform_code_array];
+				if (headers.getHeaderIndex("platform_code") != -1) {
+					stop.setPlatformCode(data[headers.getHeaderIndex("platform_code")]);
 				}
-				if (stop_code_array != -1) {
-					stop_code = data[stop_code_array];
+				if (headers.getHeaderIndex("stop_code") != -1) {
+					stop.setStopCode(data[headers.getHeaderIndex("stop_code")]);
 				}
-				if (stop_description_array != -1) {
-					stop_description = data[stop_description_array];
+				if (headers.getHeaderIndex("stop_desc") != -1) {
+					stop.setStopDescription(data[headers.getHeaderIndex("stop_desc")]);
 				}
-				if (stop_latitude_array != -1) {
-					stop_latitude = Double.parseDouble(data[stop_latitude_array].trim());
+				if (headers.getHeaderIndex("stop_lat") != -1) {
+					stop.setStopLatitude(Double.parseDouble(data[headers.getHeaderIndex("stop_lat")].trim()));
 				}
-				if (stop_longitude_array != -1) {
-					stop_longitude = Double.parseDouble(data[stop_longitude_array].trim());
+				if (headers.getHeaderIndex("stop_lon") != -1) {
+					stop.setStopLongitude(Double.parseDouble(data[headers.getHeaderIndex("stop_lon")].trim()));
 				}
 				// IMPLEMENT FOR LATER
 				/*
-				if(stop_timezone_array != -1){
+				if(headers.getHeaderIndex("stop_timezone") != -1){
 					TimeZone time;
-					stop_timezone = time.data[stop_timezone_array];
+					stop.setStopTimezone(time.data[headers.getHeaderIndex("stop_timezone")]);
 				}
-				if(stop_url_array != -1){
-					stop_url = data[stop_url_array];
+				if(headers.getHeaderIndex("stop_url") != -1){
+					stop.setStopURL(data[headers.getHeaderIndex("stop_url")]);
 				}
-				if(wheelchair_boarding_array != -1){
-					wheelchair_boarding = data[wheelchair_boarding_array];
+				if(headers.getHeaderIndex("wheelchair_boarding") != -1){
+					stop.setWheelchairBoarding(data[headers.getHeaderIndex("wheelchair_boarding")]);
 				}
-				if(location_type_array != -1){
-					location_type = data[location_type_array];
+				if(headers.getHeaderIndex("location_type") != -1){
+					stop.setLocationType(data[headers.getHeaderIndex("location_type")]);
 				}
 				*/
 
-				Stop stop = new Stop(level_id, location_type, parent_station,
-						platform_code, stop_code, stop_description, stop_id,
-						stop_latitude, stop_longitude, stop_name, stop_timezone,
-						stop_url, wheelchair_boarding);
-
-				addStop(stop_id, stop);
-				} catch (IOException e){
+				addStop(stop.getStopID(), stop);
+				} catch (Exception e){
 					// Error handling for later, right now will skip corrupted data
 				}
 			}
@@ -243,6 +210,22 @@ public class Stops {
 			}
 		} catch (DataFormatException dfe){
 			throw new DataFormatException(dfe.getMessage());
+		}
+		return true;
+	}
+
+	public boolean exportStops(File file) {
+		try {
+			File outputLocation = new File(file, "stops.txt");
+			BufferedWriter output = new BufferedWriter(new FileWriter(outputLocation));
+
+			for(String key : stops.keySet()){
+				Stop stop = stops.get(key);
+
+			}
+			output.close();
+		} catch (Exception e){
+			// pass
 		}
 		return true;
 	}
