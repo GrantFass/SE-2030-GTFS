@@ -22,8 +22,6 @@ public class Controller {
 	@FXML
 	private Label topLabel;
 	@FXML
-	private VBox vBox;
-	@FXML
 	private TextArea textArea;
 	public MenuItem viewDataDisplayButton;
 	private Data data = new Data();
@@ -238,6 +236,9 @@ public class Controller {
 					data.getTrips().loadTrips(file);
 					break;
 			}
+
+			dataDisplayController.resetTextToDefaultValues();
+			displayAlert(Alert.AlertType.INFORMATION, "Information", null, "Data Imported Successfully");
 		} catch (IllegalArgumentException e) {
 			displayAlert(Alert.AlertType.ERROR, "Error","IllegalArgumentException", e.getMessage());
 		} catch (InputMismatchException e) {
@@ -261,6 +262,14 @@ public class Controller {
 	public void reload() {
 	}
 
+	/**
+	 * Toggle the view status of the Data Display window.
+	 * If the window is showing hide it, if it is hidden then show it.
+	 * When the window becomes visible set the top label and the text area back
+	 * to default values so that old data is not inadvertently displayed to the user
+	 * leading to confusion.
+	 * @author Grant Fass
+	 */
 	public void toggleDataDisplay() {
 		if (dataDisplayStage.isShowing()) {
 			dataDisplayStage.hide();
@@ -268,6 +277,7 @@ public class Controller {
 		} else {
 			dataDisplayStage.setX(stage.getX() + stage.getWidth());
 			dataDisplayStage.setY(stage.getY());
+			dataDisplayController.resetTextToDefaultValues();
 			dataDisplayStage.show();
 			viewDataDisplayButton.setText("Hide Data Display");
 		}
