@@ -304,19 +304,26 @@ public class StopTimes {
 	}
 
 	/**
-	 * Method to print all of the individual stopTime objects to the textArea
+	 * Method to print all of the individual stopTime objects to the textArea 1000 objects at a time.
 	 * @param textArea the textArea to print the stopTime objects to
 	 * @author Grant Fass
 	 */
 	public void printDataToTextArea(TextArea textArea) {
-		textArea.clear();
 		textArea.setText(toString());
-        /*
+		/*
+		StringBuilder stringBuilder = new StringBuilder();
+		int index = 0;
 		for (String key : stop_times.keySet()) {
-			textArea.appendText(stop_times.get(key).toString() + "\n");
+			stringBuilder.append(stop_times.get(key).toString() + "\n");
+			index++;
+			if (index % 1000 ==  0) {
+				textArea.appendText(stringBuilder.toString());
+				stringBuilder.setLength(0);
+			}
 		}
+		textArea.appendText(stringBuilder.toString());
 
-         */
+		 */
 	}
 
 }//end StopTimes
