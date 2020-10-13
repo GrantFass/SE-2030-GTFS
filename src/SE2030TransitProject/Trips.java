@@ -2,9 +2,7 @@ package SE2030TransitProject;
 
 import javafx.scene.control.TextArea;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.InputMismatchException;
@@ -145,12 +143,32 @@ public class Trips {
      * Method to write Trip data to a trips.txt file
      *
      * @param path the trips.txt file desired location
-     * @return File the written trips.txt file
+     * @return true if file was written successfully, false otherwise
      * @author Simon Erickson
      */
-    public File exportTrips(Path path) throws FileNotFoundException, IOException,
-            InputMismatchException, DataFormatException {
-        return null;
+    public boolean exportTrips(Path path) throws FileNotFoundException {
+
+        //writes the items of the file to the hash map
+        try (PrintWriter write = new PrintWriter(new BufferedOutputStream(new FileOutputStream(String.valueOf(path))))) {
+
+            //write header: route_id,service_id,trip_id,trip_headsign,direction_id,block_id,shape_id
+            write.println("route_id,service_id,trip_id,trip_headsign,direction_id,block_id,shape_id");
+
+            //write body
+            int i = 0;
+            for (String key : trips.keySet()) {
+                if (i == 7) {
+                    write.print(trips.get(key) + "\n");
+                    i = 0;
+                } else {
+                    write.print(trips.get(key) + ",");
+                    i++;
+                }
+            }
+
+        }
+        return true;
+
     }
 
     /**
