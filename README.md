@@ -46,9 +46,7 @@
     <li>
         Implement Route & Routes
         <ul>
-            
             <li>Add ability to load multiple GTFS files in succession (Delete old data)</li>
-            
         </ul>
     </li>
 </ul>
