@@ -83,14 +83,14 @@ public class Trips {
     public boolean loadTrips(File file) throws FileNotFoundException, IOException,
             InputMismatchException, DataFormatException {
 
-        //clears trips hash map
-        trips = new HashMap<>();
-
         //writes the items of the file to the hash map
         try (Scanner in = new Scanner(file)) {
 
             //checks to see if trips was empty
             boolean emptyPrior = trips.isEmpty();
+
+            //clears trips hash map
+            trips = new HashMap<>();
 
             //read header: route_id,service_id,trip_id,trip_headsign,direction_id,block_id,shape_id
             in.next("route_id,service_id,trip_id,trip_headsign,direction_id," +
