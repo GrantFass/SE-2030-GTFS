@@ -87,7 +87,7 @@ public class StopTimes {
 
 	/**
 	 * Method to parse StopTime data from a stop_times.txt file, resets database for every file
-	 * @author Joy Cross
+	 * @author Joy Cross, Grant Fass
 	 * @param file the stop_times.txt file to be parsed
 	 * @return true if file was loaded, false otherwise
 	 * @throws FileNotFoundException if the file was not found
@@ -288,6 +288,18 @@ public class StopTimes {
 
 		return true;
 	}
+
+	/**
+	 * checks to confirm that the header is valid and matches an expected format
+	 * @param header the header text line to validate
+	 * @return a Headers object containing the ordering of the headers
+	 * @author Grant Fass
+	 */
+	public Headers validateHeader(String header) {
+		return null;
+	}
+
+
 
 	/**
 	 * Method to output data as a single concatenated string
