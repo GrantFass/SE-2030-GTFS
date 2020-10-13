@@ -101,6 +101,8 @@
 <h5>Grant Fass:</h5>
 <h6>TODO</h6>
 <ul>
+    <li>Compress Lab 5 Data in README</li>
+    <li>Add lab 6 Data in README</li>
     <li>
         Implement Data View Window
         <ul>
@@ -163,6 +165,65 @@
 </s>
 <h5>Unassigned:</h5>
 <ul>
+    <li>
+        Create Lab 6 PDF submission
+        <ul>
+            <li>Include how many tests were written per person</li>
+            <li>Include who wrote which tests</li>
+            <li>Generate EA class diagram snapshot update</li>
+        </ul>
+    </li>
+    <li>
+        Create JUnit tests
+        <ul>
+            <li>Create at least 2 test cases per unit test</li>
+            <li>test import validation methods (should handle any type of input line)</li>
+            <li>each team member should write one unit test</li>
+            <li>comment each unit test with what its intended purpose is and who wrote it</li>
+        </ul>
+    </li>
+    <li>
+        Implement Feature 3: Display the average speed based on the start and end times of a trip
+        <ul>
+            <li>Display output to GUI</li>
+            <li>Use observer pattern to display results</li>
+            <li>Implement method to calculate average speed</li>
+        </ul>
+    </li>
+    <li>
+        Implement Feature 15: Export the GTFS files in the correct format from the data structure
+        <ul>
+            <li>Implement routes.txt export</li>
+            <li>Implement stops.txt export</li>
+            <li>Implement stop_times.txt export</li>
+            <li>Implement trips.txt export</li>
+        </ul>
+    </li>
+    <li>
+        Harden Import Functionality
+        <ul>
+            <li>Ensure invalid file formatting is handled appropriately</li>
+            <li>Ensure invalid data in files is handled appropriately</li>
+            <li>
+                Add helper methods to import to validate individual lines
+                <ul>
+                    <li>Add method to validate a single file header line</li>
+                    <li>Add method to validate a single data line</li>
+                    <li>Add method to validate individual data type if necessary / set to default value</li>
+                </ul>
+            </li>
+            <li>
+                Updated Import Specifications
+                <ul>
+                    <li>Routes only requires a route_id and route_color (all others are optional)</li>
+                    <li>Trips does not require a service_id</li>
+                    <li>Calendar information is ignored. (Schedule assumed to be same every day)</li>
+                    <li>Only 4 files are required routes, stops, stop_times, and trips</li>
+                    <li>Other than the aforementioned differences the import should match <a href = "https://developers.google.com/transit/gtfs/reference/">here</a></li>
+                </ul>
+            </li>
+        </ul>
+    </li>
     <li>
         Implement Data class
         <ul>
