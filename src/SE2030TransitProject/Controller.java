@@ -314,10 +314,10 @@ public class Controller {
 	private File getGTFSFileUsingFileChooser() {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.getExtensionFilters().addAll(
-				new FileChooser.ExtensionFilter("STOPS", "stops.txt".toLowerCase()),
-				new FileChooser.ExtensionFilter("TRIPS", "trips.txt".toLowerCase()),
 				new FileChooser.ExtensionFilter("ROUTES", "routes.txt".toLowerCase()),
+				new FileChooser.ExtensionFilter("STOPS", "stops.txt".toLowerCase()),
 				new FileChooser.ExtensionFilter("STOP_TIMES", "stop_times.txt".toLowerCase()),
+				new FileChooser.ExtensionFilter("TRIPS", "trips.txt".toLowerCase()),
 				new FileChooser.ExtensionFilter("TXT", "*.txt".toLowerCase()),
 				new FileChooser.ExtensionFilter("ALL FILES", "*.*".toLowerCase()));
 		fileChooser.setTitle("Load GTFS files");

@@ -241,15 +241,24 @@ public class Stop {
 
 	/**
 	 * Method to output data as a single concatenated string for Stop
-	 * @author Joy Cross,
+	 * @author Joy Cross, Grant Fass
 	 * @return string of data
 	 */
 	@Override
 	public String toString() {
-		 return "ID: " + stop_id + "; NAME: " + stop_name + "\n\tlevel_is: " + level_id + "; location_type: "
-				 + location_type + "; parent_station: " + parent_station + "; platform_code: " +
-				 platform_code + "; stop_code: " + stop_code + "; stop_desc: " + stop_description + "; stop_lat: " +
-				stop_latitude + "; stop_lon: " + stop_longitude + "; stop_timezone: " + stop_timezone
-				 + "; stop_url: " + stop_url + "; wheelchair_boarding: " + wheelchair_boarding;
+		return String.format("Stop Name: %s | Stop ID: %s\n\t" +
+				"Level ID: %s\n\t" +
+				"Location Type: %s\n\t" +
+				"Parent Station: %s\n\t" +
+				"Platform Code: %s\n\t" +
+				"Stop Code: %s\n\t" +
+				"Stop Description: %s\n\t" +
+				"Stop Latitude: %s\n\t" +
+				"Stop Longitude: %s\n\t" +
+				"Stop Timezone: %s\n\t" +
+				"Stop URL: %s\n\t" +
+				"Wheelchair Boarding: %s\n", stop_name, stop_id, level_id, location_type,
+				parent_station, platform_code, stop_code, stop_description, stop_latitude,
+				stop_longitude, stop_timezone, stop_url, wheelchair_boarding);
 	}
 }//end Stop

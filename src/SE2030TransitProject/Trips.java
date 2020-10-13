@@ -151,10 +151,8 @@ public class Trips {
     @Override
     public String toString() {
         StringBuilder toReturn = new StringBuilder();
-        toReturn.append("Trips\n");
         for (String key : trips.keySet()) {
-            Trip trip = trips.get(key);
-            toReturn.append(trip.toString()).append("\n");
+            toReturn.append(trips.get(key).toString() + "\n");
         }
         return toReturn.toString();
     }

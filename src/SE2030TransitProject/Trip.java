@@ -148,11 +148,15 @@ public class Trip {
      */
     @Override
     public String toString() {
-        return "Trip ID: " + trip_id + "\n\tBikes Allowed: " + bikes_allowed
-                + "\n\tBolck ID: " + block_id + "\n\tDirection ID: " + direction_id
-                + "\n\tRoute ID: " + route_id + "\n\tService ID: " + service_id
-                + "\n\tShape ID: " + shape_id + "\n\tTrip ID: " + trip_id
-                + "\n\tTrip Short Name: " + trip_short_name + "\n\tTrip Head Sign: " + trip_headsign
-                + "\n\tWheel Chair Accessible: " + wheelchair_accessible;
+        return String.format("Trip Name: %s | Trip ID: %s\n\t" +
+                "Bikes Allowed: %s\n\t" +
+                "Block ID: %s\n\t" +
+                "Direction ID: %s\n\t" +
+                "Route ID: %s\n\t" +
+                "Service ID: %s\n\t" +
+                "Shape ID: %s\n\t" +
+                "Trip Headsign: %s\n\t" +
+                "Wheelchair Accessible: %s\n", trip_short_name, trip_id, bikes_allowed, block_id,
+                direction_id, route_id, service_id, shape_id, trip_headsign, wheelchair_accessible);
     }
 }//end Trip

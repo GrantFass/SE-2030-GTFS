@@ -285,10 +285,16 @@ public class Route {
 	 */
 	@Override
 	public String toString() {
-		return "ROUTE ID: " + route_id + "; AGENCY ID: " + agency_id + "; Short Name: " + route_short_name
-                + "; Long Name: " + route_long_name + "\n\tDescription: " + route_desc + "\n\tRoute_type: "
-                + route_type + "\n\tRoute_url: " + route_url + "\n\tRoute_color: " + route_color +"\n\tRoute_text_color: "
-                + route_text_color + "\n\tSort_order: " + route_sort_order + "\n\tContinuous_pickup: " + continuous_pickup
-                + "\n\tContinuous_drop-off: " + continuous_drop_off;
+		return String.format("Route Name: %s | Route Short Name: %s | Route Agency: %s | Route ID %s\n\t" +
+				"Route Description: %s\n\t" +
+				"Route Type: %s\n\t" +
+				"Route URL: %s\n\t" +
+				"Route Color: %s\n\t" +
+				"Route Text Color: %s\n\t" +
+				"Route Sort Order: %s\n\t" +
+				"Continuous Pickup: %s\n\t" +
+				"Continuous Drop Off: %s\n", route_long_name, route_short_name, agency_id, route_id,
+				route_desc, route_type, route_url, route_color, route_text_color, route_sort_order,
+				continuous_pickup, continuous_drop_off);
 	}
 }//end Route
