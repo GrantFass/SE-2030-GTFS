@@ -150,7 +150,7 @@ public class Trips {
      */
     public File exportTrips(Path path) throws FileNotFoundException, IOException,
             InputMismatchException, DataFormatException {
-        return file;
+        return null;
     }
 
     /**
