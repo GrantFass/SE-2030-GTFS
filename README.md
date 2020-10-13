@@ -183,7 +183,7 @@
         </ul>
     </li>
     <li>
-        Implement Feature 3: Display the average speed based on the start and end times of a trip
+        (Optional for lab 6) Implement Feature 3: Display the average speed based on the start and end times of a trip
         <ul>
             <li>Display output to GUI</li>
             <li>Use observer pattern to display results</li>
@@ -197,6 +197,13 @@
             <li>Implement stops.txt export</li>
             <li>Implement stop_times.txt export</li>
             <li>Implement trips.txt export</li>
+        </ul>
+    </li>
+    <li>
+        Implement Feature 4: Display the number of trips each stop is found on.
+        <ul>
+            <li>Display output to GUI</li>
+            <li>(Optional for lab 6) Use observer pattern to display results</li>
         </ul>
     </li>
     <li>
