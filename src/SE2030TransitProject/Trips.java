@@ -97,27 +97,22 @@ public class Trips {
 
             //read body
             int i = 0;
-            while (in.hasNext()) {
-                in.useDelimiter(",");
+            while (in.hasNextLine()) {
+                String[] line = in.nextLine().split(",");
 
                 //trip data given from file
-                String route_id = in.next();
-                String service_id = checkNext(in);
-                String trip_id = checkNext(in);
-                String trip_headsign = checkNext(in);
+                String route_id = line[0];
+                String service_id = line[1];
+                String trip_id = line[2];
+                String trip_headsign = line[3];
                 DirectionIDEnum direction_id;
-                if (in.hasNext()) {
-                    String next = in.next();
-                    if (next.equals("0")) {
-                        direction_id = DirectionIDEnum.OUTBOUND_TRAVEL;
-                    } else {
-                        direction_id = DirectionIDEnum.INBOUND_TRAVEL;
-                    }
-                } else {
+                if (line[4].equals("0")) {
                     direction_id = DirectionIDEnum.OUTBOUND_TRAVEL;
+                } else {
+                    direction_id = DirectionIDEnum.INBOUND_TRAVEL;
                 }
-                String block_id = checkNext(in);
-                String shape_id = checkNext(in);
+                String block_id = line[5];
+                String shape_id = line[6];
 
                 //trip data not given by file
                 BikesAllowedEnum bikes_allowed = BikesAllowedEnum.NO_INFORMATION;
@@ -154,14 +149,6 @@ public class Trips {
             toReturn.append(trips.get(key).toString() + "\n");
         }
         return toReturn.toString();
-    }
-
-    private String checkNext(Scanner in){
-        String returnValue = "";
-        if (in.hasNext()) {
-            returnValue = in.next();
-        }
-        return returnValue;
     }
 
     /**
