@@ -26,6 +26,28 @@ public class Stop {
 	// private String zone_id; // used if we have fares.txt so I don't think we should include it
 
 	/**
+	 * Default Stop Constructor
+	 * @author Joy Cross
+	 * @param stop_id stop id of the Stop
+	 */
+	public Stop(String stop_id){
+		this.level_id = null;
+		this.location_type = LocationTypeEnum.STOP_OR_PLATFORM;
+		this.parent_station = null;
+		this.platform_code = null;
+		this.stop_code = null;
+		this.stop_description = null;
+		this.stop_id = stop_id;
+		this.stop_latitude = 0;
+		this.stop_longitude = 0;
+		this.stop_name = null;
+		this.stop_timezone = null;
+		this.stop_url = null;
+		this.wheelchair_boarding = WheelchairBoardingEnum.PARENTLESS_NO_INFORMATION;
+		//this.zone_id = null
+	}
+
+	/**
 	 * Stop Constructor
 	 * @author Joy Cross
 	 * @param level_id level ID of the location
@@ -62,6 +84,14 @@ public class Stop {
 		this.wheelchair_boarding = wheelchair_boarding;
 		this.stop_name = stop_name;
 		//this.zone_id = zone_id;
+	}
+
+
+	public String getAttributes(){
+		return stop_id + "," + level_id + "," + level_id + "," + level_id + "," +
+				level_id + "," + level_id + "," + level_id + "," + level_id + "," +
+				level_id + "," + level_id + "," + level_id + "," + level_id + "," +
+				level_id + "," + level_id + "," + level_id + "," + level_id;
 	}
 
 	/**

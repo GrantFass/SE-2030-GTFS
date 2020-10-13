@@ -40,6 +40,6 @@ public class Header {
      * @return the value of the headerName
      */
     public String getHeaderName() {
-        return getHeaderName();
+        return headerName;
     }
 }

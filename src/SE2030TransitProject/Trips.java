@@ -4,6 +4,7 @@ import javafx.scene.control.TextArea;
 
 import java.io.*;
 import java.nio.file.Path;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -83,8 +84,8 @@ public class Trips {
      * @throws DataFormatException    if data will be overwritten
      * @author Grant Fass, Simon Erickson
      */
-    public boolean loadTrips(File file) throws FileNotFoundException, IOException,
-            InputMismatchException, DataFormatException {
+    public boolean loadTrips(File file) throws FileNotFoundException,
+            InputMismatchException, DataFormatException, ParseException {
 
         //writes the items of the file to the hash map
         try (Scanner in = new Scanner(file)) {
@@ -96,7 +97,7 @@ public class Trips {
             trips = new HashMap<>();
 
             //read header: route_id,service_id,trip_id,trip_headsign,direction_id,block_id,shape_id
-            in.nextLine();
+            validateHeader(in.nextLine());
 
             //read body
             int i = 0;
@@ -184,6 +185,24 @@ public class Trips {
             toReturn.append(trips.get(key).toString() + "\n");
         }
         return toReturn.toString();
+    }
+
+    /**
+     * Checks to confirm that the header is valid and matches an expected format
+     *
+     * @param header the header text line to validate
+     * @return a Header object containing the ordering of the headers
+     * @throws ParseException if the header does not match the expected format
+     * @author GrantFass, Simon Erickson
+     */
+    public Header validateHeader(String header) throws ParseException {
+        Header tripHeader;
+        if (header.equals("route_id,service_id,trip_id,trip_headsign,direction_id,block_id,shape_id")) {
+            tripHeader = new Header("Trip Header", 0);
+        } else {
+            throw new ParseException("Invalid Trip Header", 1);
+        }
+        return tripHeader;
     }
 
     /**
