@@ -18,6 +18,7 @@ public class Main extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("mainProgram.fxml"));
         loader.load();
         Controller controller = loader.getController();
+        controller.setDefaultValues();
         stage.setScene(new Scene(loader.getRoot()));
         stage.setTitle("General Transit Feed Specification Tool");
         stage.show();

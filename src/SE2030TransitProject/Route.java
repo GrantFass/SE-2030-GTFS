@@ -285,7 +285,7 @@ public class Route {
 	 */
 	@Override
 	public String toString() {
-		return String.format("Route Name: %s | Route Short Name: %s | Route Agency: %s | Route ID %s\n\t" +
+		return String.format("Route Name: %s | Route Short Name: %s | Route Agency: %s | Route ID: %s\n\t" +
 				"Route Description: %s\n\t" +
 				"Route Type: %s\n\t" +
 				"Route URL: %s\n\t" +

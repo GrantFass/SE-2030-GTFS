@@ -30,6 +30,25 @@ public class Controller {
 	private DataDisplayController dataDisplayController;
 
 	/**
+	 * used to set some default values
+	 * called from Main
+	 */
+	public void setDefaultValues() {
+		textArea.setText("How To Use:\n\n" +
+				"Load Files:\n\t" +
+				"Go to File -> Load. this will open a FileChooser.\n\t" +
+				"Browse to the directory where your GTFS files are stored.\n\t" +
+				"By default strict file matching is enabled, as such use the extension selector dropdown.\n\t\t" +
+				"in the bottom right of the FileChooser to chose the file type you would like to import.\n\t" +
+				"After selecting your file type double click on your file to load it.\n\t" +
+				"The FileChooser will close and a confirmation that files were loaded will be displayed.\n\t" +
+				"A warning will be displayed if previous files were overwritten.\n\n" +
+				"View Files:\n\t" +
+				"Go to View -> Show Data Display. this will open the Data Display Window.\n\t" +
+				"In the Data Display Window go to View then the file you would like to view.");
+	}
+
+	/**
 	 * returns a copy of the data object
 	 * should not return the actual data object for security reasons
 	 * @return copy of the data object
