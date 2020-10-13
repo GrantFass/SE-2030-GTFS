@@ -1,7 +1,10 @@
 package SE2030TransitProject;
 
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -16,14 +19,58 @@ import java.util.InputMismatchException;
 import java.util.zip.DataFormatException;
 
 public class Controller {
-	public Label topLabel;
-	public VBox vBox;
-	public TextArea textArea;
+	@FXML
+	private Label topLabel;
+	@FXML
+	private VBox vBox;
+	@FXML
+	private TextArea textArea;
+	public MenuItem viewDataDisplayButton;
 	private Data data = new Data();
 	private Stage stage;
+	private Stage dataDisplayStage;
+	private DataDisplayController dataDisplayController;
 
 	/**
-	 * 
+	 * returns a copy of the data object
+	 * should not return the actual data object for security reasons
+	 * @return copy of the data object
+	 * @author Grant Fass
+	 */
+	public Data getData() {
+		//TODO add copy constructors in all relevant classes so this method returns a deep copy instead of the actual values.
+		return data;
+	}
+
+	/**
+	 * Set the value of the stage associated with this file
+	 * @param stage the stage value to use
+	 * @author Grant Fass
+	 */
+	public void setStage(Stage stage) {
+		this.stage = stage;
+	}
+
+	/**
+	 * Set the value of the stage associated with the Data Display
+	 * @param dataDisplayStage the data display stage value to use
+	 * @author Grant Fass
+	 */
+	public void setDataDisplayStage(Stage dataDisplayStage) {
+		this.dataDisplayStage = dataDisplayStage;
+	}
+
+	/**
+	 * Set the value of the controller associated with the Data Display
+	 * Should make sure that the same instance of the controller is used everywhere
+	 * @param dataDisplayController the data display controller value to use
+	 * @author Grant Fass
+	 */
+	public void setDataDisplayController(DataDisplayController dataDisplayController) {
+		this.dataDisplayController = dataDisplayController;
+	}
+
+	/**
 	 * @param trip_id
 	 */
 	public void displayDistance(String trip_id){
@@ -50,7 +97,7 @@ public class Controller {
 	 * 
 	 * @param outputLocation
 	 */
-	public void exportGTFSfiles(Path outputLocation){
+	public void exportMultipleGTFSFiles(Path outputLocation){
 
 	}
 
@@ -58,7 +105,7 @@ public class Controller {
 	 * 
 	 * @param gtfsFileLocation
 	 */
-	public void importGTFSfiles(Path gtfsFileLocation){
+	public void importMultipleGTFSFiles(Path gtfsFileLocation){
 
 	}
 
@@ -191,18 +238,17 @@ public class Controller {
 					data.getTrips().loadTrips(file);
 					break;
 			}
-			displayDataSnapshot();
 		} catch (IllegalArgumentException e) {
-			errorAlert("IllegalArgumentException", e.getMessage());
+			displayAlert(Alert.AlertType.ERROR, "Error","IllegalArgumentException", e.getMessage());
 		} catch (InputMismatchException e) {
-			errorAlert("InputMismatchException", e.getMessage());
+			displayAlert(Alert.AlertType.ERROR, "Error","InputMismatchException", e.getMessage());
 		} catch (FileNotFoundException e) {
-			errorAlert("FileNotFoundException",
+			displayAlert(Alert.AlertType.ERROR, "Error","FileNotFoundException",
 					e.getMessage() + " or operation was canceled");
 		} catch (IOException e) {
-			errorAlert("IOException", e.getMessage());
+			displayAlert(Alert.AlertType.ERROR, "Error","IOException", e.getMessage());
 		} catch (DataFormatException e) {
-			warningAlert("Data Overwritten", String.format("The data from the" +
+			displayAlert(Alert.AlertType.WARNING, "Warning","Data Overwritten", String.format("The data from the" +
 					" previous '%s' file was overwritten with the new data. The program" +
 					" may work unexpectedly if the new data from '%s' does not match" +
 					" the existing data in the remaining files.", e.getMessage(), e.getMessage()));
@@ -213,6 +259,18 @@ public class Controller {
 	}
 
 	public void reload() {
+	}
+
+	public void toggleDataDisplay() {
+		if (dataDisplayStage.isShowing()) {
+			dataDisplayStage.hide();
+			viewDataDisplayButton.setText("Show Data Display");
+		} else {
+			dataDisplayStage.setX(stage.getX() + stage.getWidth());
+			dataDisplayStage.setY(stage.getY());
+			dataDisplayStage.show();
+			viewDataDisplayButton.setText("Hide Data Display");
+		}
 	}
 
 	/**
@@ -234,11 +292,8 @@ public class Controller {
 		String introductionInformation = "This program is designed to allow " +
 				"the user to import, view, and manipulate GTFS files for a General " +
 				"Transit Feed Specification Tool.\n\n";
-		Alert alert = new Alert(Alert.AlertType.INFORMATION);
-		alert.setTitle("General Transit Feed Specification Tool");
-		alert.setHeaderText(null);
-		alert.setContentText(introductionInformation + acceptedFiles + aboutInfo);
-		alert.showAndWait();
+		displayAlert(Alert.AlertType.INFORMATION, "General Transit Feed Specification Tool Information",
+				null, introductionInformation + acceptedFiles + aboutInfo);
 	}
 
 	/**
@@ -313,39 +368,18 @@ public class Controller {
 	}
 
 	/**
-	 * method to display an alert with the error format
+	 * display an alert with the specified format and values
+	 * @param alertType the type of alert to display
+	 * @param title the title of the alert
+	 * @param header the header text to display in the alert
+	 * @param content the content text to display in the alert
 	 * @author Grant Fass
-	 * @param header the header text to be displayed
-	 * @param content the content text to be displayed
 	 */
-	private void errorAlert(String header, String content) {
-		Alert alert = new Alert(Alert.AlertType.ERROR);
-		alert.setTitle("Error Dialog");
+	public void displayAlert(Alert.AlertType alertType, String title, String header, String content) {
+		Alert alert = new Alert(alertType);
+		alert.setTitle(title);
 		alert.setHeaderText(header);
 		alert.setContentText(content);
 		alert.showAndWait();
-	}
-
-	/**
-	 * method to display an alert with the warning format
-	 * @author Grant Fass
-	 * @param header the header text to be displayed
-	 * @param content the content text to be displayed
-	 */
-	private void warningAlert(String header, String content) {
-		Alert alert = new Alert(Alert.AlertType.WARNING);
-		alert.setTitle("Warning Dialog");
-		alert.setHeaderText(header);
-		alert.setContentText(content);
-		alert.showAndWait();
-	}
-
-	/**
-	 * Method to output a snapshot of the information in the Data class
-	 * @author Grant Fass
-	 */
-	private void displayDataSnapshot() {
-		topLabel.setText("Data Snapshot:");
-		textArea.setText(data.toString());
 	}
 }

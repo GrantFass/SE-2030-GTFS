@@ -104,8 +104,11 @@
             <li>Implement Data View FXML file</li>
             <li>Implement Data View controller</li>
             <li>Implement observer interface into data view controller</li>
+            <li>Add method in Stops, Routes, Trips, and StopTimes that is passed a textArea to display to</li>
+            <li>Update help section</li>
         </ul>
     </li>
+    <li>Implement Deep Copy in controller getData() method</li>
 </ul>
 <h6>Completed</h6>
 <s>
