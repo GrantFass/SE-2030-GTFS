@@ -6,6 +6,7 @@
 <h3>Program Status:</h3>
 <ul>
     <li>Stops Loads and Displays</li>
+    <li>Routes Loads and Displays</li>
     <li>Stop_Times does not load the full length file, but will load shorter versions</li>
     <li>Java SDK: 1.8.0_242</li>
     <li>Junit 5.4.2 used for testing</li>
