@@ -17,9 +17,30 @@
 <h5>Joy Cross:</h5>
 <h6>TODO</h6>
 <ul>
+    <li>Implement stop Export</li>
     <li>
+        Implement Feature 4: Display the number of trips each stop is found on
         <ul>
-            <li></li>
+            <li>Calculate the number of trips each stop is found on</li>
+        </ul>
+    </li>
+    <li>
+        Harden Stop Import Validation
+        <ul>
+            <li>Create validation method for header line</li>
+            <li>Create validation method for input line</li>
+            <li>Create unit test for header line validation method</li>
+            <li>Create unit test for input line validation method</li>
+            <li>Ensure individual file formatting is handled appropriately</li>
+            <li>
+                Ensure invalid data in files is handled appropriately
+                <ul>
+                    <li>If file has a corrupted line then skip it</li>
+                    <li>Update user that there were corrupted lines and they were skipped</li>
+                </ul>    
+            </li>
+            <li>Add Javadoc comments to Junit tests</li>
+            <li>Add Javadoc comments to validation methods</li>
         </ul>
     </li>
 </ul>
@@ -45,9 +66,24 @@
 <h5>Ryan Becker:</h5>
 <h6>TODO</h6>
 <ul>
+    <li>Implement route Export</li>
     <li>
+        Harden Route Import Validation
         <ul>
-            <li></li>
+            <li>Create validation method for header line</li>
+            <li>Create validation method for input line</li>
+            <li>Create unit test for header line validation method</li>
+            <li>Create unit test for input line validation method</li>
+            <li>Ensure individual file formatting is handled appropriately</li>
+            <li>
+                Ensure invalid data in files is handled appropriately
+                <ul>
+                    <li>If file has a corrupted line then skip it</li>
+                    <li>Update user that there were corrupted lines and they were skipped</li>
+                </ul>    
+            </li>
+            <li>Add Javadoc comments to Junit tests</li>
+            <li>Add Javadoc comments to validation methods</li>
         </ul>
     </li>
 </ul>
@@ -72,9 +108,24 @@
 <h5>Simon Erickson:</h5>
 <h6>TODO</h6>
 <ul>
+    <li>Implement trip Export</li>
     <li>
+        Harden Trip Import Validation
         <ul>
-            <li></li>
+            <li>Create validation method for header line</li>
+            <li>Create validation method for input line</li>
+            <li>Create unit test for header line validation method</li>
+            <li>Create unit test for input line validation method</li>
+            <li>Ensure individual file formatting is handled appropriately</li>
+            <li>
+                Ensure invalid data in files is handled appropriately
+                <ul>
+                    <li>If file has a corrupted line then skip it</li>
+                    <li>Update user that there were corrupted lines and they were skipped</li>
+                </ul>    
+            </li>
+            <li>Add Javadoc comments to Junit tests</li>
+            <li>Add Javadoc comments to validation methods</li>
         </ul>
     </li>
 </ul>
@@ -100,6 +151,35 @@
 </s>
 <h5>Grant Fass:</h5>
 <h6>TODO</h6>
+<ul>
+    <li>Implement stop_time Export</li>
+    <li>
+        Implement Feature 4: Display the number of trips each stop is found on
+        <ul>
+            <li>Display output to GUI</li>
+            <li>Optional for lab 6: Use observer pattern to display results</li>
+        </ul>
+    </li>
+    <li>
+        Harden Stop_Time Import Validation
+        <ul>
+            <li>Create validation method for header line</li>
+            <li>Create validation method for input line</li>
+            <li>Create unit test for header line validation method</li>
+            <li>Create unit test for input line validation method</li>
+            <li>Ensure individual file formatting is handled appropriately</li>
+            <li>
+                Ensure invalid data in files is handled appropriately
+                <ul>
+                    <li>If file has a corrupted line then skip it</li>
+                    <li>Update user that there were corrupted lines and they were skipped</li>
+                </ul>    
+            </li>
+            <li>Add Javadoc comments to Junit tests</li>
+            <li>Add Javadoc comments to validation methods</li>
+        </ul>
+    </li>
+</ul>
 <ul>
     <li>Compress Lab 5 Data in README</li>
     <li>Add lab 6 Data in README</li>
