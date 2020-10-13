@@ -1,9 +1,7 @@
 package SE2030TransitProject;
 
 
-import com.sun.javafx.image.IntPixelGetter;
 import javafx.scene.paint.Color;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -26,7 +24,7 @@ public class Routes {
 
 	/**
 	 * Routes constructor initialized with empty hash map
-	 * @Ryan Becker
+	 * @author Ryan Becker
 	 */
 	public Routes(){
 		routes = new HashMap<>();
@@ -34,9 +32,9 @@ public class Routes {
 
 	/**
 	 * adds route parameter to routes hash map with the route_id of route as the key, and route as the value.
-	 * returns true if new route was added, false otherwise.
 	 * @author Ryan Becker
 	 * @param route Route object to be added to routes
+     * @return true if new route was added, false otherwise
 	 */
 	public boolean addRoute(Route route){
 		Route routeAdded = routes.put(route.getRouteID(), route);
@@ -58,9 +56,9 @@ public class Routes {
 
 	/**
 	 * Removes specified Route object from routes
-	 * returns true if a route was deleted, false otherwise.
 	 * @author Ryan Becker
 	 * @param route Route to be removed
+     * @return true if deleted, false otherwise
 	 */
 	public boolean removeRoute(Route route){
 		Route routeRemoved = routes.remove(route.getRouteID());
@@ -126,12 +124,6 @@ public class Routes {
 			throw new DataFormatException(dfe.getMessage());
 		}
 		return true;
-
-        /*
-        TODO: DataFormatException should be thrown after everything else is done and let the user know that previous data was overwritten
-        Note: For the exception text put in the name of the text file ie: stops.txt I will do the rest in the controller
-        - Grant
-         */
 	}
 
 	/**

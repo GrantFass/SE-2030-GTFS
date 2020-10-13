@@ -2,7 +2,6 @@ package SE2030TransitProject;
 
 
 import javafx.scene.paint.Color;
-
 import java.net.URL;
 
 /**
@@ -26,7 +25,21 @@ public class Route {
 	private ContinuousPickupEnum continuous_pickup;
 	private ContinuousDropOffEnum continuous_drop_off;
 
-
+	/**
+	 * @author Ryan Becker
+	 * @param route_id ID of route
+	 * @param agency_id ID of agency
+	 * @param route_short_name short name of route
+	 * @param route_long_name long name of route
+	 * @param route_desc String of important information of route
+	 * @param route_type Identifier for type of transport
+	 * @param route_url URL of website of route
+	 * @param route_color Color of route path
+	 * @param route_text_color Color of route text
+	 * @param route_sort_order Integer indicating order to be sorted and displayed (lower is higher priority)
+	 * @param continuous_pickup Status of availability for pickups on route
+	 * @param continuous_drop_off Status of availability for drop-offs on route
+	 */
 	public Route(String route_id, String agency_id, String route_short_name, String route_long_name, String route_desc,
 				 RouteTypeEnum route_type, URL route_url, Color route_color, Color route_text_color,
 				 int route_sort_order, ContinuousPickupEnum continuous_pickup,
@@ -49,6 +62,7 @@ public class Route {
 	//Getters
 	/**
 	 * returns route_id
+	 * @author Ryan Becker
 	 * @return ID of route as a String
 	 */
 	public String getRouteID() {
@@ -57,6 +71,7 @@ public class Route {
 
 	/**
 	 * returns agency_id
+	 * @author Ryan Becker
 	 * @return ID of agency as a String
 	 */
 	public String getAgencyID() {
@@ -65,6 +80,7 @@ public class Route {
 
 	/**
 	 * returns route_short_name
+	 * @author Ryan Becker
 	 * @return short name of route as a String
 	 */
 	public String getRouteShortName() {
@@ -73,6 +89,7 @@ public class Route {
 
 	/**
 	 * returns route_long_name
+	 * @author Ryan Becker
 	 * @return long name of route as a String
 	 */
 	public String getRouteLongName() {
@@ -81,6 +98,7 @@ public class Route {
 
 	/**
 	 * returns route_desc
+	 * @author Ryan Becker
 	 * @return detailed description of route as a String
 	 */
 	public String getRouteDesc() {
@@ -89,6 +107,7 @@ public class Route {
 
 	/**
 	 * returns route_type
+	 * @author Ryan Becker
 	 * @return RouteTypeEnum, which is the method of transport of a route
 	 */
 	public RouteTypeEnum getRouteType() {
@@ -97,6 +116,7 @@ public class Route {
 
 	/**
 	 * returns route_url
+	 * @author Ryan Becker
 	 * @return URL of webpage for the route as a URL object
 	 */
 	public URL getRouteURL() {
@@ -105,6 +125,7 @@ public class Route {
 
 	/**
 	 * returns route_color
+	 * @author Ryan Becker
 	 * @return Color of route
 	 */
 	public Color getRouteColor() {
@@ -113,6 +134,7 @@ public class Route {
 
 	/**
 	 * returns route_text_color
+	 * @author Ryan Becker
 	 * @return Color of text of route
 	 */
 	public Color getRouteTextColor() {
@@ -121,6 +143,7 @@ public class Route {
 
 	/**
 	 * return route_sort_order
+	 * @author Ryan Becker
 	 * @return positive int value prioritizing order in list. Lower value has higher priority
 	 */
 	public int getRouteSortOrder() {
@@ -129,6 +152,7 @@ public class Route {
 
 	/**
 	 * return continuous_pickup
+	 * @author Ryan Becker
 	 * @return ContinuousPickupEnum, which is the status of pickup availability along a route
 	 */
 	public ContinuousPickupEnum getContinuousPickup() {
@@ -136,6 +160,7 @@ public class Route {
 	}
 	/**
 	 * return continuous_drop_off
+	 * @author Ryan Becker
 	 * @return ContinuousDropOffEnum, which is the status of drop-off availability along a route
 	 */
 	public ContinuousDropOffEnum getContinuousDropOff() {
@@ -146,6 +171,7 @@ public class Route {
 
 	/**
 	 * sets route_id
+	 * @author Ryan Becker
 	 * @param route_id String of route's ID
 	 */
 	public void setRouteID(String route_id) {
@@ -154,6 +180,7 @@ public class Route {
 
 	/**
 	 * sets agency_id
+	 * @author Ryan Becker
 	 * @param agency_id String of agency's ID
 	 */
 	public void setAgencyID(String agency_id) {
@@ -162,6 +189,7 @@ public class Route {
 
 	/**
 	 * sets route_short_name
+	 * @author Ryan Becker
 	 * @param route_short_name String of the short name of route
 	 */
 	public void setRouteShortName(String route_short_name) {
@@ -170,6 +198,7 @@ public class Route {
 
 	/**
 	 * sets route_long_name
+	 * @author Ryan Becker
 	 * @param route_long_name String of the long name of route
 	 */
 	public void setRouteLongName(String route_long_name) {
@@ -178,6 +207,7 @@ public class Route {
 
 	/**
 	 * sets route_desc
+	 * @author Ryan Becker
 	 * @param route_desc String of detailed information of route
 	 */
 	public void setRouteDesc(String route_desc) {
@@ -186,6 +216,7 @@ public class Route {
 
 	/**
 	 * sets route_type
+	 * @author Ryan Becker
 	 * @param route_type Enumerator associated with method of transport for route
 	 */
 	public void setRouteType(RouteTypeEnum route_type) {
@@ -194,6 +225,7 @@ public class Route {
 
 	/**
 	 * sets route_url
+	 * @author Ryan Becker
 	 * @param route_url URL of web page for route
 	 */
 	public void setRouteURL(URL route_url) {
@@ -202,6 +234,7 @@ public class Route {
 
 	/**
 	 * sets route_color
+	 * @author Ryan Becker
 	 * @param route_color Color of route
 	 */
 	public void setRouteColor(Color route_color) {
@@ -210,6 +243,7 @@ public class Route {
 
 	/**
 	 * sets route_text_color
+	 * @author Ryan Becker
 	 * @param route_text_color Color of text for labels for route
 	 */
 	public void setRouteTextColor(Color route_text_color) {
@@ -218,6 +252,7 @@ public class Route {
 
 	/**
 	 * sets route_sort_order
+	 * @author Ryan Becker
 	 * @param route_sort_order positive integer, where lower number indicates a higher priority in sorting
 	 */
 	//TODO ensure param is positive
@@ -227,6 +262,7 @@ public class Route {
 
 	/**
 	 * sets continuous_pickup
+	 * @author Ryan Becker
 	 * @param continuous_pickup Enumerator for status of ability for pickups along route
 	 */
 	public void setContinuousPickup(ContinuousPickupEnum continuous_pickup) {
@@ -235,6 +271,7 @@ public class Route {
 
     /**
      * sets continuous_drop_off
+	 * @author Ryan Becker
      * @param continuous_drop_off Enumerator for status of ability for drop-offs along route
      */
 	public void setContinuousDropOff(ContinuousDropOffEnum continuous_drop_off) {
