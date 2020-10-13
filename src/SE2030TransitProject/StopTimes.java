@@ -291,15 +291,58 @@ public class StopTimes {
 
 	/**
 	 * checks to confirm that the header is valid and matches an expected format
+	 * TODO: verify header matches proper format (Exception Handling)
 	 * @param header the header text line to validate
 	 * @return a Headers object containing the ordering of the headers
+	 * @throws DataFormatException if the header does not match the expected format
 	 * @author Grant Fass
 	 */
-	public Headers validateHeader(String header) {
+	public Headers validateHeader(String header) throws ParseException {
+		Headers headers = new Headers();
+		String[] headerDataArray = header.split(",");
+		for (int i = 0; i < headerDataArray.length; i++) {
+			headers.addHeader(new Header(headerDataArray[i], i));
+		}
+		return headers;
+	}
+
+	/**
+	 * checks to confirm that a data line is valid and matches the expected format set by the header line
+	 * TODO: verify data matches proper format (Exception Handling)
+	 * @param data the line of data to parse
+	 * @param headers the headers values to use to parse the data
+	 * @return a StopTime object constructed from the data
+	 * @throws DataFormatException if the data does not match the expected format
+	 * @author Grant Fass
+	 */
+	public StopTime validateData(String data, Headers headers) throws DataFormatException {
+		String[] dataArray = data.split(",");
+		if (dataArray.length != headers.length()) {
+			throw new DataFormatException("Data line does not contain the proper amount of data");
+		}
+
+		/*
+		StopTime(Timestamp arrival_time, ContinuousDropOffEnum continuous_drop_off, ContinuousPickupEnum
+				continuous_pickup, Timestamp departure_time, DropOffTypeEnum drop_off_type, PickupTypeEnum
+				pickup_type, float shape_dist_traveled, String stop_headsign, String stop_id, int stop_sequence,
+		TimepointEnum timepoint, String trip_id)
+
+		 */
 		return null;
 	}
 
-
+	/**
+	 * Sets the default values of a variable
+	 * Searches for the expectedHeader in the Headers object and will return the associated value
+	 * if it is found or will return the default value if it was not found
+	 * @param dataArray the data values to be used
+	 * @param headers the headers to search through
+	 * @param expectedHeader the expected header value
+	 * @return data value for the expected header
+	 */
+	public String setDefaultDataValue(String[] dataArray, Headers headers, String expectedHeader) {
+		return null;
+	}
 
 	/**
 	 * Method to output data as a single concatenated string

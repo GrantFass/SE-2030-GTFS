@@ -22,7 +22,7 @@ public class Header {
      * @param headerIndex the index of the header to set
      * @author Grant Fass
      */
-    Header(String headerName, int headerIndex) {
+    public Header(String headerName, int headerIndex) {
         this.headerName = headerName;
         this.headerIndex = headerIndex;
     }

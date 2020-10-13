@@ -21,7 +21,7 @@ public class Headers {
      * Constructor for the header class used to initialize variables
      * @author Grant Fass
      */
-    Headers() {
+    public Headers() {
         headers = new ArrayList<>();
     }
 
@@ -61,5 +61,9 @@ public class Headers {
             }
         }
         return -1;
+    }
+
+    public int length(){
+        return headers.size();
     }
 }
