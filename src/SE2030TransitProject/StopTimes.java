@@ -5,8 +5,6 @@ import javafx.scene.control.TextArea;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -89,204 +87,38 @@ public class StopTimes {
 	 * Method to parse StopTime data from a stop_times.txt file, resets database for every file
 	 * @author Joy Cross, Grant Fass
 	 * @param file the stop_times.txt file to be parsed
-	 * @return true if file was loaded, false otherwise
+	 * @return true if a line was skipped while loading, false otherwise
 	 * @throws FileNotFoundException if the file was not found
 	 * @throws IOException for general File IO errors.
 	 * @throws InputMismatchException if there is an issue parsing the file
 	 * @throws DataFormatException if data will be overwritten
 	 */
 	public boolean loadStopTimes(File file) throws DataFormatException, IOException {
-		try {
-			boolean emptyBefore = stop_times.isEmpty();
-			clearStopTimes();
-			Scanner sc = new Scanner(file);
-			String line = sc.nextLine();
-			String[] headers = line.split(",");
-
-			// Finding location of each parameter in headers list
-			int arrival_time_array = -1;
-			int departure_time_array = -1;
-			int drop_off_type_array = -1;
-			int pickup_type_array = -1;
-			int stop_headsign_array = -1;
-			int stop_id_array = -1;
-			int trip_id_array = -1;
-			int stop_sequence_array = -1;
-			int timepoint_array = -1;
-			int continuous_drop_off_array = -1;
-			int continuous_pickup_array = -1;
-			int shape_dist_traveled_array = -1;
-
-			Timestamp arrival_time = null;
-			Timestamp departure_time = null;
-			float shape_dist_traveled = 0;
-			String stop_headsign = null;
-			String stop_id = null;
-			int stop_sequence = 0;
-			TimepointEnum timepoint = TimepointEnum.EXACT_TIME;
-			String trip_id = null;
-			DropOffTypeEnum drop_off_type = DropOffTypeEnum.REGULARLY_SCHEDULED_DROP_OFF;
-			PickupTypeEnum pickup_type = PickupTypeEnum.REGULARLY_SCHEDULED_PICKUP;
-			ContinuousDropOffEnum continuous_drop_off = ContinuousDropOffEnum.NO_CONTINUOUS_DROP_OFF;
-			ContinuousPickupEnum continuous_pickup = ContinuousPickupEnum.NO_CONTINUOUS_PICKUP;
-
-			// loop to find location of all headers to create stop
-			for (int i = 0; i < headers.length; i++) {
-				switch (headers[i].trim().toLowerCase()) {
-					case "stop_id":
-						stop_id_array = i;
-						break;
-					case "arrival_time":
-						arrival_time_array = i;
-						break;
-					case "trip_id":
-						trip_id_array = i;
-						break;
-					case "continuous_drop_off":
-						continuous_drop_off_array = i;
-						break;
-					case "continuous_pickup":
-						continuous_pickup_array = i;
-						break;
-					case "departure_time":
-						departure_time_array = i;
-						break;
-					case "drop_off_type":
-						drop_off_type_array = i;
-						break;
-					case "pickup_type":
-						pickup_type_array = i;
-						break;
-					case "shape_dist_traveled":
-						shape_dist_traveled_array = i;
-						break;
-					case "stop_headsign":
-						stop_headsign_array = i;
-						break;
-					case "stop_sequence":
-						stop_sequence_array = i;
-						break;
-					case "timepoint":
-						timepoint_array = i;
-						break;
-				}
-			}
-
-			// loop through file
-			SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
-			int lineNumber = 1;
-			while (sc.hasNextLine()) {
-				line = sc.nextLine();
-				String[] data = line.split(",");
-				try {
-					// setting attributes, default values if not in file
-					if (stop_id_array != -1) {
-						stop_id = data[stop_id_array];
-					}
-					if (trip_id_array != -1 && stop_id_array != -1) {
-						trip_id = data[trip_id_array];
-					} else {
-						throw new IOException("No Stop ID/Route ID given for line: " + lineNumber);
-					}
-					if (arrival_time_array != -1) {
-						try {
-							arrival_time = new Timestamp(df.parse(data[arrival_time_array]).getTime());
-						} catch (ParseException parse) {
-							throw new IOException("Arrival Time not correct format should be hh:mm:ss " +
-									"for line: " + lineNumber);
-						}
-					}
-					if (departure_time_array != -1) {
-						try {
-							departure_time = new Timestamp(df.parse(data[departure_time_array]).getTime());
-						} catch (ParseException parse) {
-							throw new IOException("Departure Time not correct format should " +
-									"be hh:mm:ss for line: " + lineNumber);
-						}
-					}
-					if (drop_off_type_array != -1) {
-						try {
-							int drop_off_type_int = Integer.parseInt(data[drop_off_type_array]);
-							if (drop_off_type_int == 3) {
-								drop_off_type = DropOffTypeEnum.COORDINATE_WITH_DRIVER_FOR_DROP_OFF;
-							} else if (drop_off_type_int == 2) {
-								drop_off_type = DropOffTypeEnum.PHONE_AGENCY_FOR_DROP_OFF;
-							} else if (drop_off_type_int == 1) {
-								drop_off_type = DropOffTypeEnum.NO_DROP_OFF_AVAILABLE;
-							} else if (drop_off_type_int == 0) {
-								drop_off_type = DropOffTypeEnum.REGULARLY_SCHEDULED_DROP_OFF;
-							} else {
-								throw new IOException("Drop off type should be between 0-3 for line: "
-										+ lineNumber);
-							}
-						} catch (NumberFormatException number) {
-							throw new IOException("Stop Sequence not correct data should be integer" +
-									"for line: " + lineNumber);
-						}
-					}
-					if (pickup_type_array != -1) {
-						try {
-							int pickup_type_int = Integer.parseInt(data[pickup_type_array]);
-							if (pickup_type_int == 3) {
-								pickup_type = PickupTypeEnum.COORDINATE_WITH_DRIVER_FOR_PICKUP;
-							} else if (pickup_type_int == 2) {
-								pickup_type = PickupTypeEnum.PHONE_AGENCY_FOR_PICKUP;
-							} else if (pickup_type_int == 1) {
-								pickup_type = PickupTypeEnum.NO_PICKUP_AVAILABLE;
-							} else if (pickup_type_int == 0) {
-								pickup_type = PickupTypeEnum.REGULARLY_SCHEDULED_PICKUP;
-							} else {
-								throw new IOException("Drop off type should be between 0-3 for line: "
-										+ lineNumber);
-							}
-						} catch (NumberFormatException number) {
-							throw new IOException("Stop Sequence not correct data should be integer for line: "
-									+ lineNumber);
-						}
-					}
-					if (stop_sequence_array != -1) {
-						try {
-							stop_sequence = Integer.parseInt(data[stop_sequence_array]);
-						} catch (NumberFormatException number) {
-							throw new IOException("Stop Sequence not correct data should be integer for line: "
-									+ lineNumber);
-						}
-					}
-					if (stop_headsign_array != -1) {
-						stop_headsign = data[stop_headsign_array];
-					}
-					// IMPLEMENT FOR LATER
-					/*
-					if (timepoint_array != -1) {
-						timepoint = data[timepoint_array];
-					}
-					if (continuous_pickup_array != -1) {
-						continuous_pickup = data[continuous_pickup_array];
-					}
-					if (shape_dist_traveled_array != -1) {
-						shape_dist_traveled = data[shape_dist_traveled_array];
-					}
-					*/
-
-					StopTime stopTime = new StopTime(arrival_time, continuous_drop_off, continuous_pickup,
-							departure_time, drop_off_type, pickup_type, shape_dist_traveled, stop_headsign, stop_id,
-							stop_sequence, timepoint, trip_id);
-
-					addStopTime(stop_id, trip_id, stopTime);
-					lineNumber++;
-				} catch (IOException e){
-					// Error handling for later, right now will skip corrupted data
-				}
-			}
-
-			if(!emptyBefore){
-				throw new DataFormatException(file.getName());
-			}
-		} catch (DataFormatException dfe){
-			throw new DataFormatException(dfe.getMessage());
+		boolean emptyAtLoadStart = true;
+		if (!stop_times.isEmpty()) {
+			emptyAtLoadStart = false;
+			stop_times.clear();
 		}
-
-		return true;
+		Scanner fileInput = new Scanner(file);
+		Headers headers;
+		try {
+			headers = validateHeader(fileInput.nextLine());
+		} catch (DataFormatException e) {
+			throw new IOException("File not read due to invalid headers format");
+		}
+		boolean wasLineSkipped = false;
+		while (fileInput.hasNextLine()) {
+			try {
+				StopTime stopTime = validateData(fileInput.nextLine(), headers);
+				addStopTime(stopTime.getStopID(), stopTime.getTripID(), stopTime);
+			} catch (DataFormatException e) {
+				wasLineSkipped = true;
+			}
+		}
+		if (!emptyAtLoadStart) {
+			throw new DataFormatException(file.getName());
+		}
+		return wasLineSkipped;
 	}
 
 	/**
@@ -297,7 +129,7 @@ public class StopTimes {
 	 * @throws DataFormatException if the header does not match the expected format
 	 * @author Grant Fass
 	 */
-	public Headers validateHeader(String header) throws ParseException {
+	public Headers validateHeader(String header) throws DataFormatException {
 		Headers headers = new Headers();
 		String[] headerDataArray = header.split(",");
 		for (int i = 0; i < headerDataArray.length; i++) {
@@ -313,35 +145,56 @@ public class StopTimes {
 	 * @param headers the headers values to use to parse the data
 	 * @return a StopTime object constructed from the data
 	 * @throws DataFormatException if the data does not match the expected format
+	 * @throws IllegalArgumentException if there was an issue parsing a String enumerator to an int
 	 * @author Grant Fass
 	 */
-	public StopTime validateData(String data, Headers headers) throws DataFormatException {
+	public StopTime validateData(String data, Headers headers) throws DataFormatException, IllegalArgumentException {
 		String[] dataArray = data.split(",");
 		if (dataArray.length != headers.length()) {
 			throw new DataFormatException("Data line does not contain the proper amount of data");
 		}
+		//Required Fields
+		String trip_id = setDefaultDataValue(dataArray, headers, "trip_id");
+		String stop_id = setDefaultDataValue(dataArray, headers, "stop_id");
+		String stop_sequence = setDefaultDataValue(dataArray, headers, "stop_sequence");
 
-		/*
-		StopTime(Timestamp arrival_time, ContinuousDropOffEnum continuous_drop_off, ContinuousPickupEnum
-				continuous_pickup, Timestamp departure_time, DropOffTypeEnum drop_off_type, PickupTypeEnum
-				pickup_type, float shape_dist_traveled, String stop_headsign, String stop_id, int stop_sequence,
-		TimepointEnum timepoint, String trip_id)
+		//Conditionally Required Fields
+		String arrival_time = setDefaultDataValue(dataArray, headers, "arrival_time");
+		String departure_time = setDefaultDataValue(dataArray, headers, "departure_time");
+		if (arrival_time.isEmpty() && !departure_time.isEmpty()) {
+			arrival_time = departure_time;
+		} else if (!arrival_time.isEmpty() && departure_time.isEmpty()) {
+			departure_time = arrival_time;
+		}
 
-		 */
-		return null;
+		//Optional Fields
+		String stop_headsign = setDefaultDataValue(dataArray, headers, "stop_headsign");
+		String continuous_drop_off = setDefaultDataValue(dataArray, headers, "continuous_drop_off");
+		String continuous_pickup = setDefaultDataValue(dataArray, headers, "continuous_pickup");
+		String drop_off_type = setDefaultDataValue(dataArray, headers, "drop_off_type");
+		String pickup_type = setDefaultDataValue(dataArray, headers, "pickup_type");
+		String timepoint = setDefaultDataValue(dataArray, headers, "timepoint");
+		String shape_distance = setDefaultDataValue(dataArray, headers, "shape_dist_traveled");
+
+		return new StopTime(arrival_time, continuous_drop_off, continuous_pickup, departure_time,
+				drop_off_type, pickup_type, shape_distance, stop_headsign,
+				stop_id, stop_sequence, timepoint, trip_id);
 	}
 
 	/**
-	 * Sets the default values of a variable
 	 * Searches for the expectedHeader in the Headers object and will return the associated value
-	 * if it is found or will return the default value if it was not found
+	 * if it is found or will return empty String if it was not found.
 	 * @param dataArray the data values to be used
 	 * @param headers the headers to search through
 	 * @param expectedHeader the expected header value
 	 * @return data value for the expected header
 	 */
 	public String setDefaultDataValue(String[] dataArray, Headers headers, String expectedHeader) {
-		return null;
+		int index = headers.getHeaderIndex(expectedHeader);
+		if (index >= 0 && index < dataArray.length) {
+			return dataArray[index];
+		}
+		return "";
 	}
 
 	/**

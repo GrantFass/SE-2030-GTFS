@@ -23,11 +23,40 @@ public enum LocationTypeEnum {
 
     private final int value;
 
+    /**
+     * Constructor for the Enumerator
+     * @param value the value to set the instance of the enum to
+     * @author Grant Fass
+     */
     LocationTypeEnum(int value) {
         this.value = value;
     }
 
+    /**
+     * return the integer value associated with the enumerator
+     * @return the integer value associated with the enumerator
+     * @author Grant Fass
+     */
     public int getValue(){
         return this.value;
     }
-}
+
+    /**
+     * return the enumerator value associated with the specified integer value
+     * @param value the value to use
+     * @return the enumerator value associated with the integer or the default if none match
+     * @author Grant Fass
+     */
+    public static LocationTypeEnum getValue(int value) {
+        if (value == 1) {
+            return STATION;
+        } else if (value == 2) {
+            return ENTRANCE;
+        } else if (value == 3) {
+            return GENERIC;
+        } else if (value == 4) {
+            return BOARDING_AREA;
+        } else {
+            return STOP_OR_PLATFORM;
+        }
+    }}

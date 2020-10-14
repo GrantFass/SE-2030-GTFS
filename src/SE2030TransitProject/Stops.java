@@ -79,7 +79,7 @@ public class Stops {
 	 * Method to parse Stop data from a stops.txt file
 	 * @author Joy Cross
 	 * @param file the stops.txt file to be parsed
-	 * @return true if file was loaded, false otherwise
+	 * @return true if a line was skipped while loading, false otherwise
 	 * @throws FileNotFoundException if the file was not found
 	 * @throws IOException for general File IO errors.
 	 * @throws InputMismatchException if there is an issue parsing the file
@@ -211,6 +211,7 @@ public class Stops {
 		} catch (DataFormatException dfe){
 			throw new DataFormatException(dfe.getMessage());
 		}
+		//TODO:  true if a line was skipped while loading, false otherwise
 		return true;
 	}
 

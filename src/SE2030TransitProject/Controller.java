@@ -242,38 +242,47 @@ public class Controller {
 			checkFileExtension(file.toString().substring(file.toString().indexOf('.')));
 			String prefix = checkFilePrefix(file.toString().substring(0,
 					file.toString().indexOf('.')));
-
+			boolean wasLineSkipped = false;
 			switch (prefix) {
 				case "stop_times":
-					data.getStopTimes().loadStopTimes(file);
+					wasLineSkipped = data.getStopTimes().loadStopTimes(file);
 					break;
 				case "stops":
-					data.getStops().loadStops(file);
+					wasLineSkipped = data.getStops().loadStops(file);
 					break;
 				case "routes":
-					data.getRoutes().loadRoutes(file);
+					wasLineSkipped = data.getRoutes().loadRoutes(file);
 					break;
 				case "trips":
-					data.getTrips().loadTrips(file);
+					wasLineSkipped = data.getTrips().loadTrips(file);
 					break;
 			}
 
 			dataDisplayController.resetTextToDefaultValues();
-			displayAlert(Alert.AlertType.INFORMATION, "Information", null, "Data Imported Successfully");
+			if (wasLineSkipped) {
+				displayAlert(Alert.AlertType.INFORMATION, "Information", null, "Data Imported Successfully");
+			} else {
+				displayAlert(Alert.AlertType.WARNING, "Warning", null, "One or more lines in the file that was loaded were incorrectly formatted and skipped");
+			}
 		} catch (IllegalArgumentException e) {
 			displayAlert(Alert.AlertType.ERROR, "Error","IllegalArgumentException", e.getMessage());
+			dataDisplayController.resetTextToDefaultValues();
 		} catch (InputMismatchException e) {
 			displayAlert(Alert.AlertType.ERROR, "Error","InputMismatchException", e.getMessage());
+			dataDisplayController.resetTextToDefaultValues();
 		} catch (FileNotFoundException e) {
 			displayAlert(Alert.AlertType.ERROR, "Error","FileNotFoundException",
 					e.getMessage() + " or operation was canceled");
+			dataDisplayController.resetTextToDefaultValues();
 		} catch (IOException e) {
 			displayAlert(Alert.AlertType.ERROR, "Error","IOException", e.getMessage());
+			dataDisplayController.resetTextToDefaultValues();
 		} catch (DataFormatException e) {
 			displayAlert(Alert.AlertType.WARNING, "Warning","Data Overwritten", String.format("The data from the" +
 					" previous '%s' file was overwritten with the new data. The program" +
 					" may work unexpectedly if the new data from '%s' does not match" +
 					" the existing data in the remaining files.", e.getMessage(), e.getMessage()));
+			dataDisplayController.resetTextToDefaultValues();
 		}
 	}
 

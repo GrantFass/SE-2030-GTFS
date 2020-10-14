@@ -77,7 +77,7 @@ public class Trips {
      * Method to parse Trip data from a trips.txt file
      *
      * @param file the trips.txt file to be parsed
-     * @return true if file was loaded, false otherwise
+     * @return true if a line was skipped while loading, false otherwise
      * @throws FileNotFoundException  if the file was not found
      * @throws IOException            for general File IO errors.
      * @throws InputMismatchException if there is an issue parsing the file
@@ -85,7 +85,7 @@ public class Trips {
      * @author Grant Fass, Simon Erickson
      */
     public boolean loadTrips(File file) throws FileNotFoundException,
-            InputMismatchException, DataFormatException, ParseException {
+            InputMismatchException, DataFormatException {
 
         //writes the items of the file to the hash map
         try (Scanner in = new Scanner(file)) {
@@ -97,7 +97,13 @@ public class Trips {
             trips = new HashMap<>();
 
             //read header: route_id,service_id,trip_id,trip_headsign,direction_id,block_id,shape_id
-            validateHeader(in.nextLine());
+            try {
+                validateHeader(in.nextLine());
+            } catch (ParseException e) {
+                //TODO: Fix this. added by Grant so that the program runs
+                throw new InputMismatchException(e.getMessage());
+            }
+
 
             //read body
             int i = 0;
@@ -137,6 +143,7 @@ public class Trips {
         } catch (DataFormatException dfe) {
             throw new DataFormatException(dfe.getMessage());
         }
+        //TODO: If a line was skipped return true
         return true;
     }
 

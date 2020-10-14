@@ -20,11 +20,36 @@ public enum WheelchairAccessibleEnum {
 
     private final int value;
 
+    /**
+     * Constructor for the Enumerator
+     * @param value the value to set the instance of the enum to
+     * @author Grant Fass
+     */
     WheelchairAccessibleEnum(int value) {
         this.value = value;
     }
 
+    /**
+     * return the integer value associated with the enumerator
+     * @return the integer value associated with the enumerator
+     * @author Grant Fass
+     */
     public int getValue(){
         return this.value;
     }
-}
+
+    /**
+     * return the enumerator value associated with the specified integer value
+     * @param value the value to use
+     * @return the enumerator value associated with the integer or the default if none match
+     * @author Grant Fass
+     */
+    public static WheelchairAccessibleEnum getValue(int value) {
+        if (value == 1) {
+            return AT_LEAST_ONE_WHEELCHAIR;
+        } else if (value == 2) {
+            return NO_WHEELCHAIRS;
+        } else {
+            return NO_ACCESSIBILITY_INFORMATION;
+        }
+    }}

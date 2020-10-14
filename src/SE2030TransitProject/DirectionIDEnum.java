@@ -22,11 +22,34 @@ public enum DirectionIDEnum {
 
     private final int value;
 
+    /**
+     * Constructor for the Enumerator
+     * @param value the value to set the instance of the enum to
+     * @author Grant Fass
+     */
     DirectionIDEnum(int value) {
         this.value = value;
     }
 
+    /**
+     * return the integer value associated with the enumerator
+     * @return the integer value associated with the enumerator
+     * @author Grant Fass
+     */
     public int getValue(){
         return this.value;
     }
-}
+
+    /**
+     * return the enumerator value associated with the specified integer value
+     * @param value the value to use
+     * @return the enumerator value associated with the integer or the default if none match
+     * @author Grant Fass
+     */
+    public static DirectionIDEnum getValue(int value) {
+        if (value == 1) {
+            return INBOUND_TRAVEL;
+        } else {
+            return OUTBOUND_TRAVEL;
+        }
+    }}

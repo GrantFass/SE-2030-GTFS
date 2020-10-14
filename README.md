@@ -152,6 +152,8 @@
 <h5>Grant Fass:</h5>
 <h6>TODO</h6>
 <ul>
+    <li>verify what exception StopTime throws in overloaded constructor</li>
+    <li>verify that the validate methods in StopTimes throw the correct exceptions</li>
     <li>Implement stop_time Export</li>
     <li>
         Implement Feature 4: Display the number of trips each stop is found on

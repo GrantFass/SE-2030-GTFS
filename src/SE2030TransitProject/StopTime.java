@@ -1,6 +1,8 @@
 package SE2030TransitProject;
 
+import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 /**
@@ -25,7 +27,7 @@ public class StopTime {
 
 	/**
 	 * StopTime Constructor
-	 * @author Joy Cross
+	 * @author Joy Cross, Grant Fass
 	 * @param arrival_time arrival time of a specific stop on a specific trip on a route
 	 * @param continuous_drop_off indicates whether a rider can get off the transit vehicle at any point in the trip
 	 * @param continuous_pickup indicates whether a rider can get on the transit vehicle at any point in the trip
@@ -40,21 +42,95 @@ public class StopTime {
 	 * @param trip_id id of the specific trip
 	 */
 	public StopTime(Timestamp arrival_time, ContinuousDropOffEnum continuous_drop_off, ContinuousPickupEnum
-					continuous_pickup, Timestamp departure_time, DropOffTypeEnum drop_off_type, PickupTypeEnum
-					pickup_type, float shape_dist_traveled, String stop_headsign, String stop_id, int stop_sequence,
+			continuous_pickup, Timestamp departure_time, DropOffTypeEnum drop_off_type, PickupTypeEnum
+							pickup_type, float shape_dist_traveled, String stop_headsign, String stop_id, int stop_sequence,
 					TimepointEnum timepoint, String trip_id){
 		this.arrival_time = arrival_time;
-		this.continuous_drop_off = continuous_drop_off;
-		this.continuous_pickup = continuous_pickup;
 		this.departure_time = departure_time;
-		this.drop_off_type = drop_off_type;
-		this.pickup_type = pickup_type;
 		this.shape_dist_traveled = shape_dist_traveled;
 		this.stop_headsign = stop_headsign;
 		this.stop_id = stop_id;
 		this.stop_sequence = stop_sequence;
-		this.timepoint = timepoint;
 		this.trip_id = trip_id;
+
+		if (continuous_drop_off.getValue() == 1) {
+			this.continuous_drop_off = ContinuousDropOffEnum.NO_CONTINUOUS_DROP_OFF;
+		} else {
+			this.continuous_drop_off = continuous_drop_off;
+		}
+
+		if (continuous_pickup.getValue() == 1) {
+			this.continuous_pickup = ContinuousPickupEnum.NO_CONTINUOUS_PICKUP;
+		} else {
+			this.continuous_pickup = continuous_pickup;
+		}
+
+		if (drop_off_type.getValue() == 1) {
+			this.drop_off_type = DropOffTypeEnum.REGULARLY_SCHEDULED_DROP_OFF;
+		} else {
+			this.drop_off_type = drop_off_type;
+		}
+
+		if (pickup_type.getValue() == 1) {
+			this.pickup_type = PickupTypeEnum.REGULARLY_SCHEDULED_PICKUP;
+		} else {
+			this.pickup_type = pickup_type;
+		}
+
+		if (timepoint.getValue() == 1) {
+			this.timepoint = TimepointEnum.EXACT_TIME;
+		} else {
+			this.timepoint = timepoint;
+		}
+
+	}
+
+	/**
+	 * StopTime Constructor Overload using string values for the enumerators
+	 * @author Joy Cross, Grant Fass
+	 * @param arrival_time arrival time of a specific stop on a specific trip on a route
+	 * @param continuous_drop_off indicates whether a rider can get off the transit vehicle at any point in the trip
+	 * @param continuous_pickup indicates whether a rider can get on the transit vehicle at any point in the trip
+	 * @param departure_time departure time of stopTime
+	 * @param drop_off_type indicates dropoff method
+	 * @param pickup_type indicates pickup method
+	 * @param shape_dist_traveled actual distance traveled along the associated shape
+	 * @param stop_headsign text that appears to riders identifying trip destination
+	 * @param stop_id id of the specific stop
+	 * @param stop_sequence order of stop for a particular trip
+	 * @param timepoint indicates whether the times are approximate or exact
+	 * @param trip_id id of the specific trip
+	 * @throws IllegalArgumentException if there was an issue parsing a String or if a required field is empty
+	 */
+	public StopTime(String arrival_time, String continuous_drop_off, String continuous_pickup,
+					String departure_time, String drop_off_type, String pickup_type,
+					String shape_dist_traveled, String stop_headsign, String stop_id, String stop_sequence,
+					String timepoint, String trip_id) throws IllegalArgumentException {
+		//stop_id & trip_id are required so error if they are empty
+		if (stop_id.isEmpty() || trip_id.isEmpty()) {
+			throw new IllegalArgumentException("Line in 'stop_times.txt' file not formatted" +
+					" correctly. Skipping!");
+		}
+		this.stop_headsign = stop_headsign; //Optional and does not throw error if empty
+		this.stop_id = stop_id;
+		this.trip_id = trip_id;
+		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+		try {
+			this.arrival_time = new Timestamp(dateFormat.parse(arrival_time).getTime());
+			this.departure_time = new Timestamp(dateFormat.parse(departure_time).getTime());
+			this.stop_sequence = Integer.parseInt(stop_sequence); //required so should throw error if it is missing
+			this.shape_dist_traveled = !shape_dist_traveled.isEmpty() ? Float.parseFloat(shape_dist_traveled) : 0;
+			//Set enumerator values
+			//default values are applied if empty.
+			this.continuous_drop_off = ContinuousDropOffEnum.getValue(!continuous_drop_off.isEmpty() ? Integer.parseInt(continuous_drop_off) : -1);
+			this.continuous_pickup = ContinuousPickupEnum.getValue(!continuous_pickup.isEmpty() ? Integer.parseInt(continuous_pickup) : -1);
+			this.drop_off_type = DropOffTypeEnum.getValue(!drop_off_type.isEmpty() ? Integer.parseInt(drop_off_type) : -1);
+			this.pickup_type = PickupTypeEnum.getValue(!pickup_type.isEmpty() ? Integer.parseInt(pickup_type) : -1);
+			this.timepoint = TimepointEnum.getValue(!timepoint.isEmpty() ? Integer.parseInt(timepoint) : -1);
+		} catch (ParseException parse) {
+			throw new IllegalArgumentException("Line in 'stop_times.txt' file not formatted" +
+					" correctly. Skipping!");
+		}
 	}
 
 	/**

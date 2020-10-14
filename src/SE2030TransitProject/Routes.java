@@ -74,7 +74,7 @@ public class Routes {
 	 * Method to parse Route data from a routes.txt file
 	 * @author Grant Fass, Ryan Becker
 	 * @param file the routes.txt file to be parsed
-	 * @return true if file was loaded, false otherwise
+	 * @return true if a line was skipped while loading, false otherwise
 	 * @throws FileNotFoundException if the file was not found
 	 * @throws IOException for general File IO errors.
 	 * @throws InputMismatchException if there is an issue parsing the file
@@ -135,6 +135,7 @@ public class Routes {
 		} catch (DataFormatException dfe){
 			throw new DataFormatException(dfe.getMessage());
 		}
+		//TODO:  true if a line was skipped while loading, false otherwise
 		return true;
 	}
 
