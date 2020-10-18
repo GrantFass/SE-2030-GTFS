@@ -7,7 +7,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+
 import java.util.HashMap;
+import java.util.IllegalFormatException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.zip.DataFormatException;
@@ -22,6 +24,7 @@ import java.util.zip.DataFormatException;
 public class Routes {
 
 	private HashMap<String, Route> routes;
+
 
 	/**
 	 * Routes constructor initialized with empty hash map
@@ -80,16 +83,25 @@ public class Routes {
 	 * @throws InputMismatchException if there is an issue parsing the file
 	 * @throws DataFormatException if data will be overwritten
 	 */
+	//TODO cleanup, notify if line is skipped
 	public boolean loadRoutes(File file) throws FileNotFoundException, IOException,
 			InputMismatchException, DataFormatException {
 		try {
 
+
+
+
 			Scanner read_header = new Scanner(file);
 			String full_header = read_header.nextLine();
 
-			if(!validHeader(full_header)){
-				throw new InputMismatchException("Invalid Header:\nFile was not loaded");
-			}
+
+
+
+			// Throws DataFormatException if header is not valid
+            validateHeader(full_header);
+
+
+
 
 			boolean emptyPrior = routes.isEmpty();
 			routes.clear();
@@ -199,24 +211,84 @@ public class Routes {
 	}
 
 	/**
-	 * Checks if a header of a routes.txt file is valid
+	 * Confirms the header of the loaded routes.txt file is valid
 	 * @author Ryan Becker
-	 * @param full_header String of entire line containing header
-	 * @return True if valid, false otherwise
+	 * @param header
+	 * @return
+	 * @throws DataFormatException
 	 */
-	public boolean validHeader(String full_header){
-		boolean valid = false;
-		final String TARGET_HEADER = "route_id,agency_id,route_short_name,route_long_name," +
-				"route_desc,route_type,route_url,route_color,route_text_color";
+	//TODO add validity, finish documentation
+	public Headers validateHeader(String header) throws DataFormatException{
+		final Headers DEFAULT_HEADERS = createDefaultHeader();
 
-		if(full_header.equals(TARGET_HEADER)){
-			valid = true;
+		Headers headers = new Headers();
+        String[] header_list = header.split(",");
+
+        for(int i = 0; i < header_list.length; i++){
+
+            headers.addHeader(new Header(header_list[i], i));
+        }
+
+        // Validates header
+        if(!validHeader(headers, DEFAULT_HEADERS)){
+
+        	throw new DataFormatException("Invalid Header found in routes.txt");
 		}
-		return valid;
+
+		return headers;
 	}
 
-	public boolean validData(){
-		return false;
+	//TODO
+	public Route validateData(String data, Headers headers) throws DataFormatException, IllegalFormatException {
+		return null;
+	}
+
+
+
+
+
+	/**
+	 * Initializes a default Headers object that should be the order of header elements within a routes.txt file
+	 * @author Ryan Becker
+	 * @return
+	 */
+	//TODO finish documentation
+	private Headers createDefaultHeader(){
+		final String DEFAULT_HEADER = "route_id,agency_id,route_short_name,route_long_name,route_desc,route_type," +
+				"route_url,route_color,route_text_color";
+		Headers default_headers = new Headers();
+		String[] header_list = DEFAULT_HEADER.split(",");
+
+		for(int i = 0; i < header_list.length; i++){
+			default_headers.addHeader(new Header(header_list[i], i));
+		}
+		return default_headers;
+
+	}
+
+	/**
+	 *
+	 * @author Ryan Becker
+	 * @param headers
+	 * @param DEFAULT_HEADERS
+	 * @return
+	 */
+	//TODO finish documentation, clean up
+	private boolean validHeader (Headers headers, Headers DEFAULT_HEADERS){
+		boolean isEqual = true;
+
+		if(headers.length()!=DEFAULT_HEADERS.length()){
+			isEqual = false;
+			return isEqual;
+		}
+
+		System.out.println();
+		for(int i = 0; i < DEFAULT_HEADERS.length(); i++){
+			if(!headers.getHeaderName(i).equals(DEFAULT_HEADERS.getHeaderName(i))){
+				isEqual = false;
+			}
+		}
+		return isEqual;
 	}
 
 
