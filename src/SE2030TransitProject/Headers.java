@@ -42,7 +42,7 @@ public class Headers {
      * @author Grant Fass
      */
     public String getHeaderName(int headerIndex) {
-        if (headerIndex > 0 && headerIndex < headers.size() - 1) {
+        if (headerIndex >= 0 && headerIndex < headers.size()) {
             return headers.get(headerIndex).getHeaderName();
         }
         return null;
