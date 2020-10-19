@@ -1,13 +1,8 @@
 package SE2030TransitProject;
 
-import javafx.scene.control.TextArea;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.zip.DataFormatException;
 
@@ -122,17 +117,40 @@ public class StopTimes {
 
 	/**
 	 * checks to confirm that the header is valid and matches an expected format
-	 * TODO: verify header matches proper format (Exception Handling)
 	 * @param header the header text line to validate
 	 * @return a Headers object containing the ordering of the headers
 	 * @throws IllegalArgumentException if the header does not match the expected format
 	 * @author Grant Fass
 	 */
 	public Headers validateHeader(String header) throws IllegalArgumentException {
+		header = header.toLowerCase().replace(" ", "");
+		if (header.isEmpty()) {
+			throw new IllegalArgumentException("Input header line cannot be empty");
+		} else if (!header.contains("trip_id")) {
+			throw new IllegalArgumentException("Input header line must contain all expected" +
+					" values for a StopTime object. Header was missing trip_id");
+		} else if (!header.contains("stop_id")) {
+			throw new IllegalArgumentException("Input header line must contain all expected" +
+					" values for a StopTime object. Header was missing stop_id");
+		} else if (!header.contains("stop_sequence")) {
+			throw new IllegalArgumentException("Input header line must contain all expected" +
+					" values for a StopTime object. Header was missing trip_id");
+		} else if (header.endsWith(",")) {
+			throw new IllegalArgumentException("Input header line cannot contain blank fields");
+		}
 		Headers headers = new Headers();
 		String[] headerDataArray = header.split(",");
+		final String possibleHeaders = "trip_id,stop_id,stop_sequence,arrival_time,departure_time," +
+				"stop_headsign,continuous_drop_off,continuous_pickup,drop_off_type," +
+				"pickup_type,timepoint,shape_distance";
 		for (int i = 0; i < headerDataArray.length; i++) {
-			headers.addHeader(new Header(headerDataArray[i], i));
+			if (!headerDataArray[i].isEmpty() && possibleHeaders.contains(headerDataArray[i])) {
+				headers.addHeader(new Header(headerDataArray[i], i));
+			} else if (headerDataArray[i].isEmpty()){
+				throw new IllegalArgumentException("Input header line cannot contain blank fields");
+			} else {
+				throw new IllegalArgumentException("Header field contains unexpected field: " + headerDataArray[i]);
+			}
 		}
 		return headers;
 	}
