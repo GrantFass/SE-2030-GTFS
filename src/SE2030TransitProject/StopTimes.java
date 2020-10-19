@@ -165,7 +165,7 @@ public class StopTimes {
 	 */
 	public StopTime validateData(String data, Headers headers) throws IllegalArgumentException {
 		String[] dataArray = data.split(",");
-		if (dataArray.length != headers.length()) {
+		if (dataArray.length != headers.length() || data.isEmpty()) {
 			throw new IllegalArgumentException("Data line does not contain the proper amount of data");
 		}
 		//Required Fields
