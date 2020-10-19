@@ -1,6 +1,11 @@
 package SE2030TransitProject;
 
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.TimeZone;
 
 /**
@@ -20,7 +25,7 @@ public class Stop {
 	private double stop_latitude;
 	private double stop_longitude;
 	private String stop_name;
-	private TimeZone stop_timezone;
+	private Date stop_timezone;
 	private URL stop_url;
 	private WheelchairBoardingEnum wheelchair_boarding;
 	// private String zone_id; // used if we have fares.txt so I don't think we should include it
@@ -64,34 +69,72 @@ public class Stop {
 	 * @param stop_url url of web page about the location
 	 * @param wheelchair_boarding indicates whether wheelchair boardings are possible from the location
 	 */
-	public Stop(String level_id, LocationTypeEnum location_type, String parent_station,
+	public Stop(String level_id, String location_type, String parent_station,
 				String platform_code, String stop_code, String stop_description, String stop_id,
-				double stop_latitude, double stop_longitude, String stop_name, TimeZone stop_timezone,
-				URL stop_url,WheelchairBoardingEnum wheelchair_boarding){
+				String stop_latitude, String stop_longitude, String stop_name, String stop_timezone,
+				String stop_url,String wheelchair_boarding){
+		//stop_id & trip_id are required so error if they are empty
+		if (stop_id.isEmpty() || stop_latitude.isEmpty() || stop_longitude.isEmpty()) {
+			throw new IllegalArgumentException("Line in 'stops.txt' file not formatted" +
+					" correctly. Skipping!");
+		}
 
 		this.level_id = level_id;
-		this.location_type = location_type;
 		this.parent_station = parent_station;
 		this.platform_code = platform_code;
 		this.stop_code = stop_code;
 		this.stop_description = stop_description;
 		this.stop_id = stop_id;
-		this.stop_latitude = stop_latitude;
-		this.stop_longitude = stop_longitude;
-		this.stop_name = stop_name;
-		this.stop_timezone = stop_timezone;
-		this.stop_url = stop_url;
-		this.wheelchair_boarding = wheelchair_boarding;
 		this.stop_name = stop_name;
 		//this.zone_id = zone_id;
+
+		try {
+			this.stop_latitude = Double.parseDouble(stop_latitude);
+			this.stop_longitude = Double.parseDouble(stop_longitude);
+
+			//default values are applied if empty.
+			this.wheelchair_boarding = WheelchairBoardingEnum.getValue(!wheelchair_boarding.isEmpty() ? Integer.parseInt(wheelchair_boarding) : -1);
+			this.location_type = LocationTypeEnum.getValue(!location_type.isEmpty() ? Integer.parseInt(location_type) : -1);
+
+			SimpleDateFormat sdf = new SimpleDateFormat("a");
+			if(!stop_timezone.isEmpty()){
+				this.stop_timezone = sdf.parse(stop_timezone);
+			}
+			try {
+				if(!stop_url.isEmpty()) {
+					this.stop_url = new URL(stop_url);
+				}
+			} catch (MalformedURLException mue) {
+				throw new ParseException("URL not formatted correctly", 0);
+			}
+		} catch (ParseException parse) {
+			throw new IllegalArgumentException("Line in 'stops.txt' file not formatted" +
+					" correctly. Skipping!");
+		}
 	}
 
+	/**
+	 * gets the file headers
+	 * used for exporting stops
+	 * @return file headers in a single line header format
+	 * @author Joy Cross
+	 */
+	public static String getHeaderLine() {
+		return "stop_id,stop_longitude,stop_latitude,stop_name,stop_description,stop_code," +
+				"platform_code,level_id,location_type," +
+				"stop_timezone,wheelchair_boarding,stop_url,parent_station\n";
+	}
 
-	public String getAttributes(){
-		return stop_id + "," + level_id + "," + level_id + "," + level_id + "," +
-				level_id + "," + level_id + "," + level_id + "," + level_id + "," +
-				level_id + "," + level_id + "," + level_id + "," + level_id + "," +
-				level_id + "," + level_id + "," + level_id + "," + level_id;
+	/**
+	 * gets the data line for a single stop
+	 * used for exporting stops
+	 * @return stop time data in a single line data format
+	 * @author Joy Cross
+	 */
+	public String getDataLine() {
+		return String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", stop_id, stop_longitude, stop_latitude, stop_name,
+				stop_description, stop_code, platform_code, level_id, location_type,
+				stop_timezone, wheelchair_boarding, stop_url, parent_station);
 	}
 
 	/**
@@ -167,7 +210,7 @@ public class Stop {
 	/**
 	 * @author Joy Cross
 	 */
-	public TimeZone getStopTimezone(){
+	public Date getStopTimezone(){
 		return stop_timezone;
 	}
 
@@ -251,7 +294,7 @@ public class Stop {
 	/**
 	 * @author Joy Cross
 	 */
-	public void setStopTimezone(TimeZone stop_timezone){
+	public void setStopTimezone(Date stop_timezone){
 		this.stop_timezone = stop_timezone;
 	}
 
