@@ -6,6 +6,7 @@
  */
 package SE2030TransitProject;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
@@ -94,6 +95,14 @@ public class DataDisplayController {
     private void viewTrips() {
         displayData("'trips.txt'", primaryController.getData().getTrips().toString());
         //displayData(dataDisplayTextArea, null, null, null, primaryController.getData().getTrips());
+    }
+
+    /**
+     * display the number of trips that each stop is found on
+     * @author Grant Fass
+     */
+    public void viewTripsPerStop() {
+        displayData("Trips Per Stop", primaryController.getData().getStopTimes().getTripsPerStop());
     }
 
     /**

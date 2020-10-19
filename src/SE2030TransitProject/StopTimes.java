@@ -249,4 +249,12 @@ public class StopTimes {
 		return toReturn.toString();
 	}
 
+	/**
+	 * @return the number of trips that each stop is found on
+	 * @author Grant Fass, Joy Cross
+	 * TODO: Joy Cross in charge of implementing
+	 */
+	public String getTripsPerStop() {
+		return "Not Implemented Yet.";
+	}
 }//end StopTimes

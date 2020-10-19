@@ -24,6 +24,8 @@ Everything in this file has been setup in code.
                       text="View 'stop_times.txt'"/>
             <MenuItem mnemonicParsing="false" onAction="#viewTrips"
                       text="View 'trips.txt'"/>
+            <MenuItem mnemonicParsing="false" onAction="#viewTripsPerStop"
+                      text="View Trips Per Stop"/>
         </Menu>
         <Menu mnemonicParsing="false" text="Help">
             <MenuItem mnemonicParsing="false" onAction="#displayHelp" text="About"/>
