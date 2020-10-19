@@ -151,10 +151,10 @@ public class Stops {
 		} else if (!header.contains("stop_id")) {
 			throw new IllegalArgumentException("Input header line must contain all expected" +
 					" values for a StopTime object. Header was missing trip_id");
-		} else if (!header.contains("stop_lat") | !header.contains("stop_latitude")) {
+		} else if (!(header.contains("stop_lat") || header.contains("stop_latitude"))) {
 			throw new IllegalArgumentException("Input header line must contain all expected" +
 					" values for a StopTime object. Header was missing stop_id");
-		} else if (!header.contains("stop_lon") | !header.contains("stop_longitude")) {
+		} else if (!(header.contains("stop_lon") || header.contains("stop_longitude"))) {
 			throw new IllegalArgumentException("Input header line must contain all expected" +
 					" values for a StopTime object. Header was missing trip_id");
 		}
