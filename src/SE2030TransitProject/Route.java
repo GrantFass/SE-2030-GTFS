@@ -2,7 +2,10 @@ package SE2030TransitProject;
 
 
 import javafx.scene.paint.Color;
+
+import java.net.MalformedURLException;
 import java.net.URL;
+
 
 /**
  * Class for a Route object, which is the path that a Driver will take to various destinations
@@ -26,6 +29,7 @@ public class Route {
 	private ContinuousDropOffEnum continuous_drop_off;
 
 	/**
+	 * Constructor of Route object
 	 * @author Ryan Becker
 	 * @param route_id ID of route
 	 * @param agency_id ID of agency
@@ -57,6 +61,56 @@ public class Route {
 		this.route_sort_order = route_sort_order;
 		this.continuous_pickup = continuous_pickup;
 		this.continuous_drop_off = continuous_drop_off;
+	}
+
+	/**
+	 * Overloaded constructor of Route object, where all parameters are passed initially as Strings
+	 * @author Ryan Becker
+	 * @param route_id ID of route
+	 * @param agency_id ID of agency
+	 * @param route_short_name short name of route
+	 * @param route_long_name long name of route
+	 * @param route_desc String of important information of route
+	 * @param route_type Identifier for type of transport
+	 * @param route_url URL of website of route
+	 * @param route_color Color of route path
+	 * @param route_text_color Color of route text
+	 * @param route_sort_order Integer indicating order to be sorted and displayed (lower is higher priority)
+	 * @param continuous_pickup Status of availability for pickups on route
+	 * @param continuous_drop_off Status of availability for drop-offs on route
+	 * @throws IllegalArgumentException if there is an invalid value for a given field
+	 */
+	//TODO adjust default values
+	public Route(String route_id, String agency_id, String route_short_name, String route_long_name, String route_desc,
+				 String route_type, String route_url, String route_color, String route_text_color,
+				 String route_sort_order, String continuous_pickup, String continuous_drop_off)
+			throws IllegalArgumentException{
+		final int DEFAULT_TYPE = 3; //bus routes
+		final String DEFAULT_COLOR = "FFFFFF"; //defaults to white
+		final String DEFAULT_TEXT_COLOR = "000000"; //defaults to black
+		final int DEFAULT_SORT_ORDER = 0;
+		final int DEFAULT_CONTINUOUS = 0; //continuous stopping pickup or drop-off
+
+		final String DEFAULT_URL = "http://NULL_URL"; //Error is thrown otherwise
+
+
+
+		this.route_id = route_id;
+		this.agency_id = agency_id;
+		this.route_short_name = route_short_name;
+		this.route_long_name = route_long_name;
+		this.route_desc = route_desc;
+		try{
+			this.route_type = RouteTypeEnum.getValue(!route_type.isEmpty() ? Integer.parseInt(route_type): DEFAULT_TYPE);
+			this.route_url = new URL(!route_url.isEmpty() ? route_url : DEFAULT_URL);
+			this.route_color = Color.valueOf(!route_color.isEmpty() ? route_color : DEFAULT_COLOR);
+			this.route_text_color = Color.valueOf(!route_text_color.isEmpty() ? route_text_color : DEFAULT_TEXT_COLOR);
+			this.route_sort_order = !route_sort_order.isEmpty() ? Integer.parseInt(route_sort_order) : DEFAULT_SORT_ORDER;
+			this.continuous_pickup = ContinuousPickupEnum.getValue(!continuous_pickup.isEmpty() ? Integer.parseInt(continuous_pickup): DEFAULT_CONTINUOUS);
+			this.continuous_drop_off = ContinuousDropOffEnum.getValue(!continuous_drop_off.isEmpty() ? Integer.parseInt(continuous_drop_off): DEFAULT_CONTINUOUS);
+		} catch (MalformedURLException failedParse){
+			throw new IllegalArgumentException("Data line within routes.txt not formatted correctly.\nSkipping line");
+		}
 	}
 
 	//Getters
