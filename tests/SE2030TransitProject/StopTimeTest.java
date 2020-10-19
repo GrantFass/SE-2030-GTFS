@@ -1,8 +1,9 @@
 package SE2030TransitProject;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -98,9 +99,54 @@ class StopTimeTest {
         }
     }
 
+    /**
+     * Make sure that the arrival time is parsed correctly
+     * @author Grant Fass
+     */
     @Test
     void getArrivalTime() {
-        fail();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+        StopTime stopTime = new StopTime("", "0",
+                "0", "00:00:00", "0", "0",
+                "0", "sometext", "11",
+                "0", "0", "11");
+        assertEquals(new Timestamp(70, 0, 1, 0, 0, 0, 0), stopTime.getArrivalTime());
+
+        stopTime = new StopTime("00:00:00", "0",
+                "0", "00:00:00", "0", "0",
+                "0", "sometext", "11",
+                "0", "0", "11");
+        assertEquals(new Timestamp(70, 0, 1, 0, 0, 0, 0), stopTime.getArrivalTime());
+
+        stopTime = new StopTime("01:00:00", "0",
+                "0", "00:00:00", "0", "0",
+                "0", "sometext", "11",
+                "0", "0", "11");
+        assertEquals(new Timestamp(70, 0, 1, 1, 0, 0, 0), stopTime.getArrivalTime());
+
+        stopTime = new StopTime("00:01:00", "0",
+                "0", "00:00:00", "0", "0",
+                "0", "sometext", "11",
+                "0", "0", "11");
+        assertEquals(new Timestamp(70, 0, 1, 0, 1, 0, 0), stopTime.getArrivalTime());
+
+        stopTime = new StopTime("00:00:01", "0",
+                "0", "00:00:00", "0", "0",
+                "0", "sometext", "11",
+                "0", "0", "11");
+        assertEquals(new Timestamp(70, 0, 1, 0, 0, 1, 0), stopTime.getArrivalTime());
+
+        stopTime = new StopTime("01:01:01", "0",
+                "0", "00:00:00", "0", "0",
+                "0", "sometext", "11",
+                "0", "0", "11");
+        assertEquals(new Timestamp(70, 0, 1, 1, 1, 1, 0), stopTime.getArrivalTime());
+
+        stopTime = new StopTime("99:00:00", "0",
+                "0", "00:00:00", "0", "0",
+                "0", "sometext", "11",
+                "0", "0", "11");
+        assertEquals(new Timestamp(70, 0, 1, 99, 0, 0, 0), stopTime.getArrivalTime());
     }
 
     /**
@@ -161,19 +207,112 @@ class StopTimeTest {
         assertEquals(ContinuousPickupEnum.COORDINATE_WITH_DRIVER_FOR_CONTINUOUS_PICKUP, stopTime.getContinuousPickup());
     }
 
+    /**
+     * Make sure that the departure time is parsed correctly
+     * @author Grant Fass
+     */
     @Test
     void getDepartureTime() {
-        fail();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+        StopTime stopTime = new StopTime("00:00:00", "0",
+                "0", "", "0", "0",
+                "0", "sometext", "11",
+                "0", "0", "11");
+        assertEquals(new Timestamp(70, 0, 1, 0, 0, 0, 0), stopTime.getDepartureTime());
+
+        stopTime = new StopTime("00:00:00", "0",
+                "0", "", "0", "0",
+                "0", "sometext", "11",
+                "0", "0", "11");
+        assertEquals(new Timestamp(70, 0, 1, 0, 0, 0, 0), stopTime.getDepartureTime());
+
+        stopTime = new StopTime("00:00:00", "0",
+                "0", "01:00:00", "0", "0",
+                "0", "sometext", "11",
+                "0", "0", "11");
+        assertEquals(new Timestamp(70, 0, 1, 1, 0, 0, 0), stopTime.getDepartureTime());
+
+        stopTime = new StopTime("00:00:00", "0",
+                "0", "00:01:00", "0", "0",
+                "0", "sometext", "11",
+                "0", "0", "11");
+        assertEquals(new Timestamp(70, 0, 1, 0, 1, 0, 0), stopTime.getDepartureTime());
+
+        stopTime = new StopTime("00:00:00", "0",
+                "0", "00:00:01", "0", "0",
+                "0", "sometext", "11",
+                "0", "0", "11");
+        assertEquals(new Timestamp(70, 0, 1, 0, 0, 1, 0), stopTime.getDepartureTime());
+
+        stopTime = new StopTime("00:00:00", "0",
+                "0", "01:01:01", "0", "0",
+                "0", "sometext", "11",
+                "0", "0", "11");
+        assertEquals(new Timestamp(70, 0, 1, 1, 1, 1, 0), stopTime.getDepartureTime());
+
+        stopTime = new StopTime("00:00:00", "0",
+                "0", "99:00:00", "0", "0",
+                "0", "sometext", "11",
+                "0", "0", "11");
+        assertEquals(new Timestamp(70, 0, 1, 99, 0, 0, 0), stopTime.getDepartureTime());
     }
 
+    /**
+     * Make sure default value is returned when empty and expected value returned with integer input
+     * @author Grant Fass
+     */
     @Test
     void getDropOffType() {
-        fail();
+        //make sure that enum returns default value when empty
+        StopTime stopTime = new StopTime("00:00:00", "0", "0",
+                "00:00:00", "", "0", "0",
+                "sometext", "11", "1", "0", "11");
+        assertEquals(DropOffTypeEnum.REGULARLY_SCHEDULED_DROP_OFF, stopTime.getDropOffType());
+        stopTime = new StopTime("00:00:00", "0", "0",
+                "00:00:00", "0", "0", "0",
+                "sometext", "11", "1", "0", "11");
+        assertEquals(DropOffTypeEnum.REGULARLY_SCHEDULED_DROP_OFF, stopTime.getDropOffType());
+        stopTime = new StopTime("00:00:00", "0", "0",
+                "00:00:00", "1", "0", "0",
+                "sometext", "11", "1", "0", "11");
+        assertEquals(DropOffTypeEnum.NO_DROP_OFF_AVAILABLE, stopTime.getDropOffType());
+        stopTime = new StopTime("00:00:00", "0", "0",
+                "00:00:00", "2", "0", "0",
+                "sometext", "11", "1", "0", "11");
+        assertEquals(DropOffTypeEnum.PHONE_AGENCY_FOR_DROP_OFF, stopTime.getDropOffType());
+        stopTime = new StopTime("00:00:00", "0", "0",
+                "00:00:00", "3", "0", "0",
+                "sometext", "11", "1", "0", "11");
+        assertEquals(DropOffTypeEnum.COORDINATE_WITH_DRIVER_FOR_DROP_OFF, stopTime.getDropOffType());
     }
 
+    /**
+     * Make sure default value is returned when empty and expected value returned with integer input
+     * @author Grant Fass
+     */
     @Test
     void getPickupType() {
-        fail();
+        //make sure that enum returns default value when empty
+        StopTime stopTime = new StopTime("00:00:00", "0", "0",
+                "00:00:00", "0", "", "0",
+                "sometext", "11", "1", "0", "11");
+        assertEquals(PickupTypeEnum.REGULARLY_SCHEDULED_PICKUP, stopTime.getPickupType());
+        stopTime = new StopTime("00:00:00", "0", "0",
+                "00:00:00", "0", "0", "0",
+                "sometext", "11", "1", "0", "11");
+        assertEquals(PickupTypeEnum.REGULARLY_SCHEDULED_PICKUP, stopTime.getPickupType());
+        stopTime = new StopTime("00:00:00", "0", "0",
+                "00:00:00", "0", "1", "0",
+                "sometext", "11", "1", "0", "11");
+        assertEquals(PickupTypeEnum.NO_PICKUP_AVAILABLE, stopTime.getPickupType());
+        stopTime = new StopTime("00:00:00", "0", "0",
+                "00:00:00", "0", "2", "0",
+                "sometext", "11", "1", "0", "11");
+        assertEquals(PickupTypeEnum.PHONE_AGENCY_FOR_PICKUP, stopTime.getPickupType());
+        stopTime = new StopTime("00:00:00", "0", "0",
+                "00:00:00", "0", "3", "0",
+                "sometext", "11", "1", "0", "11");
+        assertEquals(PickupTypeEnum.COORDINATE_WITH_DRIVER_FOR_PICKUP, stopTime.getPickupType());
     }
 
     @Test
@@ -196,78 +335,29 @@ class StopTimeTest {
         fail();
     }
 
+    /**
+     * Make sure default value is returned when empty and expected value returned with integer input
+     * @author Grant Fass
+     */
     @Test
     void getTimepoint() {
-        fail();
+        //make sure that enum returns default value when empty
+        StopTime stopTime = new StopTime("00:00:00", "0", "0",
+                "00:00:00", "0", "0", "0",
+                "sometext", "11", "1", "", "11");
+        assertEquals(TimepointEnum.EXACT_TIME, stopTime.getTimepoint());
+        stopTime = new StopTime("00:00:00", "0", "0",
+                "00:00:00", "0", "0", "0",
+                "sometext", "11", "1", "0", "11");
+        assertEquals(TimepointEnum.APPROXIMATE_TIME, stopTime.getTimepoint());
+        stopTime = new StopTime("00:00:00", "0", "0",
+                "00:00:00", "0", "0", "0",
+                "sometext", "11", "1", "1", "11");
+        assertEquals(TimepointEnum.EXACT_TIME, stopTime.getTimepoint());
     }
 
     @Test
     void getTripID() {
-        fail();
-    }
-
-    @Test
-    void setArrivalTime() {
-        fail();
-    }
-
-    @Test
-    void setContinuousDropOff() {
-        fail();
-    }
-
-    @Test
-    void setContinuousPickup() {
-        fail();
-    }
-
-    @Test
-    void setDepartureTime() {
-        fail();
-    }
-
-    @Test
-    void setDropOffType() {
-        fail();
-    }
-
-    @Test
-    void setPickupType() {
-        fail();
-    }
-
-    @Test
-    void setShapeDistTraveled() {
-        fail();
-    }
-
-    @Test
-    void setStopHeadsign() {
-        fail();
-    }
-
-    @Test
-    void setStopID() {
-        fail();
-    }
-
-    @Test
-    void setStopSequence() {
-        fail();
-    }
-
-    @Test
-    void setTimepoint() {
-        fail();
-    }
-
-    @Test
-    void setTripID() {
-        fail();
-    }
-
-    @Test
-    void testToString() {
         fail();
     }
 }
