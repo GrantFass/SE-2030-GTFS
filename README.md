@@ -154,9 +154,11 @@
 <ul>
     <li>Update StopTime constructor with helper methods to make code more readable (use private setters)</li>
     <li>Reimplement setters in StopTime and make them private</li>
-    <li>verify what exception StopTime throws in overloaded constructor</li>
-    <li>verify that the validate methods in StopTimes throw the correct exceptions</li>
     <li>Implement stop_time Export</li>
+    <li>Compress Lab 5 Data in README</li>
+    <li>Add lab 6 Data in README</li>
+    <li>Update Data View Window help section</li>
+    <li>Implement Deep Copy in controller getData() method</li>
     <li>
         Implement Feature 4: Display the number of trips each stop is found on
         <ul>
@@ -164,36 +166,32 @@
             <li>Optional for lab 6: Use observer pattern to display results</li>
         </ul>
     </li>
-    <li>
-        Harden Stop_Time Import Validation
-        <ul>
-            <li>Create validation method for header line</li>
-            <li>Create validation method for input line</li>
-            <li>Create unit test for header line validation method</li>
-            <li>Create unit test for input line validation method</li>
-            <li>Ensure individual file formatting is handled appropriately</li>
-            <li>
-                Ensure invalid data in files is handled appropriately
-                <ul>
-                    <li>If file has a corrupted line then skip it</li>
-                    <li>Update user that there were corrupted lines and they were skipped</li>
-                </ul>    
-            </li>
-            <li>Add Javadoc comments to Junit tests</li>
-            <li>Add Javadoc comments to validation methods</li>
-        </ul>
-    </li>
-</ul>
-<ul>
-    <li>Override .equals methods for classes</li>
-    <li>Compress Lab 5 Data in README</li>
-    <li>Add lab 6 Data in README</li>
-    <li>Update Data View Window help section</li>
-    <li>Implement Deep Copy in controller getData() method</li>
 </ul>
 <h6>Completed</h6>
 <s>
     <ul>
+        <li>Override .equals methods for StopTime, Header, and Headers</li>
+        <li>
+            Harden Stop_Time Import Validation
+            <ul>
+                <li>Create validation method for header line</li>
+                <li>Create validation method for input line</li>
+                <li>Create unit test for header line validation method</li>
+                <li>Create unit test for input line validation method</li>
+                <li>Ensure individual file formatting is handled appropriately</li>
+                <li>
+                    Ensure invalid data in files is handled appropriately
+                    <ul>
+                        <li>If file has a corrupted line then skip it</li>
+                        <li>Update user that there were corrupted lines and they were skipped</li>
+                    </ul>    
+                </li>
+                <li>Add Javadoc comments to Junit tests</li>
+                <li>Add Javadoc comments to validation methods</li>
+            </ul>
+        </li>
+        <li>verify what exception StopTime throws in overloaded constructor</li>
+        <li>verify that the validate methods in StopTimes throw the correct exceptions</li>
         <li>Update help documentation in Main window</li>
         <li>Create initial test suites and directory</li>
         <li>

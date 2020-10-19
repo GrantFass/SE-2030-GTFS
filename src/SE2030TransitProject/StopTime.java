@@ -26,7 +26,7 @@ public class StopTime {
 	private String trip_id;
 
 	/**
-	 * StopTime Constructor Overload using string values for the enumerator.
+	 * StopTime Constructor
 	 * @author Joy Cross, Grant Fass
 	 * @param arrival_time arrival time of a specific stop on a specific trip on a route
 	 * @param continuous_drop_off indicates whether a rider can get off the transit vehicle at any point in the trip
