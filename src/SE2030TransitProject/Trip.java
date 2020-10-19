@@ -17,43 +17,67 @@ public class Trip {
     private String shape_id;
     private String trip_headsign;
     private String trip_id;
-    private String trip_short_name;
     private WheelchairAccessibleEnum wheelchair_accessible;
 
     /**
-     * @author Ryan Becker
-     * @param bikes_allowed Enum for if bikes are allowed
-     * @param block_id The block ID
-     * @param direction_id The direction ID
-     * @param route_id The route ID
-     * @param service_id The service ID
-     * @param shape_id The shape ID
-     * @param trip_headsign The trip head sign
-     * @param trip_id The ID for the trip
-     * @param trip_short_name The shorter version of the trip name
+     * @param bikes_allowed         Enum for if bikes are allowed
+     * @param block_id              The block ID
+     * @param direction_id          The direction ID
+     * @param route_id              The route ID
+     * @param service_id            The service ID
+     * @param shape_id              The shape ID
+     * @param trip_headsign         The trip head sign
+     * @param trip_id               The ID for the trip
      * @param wheelchair_accessible Enum for if it is accessible for wheelchairs
+     * @author Simon Erickson
      */
-    public Trip(BikesAllowedEnum bikes_allowed, String block_id, DirectionIDEnum direction_id,
+    public Trip(String bikes_allowed, String block_id, String direction_id,
                 String route_id, String service_id, String shape_id, String trip_headsign,
-                String trip_id, String trip_short_name,
-                WheelchairAccessibleEnum wheelchair_accessible) {
+                String trip_id, String wheelchair_accessible) {
 
-        this.bikes_allowed = bikes_allowed;
-        this.block_id = block_id;
-        this.direction_id = direction_id;
+        //stop_id & trip_id are required so error if they are empty
+        if (route_id.isEmpty() || trip_id.isEmpty() || service_id.isEmpty()) {
+            throw new IllegalArgumentException("Line in 'trips.txt' file not formatted" +
+                    " correctly. Skipping!");
+        }
         this.route_id = route_id;
-        this.service_id = service_id;
-        this.shape_id = shape_id;
-        this.trip_headsign = trip_headsign;
         this.trip_id = trip_id;
-        this.trip_short_name = trip_short_name;
-        this.wheelchair_accessible = wheelchair_accessible;
+        this.service_id = service_id;
+
+        //Optional and does not throw error if empty.
+        this.trip_headsign = trip_headsign;
+        this.block_id = block_id;
+        this.shape_id = shape_id;
+
+        //checking service_id is a day of the week
+        try {
+            this.service_id = service_id;
+            if (!(this.service_id.equalsIgnoreCase("SUNDAY")
+                    || this.service_id.equalsIgnoreCase("MONDAY")
+                    || this.service_id.equalsIgnoreCase("TUESDAY")
+                    || this.service_id.equalsIgnoreCase("WEDNESDAY")
+                    || this.service_id.equalsIgnoreCase("THURSDAY")
+                    || this.service_id.equalsIgnoreCase("FRIDAY")
+                    || this.service_id.equalsIgnoreCase("SATURDAY")
+                    || this.service_id.equalsIgnoreCase("WEEKDAY")
+                    || this.service_id.equalsIgnoreCase("WEEKEND"))) {
+                throw new IllegalArgumentException();
+            }
+            //Set enumerator values (default values are applied if empty).
+            this.bikes_allowed = BikesAllowedEnum.getValue(!bikes_allowed.isEmpty() ? Integer.parseInt(bikes_allowed) : -1);
+            this.direction_id = DirectionIDEnum.getValue(!direction_id.isEmpty() ? Integer.parseInt(direction_id) : -1);
+            this.wheelchair_accessible = WheelchairAccessibleEnum.getValue(!wheelchair_accessible.isEmpty() ? Integer.parseInt(wheelchair_accessible) : -1);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("service_id value must be SUNDAY/ MONDAY/ " +
+                    "TUESDAY/ WEDNESDAY/ THURSDAY/ FRIDAY/ SATURDAY/ WEEKDAY/ WEEKEND. Skipping!");
+        }
     }
 
     /**
      * returns bikes_allowed
-     * @author Simon Erickson
+     *
      * @return Enum for if bikes are allowed
+     * @author Simon Erickson
      */
     public BikesAllowedEnum getBikesAllowed() {
         return bikes_allowed;
@@ -61,8 +85,9 @@ public class Trip {
 
     /**
      * returns block_id
-     * @author Simon Erickson
+     *
      * @return The block ID
+     * @author Simon Erickson
      */
     public String getBlockID() {
         return block_id;
@@ -70,8 +95,9 @@ public class Trip {
 
     /**
      * returns direction_id
-     * @author Simon Erickson
+     *
      * @return The direction ID
+     * @author Simon Erickson
      */
     public DirectionIDEnum getDirectionID() {
         return direction_id;
@@ -79,8 +105,9 @@ public class Trip {
 
     /**
      * returns route_id
-     * @author Simon Erickson
+     *
      * @return The Route ID
+     * @author Simon Erickson
      */
     public String getRouteID() {
         return route_id;
@@ -88,8 +115,9 @@ public class Trip {
 
     /**
      * returns service_id
-     * @author Simon Erickson
+     *
      * @return The service id
+     * @author Simon Erickson
      */
     public String getServiceID() {
         return service_id;
@@ -97,8 +125,9 @@ public class Trip {
 
     /**
      * returns shape_id
-     * @author Simon Erickson
+     *
      * @return The id for the shape
+     * @author Simon Erickson
      */
     public String getShapeID() {
         return shape_id;
@@ -106,8 +135,9 @@ public class Trip {
 
     /**
      * returns trip_headsign
-     * @author Simon Erickson
+     *
      * @return the headsign for the trip
+     * @author Simon Erickson
      */
     public String getTripHeadsign() {
         return trip_headsign;
@@ -115,26 +145,19 @@ public class Trip {
 
     /**
      * returns trip_id
-     * @author Simon Erickson
+     *
      * @return The ID for the trip
+     * @author Simon Erickson
      */
     public String getTripID() {
         return trip_id;
     }
 
     /**
-     * returns trip_short_name
-     * @author Simon Erickson
-     * @return The short version of the trip name
-     */
-    public String getTripShortName() {
-        return trip_short_name;
-    }
-
-    /**
      * returns wheelchair_accessible
-     * @author Simon Erickson
+     *
      * @return Enum for if it is accessible for wheelchairs
+     * @author Simon Erickson
      */
     public WheelchairAccessibleEnum getWheelchairAccessible() {
         return wheelchair_accessible;
@@ -148,15 +171,15 @@ public class Trip {
      */
     @Override
     public String toString() {
-        return String.format("Trip Name: %s | Trip ID: %s\n\t" +
-                "Bikes Allowed: %s\n\t" +
-                "Block ID: %s\n\t" +
-                "Direction ID: %s\n\t" +
-                "Route ID: %s\n\t" +
-                "Service ID: %s\n\t" +
-                "Shape ID: %s\n\t" +
-                "Trip Headsign: %s\n\t" +
-                "Wheelchair Accessible: %s\n", trip_short_name, trip_id, bikes_allowed, block_id,
+        return String.format("Trip ID: %s\n\t" +
+                        "Bikes Allowed: %s\n\t" +
+                        "Block ID: %s\n\t" +
+                        "Direction ID: %s\n\t" +
+                        "Route ID: %s\n\t" +
+                        "Service ID: %s\n\t" +
+                        "Shape ID: %s\n\t" +
+                        "Trip Headsign: %s\n\t" +
+                        "Wheelchair Accessible: %s\n", trip_id, bikes_allowed, block_id,
                 direction_id, route_id, service_id, shape_id, trip_headsign, wheelchair_accessible);
     }
 }//end Trip
