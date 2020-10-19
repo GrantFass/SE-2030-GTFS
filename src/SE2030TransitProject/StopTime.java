@@ -284,6 +284,30 @@ public class StopTime {
 	}
 
 	/**
+	 * gets the file headers
+	 * used for exporting stop times
+	 * @return file headers in a single line header format
+	 * @author Grant Fass
+	 */
+	public static String getHeaderLine() {
+		return "trip_id,stop_id,stop_sequence,arrival_time,departure_time,continuous_drop_off," +
+				"continuous_pickup,drop_off_type,pickup_type," +
+				"shape_distance,stop_headsign,timepoint\n";
+	}
+
+	/**
+	 * gets the data line for a single stop
+	 * used for exporting stop times
+	 * @return stop time data in a single line data format
+	 * @author Grant Fass
+	 */
+	public String getDataLine() {
+		return String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", trip_id, stop_id, stop_sequence,
+				arrival_time, departure_time, continuous_drop_off, continuous_pickup, drop_off_type,
+				pickup_type, shape_dist_traveled, stop_headsign, timepoint);
+	}
+
+	/**
 	 * equals method override
 	 * @param o the object to compare to the current object
 	 * @return if the objects are equal

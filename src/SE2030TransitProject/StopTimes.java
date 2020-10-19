@@ -1,8 +1,6 @@
 package SE2030TransitProject;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 import java.util.zip.DataFormatException;
 
@@ -74,6 +72,25 @@ public class StopTimes {
 	public boolean clearStopTimes(){
 		stop_times.clear();
 		//stop_times = new HashMap<String, StopTime>();
+		return true;
+	}
+
+	/**
+	 * export the stop times to a specified output directory
+	 * @param file the directory to save the file to
+	 * @return true
+	 * @throws IOException if an issue was encountered saving the file
+	 * @author Grant Fass
+	 */
+	public boolean exportStopTimes(File file) throws IOException {
+		File outFile = new File(file, "stop_times.txt");
+		outFile.createNewFile();
+		FileWriter out = new FileWriter(outFile);
+		out.write(StopTime.getHeaderLine());
+		for (String key: stop_times.keySet()) {
+			out.write(stop_times.get(key).getDataLine());
+		}
+		out.close();
 		return true;
 	}
 
