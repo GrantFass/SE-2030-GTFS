@@ -152,6 +152,7 @@
 <h5>Grant Fass:</h5>
 <h6>TODO</h6>
 <ul>
+    <li>Update StopTime constructor with helper methods to make code more readable</li>
     <li>verify what exception StopTime throws in overloaded constructor</li>
     <li>verify that the validate methods in StopTimes throw the correct exceptions</li>
     <li>Implement stop_time Export</li>

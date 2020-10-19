@@ -132,7 +132,13 @@ public class StopTime {
 				this.departure_time = new Timestamp(dateFormat.parse(departure_time).getTime());
 			}
 			this.stop_sequence = Integer.parseInt(stop_sequence); //required so should throw error if it is missing
+			if (this.stop_sequence < 0) {
+				throw new IllegalArgumentException("stop_sequence value must be a non-negative integer");
+			}
 			this.shape_dist_traveled = !shape_dist_traveled.isEmpty() ? Float.parseFloat(shape_dist_traveled) : 0;
+			if (this.shape_dist_traveled < 0) {
+				this.shape_dist_traveled = 0;
+			}
 			//Set enumerator values
 			//default values are applied if empty.
 			this.continuous_drop_off = ContinuousDropOffEnum.getValue(!continuous_drop_off.isEmpty() ? Integer.parseInt(continuous_drop_off) : -1);

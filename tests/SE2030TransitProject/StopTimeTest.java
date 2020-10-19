@@ -315,24 +315,110 @@ class StopTimeTest {
         assertEquals(PickupTypeEnum.COORDINATE_WITH_DRIVER_FOR_PICKUP, stopTime.getPickupType());
     }
 
+    /**
+     * Make sure shape distance parses when it is supposed to
+     * shape distance should return zero when empty or negative numbers are input
+     * @author Grant Fass
+     */
     @Test
     void getShapeDistTraveled() {
-        fail();
+        StopTime stopTime = new StopTime("00:00:00", "0", "0",
+                "00:00:00", "0", "0", "",
+                "sometext", "11", "1", "0", "11");
+        assertEquals(0, stopTime.getShapeDistTraveled());
+        stopTime = new StopTime("00:00:00", "0", "0",
+                "00:00:00", "0", "0", "0",
+                "sometext", "11", "1", "0", "11");
+        assertEquals(0, stopTime.getShapeDistTraveled());
+        stopTime = new StopTime("00:00:00", "0", "0",
+                "00:00:00", "0", "0", "1.10",
+                "sometext", "11", "1", "0", "11");
+        assertEquals(Float.parseFloat("1.1"), stopTime.getShapeDistTraveled());
+        stopTime = new StopTime("00:00:00", "0", "0",
+                "00:00:00", "0", "0", "-1",
+                "sometext", "11", "1", "0", "11");
+        assertEquals(0, stopTime.getShapeDistTraveled());
+
     }
 
+    /**
+     * Make sure that the same value that is passed to stop_headsign is the value that is returned
+     * @author Grant Fass
+     */
     @Test
     void getStopHeadsign() {
-        fail();
+        StopTime stopTime = new StopTime("00:00:00", "0", "0",
+                "00:00:00", "0", "0", "0",
+                "sometext", "11", "1", "0", "11");
+        assertEquals("sometext", stopTime.getStopHeadsign());
+        stopTime = new StopTime("00:00:00", "0", "0",
+                "00:00:00", "0", "0", "0",
+                "", "11", "1", "0", "11");
+        assertEquals("", stopTime.getStopHeadsign());
+        stopTime = new StopTime("00:00:00", "0", "0",
+                "00:00:00", "0", "0", "0",
+                "123abcABC_!@", "11", "1", "0", "11");
+        assertEquals("123abcABC_!@", stopTime.getStopHeadsign());
     }
 
+    /**
+     * Make sure that the StopID is returned correctly
+     * Make sure that StopID errors when empty value passed in
+     * @author Grant Fass
+     */
     @Test
     void getStopID() {
-        fail();
+        StopTime stopTime = new StopTime("00:00:00", "0", "0",
+                "00:00:00", "0", "0", "0",
+                "sometext", "11", "1", "0", "11");
+        assertEquals("11", stopTime.getStopID());
+        stopTime = new StopTime("00:00:00", "0", "0",
+                "00:00:00", "0", "0", "0",
+                "sometext", "0", "1", "0", "11");
+        assertEquals("0", stopTime.getStopID());
+        stopTime = new StopTime("00:00:00", "0", "0",
+                "00:00:00", "0", "0", "0",
+                "sometext", "-1", "1", "0", "11");
+        assertEquals("-1", stopTime.getStopID());
+        //make sure exception thrown when stop_id missing
+        assertThrows(IllegalArgumentException.class, () -> {
+            StopTime stopTime1 = new StopTime("00:00:00", "0",
+                    "0", "00:00:00", "0", "0",
+                    "0", "sometext", "",
+                    "1", "0", "11");
+        });
     }
 
+    /**
+     * make sure the value for stop sequence is parsing correctly
+     * make sure stop sequence is a non-negative integer
+     * make sure stop sequence is not empty
+     * @author Grant Fass
+     */
     @Test
     void getStopSequence() {
-        fail();
+        StopTime stopTime = new StopTime("00:00:00", "0", "0",
+                "00:00:00", "0", "0", "0",
+                "sometext", "11", "1", "0", "11");
+        assertEquals(1, stopTime.getStopSequence());
+        stopTime = new StopTime("00:00:00", "0", "0",
+                "00:00:00", "0", "0", "0",
+                "sometext", "11", "0", "0", "11");
+        assertEquals(0, stopTime.getStopSequence());
+        //make sure exception thrown when stop_sequence is negative
+        assertThrows(IllegalArgumentException.class, () -> {
+            StopTime stopTime1 = new StopTime("00:00:00", "0",
+                    "0", "00:00:00", "0", "0",
+                    "0", "sometext", "11",
+                    "-1", "0", "11");
+        });
+        //make sure exception thrown when stop_sequence missing
+        assertThrows(IllegalArgumentException.class, () -> {
+            StopTime stopTime1 = new StopTime("00:00:00", "0",
+                    "0", "00:00:00", "0", "0",
+                    "0", "sometext", "11",
+                    "", "0", "11");
+        });
     }
 
     /**
@@ -356,8 +442,31 @@ class StopTimeTest {
         assertEquals(TimepointEnum.EXACT_TIME, stopTime.getTimepoint());
     }
 
+    /**
+     * Make sure that the tripID is returned correctly
+     * Make sure that tripID errors when empty value passed in
+     * @author Grant Fass
+     */
     @Test
     void getTripID() {
-        fail();
+        StopTime stopTime = new StopTime("00:00:00", "0", "0",
+                "00:00:00", "0", "0", "0",
+                "sometext", "11", "1", "0", "11");
+        assertEquals("11", stopTime.getTripID());
+        stopTime = new StopTime("00:00:00", "0", "0",
+                "00:00:00", "0", "0", "0",
+                "sometext", "11", "1", "0", "0");
+        assertEquals("0", stopTime.getTripID());
+        stopTime = new StopTime("00:00:00", "0", "0",
+                "00:00:00", "0", "0", "0",
+                "sometext", "11", "1", "0", "-1");
+        assertEquals("-1", stopTime.getTripID());
+        //make sure exception thrown when trip_id missing
+        assertThrows(IllegalArgumentException.class, () -> {
+            StopTime stopTime1 = new StopTime("00:00:00", "0",
+                    "0", "00:00:00", "0", "0",
+                    "0", "sometext", "11",
+                    "1", "0", "");
+        });
     }
 }
