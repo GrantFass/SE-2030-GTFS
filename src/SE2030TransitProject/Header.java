@@ -6,6 +6,8 @@
  */
 package SE2030TransitProject;
 
+import java.util.Objects;
+
 /**
  * Headers Purpose: create headers object used to map the order of file headers
  *
@@ -41,5 +43,29 @@ public class Header {
      */
     public String getHeaderName() {
         return headerName;
+    }
+
+    /**
+     * override equals method
+     * @param o object to check against this header
+     * @return if objects are equal
+     * @author Grant Fass
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Header header = (Header) o;
+        return headerIndex == header.headerIndex &&
+                header.headerName.equals(headerName);
+    }
+
+    /**
+     * @author Grant Fass
+     * @return hash code
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(headerName, headerIndex);
     }
 }

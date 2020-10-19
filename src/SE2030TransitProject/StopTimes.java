@@ -77,7 +77,8 @@ public class StopTimes {
 	 * @return true if removed stopTimes
 	 */
 	public boolean clearStopTimes(){
-		stop_times = new HashMap<String, StopTime>();
+		stop_times.clear();
+		//stop_times = new HashMap<String, StopTime>();
 		return true;
 	}
 
@@ -101,7 +102,7 @@ public class StopTimes {
 		Headers headers;
 		try {
 			headers = validateHeader(fileInput.nextLine());
-		} catch (DataFormatException e) {
+		} catch (IllegalArgumentException e) {
 			throw new IOException("File not read due to invalid headers format");
 		}
 		boolean wasLineSkipped = false;
@@ -124,10 +125,10 @@ public class StopTimes {
 	 * TODO: verify header matches proper format (Exception Handling)
 	 * @param header the header text line to validate
 	 * @return a Headers object containing the ordering of the headers
-	 * @throws DataFormatException if the header does not match the expected format
+	 * @throws IllegalArgumentException if the header does not match the expected format
 	 * @author Grant Fass
 	 */
-	public Headers validateHeader(String header) throws DataFormatException {
+	public Headers validateHeader(String header) throws IllegalArgumentException {
 		Headers headers = new Headers();
 		String[] headerDataArray = header.split(",");
 		for (int i = 0; i < headerDataArray.length; i++) {

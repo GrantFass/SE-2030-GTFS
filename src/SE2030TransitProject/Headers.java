@@ -7,6 +7,7 @@
 package SE2030TransitProject;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Headers Purpose: create a list of headers used to map the order of file headers
@@ -63,7 +64,42 @@ public class Headers {
         return -1;
     }
 
+    /**
+     * @return the number of headers
+     * @author Grant Fass
+     */
     public int length(){
         return headers.size();
+    }
+
+    /**
+     * check if the two objects are equal
+     * @param o the object to compare to this object
+     * @return if the two objects are equal
+     * @author Grant Fass
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        Headers headers1 = (Headers) o;
+        if (headers1.length() != this.length()) {
+            return false;
+        }
+        for (int i = 0; i < this.length(); i++) {
+            if (!headers.get(i).equals(headers1.headers.get(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * override default hashCode method
+     * @return the hashcode
+     * @author Grant Fass
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(headers);
     }
 }
