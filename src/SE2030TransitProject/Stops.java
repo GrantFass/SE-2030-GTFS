@@ -6,6 +6,8 @@ import javafx.scene.control.TextArea;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.zip.DataFormatException;
 
 /**

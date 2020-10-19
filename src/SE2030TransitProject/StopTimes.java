@@ -2,6 +2,8 @@ package SE2030TransitProject;
 
 import java.io.*;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.zip.DataFormatException;
 
 /**
@@ -251,10 +253,26 @@ public class StopTimes {
 
 	/**
 	 * @return the number of trips that each stop is found on
-	 * @author Grant Fass, Joy Cross
-	 * TODO: Joy Cross in charge of implementing
+	 * @author Joy Cross
 	 */
 	public String getTripsPerStop() {
-		return "Not Implemented Yet.";
+		Object[] keys = stop_times.keySet().toArray();
+
+		// separate stop_id from trip_id
+		for(int i = 0; i < keys.length; i++){
+			String value = keys[i].toString();
+			keys[i] = value.substring(0, value.indexOf(';'));
+		}
+
+		// count distinct stops which returns number of how much a stop is used by trips
+		StringBuilder sb = new StringBuilder();
+		Arrays.stream(keys).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+				.entrySet()
+				.forEach(object -> sb.append("Stop_id: " + object.toString()
+								.substring(0, object.toString().indexOf('=')) +
+						"; Number of trips containing stop: " + object.toString()
+								.substring(object.toString().indexOf('=')+1) + "\n"));
+
+		return sb.toString();
 	}
 }//end StopTimes
