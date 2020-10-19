@@ -150,14 +150,15 @@ public class Trips {
     /**
      * Method to write Trip data to a trips.txt file
      *
-     * @param path the trips.txt file desired location
+     * @param file the trips.txt file desired location
      * @return true if file was written successfully, false otherwise
-     * @author Simon Erickson
+     * @throws IOException if something went wrong
+     * @author Simon Erickson, Grant Fass
      */
-    public boolean exportTrips(Path path) throws FileNotFoundException {
+    public boolean exportTrips(File file) throws IOException {
 
         //writes the items of the file to the hash map
-        try (PrintWriter write = new PrintWriter(new BufferedOutputStream(new FileOutputStream(String.valueOf(path))))) {
+        try (PrintWriter write = new PrintWriter(new BufferedOutputStream(new FileOutputStream(new File(file, "trips.txt"))))) {
 
             //write header: route_id,service_id,trip_id,trip_headsign,direction_id,block_id,shape_id
             write.println("route_id,service_id,trip_id,trip_headsign,direction_id,block_id,shape_id");

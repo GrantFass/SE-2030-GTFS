@@ -24,6 +24,12 @@ Everything in this file has been setup in code.
             <MenuItem mnemonicParsing="false" onAction="#toggleDataDisplay"
                       text="Show Data Display" fx:id="viewDataDisplayButton"/>
         </Menu>
+        <Menu mnemonicParsing="false" text="Export">
+            <MenuItem mnemonicParsing="false" onAction="#exportRoutes" text="Export Routes"/>
+            <MenuItem mnemonicParsing="false" onAction="#exportStops" text="Export Stops"/>
+            <MenuItem mnemonicParsing="false" onAction="#exportStopTimes" text="Export Stop Times"/>
+            <MenuItem mnemonicParsing="false" onAction="#exportTrips" text="Export Trips"/>
+        </Menu>
         <Menu mnemonicParsing="false" text="Help">
             <MenuItem mnemonicParsing="false" onAction="#displayHelp" text="About"/>
         </Menu>

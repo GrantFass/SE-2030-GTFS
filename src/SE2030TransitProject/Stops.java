@@ -215,7 +215,7 @@ public class Stops {
 		return true;
 	}
 
-	public boolean exportStops(File file) {
+	public boolean exportStops(File file) throws IOException{
 		try {
 			File outputLocation = new File(file, "stops.txt");
 			BufferedWriter output = new BufferedWriter(new FileWriter(outputLocation));

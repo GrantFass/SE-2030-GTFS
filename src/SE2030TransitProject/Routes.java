@@ -73,6 +73,18 @@ public class Routes {
 	}
 
 	/**
+	 * export the routes to a specified output directory
+	 * @param file the directory to save the file to
+	 * @return true
+	 * @throws IOException if an issue was encountered saving the file
+	 * @author Grant Fass
+	 */
+	public boolean exportRoutes(File file) throws IOException {
+		//TODO: implement this
+		return false;
+	}
+
+	/**
 	 * Method to parse Route data from a routes.txt file
 	 * @author Grant Fass, Ryan Becker
 	 * @param file the routes.txt file to be parsed

@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.io.File;
@@ -259,7 +260,7 @@ public class Controller {
 			}
 
 			dataDisplayController.resetTextToDefaultValues();
-			if (wasLineSkipped) {
+			if (!wasLineSkipped) {
 				displayAlert(Alert.AlertType.INFORMATION, "Information", null, "Data Imported Successfully");
 			} else {
 				displayAlert(Alert.AlertType.WARNING, "Warning", null, "One or more lines in the file that was loaded were incorrectly formatted and skipped");
@@ -423,5 +424,74 @@ public class Controller {
 		alert.setHeaderText(header);
 		alert.setContentText(content);
 		alert.showAndWait();
+	}
+
+	/**
+	 * export Routes to a specified file directory
+	 * @author Grant Fass
+	 */
+	@FXML
+	public void exportRoutes() {
+		try {
+			File file = getExportDirectory();
+			data.getRoutes().exportRoutes(file);
+		} catch (IOException e) {
+			displayAlert(Alert.AlertType.ERROR, "Error", null, "Something went wrong while exporting file");
+		}
+	}
+
+	/**
+	 * export Stops to a specified file directory
+	 * @author Grant Fass
+	 */
+	@FXML
+	public void exportStops() {
+		try {
+			File file = getExportDirectory();
+			data.getStops().exportStops(file);
+		} catch (IOException e) {
+			displayAlert(Alert.AlertType.ERROR, "Error", null, "Something went wrong while exporting file");
+		}
+	}
+
+	/**
+	 * export StopTimes to a specified file directory
+	 * @author Grant Fass
+	 */
+	@FXML
+	public void exportStopTimes() {
+		try {
+			File file = getExportDirectory();
+			data.getStopTimes().exportStopTimes(file);
+		} catch (IOException e) {
+			displayAlert(Alert.AlertType.ERROR, "Error", null, "Something went wrong while exporting file");
+		}
+	}
+
+	/**
+	 * export Trips to a specified file directory
+	 * @author Grant Fass
+	 */
+	@FXML
+	public void exportTrips() {
+		try {
+			File file = getExportDirectory();
+			data.getTrips().exportTrips(file);
+		} catch (IOException e) {
+			displayAlert(Alert.AlertType.ERROR, "Error", null, "Something went wrong while exporting file");
+		}
+	}
+
+	/**
+	 * Method to query the user to retrieve a GTFS file from the computer using a FileChooser
+	 * @author Grant Fass
+	 * @return The selected GTFS file from the program
+	 */
+	private File getExportDirectory() {
+		DirectoryChooser directoryChooser = new DirectoryChooser();
+		directoryChooser.setTitle("Select Export Directory");
+		directoryChooser.setInitialDirectory(new File("C:\\\\users\\\\" +
+				System.getProperty("user.name") + "\\\\Documents"));
+		return directoryChooser.showDialog(stage);
 	}
 }

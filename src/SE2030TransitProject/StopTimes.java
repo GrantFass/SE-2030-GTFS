@@ -230,15 +230,19 @@ public class StopTimes {
 	}
 
 	/**
-	 * Method to output data as a single concatenated string
-	 * @author Joy Cross
+	 * Method to output first 1000 StopTimes as a single concatenated string
+	 * @author Joy Cross, Grant Fass
 	 * @return string of data
 	 */
 	@Override
 	public String toString() {
 		StringBuilder toReturn = new StringBuilder();
 		int maxDisplay = 1000;
+		int count = 0;
 		Object[] keys = stop_times.keySet().toArray();
+		if (keys.length == 0) {
+			return "";
+		}
 		for(int i = 0; i < maxDisplay; i++){
 			toReturn.append(stop_times.get(keys[i]).toString() + "\n");
 		}
