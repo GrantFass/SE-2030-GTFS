@@ -15,8 +15,7 @@ package SE2030TransitProject;
 public enum BikesAllowedEnum {
     NO_INFORMATION(0),
     AT_LEAST_ONE(1),
-    NO_BIKES(2)
-    ;
+    NO_BIKES(2);
 
     private final int value;
 
@@ -26,5 +25,21 @@ public enum BikesAllowedEnum {
 
     public int getValue(){
         return this.value;
+    }
+
+    /**
+     * return the enumerator value associated with the specified integer value
+     * @param value the value to use
+     * @return the enumerator value associated with the integer or the default if none match
+     * @author Simon Erickson
+     */
+    public static BikesAllowedEnum getValue(int value) {
+        if (value == 1) {
+            return AT_LEAST_ONE;
+        } else if (value == 2) {
+            return NO_BIKES;
+        } else {
+            return NO_INFORMATION;
+        }
     }
 }
