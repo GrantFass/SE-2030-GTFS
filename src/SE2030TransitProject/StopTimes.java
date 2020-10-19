@@ -31,14 +31,12 @@ public class StopTimes {
 	/**
 	 * Adds a StopTime object to the hashmap, returns false if could not be added to hashmap
 	 * Key is in format "stopid;tripid"
-	 * @author Joy Cross
-	 * @param stop_id stop id associated with stoptime
-	 * @param trip_id trip id associated with stoptime
+	 * @author Joy Cross, Grant Fass
 	 * @param stopTime stopTime to be added
 	 * @return true if added correctly
 	 */
-	public boolean addStopTime(String stop_id, String trip_id, StopTime stopTime){
-		StopTime stopTimeAdded = stop_times.put(stop_id + ";" + trip_id,stopTime);
+	public boolean addStopTime(StopTime stopTime){
+		StopTime stopTimeAdded = stop_times.put(stopTime.getStopID() + ";" + stopTime.getTripID(), stopTime);
 		boolean added = false;
 		if(stopTimeAdded != null){
 			added = true;
@@ -110,8 +108,8 @@ public class StopTimes {
 		while (fileInput.hasNextLine()) {
 			try {
 				StopTime stopTime = validateData(fileInput.nextLine(), headers);
-				addStopTime(stopTime.getStopID(), stopTime.getTripID(), stopTime);
-			} catch (DataFormatException e) {
+				addStopTime(stopTime);
+			} catch (IllegalArgumentException e) {
 				wasLineSkipped = true;
 			}
 		}
@@ -140,18 +138,16 @@ public class StopTimes {
 
 	/**
 	 * checks to confirm that a data line is valid and matches the expected format set by the header line
-	 * TODO: verify data matches proper format (Exception Handling)
 	 * @param data the line of data to parse
 	 * @param headers the headers values to use to parse the data
 	 * @return a StopTime object constructed from the data
-	 * @throws DataFormatException if the data does not match the expected format
-	 * @throws IllegalArgumentException if there was an issue parsing a String enumerator to an int
+	 * @throws IllegalArgumentException if there was an issue parsing or the wrong amount of data was passed
 	 * @author Grant Fass
 	 */
-	public StopTime validateData(String data, Headers headers) throws DataFormatException, IllegalArgumentException {
+	public StopTime validateData(String data, Headers headers) throws IllegalArgumentException {
 		String[] dataArray = data.split(",");
 		if (dataArray.length != headers.length()) {
-			throw new DataFormatException("Data line does not contain the proper amount of data");
+			throw new IllegalArgumentException("Data line does not contain the proper amount of data");
 		}
 		//Required Fields
 		String trip_id = setDefaultDataValue(dataArray, headers, "trip_id");
@@ -161,11 +157,6 @@ public class StopTimes {
 		//Conditionally Required Fields
 		String arrival_time = setDefaultDataValue(dataArray, headers, "arrival_time");
 		String departure_time = setDefaultDataValue(dataArray, headers, "departure_time");
-		if (arrival_time.isEmpty() && !departure_time.isEmpty()) {
-			arrival_time = departure_time;
-		} else if (!arrival_time.isEmpty() && departure_time.isEmpty()) {
-			departure_time = arrival_time;
-		}
 
 		//Optional Fields
 		String stop_headsign = setDefaultDataValue(dataArray, headers, "stop_headsign");
@@ -188,6 +179,7 @@ public class StopTimes {
 	 * @param headers the headers to search through
 	 * @param expectedHeader the expected header value
 	 * @return data value for the expected header
+	 * @author Grant Fass
 	 */
 	public String setDefaultDataValue(String[] dataArray, Headers headers, String expectedHeader) {
 		int index = headers.getHeaderIndex(expectedHeader);
@@ -211,29 +203,6 @@ public class StopTimes {
 			toReturn.append(stop_times.get(keys[i]).toString() + "\n");
 		}
 		return toReturn.toString();
-	}
-
-	/**
-	 * Method to print all of the individual stopTime objects to the textArea 1000 objects at a time.
-	 * @param textArea the textArea to print the stopTime objects to
-	 * @author Grant Fass
-	 */
-	public void printDataToTextArea(TextArea textArea) {
-		textArea.setText(toString());
-		/*
-		StringBuilder stringBuilder = new StringBuilder();
-		int index = 0;
-		for (String key : stop_times.keySet()) {
-			stringBuilder.append(stop_times.get(key).toString() + "\n");
-			index++;
-			if (index % 1000 ==  0) {
-				textArea.appendText(stringBuilder.toString());
-				stringBuilder.setLength(0);
-			}
-		}
-		textArea.appendText(stringBuilder.toString());
-
-		 */
 	}
 
 }//end StopTimes

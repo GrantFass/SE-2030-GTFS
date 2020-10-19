@@ -137,32 +137,4 @@ public class DataDisplayController {
         dataDisplayTextArea.setText(textAreaText);
         checkForEmptyTextArea();
     }
-
-    /**
-     * display the data by passing the text area to be filled directly to a method in the data class
-     * values for the classes not being updated should be null
-     * @param textArea the text area for the information to be written to
-     * @param routes the routes information to write to the text area
-     * @param stops the stops information to write to the text area
-     * @param stopTimes the stop times information to write to the text area
-     * @param trips the trips information to write to the text area
-     * @author Grant Fass
-     */
-    private void displayData(TextArea textArea, Routes routes, Stops stops,
-                             StopTimes stopTimes, Trips trips) {
-        if (routes != null) {
-            topLabel.setText("'routes.txt'");
-            routes.printDataToTextArea(textArea);
-        } else if (stops != null) {
-            topLabel.setText("'stops.txt'");
-            stops.printDataToTextArea(textArea);
-        } else if (stopTimes != null) {
-            topLabel.setText("'stop_times.txt'");
-            stopTimes.printDataToTextArea(textArea);
-        } else {
-            topLabel.setText("'trips.txt'");
-            trips.printDataToTextArea(textArea);
-        }
-        checkForEmptyTextArea();
-    }
 }

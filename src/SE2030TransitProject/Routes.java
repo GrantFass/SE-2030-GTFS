@@ -151,22 +151,6 @@ public class Routes {
 	}
 
 	/**
-	 * Method to print all of the individual route objects to the textArea
-	 * @param textArea the textArea to print the route objects to
-	 * @author Grant Fass
-	 */
-	public void printDataToTextArea(TextArea textArea) {
-		textArea.clear();
-		textArea.setText(toString());
-        /*
-		for (String key : routes.keySet()) {
-			textArea.appendText(routes.get(key).toString() + "\n");
-		}
-
-         */
-	}
-
-	/**
      * @deprecated
 	 * Helper method for loadRoutes(). Refreshes hashmap to default parameters for use in a new line of data
 	 * @author Ryan Becker

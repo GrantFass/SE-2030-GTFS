@@ -245,19 +245,4 @@ public class Stops {
 		return toReturn.toString();
 	}
 
-	/**
-	 * Method to print all of the individual stop objects to the textArea
-	 * @param textArea the textArea to print the stop objects to
-	 * @author Grant Fass
-	 */
-	public void printDataToTextArea(TextArea textArea) {
-		textArea.clear();
-		textArea.setText(toString());
-        /*
-		for (String key : stops.keySet()) {
-			textArea.appendText(stops.get(key).toString() + "\n");
-		}
-
-         */
-	}
 }//end Stops

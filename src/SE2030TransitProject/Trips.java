@@ -211,23 +211,4 @@ public class Trips {
         }
         return tripHeader;
     }
-
-    /**
-     * Method to print all of the individual trip objects to the textArea
-     *
-     * @param textArea the textArea to print the trip objects to
-     * @author Grant Fass
-     */
-    public void printDataToTextArea(TextArea textArea) {
-        textArea.clear();
-        textArea.setText(toString());
-        /*
-        for (String key : trips.keySet()) {
-            textArea.appendText(trips.get(key).toString() + "\n");
-        }
-
-         */
-    }
-
-
 }//end Trips
