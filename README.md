@@ -154,7 +154,8 @@
 <ul>
     <li>Update StopTime constructor with helper methods to make code more readable (use private setters)</li>
     <li>Reimplement setters in StopTime and make them private</li>
-    <li>Implement stop_time Export</li>
+    <li>Verify stop_time Export clears output file before writing</li>
+    <li>Add export option to GUI</li>
     <li>Compress Lab 5 Data in README</li>
     <li>Add lab 6 Data in README</li>
     <li>Update Data View Window help section</li>
@@ -170,6 +171,7 @@
 <h6>Completed</h6>
 <s>
     <ul>
+        <li>Implement stop_time Export</li>
         <li>Override .equals methods for StopTime, Header, and Headers</li>
         <li>
             Harden Stop_Time Import Validation

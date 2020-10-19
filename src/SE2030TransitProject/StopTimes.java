@@ -84,12 +84,16 @@ public class StopTimes {
 	 */
 	public boolean exportStopTimes(File file) throws IOException {
 		File outFile = new File(file, "stop_times.txt");
-		outFile.createNewFile();
-		FileWriter out = new FileWriter(outFile);
-		out.write(StopTime.getHeaderLine());
-		for (String key: stop_times.keySet()) {
-			out.write(stop_times.get(key).getDataLine());
+		if (!outFile.exists()) {
+			outFile.createNewFile();
 		}
+		FileWriter out = new FileWriter(outFile.getAbsoluteFile());
+		StringBuilder outputString = new StringBuilder();
+		outputString.append(StopTime.getHeaderLine());
+		for (String key: stop_times.keySet()) {
+			outputString.append(stop_times.get(key).getDataLine());
+		}
+		out.append(outputString);
 		out.close();
 		return true;
 	}
