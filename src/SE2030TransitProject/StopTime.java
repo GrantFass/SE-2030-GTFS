@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Objects;
 
 /**
  * Class for a StopTime object, which is a specific stop <-> trip relationship for a route
@@ -41,6 +42,7 @@ public class StopTime {
 	 * @param timepoint indicates whether the times are approximate or exact
 	 * @param trip_id id of the specific trip
 	 */
+	/*
 	public StopTime(Timestamp arrival_time, ContinuousDropOffEnum continuous_drop_off, ContinuousPickupEnum
 			continuous_pickup, Timestamp departure_time, DropOffTypeEnum drop_off_type, PickupTypeEnum
 							pickup_type, float shape_dist_traveled, String stop_headsign, String stop_id, int stop_sequence,
@@ -82,8 +84,8 @@ public class StopTime {
 		} else {
 			this.timepoint = timepoint;
 		}
-
 	}
+	 */
 
 	/**
 	 * StopTime Constructor Overload using string values for the enumerators
@@ -116,8 +118,20 @@ public class StopTime {
 		this.trip_id = trip_id;
 		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 		try {
-			this.arrival_time = new Timestamp(dateFormat.parse(arrival_time).getTime());
-			this.departure_time = new Timestamp(dateFormat.parse(departure_time).getTime());
+			if (arrival_time.isEmpty() && !departure_time.isEmpty()) {
+				this.departure_time = new Timestamp(dateFormat.parse(departure_time).getTime());
+				this.arrival_time = this.departure_time;
+			} else if (!arrival_time.isEmpty() && departure_time.isEmpty()) {
+				this.arrival_time = new Timestamp(dateFormat.parse(arrival_time).getTime());
+				this.departure_time = this.arrival_time;
+			} else if (arrival_time.isEmpty()) {
+				//if both are empty
+				throw new IllegalArgumentException("Both arrival time and departure time are empty!");
+			} else {
+				//neither are empty
+				this.arrival_time = new Timestamp(dateFormat.parse(arrival_time).getTime());
+				this.departure_time = new Timestamp(dateFormat.parse(departure_time).getTime());
+			}
 			this.stop_sequence = Integer.parseInt(stop_sequence); //required so should throw error if it is missing
 			this.shape_dist_traveled = !shape_dist_traveled.isEmpty() ? Float.parseFloat(shape_dist_traveled) : 0;
 			//Set enumerator values
@@ -323,5 +337,40 @@ public class StopTime {
 				dateFormat.format(departure_time), continuous_drop_off, continuous_pickup,
 				drop_off_type.toString(), pickup_type.toString(), shape_dist_traveled,
 				stop_headsign, stop_sequence, timepoint);
+	}
+
+	/**
+	 * equals method override
+	 * @param o the object to compare to the current object
+	 * @return if the objects are equal
+	 * @author Grant Fass
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		StopTime stopTime = (StopTime) o;
+		return Float.compare(stopTime.shape_dist_traveled, shape_dist_traveled) == 0 &&
+				stop_sequence == stopTime.stop_sequence &&
+				Objects.equals(arrival_time, stopTime.arrival_time) &&
+				continuous_drop_off == stopTime.continuous_drop_off &&
+				continuous_pickup == stopTime.continuous_pickup &&
+				Objects.equals(departure_time, stopTime.departure_time) &&
+				drop_off_type == stopTime.drop_off_type &&
+				pickup_type == stopTime.pickup_type &&
+				Objects.equals(stop_headsign, stopTime.stop_headsign) &&
+				stop_id.equals(stopTime.stop_id) &&
+				timepoint == stopTime.timepoint &&
+				trip_id.equals(stopTime.trip_id);
+	}
+
+	/**
+	 * hashCode method override
+	 * @return the hashcode generated from the object
+	 * @author Grant Fass
+	 */
+	@Override
+	public int hashCode() {
+		return Objects.hash(arrival_time, continuous_drop_off, continuous_pickup, departure_time, drop_off_type, pickup_type, shape_dist_traveled, stop_headsign, stop_id, stop_sequence, timepoint, trip_id);
 	}
 }//end StopTime
