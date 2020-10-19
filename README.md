@@ -183,14 +183,10 @@
     </li>
 </ul>
 <ul>
+    <li>Override .equals methods for classes</li>
     <li>Compress Lab 5 Data in README</li>
     <li>Add lab 6 Data in README</li>
-    <li>
-        Implement Data View Window
-        <ul>
-            <li>Update help section</li>
-        </ul>
-    </li>
+    <li>Update Data View Window help section</li>
     <li>Implement Deep Copy in controller getData() method</li>
 </ul>
 <h6>Completed</h6>
