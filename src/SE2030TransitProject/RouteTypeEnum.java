@@ -56,7 +56,7 @@ public enum RouteTypeEnum {
      * return the enumerator value associated with the specified integer value
      * @param value the value to use
      * @return the enumerator value associated with the integer or the default if none match
-     * @author Grant Fass, Ryan Becker
+     * @author Grant Fass
      */
     public static RouteTypeEnum getValue(int value) {
         if (value == 0) {
