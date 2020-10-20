@@ -63,6 +63,7 @@
 <hr>
 <h5>Simon Erickson:</h5>
 <h6>TODO</h6>
+<h6>Completed</h6>
 <ul>
     <li>
         Implement Feature 2: Display the Distance of each Trip
@@ -74,10 +75,6 @@
     <li>
         Harden Trip Import Validation
         <ul>
-            <li>Create validation method for header line</li>
-            <li>Create validation method for input line</li>
-            <li>Create unit test for header line validation method</li>
-            <li>Create unit test for input line validation method</li>
             <li>Ensure individual file formatting is handled appropriately</li>
             <li>
                 Ensure invalid data in files is handled appropriately
@@ -91,7 +88,6 @@
         </ul>
     </li>
 </ul>
-<h6>Completed</h6>
 <s>
     <ul>
         <li></li>
