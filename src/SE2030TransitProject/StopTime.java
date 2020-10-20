@@ -302,9 +302,10 @@ public class StopTime {
 	 * @author Grant Fass
 	 */
 	public String getDataLine() {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 		return String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", trip_id, stop_id, stop_sequence,
-				arrival_time, departure_time, continuous_drop_off, continuous_pickup, drop_off_type,
-				pickup_type, shape_dist_traveled, stop_headsign, timepoint);
+				dateFormat.format(arrival_time), dateFormat.format(departure_time), continuous_drop_off.getValue(), continuous_pickup.getValue(), drop_off_type.getValue(),
+				pickup_type.getValue(), shape_dist_traveled, stop_headsign, timepoint.getValue());
 	}
 
 	/**

@@ -47,7 +47,10 @@ public class Controller {
 				"A warning will be displayed if previous files were overwritten.\n\n" +
 				"View Files:\n\t" +
 				"Go to View -> Show Data Display. this will open the Data Display Window.\n\t" +
-				"In the Data Display Window go to View then the file you would like to view.");
+				"In the Data Display Window go to View then the file you would like to view.\n\n" +
+				"Export Files:\n\t" +
+				"Go to the Export menu and then select the file type that you would like to export.\n\t" +
+				"A directory chooser will then appear. Use this window to select where to save the exported file to.\n\t");
 	}
 
 	/**

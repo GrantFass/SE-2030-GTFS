@@ -132,8 +132,11 @@ public class StopTimes {
 				wasLineSkipped = true;
 			}
 		}
-		if (!emptyAtLoadStart) {
+		if (!emptyAtLoadStart && !wasLineSkipped) {
 			throw new DataFormatException(file.getName());
+		} else if (!emptyAtLoadStart) {
+			throw new IOException("Either data in " + file.getName() + " was overwritten or " +
+					"there was a problem reading the file");
 		}
 		return wasLineSkipped;
 	}
