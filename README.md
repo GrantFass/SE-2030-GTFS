@@ -155,23 +155,22 @@
 <ul>
     <li>Update StopTime constructor with helper methods to make code more readable (use private setters)</li>
     <li>Reimplement setters in StopTime and make them private</li>
-    <li>Verify stop_time Export clears output file before writing</li>
-    <li>Add export option to GUI</li>
-    <li>Compress Lab 5 Data in README</li>
-    <li>Add lab 6 Data in README</li>
+    <li>Clean up README</li>
     <li>Update Data View Window help section</li>
     <li>Implement Deep Copy in controller getData() method</li>
-    <li>
-        Implement Feature 4: Display the number of trips each stop is found on
-        <ul>
-            <li>Display output to GUI</li>
-            <li>Optional for lab 6: Use observer pattern to display results</li>
-        </ul>
-    </li>
+    <li>Update Trips per Stop to use observer pattern to display results</li>
 </ul>
 <h6>Completed</h6>
 <s>
     <ul>
+        <li>
+            Implement Feature 4: Display the number of trips each stop is found on
+            <ul>
+                <li>Display output to GUI</li>
+            </ul>
+        </li>
+        <li>Verify stop_time Export clears output file before writing</li>
+        <li>Add export option to GUI</li>
         <li>Implement stop_time Export</li>
         <li>Override .equals methods for StopTime, Header, and Headers</li>
         <li>
@@ -255,15 +254,6 @@
         </ul>
     </li>
     <li>
-        Create JUnit tests
-        <ul>
-            <li>Create at least 2 test cases per unit test</li>
-            <li>test import validation methods (should handle any type of input line)</li>
-            <li>each team member should write one unit test</li>
-            <li>comment each unit test with what its intended purpose is and who wrote it</li>
-        </ul>
-    </li>
-    <li>
         (Optional for lab 6) Implement Feature 3: Display the average speed based on the start and end times of a trip
         <ul>
             <li>Display output to GUI</li>
@@ -272,52 +262,7 @@
         </ul>
     </li>
     <li>
-        Implement Feature 15: Export the GTFS files in the correct format from the data structure
-        <ul>
-            <li>Implement routes.txt export</li>
-            <li>Implement stops.txt export</li>
-            <li>Implement stop_times.txt export</li>
-            <li>Implement trips.txt export</li>
-        </ul>
-    </li>
-    <li>
-        Implement Feature 4: Display the number of trips each stop is found on.
-        <ul>
-            <li>Display output to GUI</li>
-            <li>(Optional for lab 6) Use observer pattern to display results</li>
-        </ul>
-    </li>
-    <li>
-        Harden Import Functionality
-        <ul>
-            <li>Ensure invalid file formatting is handled appropriately</li>
-            <li>Ensure invalid data in files is handled appropriately</li>
-            <li>
-                Add helper methods to import to validate individual lines
-                <ul>
-                    <li>Add method to validate a single file header line</li>
-                    <li>Add method to validate a single data line</li>
-                    <li>Add method to validate individual data type if necessary / set to default value</li>
-                </ul>
-            </li>
-            <li>
-                Updated Import Specifications
-                <ul>
-                    <li>Routes only requires a route_id and route_color (all others are optional)</li>
-                    <li>Trips does not require a service_id</li>
-                    <li>Calendar information is ignored. (Schedule assumed to be same every day)</li>
-                    <li>Only 4 files are required routes, stops, stop_times, and trips</li>
-                    <li>Other than the aforementioned differences the import should match <a href = "https://developers.google.com/transit/gtfs/reference/">here</a></li>
-                </ul>
-            </li>
-        </ul>
-    </li>
-    <li>
-        Implement Data class
-        <ul>
-            <li>Update getters</li>
-            <li>Update constructors</li>
-        </ul>
+        Implement Data class observer pattern
     </li>
     <li>
         Implement GTFS file load capabilities
