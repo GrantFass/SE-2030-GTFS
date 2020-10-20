@@ -115,7 +115,6 @@
     <li>
         Harden Trip Import Validation
         <ul>
-            <li>Create validation method for header line</li>
             <li>Create validation method for input line</li>
             <li>Create unit test for header line validation method</li>
             <li>Create unit test for input line validation method</li>
