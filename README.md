@@ -115,7 +115,6 @@
     <li>
         Harden Trip Import Validation
         <ul>
-            <li>Create unit test for input line validation method</li>
             <li>Ensure individual file formatting is handled appropriately</li>
             <li>
                 Ensure invalid data in files is handled appropriately
