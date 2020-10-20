@@ -1,8 +1,6 @@
 package SE2030TransitProject;
 
 
-import com.sun.org.apache.xerces.internal.impl.dv.dtd.NOTATIONDatatypeValidator;
-
 /**
  * Indicates drop off method. Valid options are:
  *

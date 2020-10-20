@@ -1,10 +1,7 @@
 package SE2030TransitProject;
 
-import javafx.scene.control.TextArea;
-
 import java.io.*;
 import java.nio.file.Path;
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -82,69 +79,51 @@ public class Trips {
      * @throws IOException            for general File IO errors.
      * @throws InputMismatchException if there is an issue parsing the file
      * @throws DataFormatException    if data will be overwritten
-     * @author Grant Fass, Simon Erickson
+     * @author Simon Erickson
      */
     public boolean loadTrips(File file) throws FileNotFoundException,
             InputMismatchException, DataFormatException {
 
+        //checks to see if trips was empty
+        boolean emptyPrior = trips.isEmpty();
+
+        //empties List if list was not empty
+        if (!emptyPrior) {
+            trips.clear();
+        }
+
+        //sets initial skip value to false
+        boolean wasLineSkipped = false;
+
         //writes the items of the file to the hash map
         try (Scanner in = new Scanner(file)) {
 
-            //checks to see if trips was empty
-            boolean emptyPrior = trips.isEmpty();
-
-            //clears trips hash map
-            trips = new HashMap<>();
-
-            //read header: route_id,service_id,trip_id,trip_headsign,direction_id,block_id,shape_id
+            //Header object
+            Headers headers;
             try {
-                validateHeader(in.nextLine());
-            } catch (ParseException e) {
-                //TODO: Fix this. added by Grant so that the program runs
-                throw new InputMismatchException(e.getMessage());
+                headers = validateHeader(in.nextLine());
+            } catch (IllegalArgumentException e) {
+                throw new IOException("File not read due to invalid headers format");
             }
-
 
             //read body
             int i = 0;
             while (in.hasNextLine()) {
-                String[] line = in.nextLine().split(",");
-
-                //trip data given from file
-                String route_id = line[0];
-                String service_id = line[1];
-                String trip_id = line[2];
-                String trip_headsign = line[3];
-                DirectionIDEnum direction_id;
-                if (line[4].equals("0")) {
-                    direction_id = DirectionIDEnum.OUTBOUND_TRAVEL;
-                } else {
-                    direction_id = DirectionIDEnum.INBOUND_TRAVEL;
+                try {
+                    Trip trip = validateData(in.nextLine(), headers);
+                    addTrip(trip);
+                } catch (IllegalArgumentException e) {
+                    wasLineSkipped = true;
                 }
-                String block_id = line[5];
-                String shape_id = line[6];
-
-                //trip data not given by file
-                BikesAllowedEnum bikes_allowed = BikesAllowedEnum.NO_INFORMATION;
-                String trip_short_name = "Trip " + i;
-                i++;
-                WheelchairAccessibleEnum wheelchair_accessible =
-                        WheelchairAccessibleEnum.NO_ACCESSIBILITY_INFORMATION;
-
-                //assigning variables to trip object
-                trips.put(trip_id, new Trip(bikes_allowed, block_id, direction_id,
-                        route_id, service_id, shape_id, trip_headsign, trip_id, trip_short_name,
-                        wheelchair_accessible));
             }
 
             if (!emptyPrior) {
                 throw new DataFormatException(file.getName());
             }
-        } catch (DataFormatException dfe) {
+        } catch (DataFormatException | IOException dfe) {
             throw new DataFormatException(dfe.getMessage());
         }
-        //TODO: If a line was skipped return true
-        return true;
+        return wasLineSkipped;
     }
 
     /**
@@ -153,7 +132,7 @@ public class Trips {
      * @param file the trips.txt file desired location
      * @return true if file was written successfully, false otherwise
      * @throws IOException if something went wrong
-     * @author Simon Erickson, Grant Fass
+     * @author Simon Erickson
      */
     public boolean exportTrips(File file) throws IOException {
 
@@ -184,7 +163,7 @@ public class Trips {
      * Method to output data as a single concatenated string
      *
      * @return string of data
-     * @author GrantFass,
+     * @author GrantFass, Simon Erickson
      */
     @Override
     public String toString() {
@@ -196,20 +175,112 @@ public class Trips {
     }
 
     /**
-     * Checks to confirm that the header is valid and matches an expected format
+     * checks to confirm that the header is valid and matches an expected format
      *
      * @param header the header text line to validate
-     * @return a Header object containing the ordering of the headers
-     * @throws ParseException if the header does not match the expected format
-     * @author GrantFass, Simon Erickson
+     * @return a Headers object containing the ordering of the headers
+     * @throws IllegalArgumentException if the header does not match the expected format
+     * @author Simon Erickson
      */
-    public Header validateHeader(String header) throws ParseException {
-        Header tripHeader;
-        if (header.equals("route_id,service_id,trip_id,trip_headsign,direction_id,block_id,shape_id")) {
-            tripHeader = new Header("Trip Header", 0);
-        } else {
-            throw new ParseException("Invalid Trip Header", 1);
+    public Headers validateHeader(String header) throws IllegalArgumentException {
+        header = header.toLowerCase().replace(" ", "");
+        if (header.isEmpty()) {
+            throw new IllegalArgumentException("Input header line cannot be empty");
+        } else if (!header.contains("route_id")) {
+            throw new IllegalArgumentException("Input header line must contain all expected" +
+                    " values for a Trip object. Header was missing route_id");
+        } else if (!header.contains("service_id")) {
+            throw new IllegalArgumentException("Input header line must contain all expected" +
+                    " values for a Trip object. Header was missing service_id");
+        } else if (!header.contains("trip_headsign")) {
+            throw new IllegalArgumentException("Input header line must contain all expected" +
+                    " values for a Trip object. Header was missing trip_headsign");
+        } else if (!header.contains("direction_id")) {
+            throw new IllegalArgumentException("Input header line must contain all expected" +
+                    " values for a Trip object. Header was missing direction_id");
+        } else if (!header.contains("block_id")) {
+            throw new IllegalArgumentException("Input header line must contain all expected" +
+                    " values for a Trip object. Header was missing block_id");
+        } else if (!header.contains("shape_id")) {
+            throw new IllegalArgumentException("Input header line must contain all expected" +
+                    " values for a Trip object. Header was missing shape_id");
+        } else if (header.endsWith(",")) {
+            throw new IllegalArgumentException("Input header line cannot contain blank fields");
         }
-        return tripHeader;
+        Headers headers = new Headers();
+        String[] headerDataArray = header.split(",");
+        final String possibleHeaders = "route_id,service_id,trip_id,trip_headsign,direction_id," +
+                "block_id,shape_id";
+        for (int i = 0; i < headerDataArray.length; i++) {
+            if (!headerDataArray[i].isEmpty() && possibleHeaders.contains(headerDataArray[i])) {
+                headers.addHeader(new Header(headerDataArray[i], i));
+            } else if (headerDataArray[i].isEmpty()) {
+                throw new IllegalArgumentException("Input header line cannot contain blank fields");
+            } else {
+                throw new IllegalArgumentException("Header field contains unexpected field: "
+                        + headerDataArray[i]);
+            }
+        }
+        return headers;
     }
+
+    /**
+     * checks to confirm that a data line is valid and matches
+     * the expected format set by the header line
+     *
+     * @param data    the line of data to parse
+     * @param headers the headers values to use to parse the data
+     * @return a Trip object constructed from the data
+     * @throws IllegalArgumentException if there was an issue
+     *                                  parsing or the wrong amount of data was passed
+     * @author Simon Erickson
+     */
+    public Trip validateData(String data, Headers headers) throws IllegalArgumentException {
+        String[] dataArray = data.split(",");
+        if (dataArray.length != headers.length()) {
+            throw new IllegalArgumentException("Data line does not contain the " +
+                    "proper amount of data");
+        }
+
+        //trip data given from file
+        String route_id = setDefaultDataValue(dataArray, headers, "route_id");
+        String service_id = setDefaultDataValue(dataArray, headers, "service_id");
+        String trip_id = setDefaultDataValue(dataArray, headers, "trip_id");
+        String trip_headsign
+                = setDefaultDataValue(dataArray, headers, "trip_headsign");
+        String direction_id
+                = setDefaultDataValue(dataArray, headers, "direction_id");
+        String block_id = setDefaultDataValue(dataArray, headers, "block_id");
+        String shape_id = setDefaultDataValue(dataArray, headers, "shape_id");
+
+        //trip data not given by file
+        String bikes_allowed
+                = setDefaultDataValue(dataArray, headers, "bikes_allowed");
+        String wheelchair_accessible
+                = setDefaultDataValue(dataArray, headers, "wheelchair_accessible");
+
+        //assigning variables to trip object
+        return new Trip(bikes_allowed, block_id, direction_id,
+                route_id, service_id, shape_id, trip_headsign, trip_id,
+                wheelchair_accessible);
+    }
+
+    /**
+     * Searches for the expectedHeader in the Headers object and will return the associated value
+     * if it is found or will return empty String if it was not found.
+     *
+     * @param dataArray      the data values to be used
+     * @param headers        the headers to search through
+     * @param expectedHeader the expected header value
+     * @return data value for the expected header
+     * @author Simon Erickson
+     */
+    public String setDefaultDataValue(String[] dataArray, Headers headers, String expectedHeader) {
+        int index = headers.getHeaderIndex(expectedHeader);
+        if (index >= 0 && index < dataArray.length) {
+            return dataArray[index];
+        }
+        return "";
+    }
+
 }//end Trips
