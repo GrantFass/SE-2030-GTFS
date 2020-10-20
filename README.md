@@ -83,6 +83,7 @@
             </li>
             <li>Add Javadoc comments to Junit tests</li>
             <li>Add Javadoc comments to validation methods</li>
+            <li>TEST MERGE</li>
         </ul>
     </li>
 </ul>
