@@ -17,7 +17,12 @@
 <h5>Joy Cross:</h5>
 <h6>TODO</h6>
 <ul>
-    
+    <li>
+            Implement Feature 8: Search for a stop by stop_id and display the next trip_id(s) (closest to the current time)
+            <ul>
+                <li>Implement method to search</li>
+            </ul>
+        </li>
 </ul>
 <h6>Completed</h6>
 <s>
@@ -68,6 +73,12 @@
 <h5>Ryan Becker:</h5>
 <h6>TODO</h6>
 <ul>
+    <li>
+        Implement Feature 5: Search for a stop by stop_id and display all route_id(s) that contain the stop
+        <ul>
+            <li>Implement method to search</li>
+        </ul>
+    </li>
     <li>Implement route Export</li>
     <li>
         Harden Route Import Validation
@@ -110,6 +121,12 @@
 <h5>Simon Erickson:</h5>
 <h6>TODO</h6>
 <ul>
+<li>
+        Implement Feature 2: Display the Distance of each Trip
+        <ul>
+            <li>Implement method to calculate distance</li>
+        </ul>
+    </li>
     <li>Implement trip Export</li>
     <li>
         Harden Trip Import Validation
@@ -154,6 +171,45 @@
 <h5>Grant Fass:</h5>
 <h6>TODO</h6>
 <ul>
+<li>
+        Implement Feature 2: Display the Distance of each Trip
+        <ul>
+            <li>Implement GUI</li>
+            <li>Implement Observer Pattern</li>
+        </ul>
+    </li>
+    <li>
+        Implement Feature 5: Search for a stop by stop_id and display all route_id(s) that contain the stop
+        <ul>
+            <li>Implement GUI</li>
+            <li>Implement Observer Pattern</li>
+        </ul>
+    </li>
+    <li>
+        Implement Feature 8: Search for a stop by stop_id and display the next trip_id(s) (closest to the current time)
+        <ul>
+            <li>Implement GUI</li>
+            <li>Implement Observer Pattern</li>
+        </ul>
+    </li>
+    <li>
+        Update data display
+        <ul>
+            <li>Change display of files to only display a certain number of results</li>
+            <li>Page results (ie: see results 1 - 100, 101-200)</li>
+            <li>Show last updated time</li>
+        </ul>
+    </li>
+<li>
+        Implement Observer Pattern
+        <ul>
+            <li>Observer pattern should work when loading files</li>
+            <li>Observer pattern should work for any features implemented</li>
+            <li>Observer pattern should work for displaying average speed (Feature 3)</li>
+            <li>Observer pattern should work for Trips per Stop (Feature 4)</li>
+            <li>Observer pattern should work for features implemented this week</li>
+        </ul>
+    </li>
     <li>Update StopTime constructor with helper methods to make code more readable (use private setters)</li>
     <li>Reimplement setters in StopTime and make them private</li>
     <li>Clean up README</li>
