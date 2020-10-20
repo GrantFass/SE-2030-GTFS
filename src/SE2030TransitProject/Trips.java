@@ -142,7 +142,7 @@ public class Trips {
             write.println(Trip.getHeaderLine());
 
             //write body
-            for (String key: trips.keySet()) {
+            for (String key : trips.keySet()) {
                 write.append(trips.get(key).getDataLine());
             }
             return true;
@@ -177,6 +177,9 @@ public class Trips {
         if (header.isEmpty()) {
             throw new IllegalArgumentException("Input header line cannot be empty");
         } else if (!header.contains("route_id")) {
+            throw new IllegalArgumentException("Input header line must contain all expected" +
+                    " values for a Trip object. Header was missing route_id");
+        } else if (!header.contains("trip_id")) {
             throw new IllegalArgumentException("Input header line must contain all expected" +
                     " values for a Trip object. Header was missing route_id");
         } else if (!header.contains("service_id")) {
