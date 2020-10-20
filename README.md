@@ -37,6 +37,7 @@
             </ul>
         </li>
         <li>Done for lab 6</li>
+        <li>Done for lab 5</li>
         <li>Implement stop Export</li>
         <li>
             Implement Feature 4: Display the number of trips each stop is found on
