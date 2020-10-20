@@ -201,7 +201,7 @@ public class Stops {
 	 * @author Joy Cross
 	 */
 	public Stop validateData(String data, Headers headers) throws DataFormatException, IllegalArgumentException {
-		String[] dataArray = data.split(",");
+		String[] dataArray = data.split(",", -1);
 		if (dataArray.length != headers.length() || data.isEmpty()) {
 			throw new IllegalArgumentException("Data line does not contain the proper amount of data");
 		}

@@ -74,14 +74,14 @@ public class Stop {
 			this.wheelchair_boarding = WheelchairBoardingEnum.getValue(!wheelchair_boarding.isEmpty() ? Integer.parseInt(wheelchair_boarding) : -1);
 			this.location_type = LocationTypeEnum.getValue(!location_type.isEmpty() ? Integer.parseInt(location_type) : -1);
 
-			if(!stop_timezone.isEmpty()){
+			if(!stop_timezone.isEmpty() && !stop_timezone.equals("null")){
 				this.stop_timezone = TimeZone.getTimeZone(stop_timezone);
 				if(!this.stop_timezone.getID().equals(stop_timezone)){
 					throw new ParseException("Timezone was not in correct format", 0);
 				}
 			}
 			try {
-				if(!stop_url.isEmpty()) {
+				if(!stop_url.isEmpty() && !stop_url.equals("null")) {
 					this.stop_url = new URL(stop_url);
 				}
 			} catch (MalformedURLException mue) {
@@ -112,9 +112,17 @@ public class Stop {
 	 * @author Joy Cross
 	 */
 	public String getDataLine() {
+		String timezone = null;
+		if(stop_timezone != null){
+			timezone = stop_timezone.getID();
+		}
+		String url = null;
+		if(stop_timezone != null){
+			url = stop_url.toString();
+		}
 		return String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", stop_id, stop_longitude, stop_latitude, stop_name,
-				stop_description, stop_code, platform_code, level_id, location_type,
-				stop_timezone, wheelchair_boarding, stop_url, parent_station);
+				stop_description, stop_code, platform_code, level_id, location_type.getValue(),
+				timezone, wheelchair_boarding.getValue(), url, parent_station);
 	}
 
 	/**
