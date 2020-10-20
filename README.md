@@ -246,11 +246,20 @@
 <h5>Unassigned:</h5>
 <ul>
     <li>
-        Create Lab 6 PDF submission
+        Create Lab 7 PDF submission
         <ul>
-            <li>Include how many tests were written per person</li>
-            <li>Include who wrote which tests</li>
+            <li>Create PDF document with what features were implemented</li>
             <li>Generate EA class diagram snapshot update</li>
+        </ul>
+    </li>
+    <li>
+        Implement Observer Pattern
+        <ul>
+            <li>Observer pattern should work when loading files</li>
+            <li>Observer pattern should work for any features implemented</li>
+            <li>Observer pattern should work for displaying average speed (Feature 3)</li>
+            <li>Observer pattern should work for Trips per Stop (Feature 4)</li>
+            <li>Observer pattern should work for features implemented this week</li>
         </ul>
     </li>
     <li>
@@ -262,7 +271,39 @@
         </ul>
     </li>
     <li>
-        Implement Data class observer pattern
+        Implement Feature 2: Display the Distance of each Trip
+        <ul>
+            <li>Implement GUI</li>
+            <li>Implement Observer Pattern</li>
+            <li>Implement method to calculate distance</li>
+        </ul>
+    </li>
+    <li>
+        Implement Feature 5: Search for a stop by stop_id and display all route_id(s) that contain the stop
+        <ul>
+            <li>Implement GUI</li>
+            <li>Implement Observer Pattern</li>
+            <li>Implement method to search</li>
+        </ul>
+    </li>
+    <li>
+        Implement Feature 8: Search for a stop by stop_id and display the next trip_id(s) (closest to the current time)
+        <ul>
+            <li>Implement GUI</li>
+            <li>Implement Observer Pattern</li>
+            <li>Implement method to search</li>
+        </ul>
+    </li>
+    <li>
+        Implement semantic correctness check
+        <ul>
+            <li>Test that each ID used in the application is unique</li>
+            <li>Check that all referenced IDs are found in another file (ex: stop_ids from StopTimes can be found in the stops structure)</li>
+            <li>Each trip (in stop_times) should validate that the time listed for a given stop is after the time listed for a previous stop and before a time listed for the next stop</li>
+        </ul>
+    </li>
+    <li>
+        Change display of files to only display a certain number of results and then page them
     </li>
     <li>
         Implement GTFS file load capabilities
