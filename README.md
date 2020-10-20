@@ -303,7 +303,12 @@
         </ul>
     </li>
     <li>
-        Change display of files to only display a certain number of results and then page them
+        Update data display
+        <ul>
+            <li>Change display of files to only display a certain number of results</li>
+            <li>Page results (ie: see results 1 - 100, 101-200)</li>
+            <li>Show last updated time</li>
+        </ul>
     </li>
     <li>
         Implement GTFS file load capabilities
