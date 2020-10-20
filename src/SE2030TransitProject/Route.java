@@ -29,6 +29,7 @@ public class Route {
 	private ContinuousDropOffEnum continuous_drop_off;
 
 	/**
+	 * @deprecated
 	 * Constructor of Route object
 	 * @author Ryan Becker
 	 * @param route_id ID of route
@@ -85,21 +86,30 @@ public class Route {
 				 String route_type, String route_url, String route_color, String route_text_color,
 				 String route_sort_order, String continuous_pickup, String continuous_drop_off)
 			throws IllegalArgumentException{
+
+		//Route only requires a route_id and route_color, but route_color defaults to white if empty per GTFS guidelines
+		if(route_id.isEmpty()){
+			throw new IllegalArgumentException("Data line within routes.txt not formatted correctly.\nSkipping line");
+		}
+
+
 		final int DEFAULT_TYPE = 3; //bus routes
-		final String DEFAULT_COLOR = "FFFFFF"; //defaults to white
+		final String DEFAULT_COLOR = "ffffff"; //defaults to white
 		final String DEFAULT_TEXT_COLOR = "000000"; //defaults to black
 		final int DEFAULT_SORT_ORDER = 0;
-		final int DEFAULT_CONTINUOUS = 0; //continuous stopping pickup or drop-off
+		final int DEFAULT_CONTINUOUS = -1; //continuous stopping pickup or drop-off
 
-		final String DEFAULT_URL = "http://NULL_URL"; //Error is thrown otherwise
+		final String DEFAULT_URL = "http://NULL"; //Error is thrown otherwise
 
 
 
 		this.route_id = route_id;
+		//Start can be empty
 		this.agency_id = agency_id;
 		this.route_short_name = route_short_name;
 		this.route_long_name = route_long_name;
 		this.route_desc = route_desc;
+		//End can be empty
 		try{
 			this.route_type = RouteTypeEnum.getValue(!route_type.isEmpty() ? Integer.parseInt(route_type): DEFAULT_TYPE);
 			this.route_url = new URL(!route_url.isEmpty() ? route_url : DEFAULT_URL);
@@ -108,6 +118,13 @@ public class Route {
 			this.route_sort_order = !route_sort_order.isEmpty() ? Integer.parseInt(route_sort_order) : DEFAULT_SORT_ORDER;
 			this.continuous_pickup = ContinuousPickupEnum.getValue(!continuous_pickup.isEmpty() ? Integer.parseInt(continuous_pickup): DEFAULT_CONTINUOUS);
 			this.continuous_drop_off = ContinuousDropOffEnum.getValue(!continuous_drop_off.isEmpty() ? Integer.parseInt(continuous_drop_off): DEFAULT_CONTINUOUS);
+
+			//checks if sort order is positive
+			if(this.route_sort_order < 0){
+				throw new IllegalArgumentException("Data line within routes.txt not formatted correctly.\nSkipping line");
+			}
+
+
 		} catch (MalformedURLException failedParse){
 			throw new IllegalArgumentException("Data line within routes.txt not formatted correctly.\nSkipping line");
 		}
@@ -119,7 +136,8 @@ public class Route {
 	 * @author Ryan Becker
 	 * @return ID of route as a String
 	 */
-	public String getRouteID() {
+	public String getRouteID(){
+
 		return route_id;
 	}
 
@@ -199,8 +217,12 @@ public class Route {
 	 * return route_sort_order
 	 * @author Ryan Becker
 	 * @return positive int value prioritizing order in list. Lower value has higher priority
+	 * @throws IllegalArgumentException if route_sort_order is negative
 	 */
-	public int getRouteSortOrder() {
+	public int getRouteSortOrder() throws IllegalArgumentException{
+		if(route_sort_order < 0){
+			throw new IllegalArgumentException("Invalid Data Field for route_sort_order");
+		}
 		return route_sort_order;
 	}
 
@@ -220,6 +242,24 @@ public class Route {
 	public ContinuousDropOffEnum getContinuousDropOff() {
 		return continuous_drop_off;
 	}
+
+
+
+
+
+
+	public static String getHeaderLine(){
+		final String EXPECTED_HEADER = "route_id,agency_id,route_short_name,route_long_name,route_desc,route_type," +
+				"route_url,route_color,route_text_color";
+		return EXPECTED_HEADER;
+	}
+
+	public String getDataLine(){
+		return String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n",route_id, agency_id, route_short_name,
+				route_long_name, route_desc, route_type.getValue(), route_url, route_color, route_text_color, route_sort_order,
+				continuous_pickup.getValue(), continuous_drop_off.getValue());
+	}
+
 
 	//Setters
 
