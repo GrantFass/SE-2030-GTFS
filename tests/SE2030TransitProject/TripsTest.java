@@ -17,41 +17,41 @@ class TripsTest {
     @Test
     void validateHeader() {
         //throw exception if input line is empty
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(NullPointerException.class, () -> {
             trips.validateHeader("");
         });
 
         //throw exception if input line does not contain route_id
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(NullPointerException.class, () -> {
             trips.validateHeader("service_id,trip_id,trip_headsign,direction_id,block_id,shape_id");
         });
 
         //throw exception if input line does not contain service_id
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(NullPointerException.class, () -> {
             trips.validateHeader("route_id,trip_id,trip_headsign,direction_id,block_id,shape_id");
         });
 
         //throw exception if input line does not contain trip_id
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(NullPointerException.class, () -> {
             trips.validateHeader("route_id,service_id,trip_headsign,direction_id,block_id,shape_id");
         });
 
         //throw exception if input line contains a blank header at start or middle
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(NullPointerException.class, () -> {
             trips.validateHeader(",route_id,service_id,trip_id,trip_headsign,direction_id,block_id,shape_id");
         });
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(NullPointerException.class, () -> {
             trips.validateHeader("route_id,service_id,trip_id,trip_headsign,direction_id,block_id,shape_id, ");
         });
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(NullPointerException.class, () -> {
             trips.validateHeader("route_id,service_id,trip_id,,trip_headsign,direction_id,block_id,shape_id");
         });
 
         //throw exception if input line contains an extra (unexpected) header
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(NullPointerException.class, () -> {
             trips.validateHeader("route_id,service_id,trip_id,trip_headsign,direction_id,block_id,shape_id,extra_header");
         });
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(NullPointerException.class, () -> {
             trips.validateHeader("extra_header,route_id,service_id,trip_id,trip_headsign,direction_id,block_id,shape_id");
         });
         assertThrows(IllegalArgumentException.class, () -> {
@@ -71,12 +71,12 @@ class TripsTest {
     @Test
     void validateData() {
         //throw exception if input line is empty
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(NullPointerException.class, () -> {
             trips.validateData("", new Headers());
         });
 
         //throw exception if data line field amount does not match header field amount
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(NullPointerException.class, () -> {
             trips.validateData("0,0,0", expectedHeaders);
         });
     }
