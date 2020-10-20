@@ -73,9 +73,6 @@
     <li>
         Harden Route Import Validation
         <ul>
-            <li>Create validation method for header line</li>
-            <li>Create validation method for input line</li>
-            <li>Create unit test for header line validation method</li>
             <li>Create unit test for input line validation method</li>
             <li>Ensure individual file formatting is handled appropriately</li>
             <li>
@@ -106,6 +103,9 @@
                 <li>Implement toString method override</li>
             </ul>
         </li>
+        <li>Create validation method for header line</li>
+        <li>Create validation method for input line</li>
+        <li>Create unit test for header line validation method</li>
     </ul>
 </s>
 <h5>Simon Erickson:</h5>
