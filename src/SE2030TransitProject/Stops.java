@@ -125,7 +125,7 @@ public class Stops {
 	 * @author Joy Cross
 	 */
 	public boolean exportStops(File file) throws IOException {
-		File outFile = new File(file, "stop_times.txt");
+		File outFile = new File(file, "stops.txt");
 		if (!outFile.exists()) {
 			outFile.createNewFile();
 		}
@@ -148,6 +148,7 @@ public class Stops {
 	 * @author Joy Cross
 	 */
 	public Headers validateHeader(String header) throws DataFormatException {
+		header = header.toLowerCase();
 		if (header.isEmpty()) {
 			throw new IllegalArgumentException("Input header line cannot be empty");
 		} else if (!header.contains("stop_id")) {
@@ -162,7 +163,7 @@ public class Stops {
 		}
 		Headers headers = new Headers();
 		String[] headerDataArray = header.split(",");
-		final String possibleHeaders = Stop.getHeaderLine();
+		final String possibleHeaders = Stop.getHeaderLine().toLowerCase();
 		for (int i = 0; i < headerDataArray.length; i++) {
 			String indivHeader = headerDataArray[i].trim();
 			// checks if header is abbreviated to something else and normalizes it
@@ -200,9 +201,9 @@ public class Stops {
 	 * @author Joy Cross
 	 */
 	public Stop validateData(String data, Headers headers) throws DataFormatException, IllegalArgumentException {
-		String[] dataArray = data.split(",");
-		if (dataArray.length != headers.length()) {
-			throw new DataFormatException("Data line does not contain the proper amount of data");
+		String[] dataArray = data.split(",", -1);
+		if (dataArray.length != headers.length() || data.isEmpty()) {
+			throw new IllegalArgumentException("Data line does not contain the proper amount of data");
 		}
 
 		//Required Fields

@@ -435,6 +435,7 @@ public class Controller {
 		try {
 			File file = getExportDirectory();
 			data.getRoutes().exportRoutes(file);
+			displayAlert(Alert.AlertType.INFORMATION, "Data Export", null, "Data Export Was Successful");
 		} catch (IOException e) {
 			displayAlert(Alert.AlertType.ERROR, "Error", null, "Something went wrong while exporting file");
 		}
@@ -449,6 +450,7 @@ public class Controller {
 		try {
 			File file = getExportDirectory();
 			data.getStops().exportStops(file);
+			displayAlert(Alert.AlertType.INFORMATION, "Data Export", null, "Data Export Was Successful");
 		} catch (IOException e) {
 			displayAlert(Alert.AlertType.ERROR, "Error", null, "Something went wrong while exporting file");
 		}
@@ -463,6 +465,7 @@ public class Controller {
 		try {
 			File file = getExportDirectory();
 			data.getStopTimes().exportStopTimes(file);
+			displayAlert(Alert.AlertType.INFORMATION, "Data Export", null, "Data Export Was Successful");
 		} catch (IOException e) {
 			displayAlert(Alert.AlertType.ERROR, "Error", null, "Something went wrong while exporting file");
 		}
@@ -477,6 +480,7 @@ public class Controller {
 		try {
 			File file = getExportDirectory();
 			data.getTrips().exportTrips(file);
+			displayAlert(Alert.AlertType.INFORMATION, "Data Export", null, "Data Export Was Successful");
 		} catch (IOException e) {
 			displayAlert(Alert.AlertType.ERROR, "Error", null, "Something went wrong while exporting file");
 		}
