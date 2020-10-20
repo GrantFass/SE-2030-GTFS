@@ -25,32 +25,10 @@ public class Stop {
 	private double stop_latitude;
 	private double stop_longitude;
 	private String stop_name;
-	private Date stop_timezone;
+	private TimeZone stop_timezone;
 	private URL stop_url;
 	private WheelchairBoardingEnum wheelchair_boarding;
 	// private String zone_id; // used if we have fares.txt so I don't think we should include it
-
-	/**
-	 * Default Stop Constructor
-	 * @author Joy Cross
-	 * @param stop_id stop id of the Stop
-	 */
-	public Stop(String stop_id){
-		this.level_id = null;
-		this.location_type = LocationTypeEnum.STOP_OR_PLATFORM;
-		this.parent_station = null;
-		this.platform_code = null;
-		this.stop_code = null;
-		this.stop_description = null;
-		this.stop_id = stop_id;
-		this.stop_latitude = 0;
-		this.stop_longitude = 0;
-		this.stop_name = null;
-		this.stop_timezone = null;
-		this.stop_url = null;
-		this.wheelchair_boarding = WheelchairBoardingEnum.PARENTLESS_NO_INFORMATION;
-		//this.zone_id = null
-	}
 
 	/**
 	 * Stop Constructor
@@ -96,9 +74,11 @@ public class Stop {
 			this.wheelchair_boarding = WheelchairBoardingEnum.getValue(!wheelchair_boarding.isEmpty() ? Integer.parseInt(wheelchair_boarding) : -1);
 			this.location_type = LocationTypeEnum.getValue(!location_type.isEmpty() ? Integer.parseInt(location_type) : -1);
 
-			SimpleDateFormat sdf = new SimpleDateFormat("a");
 			if(!stop_timezone.isEmpty()){
-				this.stop_timezone = sdf.parse(stop_timezone);
+				this.stop_timezone = TimeZone.getTimeZone(stop_timezone);
+				if(!this.stop_timezone.getID().equals(stop_timezone)){
+					throw new ParseException("Timezone was not in correct format", 0);
+				}
 			}
 			try {
 				if(!stop_url.isEmpty()) {
@@ -210,7 +190,7 @@ public class Stop {
 	/**
 	 * @author Joy Cross
 	 */
-	public Date getStopTimezone(){
+	public TimeZone getStopTimezone(){
 		return stop_timezone;
 	}
 
@@ -228,89 +208,91 @@ public class Stop {
 		return wheelchair_boarding;
 	}
 
+	/*
 	/**
 	 * @author Joy Cross
-	 */
+	 *
 	public void setLevelID(String level_id){
 		this.level_id = level_id;
 	}
 
 	/**
 	 * @author Joy Cross
-	 */
+	 *
 	public void setLocationType(LocationTypeEnum location_type){
 		this.location_type = location_type;
 	}
 
 	/**
 	 * @author Joy Cross
-	 */
+	 *
 	public void setParentStation(String parent_station){
 		this.parent_station = parent_station;
 	}
 
 	/**
 	 * @author Joy Cross
-	 */
+	 *
 	public void setPlatformCode(String platform_code){
 		this.platform_code = platform_code;
 	}
 
 	/**
 	 * @author Joy Cross
-	 */
+	 *
 	public void setStopCode(String stop_code){
 		this.stop_code = stop_code;
 	}
 
 	/**
 	 * @author Joy Cross
-	 */
+	 *
 	public void setStopDescription(String stop_description){
 		this.stop_description = stop_description;
 	}
 
 	/**
 	 * @author Joy Cross
-	 */
+	 *
 	public void setStopLatitude(double stop_latitude){
 		this.stop_latitude = stop_latitude;
 	}
 
 	/**
 	 * @author Joy Cross
-	 */
+	 *
 	public void setStopLongitude(double stop_longitude){
 		this.stop_longitude = stop_longitude;
 	}
 
 	/**
 	 * @author Joy Cross
-	 */
+	 *
 	public void setStopName(String stop_name){
 		this.stop_name = stop_name;
 	}
 
 	/**
 	 * @author Joy Cross
-	 */
-	public void setStopTimezone(Date stop_timezone){
+	 *
+	public void setStopTimezone(TimeZone stop_timezone){
 		this.stop_timezone = stop_timezone;
 	}
 
 	/**
 	 * @author Joy Cross
-	 */
+	 *
 	public void setStopURL(URL stop_url){
 		this.stop_url = stop_url;
 	}
 
 	/**
 	 * @author Joy Cross
-	 */
+	 *
 	public void setWheelchairBoarding(WheelchairBoardingEnum wheelchair_boarding){
 		this.wheelchair_boarding = wheelchair_boarding;
 	}
+	*/
 
 	/**
 	 * Method to output data as a single concatenated string for Stop
