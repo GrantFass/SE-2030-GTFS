@@ -36,6 +36,7 @@
                 <li>Display alert to user when overwriting data during file load, Done by throwing DataFormatException</li>
             </ul>
         </li>
+        <li>Done for lab 6</li>
         <li>Implement stop Export</li>
         <li>
             Implement Feature 4: Display the number of trips each stop is found on
@@ -303,7 +304,12 @@
         </ul>
     </li>
     <li>
-        Change display of files to only display a certain number of results and then page them
+        Update data display
+        <ul>
+            <li>Change display of files to only display a certain number of results</li>
+            <li>Page results (ie: see results 1 - 100, 101-200)</li>
+            <li>Show last updated time</li>
+        </ul>
     </li>
     <li>
         Implement GTFS file load capabilities
