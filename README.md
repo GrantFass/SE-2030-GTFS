@@ -36,6 +36,7 @@
                 <li>Display alert to user when overwriting data during file load, Done by throwing DataFormatException</li>
             </ul>
         </li>
+        <li>Done for lab 6</li>
         <li>Implement stop Export</li>
         <li>
             Implement Feature 4: Display the number of trips each stop is found on
