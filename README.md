@@ -37,6 +37,7 @@
             </ul>
         </li>
         <li>Done for lab 6</li>
+        <li>Done for Lab 5</li>
         <li>Implement stop Export</li>
         <li>
             Implement Feature 4: Display the number of trips each stop is found on
@@ -155,6 +156,7 @@
 <h5>Grant Fass:</h5>
 <h6>TODO</h6>
 <ul>
+    <li>test</li>
     <li>Update StopTime constructor with helper methods to make code more readable (use private setters)</li>
     <li>Reimplement setters in StopTime and make them private</li>
     <li>Clean up README</li>
