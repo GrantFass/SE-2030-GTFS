@@ -17,32 +17,7 @@
 <h5>Joy Cross:</h5>
 <h6>TODO</h6>
 <ul>
-    <li>Implement stop Export</li>
-    <li>
-        Implement Feature 4: Display the number of trips each stop is found on
-        <ul>
-            <li>Calculate the number of trips each stop is found on</li>
-        </ul>
-    </li>
-    <li>
-        Harden Stop Import Validation
-        <ul>
-            <li>Create validation method for header line</li>
-            <li>Create validation method for input line</li>
-            <li>Create unit test for header line validation method</li>
-            <li>Create unit test for input line validation method</li>
-            <li>Ensure individual file formatting is handled appropriately</li>
-            <li>
-                Ensure invalid data in files is handled appropriately
-                <ul>
-                    <li>If file has a corrupted line then skip it</li>
-                    <li>Update user that there were corrupted lines and they were skipped</li>
-                </ul>    
-            </li>
-            <li>Add Javadoc comments to Junit tests</li>
-            <li>Add Javadoc comments to validation methods</li>
-        </ul>
-    </li>
+    
 </ul>
 <h6>Completed</h6>
 <s>
@@ -59,6 +34,32 @@
                 <li>update constructor</li>
                 <li>Add ability to load multiple GTFS files in succession (Delete old data)</li>
                 <li>Display alert to user when overwriting data during file load, Done by throwing DataFormatException</li>
+            </ul>
+        </li>
+        <li>Implement stop Export</li>
+        <li>
+            Implement Feature 4: Display the number of trips each stop is found on
+            <ul>
+                <li>Calculate the number of trips each stop is found on</li>
+            </ul>
+        </li>
+        <li>
+            Harden Stop Import Validation
+            <ul>
+                <li>Create validation method for header line</li>
+                <li>Create validation method for input line</li>
+                <li>Create unit test for header line validation method</li>
+                <li>Create unit test for input line validation method</li>
+                <li>Ensure individual file formatting is handled appropriately</li>
+                <li>
+                    Ensure invalid data in files is handled appropriately
+                    <ul>
+                        <li>If file has a corrupted line then skip it</li>
+                        <li>Update user that there were corrupted lines and they were skipped</li>
+                    </ul>    
+                </li>
+                <li>Add Javadoc comments to Junit tests</li>
+                <li>Add Javadoc comments to validation methods</li>
             </ul>
         </li>
     </ul>
