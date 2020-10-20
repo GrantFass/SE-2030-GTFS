@@ -109,6 +109,7 @@
 </s>
 <h5>Simon Erickson:</h5>
 <h6>TODO</h6>
+<h6>Completed</h6>
 <ul>
     <li>Implement trip Export</li>
     <li>
@@ -131,7 +132,6 @@
         </ul>
     </li>
 </ul>
-<h6>Completed</h6>
 <s>
     <ul>
         <li>
