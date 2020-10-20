@@ -1,7 +1,6 @@
 package SE2030TransitProject;
 
 import java.io.*;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -140,23 +139,14 @@ public class Trips {
         try (PrintWriter write = new PrintWriter(new BufferedOutputStream(new FileOutputStream(new File(file, "trips.txt"))))) {
 
             //write header: route_id,service_id,trip_id,trip_headsign,direction_id,block_id,shape_id
-            write.println("route_id,service_id,trip_id,trip_headsign,direction_id,block_id,shape_id");
+            write.println(Trip.getHeaderLine());
 
             //write body
-            int i = 0;
-            for (String key : trips.keySet()) {
-                if (i == 7) {
-                    write.print(trips.get(key) + "\n");
-                    i = 0;
-                } else {
-                    write.print(trips.get(key) + ",");
-                    i++;
-                }
+            for (String key: trips.keySet()) {
+                write.append(trips.get(key).getDataLine());
             }
-
+            return true;
         }
-        return true;
-
     }
 
     /**
