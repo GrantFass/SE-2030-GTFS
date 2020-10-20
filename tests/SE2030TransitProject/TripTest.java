@@ -46,8 +46,10 @@ class TripTest {
             fail();
         }
     }
+
     @BeforeEach
     void setUp() {
+
     }
 
     @AfterEach

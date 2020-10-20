@@ -48,8 +48,6 @@ public class Trip {
         this.trip_headsign = trip_headsign;
         this.block_id = block_id;
         this.shape_id = shape_id;
-
-        //checking service_id is a day of the week
         this.service_id = service_id;
         //Set enumerator values (default values are applied if empty).
         this.bikes_allowed = BikesAllowedEnum.getValue(!bikes_allowed.isEmpty() ? Integer.parseInt(bikes_allowed) : -1);
