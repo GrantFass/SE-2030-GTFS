@@ -1,7 +1,6 @@
 package SE2030TransitProject;
 
 import javafx.scene.paint.Color;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,18 +13,18 @@ class RouteTest {
 
     Route test_route;
     //Start Valid Fields
-    String route_id = "44";
-    String agency_id = "MCTS";
-    String route_short_name = "44";
-    String route_long_name = "National Flyer";
-    String route_desc = "This, is a description";
-    String route_type = "3";
-    String route_url = "http://website";
-    String route_color = "ff0000";
-    String route_text_color = "0000ff";
-    String route_sort_order = "0";
-    String continuous_pickup = "0";
-    String continuous_drop_off = "0";
+    final String route_id = "44";
+    final String agency_id = "MCTS";
+    final String route_short_name = "44";
+    final String route_long_name = "National Flyer";
+    final String route_desc = "This, is a description";
+    final String route_type = "3";
+    final String route_url = "http://website";
+    final String route_color = "ff0000";
+    final String route_text_color = "0000ff";
+    final String route_sort_order = "0";
+    final String continuous_pickup = "0";
+    final String continuous_drop_off = "0";
     //End Valid Fields
 
 
@@ -50,14 +49,26 @@ class RouteTest {
 
         //Exception thrown when route_color is invalid
         assertThrows(IllegalArgumentException.class, () -> {
-            Route route = new Route("", agency_id, route_short_name, route_long_name, route_desc, route_type,
+            Route route = new Route(route_id, agency_id, route_short_name, route_long_name, route_desc, route_type,
                     route_url, "IM_INVALID", route_text_color, route_sort_order, continuous_pickup, continuous_drop_off);
+        });
+
+        //Exception thrown when route_text_color is invalid
+        assertThrows(IllegalArgumentException.class, () -> {
+            Route route = new Route(route_id, agency_id, route_short_name, route_long_name, route_desc, route_type,
+                    route_url, route_color, "IM_INVALID", route_sort_order, continuous_pickup, continuous_drop_off);
         });
 
         //Exception thrown when route_sort_order is negative
         assertThrows(IllegalArgumentException.class, () -> {
             Route route = new Route(route_id, agency_id, route_short_name, route_long_name, route_desc, route_type,
                     route_url, route_color, route_text_color, "-1", continuous_pickup, continuous_drop_off);
+        });
+
+        //Exception thrown when route_url is malformed
+        assertThrows(IllegalArgumentException.class, () ->{
+            Route route = new Route(route_id, agency_id, route_short_name, route_long_name, route_desc, route_type,
+                    "invalid", route_color, route_text_color, route_sort_order, continuous_pickup, continuous_drop_off);
         });
 
         //Tests if class can be made as long as route_id exists
@@ -90,8 +101,10 @@ class RouteTest {
      */
     @Test
     void getRouteID() {
+        //Makes sure route_id is returned
         assertEquals("44", test_route.getRouteID());
 
+        //Makes sure route_id cannot be empty
         assertThrows(IllegalArgumentException.class, () -> {
             test_route = new Route("", agency_id, route_short_name, route_long_name, route_desc, route_type,
                     route_url, route_color, route_text_color, route_sort_order, continuous_pickup, continuous_drop_off);
@@ -121,8 +134,10 @@ class RouteTest {
      */
     @Test
     void getRouteShortName() {
+        //Makes sure route_short_name is returned
         assertEquals("44", test_route.getRouteShortName());
 
+        //Makes sure route_short_name can be empty
         test_route = new Route(route_id, agency_id, "", route_long_name, route_desc, route_type,
                 route_url, route_color, route_text_color, route_sort_order, continuous_pickup, continuous_drop_off);
         assertEquals("", test_route.getRouteShortName());
@@ -135,7 +150,10 @@ class RouteTest {
      */
     @Test
     void getRouteLongName() {
+        //Makes sure route_long_name is returned
         assertEquals("National Flyer", test_route.getRouteLongName());
+
+        //Makes sure route_long_name can be empty
         test_route = new Route(route_id, agency_id, route_short_name, "", route_desc, route_type,
                 route_url, route_color, route_text_color, route_sort_order, continuous_pickup, continuous_drop_off);
         assertEquals("", test_route.getRouteLongName());
@@ -148,7 +166,10 @@ class RouteTest {
      */
     @Test
     void getRouteDesc() {
+        //Makes sure route_desc is returned
         assertEquals("This, is a description", test_route.getRouteDesc());
+
+        //Makes sure route_desc can be empty
         test_route = new Route(route_id, agency_id, route_short_name, route_long_name, "", route_type,
                 route_url, route_color, route_text_color, route_sort_order, continuous_pickup, continuous_drop_off);
         assertEquals("", test_route.getRouteDesc());
@@ -157,15 +178,20 @@ class RouteTest {
     /**
      * Makes sure route_type is returned properly
      * Makes sure route_type is defaulted to 3 (BUS) if empty
+     * Makes sure route_type is defaulted to 3 (BUS) if "invalid"
      * @author Ryan Becker
      */
     @Test
     void getRouteType() {
+        //Makes sure route_type is returned
         assertEquals(RouteTypeEnum.BUS, test_route.getRouteType());
+
+        //Makes sure route_type defaults when empty
         test_route = new Route(route_id, agency_id, route_short_name, route_long_name, route_desc, "",
                 route_url, route_color, route_text_color, route_sort_order, continuous_pickup, continuous_drop_off);
         assertEquals(RouteTypeEnum.BUS, test_route.getRouteType());
 
+        //Makes sure route_type defaults when "invalid"
         test_route = new Route(route_id, agency_id, route_short_name, route_long_name, route_desc, "-1",
                 route_url, route_color, route_text_color, route_sort_order, continuous_pickup, continuous_drop_off);
         assertEquals(RouteTypeEnum.BUS, test_route.getRouteType());
@@ -180,12 +206,14 @@ class RouteTest {
      */
     @Test
     void getRouteURL() {
+        //Makes sure route_url is returned
         try{
             assertEquals(new URL("http://website"), test_route.getRouteURL());
         }catch (MalformedURLException invalidURL){
             fail();
         }
 
+        //Makes sure route_url can be empty
         test_route = new Route(route_id, agency_id, route_short_name, route_long_name, route_desc, route_type,
                 "", route_color, route_text_color, route_sort_order, continuous_pickup, continuous_drop_off);
         try{
@@ -202,8 +230,10 @@ class RouteTest {
      */
     @Test
     void getRouteColor() {
+        //Makes sure route_color is returned
         assertEquals(Color.valueOf("ff0000"), test_route.getRouteColor());
 
+        //Makes sure route_color defaults to white ("ffffff") if empty
         test_route = new Route(route_id, agency_id, route_short_name, route_long_name, route_desc, route_type,
                 route_url, "", route_text_color, route_sort_order, continuous_pickup, continuous_drop_off);
         assertEquals(Color.valueOf("ffffff"), test_route.getRouteColor());
@@ -216,8 +246,10 @@ class RouteTest {
      */
     @Test
     void getRouteTextColor() {
+        //Makes sure route_text_color is returned
         assertEquals(Color.valueOf("0000ff"), test_route.getRouteTextColor());
 
+        //Makes sure route_text_color defaults to black ("000000") if empty
         test_route = new Route(route_id, agency_id, route_short_name, route_long_name, route_desc, route_type,
                 route_url, route_color, "", route_sort_order, continuous_pickup, continuous_drop_off);
         assertEquals(Color.valueOf("000000"), test_route.getRouteTextColor());
@@ -231,14 +263,17 @@ class RouteTest {
      */
     @Test
     void getRouteSortOrder() {
+        //Makes sure route_sort_order is returned
         assertEquals(0, test_route.getRouteSortOrder());
 
+        //Makes sure route_sort_order cannot be negative
         assertThrows(IllegalArgumentException.class, () -> {
             test_route = new Route(route_id, agency_id, route_short_name, route_long_name, route_desc, route_type,
                     route_url, route_color, route_text_color, "-1", continuous_pickup, continuous_drop_off);
             test_route.getRouteSortOrder();
         });
 
+        //Makes sure route_sort_order defaults to "0" if empty
         test_route = new Route(route_id, agency_id, route_short_name, route_long_name, route_desc, route_type,
                 route_url, route_color, route_text_color, "", continuous_pickup, continuous_drop_off);
         assertEquals(0, test_route.getRouteSortOrder());
@@ -248,6 +283,8 @@ class RouteTest {
 
     /**
      * Makes sure continuous_pickup is returned correctly
+     * Makes sure continuous_pickup defaults when "invalid"
+     * Makes sure continuous_pickup defaults when empty
      * @author Ryan Becker
      */
     @Test
@@ -265,6 +302,8 @@ class RouteTest {
 
     /**
      * Makes sure continuous_drop_off is returned correctly
+     * Makes sure continuous_drop_off defaults when "invalid"
+     * Makes sure continuous_drop_off defaults when empty
      * @author Ryan Becker
      */
     @Test

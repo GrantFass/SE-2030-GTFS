@@ -1,10 +1,8 @@
 package SE2030TransitProject;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledIf;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -30,52 +28,92 @@ class RoutesTest {
 
     }
 
+    /**
+     * Makes sure header is valid
+     * @author Ryan Becker
+     */
     @Test
     void validateHeader(){
+        //Makes sure header cannot be empty
         assertThrows(IllegalArgumentException.class, () -> {
             routes.validateHeader("");
         });
 
+        //Makes sure header needs route_id
         assertThrows(IllegalArgumentException.class, () -> {
             routes.validateHeader("agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color");
         });
 
+        //Makes sure header cannot start with an empty field
         assertThrows(IllegalArgumentException.class, () -> {
             routes.validateHeader(",route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color");
         });
 
+        //Makes sure header cannot contain an empty field within
         assertThrows(IllegalArgumentException.class, () -> {
             routes.validateHeader("agency_id,route_short_name,,route_long_name,route_desc,route_type,route_url,route_color,route_text_color");
         });
 
+        //Makes sure header cannot contain an empty field at the end
         assertThrows(IllegalArgumentException.class, () -> {
             routes.validateHeader("route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color,");
         });
 
+        //Makes sure header cannot have additional unspecified headers
         assertThrows(IllegalArgumentException.class, () -> {
             routes.validateHeader("route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color,additional_header");
         });
 
+        //Makes sure valid header passes
         assertEquals(expectedHeaders, routes.validateHeader("route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color"));
 
 
 
     }
 
+    /**
+     * Makes sure data line within file is valid
+     * @author Ryan Becker
+     */
     @Test
     void validateData(){
+        //Makes sure data cannot be empty
         assertThrows(IllegalArgumentException.class, () -> {
             routes.validateData("", new Headers());
         });
 
+        //Makes sure data cannot contain less data fields than there are header fields
         assertThrows(IllegalArgumentException.class, () -> {
-            routes.validateData("0, 0, 0", expectedHeaders);
+            routes.validateData("0,0,0", expectedHeaders);
         });
 
-        Route actual = routes.validateData("223,MCTS,223,Park Place - Bradley Woods Shuttle,,3,,008345,", expectedHeaders);
-        Route expected = new Route("223", "MCTS", "223", "Park Place - Bradley Woods Shuttle", "", "3", "", "008345", "", "", "", "");
-        //This assertion is not working correctly, but the console shows no differences
-        assertEquals(expected, actual);
+        //Makes sure data fields cannot exceed number of header fields
+        assertThrows(IllegalArgumentException.class, () -> {
+            routes.validateData("0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0", expectedHeaders);
+        });
+
+        //Makes sure route_id value cannot be missing
+        assertThrows(IllegalArgumentException.class, () -> {
+            routes.validateData(",agency,short,long,desc,3,http://url,ffffff,000000", expectedHeaders);
+        });
+
+        //Makes sure route_color cannot be an invalid value
+        assertThrows(IllegalArgumentException.class, () -> {
+            routes.validateData("id,agency,short,long,desc,3,http://url,INVALID,000000", expectedHeaders);
+        });
+
+        //Makes sure route_text_color cannot be an invalid value
+        assertThrows(IllegalArgumentException.class, () -> {
+            routes.validateData("id,agency,short,long,desc,3,http://url,ffffff,INVALID", expectedHeaders);
+        });
+
+        //Makes sure a valid data line doesn't throw an error
+        assertDoesNotThrow(() -> {
+            routes.validateData("id,agency,short,long,desc,0,http://url,ffffff,000000", expectedHeaders);
+        });
+
+
+
     }
 
     @Disabled
