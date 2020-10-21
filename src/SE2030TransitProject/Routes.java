@@ -1,13 +1,10 @@
 package SE2030TransitProject;
 
 
-import javafx.scene.control.TextArea;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-
 import java.util.HashMap;
 import java.util.IllegalFormatException;
 import java.util.InputMismatchException;
@@ -84,7 +81,7 @@ public class Routes {
 		File routeFile = new File(file, "routes.txt");
 		FileWriter writer = new FileWriter(routeFile.getAbsoluteFile());
 
-		writer.append(Route.getHeaderLine() + "\n");
+		writer.append(Route.getHeaderLine()).append("\n");
 		for(String key : routes.keySet()){
 			writer.append(routes.get(key).getDataLine());
 		}
@@ -102,7 +99,6 @@ public class Routes {
 	 * @throws InputMismatchException if there is an issue parsing the file
 	 * @throws DataFormatException if data will be overwritten
 	 */
-	//TODO cleanup, notify if line is skipped
 	public boolean loadRoutes(File file) throws FileNotFoundException, IOException,
             InputMismatchException, DataFormatException {
 	    boolean lineSkipped;
@@ -112,7 +108,7 @@ public class Routes {
 
 	    Headers headers;
 
-	    // Throws DataFormatException if header is not valid
+	    // Throws IllegalArgumentException if header is not valid
         try {
             headers = validateHeader(full_header);
         } catch (IllegalArgumentException invalidHeader){
@@ -125,15 +121,11 @@ public class Routes {
             routes.clear();
         }
 
-        //String[] split_header = full_header.split(",");
-
         Scanner read_data = new Scanner(file);
         read_data.useDelimiter(",");
         read_data.nextLine(); //consumes header line to start at data to be parsed
 
         while (read_data.hasNextLine()) {
-            //HashMap<String, String> fields = new HashMap<>();
-            //initializeKeys(fields);
 
             String full_data = read_data.nextLine();
 
@@ -148,11 +140,12 @@ public class Routes {
         read_header.close();
         read_data.close();
 
-        if(!emptyPrior){
+        if(!emptyPrior && !lineSkipped){
             throw new DataFormatException(file.getName());
-        }
-
-		//TODO:  true if a line was skipped while loading, false otherwise
+        } else if(!emptyPrior){
+        	throw new IOException("Either data in " + file.getName() + " was overwritten, or there was a problem" +
+					"reading the file");
+		}
 		return lineSkipped;
 	}
 
@@ -203,12 +196,12 @@ public class Routes {
 	/**
 	 * Confirms the header of the loaded routes.txt file is valid
 	 * @author Ryan Becker
-	 * @param header
-	 * @return
-	 * @throws DataFormatException
+	 * @param header String of read-in header from file
+	 * @return Headers object containing the header fields in an ordered fashion
+	 * @throws IllegalArgumentException if the header is invalid
 	 */
-	//TODO add validity, finish documentation
 	public Headers validateHeader(String header) throws IllegalArgumentException{
+		header = header.toLowerCase().replace(" ", "");
 
 		if(header.isEmpty()){
 			throw new IllegalArgumentException("Invalid Header found in routes.txt: Empty Header\n" +
@@ -218,33 +211,33 @@ public class Routes {
 			throw new IllegalArgumentException("Invalid Header found in routes.txt: Missing route_id\n" +
 					"File will not be loaded");
 		}
-		if(!header.contains("route_color")){
+		//route_color is needed, but also says it defaults to white per the GTFS guideline
+		/*if(!header.contains("route_color")){
 			throw new IllegalArgumentException("Invalid Header found in routes.txt: Missing route_color\n" +
 					"File will not be loaded");
-		}
+		}*/
 		if(header.endsWith(",")){
 			throw new IllegalArgumentException("Invalid Header found in routes.txt: Header ends with ','\n" +
 					"File will not be loaded");
 		}
 
-
-
-
 		Headers headers = new Headers();
         String[] header_list = header.split(",");
+        final String POSSIBLE_HEADERS = Route.getHeaderLine();
 
         for(int i = 0; i < header_list.length; i++){
-            headers.addHeader(new Header(header_list[i], i));
+        	if(!header_list[i].isEmpty() && POSSIBLE_HEADERS.contains(header_list[i])){
+				headers.addHeader(new Header(header_list[i], i));
+			} else if(header_list[i].isEmpty()){
+        		throw new IllegalArgumentException("Invalid Header found in routes.txt: Empty header field:\n" +
+						"File will not be loaded");
+			} else {
+				throw new IllegalArgumentException(("Invalid Header found in routes.txt: Unexpected header field:\n" +
+						"File will not be loaded"));
+			}
         }
 
-        // Validates header
-		final Headers DEFAULT_HEADERS = createDefaultHeader();
-        if(!validHeader(headers, DEFAULT_HEADERS)){
-        	throw new IllegalArgumentException("Invalid Header found in routes.txt: Formatting\n" +
-					"File will not be loaded");
-		}
-
-		return headers;
+        return headers;
 	}
 
     /**
@@ -253,10 +246,8 @@ public class Routes {
      * @param full_data String of line of data
      * @param headers Headers object of all fields within the header line in addition to their position in the header
      * @return Route object created from valid data
-     * @throws DataFormatException if data input is not valid
      * @throws IllegalFormatException if data being parsed from a String is invalid
      */
-	//TODO
 	public Route validateData(String full_data, Headers headers) throws IllegalFormatException {
         //splits while ignoring commas within description
         String[] split_data = full_data.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
@@ -264,7 +255,6 @@ public class Routes {
         if(split_data.length != headers.length()){
             throw new IllegalArgumentException("Invalid quantity of data fields within line of data");
         }
-
 
         // Required Fields
         String route_id = setDefaultDataValue(split_data, headers, "route_id");
@@ -281,15 +271,13 @@ public class Routes {
         String continuous_pickup = setDefaultDataValue(split_data, headers, "continuous_pickup");
         String continuous_drop_off = setDefaultDataValue(split_data, headers, "continuous_drop_off");
 
-
-
         return new Route(route_id, agency_id, route_short_name, route_long_name, route_desc, route_type, route_url,
                 route_color, route_text_color, route_sort_order, continuous_pickup, continuous_drop_off);
 	}
 
     /**
      *
-     * @authors Grant Fass, Ryan Becker
+     * @author Grant Fass, Ryan Becker
      * @param split_data array of segmented data
      * @param headers Headers object of all fields within the header line in addition to their position in the header
      * @param header_element String representing the field in the header
@@ -305,11 +293,11 @@ public class Routes {
 
 
 	/**
+	 * @deprecated
 	 * Initializes a default Headers object that should be the order of header elements within a routes.txt file
 	 * @author Ryan Becker
 	 * @return Headers object containing Header objects each with a header field and index value
 	 */
-	//TODO finish documentation
 	private Headers createDefaultHeader(){
 		final String DEFAULT_HEADER = "route_id,agency_id,route_short_name,route_long_name,route_desc,route_type," +
 				"route_url,route_color,route_text_color";
@@ -324,13 +312,12 @@ public class Routes {
 	}
 
 	/**
-	 *
+	 * @deprecated
 	 * @author Ryan Becker
 	 * @param headers Headers object of all fields within the header line in addition to their position in the header
 	 * @param DEFAULT_HEADERS expected parameters within header
 	 * @return true if the read-in header line is valid per the expected header in DEFAULT_HEADERS, false otherwise
 	 */
-	//TODO finish documentation, clean up
 	private boolean validHeader (Headers headers, Headers DEFAULT_HEADERS){
 		boolean isEqual = true;
 

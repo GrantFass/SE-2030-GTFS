@@ -81,7 +81,6 @@ public class Route {
 	 * @param continuous_drop_off Status of availability for drop-offs on route
 	 * @throws IllegalArgumentException if there is an invalid value for a given field
 	 */
-	//TODO adjust default values
 	public Route(String route_id, String agency_id, String route_short_name, String route_long_name, String route_desc,
 				 String route_type, String route_url, String route_color, String route_text_color,
 				 String route_sort_order, String continuous_pickup, String continuous_drop_off)
@@ -100,7 +99,6 @@ public class Route {
 		final int DEFAULT_CONTINUOUS = -1; //continuous stopping pickup or drop-off
 
 		final String DEFAULT_URL = "http://NULL"; //Error is thrown otherwise
-
 
 
 		this.route_id = route_id;
@@ -244,16 +242,21 @@ public class Route {
 	}
 
 
-
-
-
-
+	/**
+	 * returns header line to be used for exporting routes.txt
+	 * @author Ryan Becker
+	 * @return String of the header line to be used for export
+	 */
 	public static String getHeaderLine(){
-		final String EXPECTED_HEADER = "route_id,agency_id,route_short_name,route_long_name,route_desc,route_type," +
-				"route_url,route_color,route_text_color";
-		return EXPECTED_HEADER;
+		return "route_id,agency_id,route_short_name,route_long_name,route_desc,route_type," +
+				"route_url,route_color,route_text_color,route_sort_order,continuous_pickup,continuous_drop_off";
 	}
 
+	/**
+	 * returns String of the data used in exporting routes.txt
+	 * @author Ryan Becker
+	 * @return String of the data line read from file, and defaulted values where applicable
+	 */
 	public String getDataLine(){
 		return String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n",route_id, agency_id, route_short_name,
 				route_long_name, route_desc, route_type.getValue(), route_url, route_color, route_text_color, route_sort_order,
@@ -347,9 +350,8 @@ public class Route {
 	/**
 	 * sets route_sort_order
 	 * @author Ryan Becker
-	 * @param route_sort_order positive integer, where lower number indicates a higher priority in sorting
+	 * @param route_sort_order integer, where lower number indicates a higher priority in sorting
 	 */
-	//TODO ensure param is positive
 	public void setRouteSortOrder(int route_sort_order) {
 		this.route_sort_order = route_sort_order;
 	}
