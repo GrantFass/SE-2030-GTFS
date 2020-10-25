@@ -1,6 +1,9 @@
 package SE2030TransitProject;
 
 import java.io.*;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -14,6 +17,7 @@ import java.util.zip.DataFormatException;
 public class StopTimes {
 
 	private HashMap<String, StopTime> stop_times;
+	private HashMap<String, String> tripStartAndEnd;
 
 	/**
 	 * StopTimes Constructor: creates empty instance of stop_times object
@@ -21,6 +25,7 @@ public class StopTimes {
 	 */
 	public StopTimes(){
 		stop_times = new HashMap<String, StopTime>();
+		tripStartAndEnd = new HashMap<String, String>();
 	}
 
 	/**
@@ -31,6 +36,7 @@ public class StopTimes {
 	 * @return true if added correctly
 	 */
 	public boolean addStopTime(StopTime stopTime){
+		addTripStartAndEnd(stopTime);
 		StopTime stopTimeAdded = stop_times.put(stopTime.getStopID() + ";" + stopTime.getTripID(), stopTime);
 		boolean added = false;
 		if(stopTimeAdded != null){
@@ -73,6 +79,7 @@ public class StopTimes {
 	 */
 	public boolean clearStopTimes(){
 		stop_times.clear();
+		tripStartAndEnd.clear();
 		//stop_times = new HashMap<String, StopTime>();
 		return true;
 	}
@@ -115,6 +122,7 @@ public class StopTimes {
 		if (!stop_times.isEmpty()) {
 			emptyAtLoadStart = false;
 			stop_times.clear();
+			tripStartAndEnd.clear();
 		}
 		Scanner fileInput = new Scanner(file);
 		Headers headers;
@@ -277,5 +285,56 @@ public class StopTimes {
 								.substring(object.toString().indexOf('=')+1) + "\n"));
 
 		return sb.toString();
+	}
+
+	/**
+	 * Method that creates a HashMap with trip_id, first_time, first_stop_id,
+	 * 	 * last_time, and last_stop_id
+	 *
+	 * @author Simon Erickson
+	 * @param stopTime a StopTime object that holds the information for the HashMap
+	 */
+	private void addTripStartAndEnd(StopTime stopTime) {
+		//HashMap<trip_id, first_time--first_stop_id--last_time--last_stop_id>
+		String valueAtTrip = tripStartAndEnd.get(stopTime.getTripID());
+		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+		Timestamp arrive = stopTime.getArrivalTime();
+		Timestamp depart = stopTime.getDepartureTime();
+		String stop_id = stopTime.getStopID();
+		try {
+			String[] tripValue = valueAtTrip.split("--");
+			Timestamp first_time = new Timestamp(dateFormat.parse(tripValue[0]).getTime());
+			Timestamp last_time = new Timestamp(dateFormat.parse(tripValue[2]).getTime());
+			String first_stop_id = tripValue[1];
+			String last_stop_id = tripValue[3];
+			if(arrive.before(first_time)){
+				first_time = arrive;
+				first_stop_id = stop_id;
+			}
+			if(depart.after(last_time)){
+				last_time = depart;
+				last_stop_id = stop_id;
+			}
+			tripStartAndEnd.remove(stopTime.getTripID());
+			tripStartAndEnd.put(stopTime.getTripID(),
+					first_time + "--" + first_stop_id + "--"
+							+ last_time + "--" + last_stop_id);
+		}catch (NullPointerException | ParseException e){
+			tripStartAndEnd.put(stopTime.getTripID(),
+					arrive + "--" + stopTime.getStopID() + "--"
+							+ depart + "--" + stopTime.getStopID());
+		}
+	}
+
+	/**
+	 * Method that returns a HashMap with trip_id, first_time, first_stop_id,
+	 * last_time, and last_stop_id
+	 *
+	 * @author Simon Erickson
+	 * @return tripAndDistance The HashMap with trip_id, first_time, first_stop_id,
+	 * 	 * last_time, and last_stop_id.
+	 */
+	public HashMap<String, String> getTripStartAndEnd(){
+		return tripStartAndEnd;
 	}
 }//end StopTimes
