@@ -97,56 +97,68 @@
 <h5>Grant Fass:</h5>
 <h6>TODO</h6>
 <ul>
-<li>
-        Implement Feature 2: Display the Distance of each Trip
-        <ul>
-            <li>Implement GUI</li>
-            <li>Implement Observer Pattern</li>
-        </ul>
-    </li>
+    <li>Remove Getters from Data</li>
+    <li>Refactor Exports to not include headers where all values are default</li>
+    <li>Catch invalid colors for routes</li>
     <li>
         Implement Feature 5: Search for a stop by stop_id and display all route_id(s) that contain the stop
         <ul>
-            <li>Implement GUI</li>
+            <li>Implement gui</li>
             <li>Implement Observer Pattern</li>
         </ul>
     </li>
     <li>
         Implement Feature 8: Search for a stop by stop_id and display the next trip_id(s) (closest to the current time)
         <ul>
-            <li>Implement GUI</li>
+            <li>Implement gui</li>
             <li>Implement Observer Pattern</li>
         </ul>
     </li>
     <li>
         Update data display
         <ul>
-            <li>Change display of files to only display a certain number of results</li>
             <li>Page results (ie: see results 1 - 100, 101-200)</li>
             <li>Show last updated time</li>
         </ul>
     </li>
-<li>
-        Implement Observer Pattern
+    <li>
+        Update StopTime
         <ul>
-            <li>Observer pattern should work when loading files</li>
-            <li>Observer pattern should work for any features implemented</li>
-            <li>Observer pattern should work for displaying average speed (Feature 3)</li>
-            <li>Observer pattern should work for Trips per Stop (Feature 4)</li>
-            <li>Observer pattern should work for features implemented this week</li>
+            <li>Update StopTime constructor with helper methods to make code more readable (use private setters)</li>
+            <li>Fix issues in stop_time loading EauClaire + LAX gtfs files</li>
+            <li>Reimplement setters in StopTime and make them private</li>
         </ul>
     </li>
-    <li>Update StopTime constructor with helper methods to make code more readable (use private setters)</li>
-    <li>Reimplement setters in StopTime and make them private</li>
-    <li>Clean up README</li>
     <li>Update Data View Window help section</li>
     <li>Implement Deep Copy in controller getData() method</li>
-    <li>Update Trips per Stop to use observer pattern to display results</li>
 </ul>
 <h6>Completed</h6>
 <s>
     <ul>
-        <li></li>
+        <li>
+                Implement Feature 2: Display the Distance of each Trip
+                <ul>
+                    <li>Implement gui</li>
+                    <li>Implement Observer Pattern</li>
+                </ul>
+            </li>
+            <li>Update Trips per Stop to use observer pattern to display results</li>
+            <li>
+                    Implement Observer Pattern
+                    <ul>
+                        <li>Observer pattern should work when loading files</li>
+                        <li>Observer pattern should work for any features implemented</li>
+                        <li>Observer pattern should work for displaying average speed (Feature 3)</li>
+                        <li>Observer pattern should work for Trips per Stop (Feature 4)</li>
+                        <li>Observer pattern should work for features implemented this week</li>
+                    </ul>
+                </li>
+                <li>
+                        Update data display
+                        <ul>
+                            <li>Change display of files to only display a certain number of results</li>
+                        </ul>
+                    </li>
     </ul>
 </s>
 <hr>
@@ -172,7 +184,7 @@
     <li>
         (Optional for lab 6) Implement Feature 3: Display the average speed based on the start and end times of a trip
         <ul>
-            <li>Display output to GUI</li>
+            <li>Display output to gui</li>
             <li>Use observer pattern to display results</li>
             <li>Implement method to calculate average speed</li>
         </ul>
@@ -180,7 +192,7 @@
     <li>
         Implement Feature 2: Display the Distance of each Trip
         <ul>
-            <li>Implement GUI</li>
+            <li>Implement gui</li>
             <li>Implement Observer Pattern</li>
             <li>Implement method to calculate distance</li>
         </ul>
@@ -188,7 +200,7 @@
     <li>
         Implement Feature 5: Search for a stop by stop_id and display all route_id(s) that contain the stop
         <ul>
-            <li>Implement GUI</li>
+            <li>Implement gui</li>
             <li>Implement Observer Pattern</li>
             <li>Implement method to search</li>
         </ul>
@@ -196,7 +208,7 @@
     <li>
         Implement Feature 8: Search for a stop by stop_id and display the next trip_id(s) (closest to the current time)
         <ul>
-            <li>Implement GUI</li>
+            <li>Implement gui</li>
             <li>Implement Observer Pattern</li>
             <li>Implement method to search</li>
         </ul>

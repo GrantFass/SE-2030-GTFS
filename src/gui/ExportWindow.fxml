@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Please do not attempt to modify this file using scenebuilder.
+Everything in this file has been setup in code.
+
+@author Grant Fass
+-->
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="gui.ExportWindowController"
+      maxHeight="Infinity" maxWidth="Infinity" minHeight="400" minWidth="300" prefHeight="400.0" prefWidth="600" spacing="5">
+    <padding>
+        <Insets top="20" bottom="20" left="20" right="20"/>
+    </padding>
+    <HBox spacing="10" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="75" minWidth="20" minHeight="20">
+        <TextArea editable="false" text="Short Description" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="75" minWidth="20" minHeight="20"/>
+        <Button text="?" onAction="#displayHelp" alignment="CENTER" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="100" maxHeight="75" minWidth="20" minHeight="20"/>
+    </HBox>
+    <HBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="60" minWidth="20" minHeight="20" spacing="10">
+        <TextField editable="false" fx:id="directoryTextField" text="Directory" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="75" minWidth="30" minHeight="20"/>
+        <Button onAction="#browseDirectory" text="browse" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="100" maxHeight="100" minWidth="30" minHeight="20"/>
+    </HBox>
+    <HBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" minWidth="20" minHeight="20" spacing="10">
+        <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" minWidth="20" minHeight="20" spacing="10">
+            <HBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20" spacing="10">
+                <CheckBox onAction="#toggleRouteCheckBox" fx:id="routesCheckBox" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="10" maxHeight="100" minWidth="20" minHeight="20"/>
+                <VBox disable="true" fx:id="routeVBox" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20" spacing="1">
+                    <HBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20" spacing="10">
+                        <Label text="Routes" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="100" maxHeight="100" minWidth="50" minHeight="20"/>
+                        <TextField fx:id="routeTextField" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20"/>
+                    </HBox>
+                    <ProgressBar fx:id="routesProgressBar" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="30" minWidth="20" minHeight="20"/>
+                </VBox>
+            </HBox>
+            <HBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20" spacing="10">
+                <CheckBox onAction="#toggleStopCheckBox" fx:id="stopsCheckBox" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="10" maxHeight="100" minWidth="20" minHeight="20"/>
+                <VBox disable="true" fx:id="stopVBox" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20" spacing="1">
+                    <HBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20" spacing="10">
+                        <Label text="Stops" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="100" maxHeight="100" minWidth="50" minHeight="20"/>
+                        <TextField fx:id="stopTextField" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20"/>
+                    </HBox>
+                    <ProgressBar fx:id="stopsProgressBar" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="30" minWidth="20" minHeight="20"/>
+                </VBox>
+            </HBox>
+            <HBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20" spacing="10">
+                <CheckBox onAction="#toggleStopTimeCheckBox" fx:id="stopTimesCheckBox" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="10" maxHeight="100" minWidth="20" minHeight="20"/>
+                <VBox disable="true" fx:id="stopTimeVBox" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20" spacing="1">
+                    <HBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20" spacing="10">
+                        <Label text="StopTimes" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="100" maxHeight="100" minWidth="50" minHeight="20"/>
+                        <TextField fx:id="stopTimeTextField" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20"/>
+                    </HBox>
+                    <ProgressBar fx:id="stopTimesProgressBar" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="30" minWidth="20" minHeight="20"/>
+                </VBox>
+            </HBox>
+            <HBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20" spacing="10">
+                <CheckBox onAction="#toggleTripCheckBox" fx:id="tripsCheckBox" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="10" maxHeight="100" minWidth="20" minHeight="20"/>
+                <VBox disable="true" fx:id="tripVBox" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20" spacing="1">
+                    <HBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20" spacing="10">
+                        <Label text="Trips" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="100" maxHeight="100" minWidth="50" minHeight="20"/>
+                        <TextField fx:id="tripTextField" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20"/>
+                    </HBox>
+                    <ProgressBar fx:id="tripsProgressBar" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="30" minWidth="20" minHeight="20"/>
+                </VBox>
+            </HBox>
+            <Button onAction="#exportFiles" text="Export" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20"/>
+        </VBox>
+        <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="200" maxHeight="Infinity" minWidth="20" minHeight="20" spacing="10">
+            <Label text="Alerts" alignment="CENTER" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="50" minWidth="20" minHeight="20"/>
+            <TextArea fx:id="alertTextArea" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" minWidth="20" minHeight="20"/>
+        </VBox>
+    </HBox>
+</VBox>

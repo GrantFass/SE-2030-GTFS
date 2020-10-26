@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Please do not attempt to modify this file using scenebuilder.
+Everything in this file has been setup in code.
+
+@author Grant Fass
+-->
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.collections.FXCollections?>
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="gui.SearchWindowController"
+      maxHeight="Infinity" maxWidth="Infinity" minHeight="400" minWidth="300" prefHeight="400.0" prefWidth="600" spacing="10">
+    <padding>
+        <Insets top="20" bottom="20" left="20" right="20"/>
+    </padding>
+    <HBox spacing="10" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20">
+        <TextArea editable="false" text="Short Description" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20"/>
+        <Button text="?" onAction="#displayHelp" alignment="CENTER" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="100" maxHeight="100" minWidth="20" minHeight="20"/>
+    </HBox>
+    <HBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" spacing="10">
+        <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" spacing="10">
+            <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" spacing="10">
+                <Label text="Output Type" alignment="CENTER" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"/>
+                <ComboBox fx:id="outputType" value="Output Type" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Route"/>
+                            <String fx:value="Stop"/>
+                            <String fx:value="StopTime"/>
+                            <String fx:value="Trip"/>
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+            </VBox>
+            <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" spacing="10">
+                <Label text="Input Type" alignment="CENTER" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"/>
+                <ComboBox fx:id="inputType" value="Input Type" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Route"/>
+                            <String fx:value="Stop"/>
+                            <String fx:value="StopTime"/>
+                            <String fx:value="Trip"/>
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+            </VBox>
+            <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" spacing="10">
+                <Label text="Input" alignment="CENTER" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"/>
+                <TextField fx:id="input" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"/>
+            </VBox>
+            <Button onAction="#search" text="Search" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"/>
+        </VBox>
+        <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" spacing="10">
+            <Label text="Output" alignment="CENTER" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"/>
+            <TextArea fx:id="output" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"/>
+        </VBox>
+    </HBox>
+</VBox>
