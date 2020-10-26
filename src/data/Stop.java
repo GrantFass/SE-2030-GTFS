@@ -324,4 +324,13 @@ public class Stop {
 				parent_station, platform_code, stop_code, stop_description, stop_latitude,
 				stop_longitude, stop_timezone, stop_url, wheelchair_boarding);
 	}
+
+	/**
+	 * output simplified data as a single concatenated string
+	 * @return string of data
+	 * @author Grant Fass
+	 */
+	public String toSimpleString() {
+		return String.format("Stop ID: %s | Latitude: %s | Longitude: %s\n", stop_id, stop_latitude, stop_longitude);
+	}
 }//end Stop

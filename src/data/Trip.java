@@ -170,6 +170,15 @@ public class Trip {
     }
 
     /**
+     * output simplified data as a single concatenated string
+     * @return string of data
+     * @author Grant Fass
+     */
+    public String toSimpleString() {
+        return String.format("Trip ID: %s | Route ID: %s\n", trip_id, route_id);
+    }
+
+    /**
      * gets the file header for Trips
      * @return file header in a single line header format
      * @author Simon Erickson

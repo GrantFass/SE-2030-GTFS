@@ -241,16 +241,39 @@ public class Stops {
 
 	/**
 	 * Method to output data as a single concatenated string
-	 * @author Joy Cross, Grant Fass
+	 * @author Grant Fass
 	 * @return string of data
 	 */
 	@Override
 	public String toString() {
-		StringBuilder toReturn = new StringBuilder();
-		for(String key : stops.keySet()){
-			toReturn.append(stops.get(key).toString() + "\n");
+		StringBuilder stringBuilder = new StringBuilder();
+		int maxDisplay = 100;
+		int count = 0;
+		Iterator mapIterator = stops.entrySet().iterator();
+		while (mapIterator.hasNext() && count < maxDisplay) {
+			Map.Entry mapElement = (Map.Entry) mapIterator.next();
+			stringBuilder.append(getStop(mapElement.getKey().toString()).toString()).append("\n");
+			count++;
 		}
-		return toReturn.toString();
+		return stringBuilder.toString();
+	}
+
+	/**
+	 * output simplified data as a single concatenated string
+	 * @return string of data
+	 * @author Grant Fass
+	 */
+	public String toSimpleString() {
+		StringBuilder stringBuilder = new StringBuilder();
+		int maxDisplay = 100;
+		int count = 0;
+		Iterator mapIterator = stops.entrySet().iterator();
+		while (mapIterator.hasNext() && count < maxDisplay) {
+			Map.Entry mapElement = (Map.Entry) mapIterator.next();
+			stringBuilder.append(getStop(mapElement.getKey().toString()).toSimpleString()).append("\n");
+			count++;
+		}
+		return stringBuilder.toString();
 	}
 
 	/*

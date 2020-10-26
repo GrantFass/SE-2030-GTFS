@@ -286,6 +286,15 @@ public class StopTime {
 	}
 
 	/**
+	 * output simplified data as a single concatenated string
+	 * @return string of data
+	 * @author Grant Fass
+	 */
+	public String toSimpleString() {
+		return String.format("Trip ID: %s | Stop ID: %s | Stop Sequence: %s\n", trip_id, stop_id, stop_sequence);
+	}
+
+	/**
 	 * gets the file headers
 	 * used for exporting stop times
 	 * @return file headers in a single line header format

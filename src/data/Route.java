@@ -396,4 +396,13 @@ public class Route {
 				route_desc, route_type, route_url, route_color, route_text_color, route_sort_order,
 				continuous_pickup, continuous_drop_off);
 	}
+
+	/**
+	 * output simplified data as a single concatenated string
+	 * @return string of data
+	 * @author Grant Fass
+	 */
+	public String toSimpleString() {
+		return String.format("Route ID: %s | Route Color: %s\n", route_id, route_color);
+	}
 }//end Route
