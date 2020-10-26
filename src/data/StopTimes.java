@@ -1,9 +1,12 @@
 package data;
 
 import java.io.*;
+import java.sql.Array;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -18,6 +21,7 @@ public class StopTimes {
 
 	private HashMap<String, StopTime> stop_times;
 	private HashMap<String, String> tripStartAndEnd;
+	private final int MAX_DISPLAY = 100;
 
 	/**
 	 * StopTimes Constructor: creates empty instance of stop_times object
@@ -268,18 +272,18 @@ public class StopTimes {
 	 */
 	public String toSimpleString() {
 		StringBuilder toReturn = new StringBuilder();
-		int maxDisplay = 100;
 		Object[] keys = stop_times.keySet().toArray();
 		if (keys.length == 0) {
 			return "";
 		}
-		for(int i = 0; i < maxDisplay; i++){
+		for(int i = 0; i < MAX_DISPLAY; i++){
 			toReturn.append(stop_times.get(keys[i]).toSimpleString() + "\n");
 		}
 		return toReturn.toString();
 	}
 
 	/**
+	 * Gets the count of trips that is associated with a stop
 	 * @return the number of trips that each stop is found on
 	 * @author Joy Cross
 	 */
@@ -294,12 +298,18 @@ public class StopTimes {
 
 		// count distinct stops which returns number of how much a stop is used by trips
 		StringBuilder sb = new StringBuilder();
+		int[] i = {0};
 		Arrays.stream(keys).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
 				.entrySet()
-				.forEach(object -> sb.append("Stop_id: " + object.toString()
+				.forEach(object -> {
+						if(i[0]<=MAX_DISPLAY){
+						sb.append("Stop_id: " + object.toString()
 								.substring(0, object.toString().indexOf('=')) +
-						"; Number of trips containing stop: " + object.toString()
-								.substring(object.toString().indexOf('=')+1) + "\n"));
+								"; Number of trips containing stop: " + object.toString()
+								.substring(object.toString().indexOf('=') + 1) + "\n");
+						}
+						i[0] = i[0] + 1;
+				});
 
 		return sb.toString();
 	}
@@ -354,4 +364,51 @@ public class StopTimes {
 	public HashMap<String, String> getTripStartAndEnd(){
 		return tripStartAndEnd;
 	}
+
+	/**
+	 * Searches through database of stopTimes and returns List<trip_id> related to stop
+	 * @param stop_id stop to search for
+	 * @return trips in order of time that contain that stop
+	 * @author Joy Cross
+	 */
+	public List<String> searchStopDisplayTrips(String stop_id){
+		// gets current time to compare
+		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+
+		// gets hashmap of trips id and arrival times for comparison
+		HashMap<Timestamp, String> tripsByStop = new HashMap<>();
+		ArrayList<Timestamp> times = new ArrayList<>();
+		Object[] keys = stop_times.keySet().toArray();
+
+		Arrays.stream(keys)
+				.forEach(object -> {
+							if(object.toString().startsWith(stop_id + ";")){
+								tripsByStop.put(stop_times.get(object.toString()).getArrivalTime(),
+										object.toString().replace(stop_id + ";", "").trim());
+								times.add(stop_times.get(object.toString()).getArrivalTime());
+							}
+						});
+
+		// get index of everything after or at current time in sorted list
+		Collections.sort(times);
+		int index = 0;
+		for(int i = 0; i < times.size(); i++){
+			if((times.get(i).getTime() - currentTime.getTime())>=0){
+				index = i;
+				break;
+			}
+		}
+
+		// sort list by comparing to current time
+		ArrayList<String> toReturn = new ArrayList<>();
+		for(int i = index; i < times.size(); i++){
+			toReturn.add(tripsByStop.get(times.get(i)));
+		}
+		for(int i = 0; i < index; i++){
+			toReturn.add(tripsByStop.get(times.get(i)));
+		}
+
+		return toReturn;
+	}
+
 }//end StopTimes

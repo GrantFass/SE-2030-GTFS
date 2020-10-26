@@ -14,6 +14,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import java.util.List;
+
 /**
  * SearchWindowController Purpose: Controller for the search window
  *
@@ -125,7 +127,18 @@ public class SearchWindowController {
                 output.appendText("not ready");
                 break;
             case "trip":
-                output.appendText("not ready");
+                if(((String)inputType.getValue()).toLowerCase().equals("stop")){
+                    String inputText = (input.getText()).toLowerCase();
+                    List<String> list = mainWindowController.getData().getStopTimes().searchStopDisplayTrips(inputText);
+                    StringBuilder sb = new StringBuilder();
+                    for(int i = 0; i < list.size(); i++){
+                        int j = i + 1;
+                        sb.append(j + ": " + list.get(i) + "\n");
+                    }
+                    output.appendText(sb.toString());
+                } else{
+                    output.appendText("Input type not yet implemented");
+                }
                 break;
         }
     }
