@@ -365,6 +365,33 @@ public class StopTimes {
 		return tripStartAndEnd;
 	}
 
+
+
+	//Start feature five
+
+	/**
+	 * Gets every trip_id that is paired with the searched stop_id within a given StopTime object
+	 * @author Ryan Becker
+	 * @param stop_id associated with a Stop that is used to search for paired trip_id within a given StopTime object
+	 * @return ArrayList of every trip_id that is within a StopTime object that also contains the searched stop_id
+	 */
+	public ArrayList<String> getTripIDs_fromStop_ID(String stop_id){
+		ArrayList<String> trip_ids = new ArrayList<>();
+		for(StopTime stop_time : stop_times.values()){
+			if(stop_time.getStopID().equals(stop_id)){
+				trip_ids.add(stop_time.getTripID());
+			}
+
+
+
+		}
+
+		return trip_ids;
+	}
+
+	//End feature five
+
+
 	/**
 	 * Searches through database of stopTimes and returns List<trip_id> related to stop
 	 * @param stop_id stop to search for
