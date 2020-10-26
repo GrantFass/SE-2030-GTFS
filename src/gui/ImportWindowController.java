@@ -6,6 +6,19 @@
  */
 package gui;
 
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.InputMismatchException;
+import java.util.zip.DataFormatException;
+
 /**
  * ImportWindowController Purpose: Controller for the Input Window
  *
@@ -13,4 +26,401 @@ package gui;
  * @version Created on 10/25/2020 at 1:26 AM
  */
 public class ImportWindowController {
+    @FXML
+    private TextArea alertTextArea;
+    @FXML
+    private VBox routesVBox;
+    @FXML
+    private VBox stopsVBox;
+    @FXML
+    private VBox stopTimesVBox;
+    @FXML
+    private VBox tripsVBox;
+    @FXML
+    private CheckBox routesCheckBox;
+    @FXML
+    private TextField routesTextField;
+    @FXML
+    private ProgressBar routesProgressBar;
+    @FXML
+    private CheckBox stopsCheckBox;
+    @FXML
+    private TextField stopsTextField;
+    @FXML
+    private ProgressBar stopsProgressBar;
+    @FXML
+    private CheckBox stopTimesCheckBox;
+    @FXML
+    private TextField stopTimesTextField;
+    @FXML
+    private ProgressBar stopTimesProgressBar;
+    @FXML
+    private CheckBox tripsCheckBox;
+    @FXML
+    private TextField tripsTextField;
+    @FXML
+    private ProgressBar tripsProgressBar;
+
+    private Stage analysisWindowStage;
+    private AnalysisWindowController analysisWindowController;
+    private Stage dataWindowStage;
+    private DataWindowController dataWindowController;
+    private Stage exportWindowStage;
+    private ExportWindowController exportWindowController;
+    private Stage importWindowStage;
+    private Stage mainWindowStage;
+    private MainWindowController mainWindowController;
+    private Stage mapWindowStage;
+    private MapWindowController mapWindowController;
+    private Stage searchWindowStage;
+    private SearchWindowController searchWindowController;
+    private Stage updateWindowStage;
+    private UpdateWindowController updateWindowController;
+
+    /**
+     * set the local values of all of the stages.
+     *
+     * @param analysisWindowStage the stage for the AnalysisWindow
+     * @param dataWindowStage     the stage for the DataWindow
+     * @param exportWindowStage   the stage for the ExportWindow
+     * @param importWindowStage   the stage for the ImportWindow
+     * @param mainWindowStage     the stage for the MainWindow
+     * @param mapWindowStage      the stage for the MapWindow
+     * @param searchWindowStage   the stage for the SearchWindow
+     * @param updateWindowStage   the stage for the UpdateWindow
+     * @author Grant Fass
+     */
+    public void setStages(Stage analysisWindowStage, Stage dataWindowStage,
+                          Stage exportWindowStage, Stage importWindowStage,
+                          Stage mainWindowStage, Stage mapWindowStage,
+                          Stage searchWindowStage, Stage updateWindowStage) {
+        this.analysisWindowStage = analysisWindowStage;
+        this.dataWindowStage = dataWindowStage;
+        this.exportWindowStage = exportWindowStage;
+        this.importWindowStage = importWindowStage;
+        this.mainWindowStage = mainWindowStage;
+        this.mapWindowStage = mapWindowStage;
+        this.searchWindowStage = searchWindowStage;
+        this.updateWindowStage = updateWindowStage;
+    }
+
+    /**
+     * Sets the values of the controller associated with the respective files
+     * Makes sure the same instance of the controller is used everywhere
+     *
+     * @param analysisWindowController reference to the AnalysisWindowController in use
+     * @param dataWindowController     reference to the DataWindowController in use
+     * @param exportWindowController   reference to the ExportWindowController in use
+     * @param mainWindowController     reference to the MainWindowController in use
+     * @param mapWindowController      reference to the MapWindowController in use
+     * @param searchWindowController   reference to the SearchWindowController in use
+     * @param updateWindowController   reference to the UpdateWindowController in use
+     * @author Grant Fass
+     */
+    public void setControllers(AnalysisWindowController analysisWindowController,
+                               DataWindowController dataWindowController,
+                               ExportWindowController exportWindowController,
+                               MainWindowController mainWindowController,
+                               MapWindowController mapWindowController,
+                               SearchWindowController searchWindowController,
+                               UpdateWindowController updateWindowController) {
+        this.analysisWindowController = analysisWindowController;
+        this.dataWindowController = dataWindowController;
+        this.exportWindowController = exportWindowController;
+        this.mainWindowController = mainWindowController;
+        this.mapWindowController = mapWindowController;
+        this.searchWindowController = searchWindowController;
+        this.updateWindowController = updateWindowController;
+    }
+
+    /**
+     * set the default values of the progress bars
+     * @author Grant Fass
+     */
+    public void setDefaultValues() {
+        routesProgressBar.setVisible(false);
+        stopsProgressBar.setVisible(false);
+        stopTimesProgressBar.setVisible(false);
+        tripsProgressBar.setVisible(false);
+    }
+
+    /**
+     * error if no file is loaded or file is null
+     *
+     * @param file the file to check
+     * @throws FileNotFoundException null file
+     * @author Grant Fass
+     */
+    private void checkNullFile(File file) throws FileNotFoundException {
+        if (file == null) {
+            throw new FileNotFoundException("File was not found at specified address");
+        }
+    }
+
+    /**
+     * method to check the extension of a file and make sure it matches one of the valid formats
+     *
+     * @param extension the extension to check
+     * @throws IllegalArgumentException if extension is not one of the listed ones.
+     * @author Grant Fass
+     */
+    private void checkFileExtension(String extension) throws IllegalArgumentException {
+        if (!extension.toLowerCase().equals(".txt")) {
+            throw new IllegalArgumentException("The file of type "
+                    + extension + " is not supported." +
+                    "Supported file types are '.txt'.");
+        }
+    }
+
+    /**
+     * method to check the name of a file and make sure it matches the expected format
+     * so that the file can be passed on to the correct class for parsing.
+     *
+     * @param prefix the name of the file
+     * @return a simplified name of the file to be used for comparing
+     * @throws InputMismatchException if the file does not match the expected name
+     * @author Grant Fass
+     */
+    private String checkFilePrefix(String prefix) throws InputMismatchException {
+        if (prefix.toLowerCase().contains("stop_times")) {
+            return "stop_times";
+        } else if (prefix.toLowerCase().contains("stops")) {
+            return "stops";
+        } else if (prefix.toLowerCase().contains("trips")) {
+            return "trips";
+        } else if (prefix.toLowerCase().contains("routes")) {
+            return "routes";
+        } else {
+            throw new InputMismatchException("The file with name %s is not " +
+                    "supported. Please make sure that your file matches the expected naming" +
+                    "convention of 'stops.txt', 'stop_times.txt', 'trips.txt', &" +
+                    " 'routes.txt'.");
+        }
+    }
+
+    /**
+     * query the user to retrieve a GTFS file from the computer using a FileChooser
+     *
+     * @param description the description for the primary extension filter
+     * @param expected    the extension for the primary extension filter
+     * @return the selected GTFS file from the program
+     * @author Grant Fass
+     */
+    private File getGTFSFileLocationUsingFileChooser(String description, String expected) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter(description, expected.toLowerCase()),
+                new FileChooser.ExtensionFilter("TXT", "*.txt".toLowerCase()));
+        fileChooser.setTitle("Load GTFS File");
+        fileChooser.setInitialDirectory(new File("C:\\\\users\\\\" +
+                System.getProperty("user.name") + "\\\\Documents"));
+        return fileChooser.showOpenDialog(mainWindowStage);
+    }
+
+    /**
+     * display help values to the program
+     * Activates when help menu button is clicked
+     *
+     * @author Grant Fass
+     */
+    @FXML
+    private void displayHelp() {
+        MainWindowController.displayAlert(Alert.AlertType.INFORMATION, "General Transit Feed Specification Tool Information",
+                "Import Window Help", "Not Implemented Yet");
+    }
+
+    /**
+     * opens a FileChooser with the specified extension filter and outputs the file path to the corresponding TextArea
+     *
+     * @author Grant Fass
+     */
+    @FXML
+    private void browseRoutes() {
+        browse(routesTextField, "ROUTES", "routes.txt", routesProgressBar);
+    }
+
+    /**
+     * opens a FileChooser with the specified extension filter and outputs the file path to the corresponding TextArea
+     *
+     * @author Grant Fass
+     */
+    @FXML
+    private void browseStops() {
+        browse(stopsTextField, "STOPS", "stops.txt", stopsProgressBar);
+    }
+
+    /**
+     * opens a FileChooser with the specified extension filter and outputs the file path to the corresponding TextArea
+     *
+     * @author Grant Fass
+     */
+    @FXML
+    private void browseStopTimes() {
+        browse(stopTimesTextField, "STOP_TIMES", "stop_times.txt", stopTimesProgressBar);
+    }
+
+    /**
+     * opens a FileChooser with the specified extension filter and outputs the file path to the corresponding TextArea
+     *
+     * @author Grant Fass
+     */
+    @FXML
+    private void browseTrips() {
+        browse(tripsTextField, "TRIPS", "trips.txt", tripsProgressBar);
+    }
+
+    /**
+     * opens a FileChooser to browse to the file location and set initial load values
+     * @param textField the TextField to display the file location to
+     * @param description the description to use for the extension for the FileChooser
+     * @param extension the extension to use for the FileChooser
+     * @param progressBar the progress bar to set initial values for
+     * @author Grant Fass
+     */
+    private void browse(TextField textField, String description, String extension, ProgressBar progressBar) {
+        try {
+            File file = getGTFSFileLocationUsingFileChooser(description, extension);
+            textField.setText(file.toString());
+            progressBar.setProgress(0);
+            progressBar.setStyle("-fx-accent: blanchedalmond");
+            progressBar.setVisible(true);
+        } catch (NullPointerException ignored) {
+
+        }
+    }
+
+
+    /**
+     * Import selected files into the program
+     * Will not import file if corresponding checkbox is not selected
+     * Outputs success results to Alerts TextArea
+     * @author Grant Fass
+     */
+    @FXML
+    private void importFiles() {
+        alertTextArea.clear();
+        alertTextArea.appendText(LocalDateTime.now().toString() + "\n");
+        importFile(routesCheckBox, routesTextField, routesProgressBar, "Routes");
+        importFile(stopsCheckBox, stopsTextField, stopsProgressBar, "Stops");
+        importFile(stopTimesCheckBox, stopTimesTextField, stopTimesProgressBar, "Stop_Times");
+        importFile(tripsCheckBox, tripsTextField, tripsProgressBar, "Trips");
+    }
+
+    /**
+     * Import a file into the program
+     * @param checkBox the checkbox to check if the file is to be imported
+     * @param textField the textField to read the filename from
+     * @param progressBar the progressbar to update with loading status
+     * @param fileType the file type for alert output
+     * @author Grant Fass
+     */
+    private void importFile(CheckBox checkBox, TextField textField, ProgressBar progressBar, String fileType) {
+        progressBar.setProgress(ProgressBar.INDETERMINATE_PROGRESS);
+        if (checkBox.isSelected() && !textField.getText().isEmpty()) {
+            alertTextArea.appendText("IN: " + fileType + "\n");
+            importFile(new File(textField.getText()), progressBar);
+            progressBar.setStyle("-fx-accent: green");
+        } else if (checkBox.isSelected()) {
+            alertTextArea.appendText("SKIP: " + fileType + " - Empty File Location\n");
+            progressBar.setStyle("-fx-accent: red");
+        } else {
+            alertTextArea.appendText("SKIP: " + fileType + " - Not Selected\n");
+            progressBar.setStyle("-fx-accent: red");
+        }
+        progressBar.setProgress(100);
+    }
+
+    /**
+     * imports a single file into the program
+     * @param file the file to import
+     * @author Grant Fass
+     */
+    private void importFile(File file, ProgressBar progressBar) {
+        try {
+            checkNullFile(file);
+            checkFileExtension(file.toString().substring(file.toString().indexOf('.')));
+            String prefix = checkFilePrefix(file.toString().substring(0,
+                    file.toString().indexOf('.')));
+            boolean wasLineSkipped = false;
+            progressBar.setProgress(25);
+            switch (prefix) {
+                case "stop_times":
+                    wasLineSkipped = mainWindowController.getData().loadStopTimes(file);
+                    break;
+                case "stops":
+                    wasLineSkipped = mainWindowController.getData().loadStops(file);
+                    break;
+                case "routes":
+                    wasLineSkipped = mainWindowController.getData().loadRoutes(file);
+                    break;
+                case "trips":
+                    wasLineSkipped = mainWindowController.getData().loadTrips(file);
+                    break;
+            }
+            if (!wasLineSkipped) {
+                alertTextArea.appendText("\tINFO: " + prefix + " data imported successfully\n");
+            } else {
+                alertTextArea.appendText("\tWARN: one or more lines in " + prefix + " were incorrectly formatted and skipped\n");
+            }
+        } catch (IllegalArgumentException e) {
+            alertTextArea.appendText("\tERROR: IllegalArgumentException - " + e.getMessage() + "\n");
+        } catch (InputMismatchException e) {
+            alertTextArea.appendText("\tERROR: InputMismatchException - " + e.getMessage() + "\n");
+        } catch (FileNotFoundException e) {
+            alertTextArea.appendText("\tERROR: FileNotFoundException - " + e.getMessage() + "\n");
+        } catch (IOException e) {
+            alertTextArea.appendText("\tERROR: IOException - " + e.getMessage() + "\n");
+        } catch (DataFormatException e) {
+            alertTextArea.appendText(String.format("\tWARN: Data Overwritten - The data from the" +
+                    " previous '%s' file was overwritten with the new data. The program" +
+                    " may work unexpectedly if the new data from '%s' does not match" +
+                    " the existing data in the remaining files.\n", e.getMessage(), e.getMessage()));
+        }
+    }
+
+    /**
+     * update the disabled status of the route data based on CheckBox toggle
+     * @author Grant Fass
+     */
+    @FXML
+    private void toggleRouteCheckBox() {
+        toggleCheckBox(routesCheckBox, routesVBox);
+    }
+
+    /**
+     * update the disabled status of the stop data based on CheckBox toggle
+     * @author Grant Fass
+     */
+    @FXML
+    private void toggleStopCheckBox() {
+        toggleCheckBox(stopsCheckBox, stopsVBox);
+    }
+
+    /**
+     * update the disabled status of the stopTime data based on CheckBox toggle
+     * @author Grant Fass
+     */
+    @FXML
+    private void toggleStopTimeCheckBox() {
+        toggleCheckBox(stopTimesCheckBox, stopTimesVBox);
+    }
+
+    /**
+     * update the disabled status of the trip data based on CheckBox toggle
+     * @author Grant Fass
+     */
+    @FXML
+    private void toggleTripCheckBox() {
+        toggleCheckBox(tripsCheckBox, tripsVBox);
+    }
+
+    /**
+     * update the disabled status of the data based on the toggled status of the checkBox
+     * @param checkBox to check the status of
+     * @param vBox to set the disabled status of
+     * @author Grant Fass
+     */
+    private void toggleCheckBox(CheckBox checkBox, VBox vBox) {
+        vBox.setDisable(!checkBox.isSelected());
+    }
 }

@@ -1,9 +1,7 @@
 package data;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.InputMismatchException;
-import java.util.Scanner;
+import java.util.*;
 import java.util.zip.DataFormatException;
 
 /**
@@ -153,15 +151,38 @@ public class Trips {
      * Method to output data as a single concatenated string
      *
      * @return string of data
-     * @author GrantFass, Simon Erickson
+     * @author Grant Fass
      */
     @Override
     public String toString() {
-        StringBuilder toReturn = new StringBuilder();
-        for (String key : trips.keySet()) {
-            toReturn.append(trips.get(key).toString() + "\n");
+        StringBuilder stringBuilder = new StringBuilder();
+        int maxDisplay = 100;
+        int count = 0;
+        Iterator mapIterator = trips.entrySet().iterator();
+        while (mapIterator.hasNext() && count < maxDisplay) {
+            Map.Entry mapElement = (Map.Entry) mapIterator.next();
+            stringBuilder.append(getTrip(mapElement.getKey().toString()).toString()).append("\n");
+            count++;
         }
-        return toReturn.toString();
+        return stringBuilder.toString();
+    }
+
+    /**
+     * output simplified data as a single concatenated string
+     * @return string of data
+     * @author Grant Fass
+     */
+    public String toSimpleString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        int maxDisplay = 100;
+        int count = 0;
+        Iterator mapIterator = trips.entrySet().iterator();
+        while (mapIterator.hasNext() && count < maxDisplay) {
+            Map.Entry mapElement = (Map.Entry) mapIterator.next();
+            stringBuilder.append(getTrip(mapElement.getKey().toString()).toSimpleString()).append("\n");
+            count++;
+        }
+        return stringBuilder.toString();
     }
 
     /**

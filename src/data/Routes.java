@@ -5,10 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.IllegalFormatException;
-import java.util.InputMismatchException;
-import java.util.Scanner;
+import java.util.*;
 import java.util.zip.DataFormatException;
 
 /**
@@ -151,16 +148,39 @@ public class Routes {
 
 	/**
 	 * Method to output data as a single concatenated string
-	 * @author GrantFass, Ryan Becker
+	 * @author Grant Fass
 	 * @return string of data
 	 */
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		for(String key_ID : routes.keySet()){
-			sb.append(routes.get(key_ID).toString() + "\n");
+		StringBuilder stringBuilder = new StringBuilder();
+		int maxDisplay = 100;
+		int count = 0;
+		Iterator mapIterator = routes.entrySet().iterator();
+		while (mapIterator.hasNext() && count < maxDisplay) {
+			Map.Entry mapElement = (Map.Entry) mapIterator.next();
+			stringBuilder.append(getRoute(mapElement.getKey().toString()).toString()).append("\n");
+			count++;
 		}
-		return sb.toString();
+		return stringBuilder.toString();
+	}
+
+	/**
+	 * output simplified data as a single concatenated string
+	 * @return string of data
+	 * @author Grant Fass
+	 */
+	public String toSimpleString() {
+		StringBuilder stringBuilder = new StringBuilder();
+		int maxDisplay = 100;
+		int count = 0;
+		Iterator mapIterator = routes.entrySet().iterator();
+		while (mapIterator.hasNext() && count < maxDisplay) {
+			Map.Entry mapElement = (Map.Entry) mapIterator.next();
+			stringBuilder.append(getRoute(mapElement.getKey().toString()).toSimpleString()).append("\n");
+			count++;
+		}
+		return stringBuilder.toString();
 	}
 
 	/**

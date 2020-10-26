@@ -250,14 +250,31 @@ public class StopTimes {
 	@Override
 	public String toString() {
 		StringBuilder toReturn = new StringBuilder();
-		int maxDisplay = 1000;
-		int count = 0;
+		int maxDisplay = 100;
 		Object[] keys = stop_times.keySet().toArray();
 		if (keys.length == 0) {
 			return "";
 		}
 		for(int i = 0; i < maxDisplay; i++){
 			toReturn.append(stop_times.get(keys[i]).toString() + "\n");
+		}
+		return toReturn.toString();
+	}
+
+	/**
+	 * output simplified data as a single concatenated string
+	 * @return string of data
+	 * @author Grant Fass
+	 */
+	public String toSimpleString() {
+		StringBuilder toReturn = new StringBuilder();
+		int maxDisplay = 100;
+		Object[] keys = stop_times.keySet().toArray();
+		if (keys.length == 0) {
+			return "";
+		}
+		for(int i = 0; i < maxDisplay; i++){
+			toReturn.append(stop_times.get(keys[i]).toSimpleString() + "\n");
 		}
 		return toReturn.toString();
 	}

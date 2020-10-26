@@ -1,9 +1,10 @@
 package data;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Observable;
-import java.util.Observer;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.*;
+import java.util.zip.DataFormatException;
 
 /**
  * @author Simon Erickson, Grant Fass,
@@ -44,12 +45,27 @@ public class Data extends Observable {
 	}
 
 	/**
+	 * compile all of the trip distances into a single string
+	 * @return the trip distances as a single string
+	 * @author Grant Fass
+	 */
+	public String getTripDistances() {
+		StringBuilder stringBuilder = new StringBuilder();
+		Iterator mapIterator = tripDistances().entrySet().iterator();
+		while (mapIterator.hasNext()) {
+			Map.Entry mapElement = (Map.Entry) mapIterator.next();
+			stringBuilder.append(mapElement.getKey()).append(" | ").append(mapElement.getValue()).append("\n");
+		}
+		return stringBuilder.toString();
+	}
+
+	/**
 	 * Method that creates a HashMap with all trips with there lengths.
 	 * TODO: @FassG Use this method for GUI
 	 * @author Simon Erickson
 	 * @return tripAndDistance The HashMap with all trips with there lengths.
 	 */
-	public HashMap<String, Integer> tripDistances(){
+	private HashMap<String, Integer> tripDistances(){
 
 		//HashMap<trip_id, first_time--first_stop_id--last_time--last_stop_id>
 		HashMap<String, String> tripStartAndEnd = stop_times.getTripStartAndEnd();
@@ -73,6 +89,9 @@ public class Data extends Observable {
 	 * @return The distance between two stops in miles
 	 */
 	private int tripDistance(Stop fromThisStop, Stop toThisStop) {
+		if(fromThisStop == null || toThisStop == null) {
+			return -1;
+		}
 		double fromThisLat = fromThisStop.getStopLatitude();
 		double toThisLat = toThisStop.getStopLatitude();
 		double fromThisLng = fromThisStop.getStopLongitude();
@@ -91,6 +110,75 @@ public class Data extends Observable {
 		double miles = (Math.round(EARTH_RADIUS * f));
 
 		return (int) miles;
+	}
+
+	/**
+	 * Method to parse Route data from a routes.txt file
+	 * @param file the routes.txt file to be parsed
+	 * @return true if a line was skipped while loading, false otherwise
+	 * @throws FileNotFoundException if the file was not found
+	 * @throws IOException for general File IO errors.
+	 * @throws InputMismatchException if there is an issue parsing the file
+	 * @throws DataFormatException if data will be overwritten
+	 * @author Grant Fass
+	 */
+	public boolean loadRoutes(File file) throws FileNotFoundException, IOException,
+			InputMismatchException, DataFormatException {
+		boolean wasLineSkipped = routes.loadRoutes(file);
+		setChanged();
+		notifyObservers();
+		return wasLineSkipped;
+	}
+	/**
+	 * Method to parse Stop data from a stops.txt file
+	 * @param file the routes.txt file to be parsed
+	 * @return true if a line was skipped while loading, false otherwise
+	 * @throws FileNotFoundException if the file was not found
+	 * @throws IOException for general File IO errors.
+	 * @throws InputMismatchException if there is an issue parsing the file
+	 * @throws DataFormatException if data will be overwritten
+	 * @author Grant Fass
+	 */
+	public boolean loadStops(File file) throws FileNotFoundException, IOException,
+			InputMismatchException, DataFormatException {
+		boolean wasLineSkipped = stops.loadStops(file);
+		setChanged();
+		notifyObservers();
+		return wasLineSkipped;
+	}
+	/**
+	 * Method to parse StopTimes data from a stop_times.txt file
+	 * @param file the routes.txt file to be parsed
+	 * @return true if a line was skipped while loading, false otherwise
+	 * @throws FileNotFoundException if the file was not found
+	 * @throws IOException for general File IO errors.
+	 * @throws InputMismatchException if there is an issue parsing the file
+	 * @throws DataFormatException if data will be overwritten
+	 * @author Grant Fass
+	 */
+	public boolean loadStopTimes(File file) throws FileNotFoundException, IOException,
+			InputMismatchException, DataFormatException {
+		boolean wasLineSkipped = stop_times.loadStopTimes(file);
+		setChanged();
+		notifyObservers();
+		return wasLineSkipped;
+	}
+	/**
+	 * Method to parse Trip data from a trips.txt file
+	 * @param file the routes.txt file to be parsed
+	 * @return true if a line was skipped while loading, false otherwise
+	 * @throws FileNotFoundException if the file was not found
+	 * @throws IOException for general File IO errors.
+	 * @throws InputMismatchException if there is an issue parsing the file
+	 * @throws DataFormatException if data will be overwritten
+	 * @author Grant Fass
+	 */
+	public boolean loadTrips(File file) throws FileNotFoundException, IOException,
+			InputMismatchException, DataFormatException {
+		boolean wasLineSkipped = trips.loadTrips(file);
+		setChanged();
+		notifyObservers();
+		return wasLineSkipped;
 	}
 
 	/**

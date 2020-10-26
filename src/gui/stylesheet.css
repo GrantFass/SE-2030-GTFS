@@ -1,0 +1,9 @@
+/*
+Universal stylesheet for every gui window
+@author Grant Fass
+ */
+.root {
+    -fx-font-family: "Courier New", Times, serif;
+    -fx-font-scale: 3;
+    -fx-font-size: 14px;
+}
