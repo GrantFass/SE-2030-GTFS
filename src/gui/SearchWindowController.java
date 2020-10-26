@@ -14,6 +14,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+
 import java.util.List;
 
 /**
@@ -117,6 +119,17 @@ public class SearchWindowController {
     private void search() {
         output.setText("Searching For: " + ((String)outputType.getValue()).toUpperCase() + "S\n");
         switch (((String)outputType.getValue()).toLowerCase()) {
+            case "route_id":
+                if(!(inputType.getValue()).equals("stop_id")){
+                    output.appendText("Search type is invalid:\nTo search for route_ids, search type must be stop_id");
+                } else if(mainWindowController.getData().getStops().getStop(input.getText()) != null){
+                    String route_ids = mainWindowController.getData().getRouteIDs_fromStopID(input.getText());
+
+                    output.appendText(route_ids);
+                } else {
+                    output.appendText("No Stops were found to be associated with the given stop_id");
+                }
+                break;
             case "route":
                 output.appendText("not ready");
                 break;

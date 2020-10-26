@@ -191,4 +191,76 @@ public class Data extends Observable {
 		return getStopTimes().toString() + getStops().toString()
 				+ getTrips().toString() + getRoutes().toString();
 	}
+
+
+	//start feature 5
+
+	/**
+	 * Searches for every route_id associated with a Stop given stop_id
+	 * @param stop_id of Stop being searched
+	 * @return String of formatted route_ids associated with stop_id
+	 */
+	public String getRouteIDs_fromStopID(String stop_id){
+	    ArrayList<String> route_ids = searchStopForRoute_IDs(stop_id);
+	    return formatRoute_IDs(stop_id, route_ids);
+	}
+
+	/**
+	 * Helper method for getRouteIDs_fromStopID() that gets all route_ids associated with a given stop_id
+	 * @author Ryan Becker
+	 * @param stop_id for a Stop used in searching for all route_ids that are paired with the given stop_id
+	 * @return ArrayList of every route_id that is associated with stop_id
+	 */
+	private ArrayList<String> searchStopForRoute_IDs(String stop_id){
+		ArrayList<String> trip_ids = stop_times.getTripIDs_fromStop_ID(stop_id);
+
+		ArrayList<String> all_route_ids = new ArrayList<>();
+
+		for(String trip_id : trip_ids){
+			ArrayList<String> route_ids = trips.getRouteIDs_fromTripIDs(trip_id);
+			all_route_ids.addAll(onlyAddNew(all_route_ids, route_ids));
+		}
+
+		return all_route_ids;
+	}
+
+	/**
+	 * Helper method for getRouteIDs_fromStopID() that formats a string similarly to a toString() method
+	 * to display every route_id associated with a stop_id
+	 * @param stop_id of a Stop being searched
+	 * @param route_ids ArrayList of every route_id associated with stop_id
+	 * @return String formatting every route_id associated with stop_id on new lines
+	 */
+	private String formatRoute_IDs(String stop_id, ArrayList<String> route_ids){
+		StringBuilder sb = new StringBuilder();
+		sb.append("route_id(s) that contain the stop_id: " + stop_id);
+		for(String route_id : route_ids){
+			sb.append("\n- " + route_id);
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * Helper method for searchStopForRoute_IDs() that will help remove duplicate occurences of a route_id
+	 * @author Ryan Becker
+	 * @param allRouteIDs ArrayList of all current unique route_ids associated with stop_id
+	 * @param route_ids all newly read route_ids, which are only added to returned list if they do not
+	 *                  already occur within allRouteIDs
+	 * @return ArrayList of all route_ids currently not found in allRouteIDs
+	 */
+	private ArrayList<String> onlyAddNew(ArrayList<String> allRouteIDs, ArrayList<String> route_ids){
+		ArrayList<String> uniqueIDs = new ArrayList<>();
+		for(String route_id : route_ids){
+			if(!allRouteIDs.contains(route_id)){
+				uniqueIDs.add(route_id);
+			}
+		}
+		return uniqueIDs;
+	}
+
+
+	//end feature 5
+
+
+
 }//end Data

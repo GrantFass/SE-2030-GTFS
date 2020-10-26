@@ -30,6 +30,7 @@ Everything in this file has been setup in code.
                 <ComboBox fx:id="outputType" value="Output Type" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity">
                     <items>
                         <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="route_id"/>
                             <String fx:value="Route"/>
                             <String fx:value="Stop"/>
                             <String fx:value="StopTime"/>
@@ -43,6 +44,7 @@ Everything in this file has been setup in code.
                 <ComboBox fx:id="inputType" value="Input Type" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity">
                     <items>
                         <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="stop_id"/>
                             <String fx:value="Route"/>
                             <String fx:value="Stop"/>
                             <String fx:value="StopTime"/>
