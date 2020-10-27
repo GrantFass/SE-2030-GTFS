@@ -66,19 +66,22 @@ public class Data extends Observable {
 	 * @return tripAndDistance The HashMap with all trips with there lengths.
 	 */
 	private HashMap<String, Integer> tripDistances(){
+		HashMap<String, Integer> returnHashMap = new HashMap();
+		if(!(stop_times == null | stops == null)){
+			//HashMap<trip_id, first_time--first_stop_id--last_time--last_stop_id>
+			HashMap<String, String> tripStartAndEnd = stop_times.getTripStartAndEnd();
 
-		//HashMap<trip_id, first_time--first_stop_id--last_time--last_stop_id>
-		HashMap<String, String> tripStartAndEnd = stop_times.getTripStartAndEnd();
+			//HashMap<trip_id, distance in miles>
+			HashMap<String, Integer> tripAndDistance = new HashMap<>();
 
-		//HashMap<trip_id, distance in miles>
-		HashMap<String, Integer> tripAndDistance = new HashMap<>();
+			tripStartAndEnd.forEach((k,v)->{
+				String[] value = v.split("--");
+				tripAndDistance.put(k, tripDistance(stops.getStop(value[1]), stops.getStop(value[3])));
+			});
+			returnHashMap = tripAndDistance;
+		}
 
-		tripStartAndEnd.forEach((k,v)->{
-			String[] value = v.split("--");
-			tripAndDistance.put(k, tripDistance(stops.getStop(value[1]), stops.getStop(value[3])));
-		});
-
-		return tripAndDistance;
+		return returnHashMap;
 	}
 
 	/**

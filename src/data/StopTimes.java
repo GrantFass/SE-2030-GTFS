@@ -325,31 +325,31 @@ public class StopTimes {
 		//HashMap<trip_id, first_time--first_stop_id--last_time--last_stop_id>
 		String valueAtTrip = tripStartAndEnd.get(stopTime.getTripID());
 		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-		Timestamp arrive = stopTime.getArrivalTime();
-		Timestamp depart = stopTime.getDepartureTime();
+		long newArrive = stopTime.getArrivalTime().getTime();
+		long newDepart = stopTime.getDepartureTime().getTime();
 		String stop_id = stopTime.getStopID();
 		try {
 			String[] tripValue = valueAtTrip.split("--");
-			Timestamp first_time = new Timestamp(dateFormat.parse(tripValue[0]).getTime());
-			Timestamp last_time = new Timestamp(dateFormat.parse(tripValue[2]).getTime());
+			long currentFirstArrive = Long.parseLong(tripValue[0]);
+			long currentLastDepart = Long.parseLong(tripValue[2]);
 			String first_stop_id = tripValue[1];
 			String last_stop_id = tripValue[3];
-			if(arrive.before(first_time)){
-				first_time = arrive;
+			if(newArrive < currentFirstArrive){
+				currentFirstArrive = newArrive;
 				first_stop_id = stop_id;
 			}
-			if(depart.after(last_time)){
-				last_time = depart;
+			if(newDepart > currentLastDepart){
+				currentLastDepart = newDepart;
 				last_stop_id = stop_id;
 			}
 			tripStartAndEnd.remove(stopTime.getTripID());
 			tripStartAndEnd.put(stopTime.getTripID(),
-					first_time + "--" + first_stop_id + "--"
-							+ last_time + "--" + last_stop_id);
-		}catch (NullPointerException | ParseException e){
+					currentFirstArrive + "--" + first_stop_id + "--"
+							+ currentLastDepart + "--" + last_stop_id);
+		}catch (NullPointerException e){
 			tripStartAndEnd.put(stopTime.getTripID(),
-					arrive + "--" + stopTime.getStopID() + "--"
-							+ depart + "--" + stopTime.getStopID());
+					newArrive + "--" + stopTime.getStopID() + "--"
+							+ newDepart + "--" + stopTime.getStopID());
 		}
 	}
 
