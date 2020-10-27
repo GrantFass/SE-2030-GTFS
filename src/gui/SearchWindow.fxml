@@ -31,10 +31,9 @@ Everything in this file has been setup in code.
                     <items>
                         <FXCollections fx:factory="observableArrayList">
                             <String fx:value="route_id"/>
-                            <String fx:value="Route"/>
-                            <String fx:value="Stop"/>
+                            <String fx:value="stop_id"/>
                             <String fx:value="StopTime"/>
-                            <String fx:value="Trip"/>
+                            <String fx:value="trip_id"/>
                         </FXCollections>
                     </items>
                 </ComboBox>
@@ -45,10 +44,9 @@ Everything in this file has been setup in code.
                     <items>
                         <FXCollections fx:factory="observableArrayList">
                             <String fx:value="stop_id"/>
-                            <String fx:value="Route"/>
-                            <String fx:value="Stop"/>
+                            <String fx:value="route_id"/>
                             <String fx:value="StopTime"/>
-                            <String fx:value="Trip"/>
+                            <String fx:value="trip_id"/>
                         </FXCollections>
                     </items>
                 </ComboBox>

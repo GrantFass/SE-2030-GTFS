@@ -130,17 +130,14 @@ public class SearchWindowController {
                     output.appendText("No Stops were found to be associated with the given stop_id");
                 }
                 break;
-            case "route":
-                output.appendText("not ready");
-                break;
-            case "stop":
+            case "stop_id":
                 output.appendText("not ready");
                 break;
             case "stoptime":
                 output.appendText("not ready");
                 break;
-            case "trip":
-                if(((String)inputType.getValue()).toLowerCase().equals("stop")){
+            case "trip_id":
+                if(((String)inputType.getValue()).toLowerCase().equals("stop_id")){
                     String inputText = (input.getText()).toLowerCase();
                     List<String> list = mainWindowController.getData().getStopTimes().searchStopDisplayTrips(inputText);
                     StringBuilder sb = new StringBuilder();
