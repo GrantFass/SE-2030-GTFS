@@ -14,6 +14,10 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+
+import java.util.List;
+
 /**
  * SearchWindowController Purpose: Controller for the search window
  *
@@ -115,17 +119,36 @@ public class SearchWindowController {
     private void search() {
         output.setText("Searching For: " + ((String)outputType.getValue()).toUpperCase() + "S\n");
         switch (((String)outputType.getValue()).toLowerCase()) {
-            case "route":
-                output.appendText("not ready");
+            case "route_id":
+                if(!(inputType.getValue()).equals("stop_id")){
+                    output.appendText("Search type is invalid:\nTo search for route_ids, search type must be stop_id");
+                } else if(mainWindowController.getData().getStops().getStop(input.getText()) != null){
+                    String route_ids = mainWindowController.getData().getRouteIDs_fromStopID(input.getText());
+
+                    output.appendText(route_ids);
+                } else {
+                    output.appendText("No Stops were found to be associated with the given stop_id");
+                }
                 break;
-            case "stop":
+            case "stop_id":
                 output.appendText("not ready");
                 break;
             case "stoptime":
                 output.appendText("not ready");
                 break;
-            case "trip":
-                output.appendText("not ready");
+            case "trip_id":
+                if(((String)inputType.getValue()).toLowerCase().equals("stop_id")){
+                    String inputText = (input.getText()).toLowerCase();
+                    List<String> list = mainWindowController.getData().getStopTimes().searchStopDisplayTrips(inputText);
+                    StringBuilder sb = new StringBuilder();
+                    for(int i = 0; i < list.size(); i++){
+                        int j = i + 1;
+                        sb.append(j + ": " + list.get(i) + "\n");
+                    }
+                    output.appendText(sb.toString());
+                } else{
+                    output.appendText("Input type not yet implemented");
+                }
                 break;
         }
     }

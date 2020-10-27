@@ -297,4 +297,26 @@ public class Trips {
         return "";
     }
 
+
+
+    //Start feature five
+
+    /**
+     * Gets every route_id that is paired with the searched trip_id within a given Trip object
+     * @author Ryan Becker
+     * @param trip_id associated with a Trip that is used to search for paired route_id within a given Trip object
+     * @return ArrayList of every route_id that is within a Trip object that also contains the searched trip_id
+     */
+    public ArrayList<String> getRouteIDs_fromTripIDs(String trip_id){
+        ArrayList<String> route_ids = new ArrayList<>();
+        for(Trip trip : trips.values()){
+            if(trip.getTripID().equals(trip_id)){
+                route_ids.add(trip.getRouteID());
+            }
+        }
+        return route_ids;
+    }
+
+    //End feature five
+
 }//end Trips
