@@ -90,13 +90,12 @@ public class Route {
 			throws IllegalArgumentException{
 
 		//Route only requires a route_id and route_color, but route_color defaults to white if empty per GTFS guidelines
-		if(route_id.isEmpty()){
+		if(route_id.isEmpty() || route_color.isEmpty()){
 			throw new IllegalArgumentException("Data line within routes.txt not formatted correctly.\nSkipping line");
 		}
 
 
 		final int DEFAULT_TYPE = 3; //bus routes
-		final String DEFAULT_COLOR = "ffffff"; //defaults to white
 		final String DEFAULT_TEXT_COLOR = "000000"; //defaults to black
 		final int DEFAULT_SORT_ORDER = 0;
 		final int DEFAULT_CONTINUOUS = -1; //continuous stopping pickup or drop-off
@@ -114,7 +113,7 @@ public class Route {
 		try{
 			this.route_type = RouteTypeEnum.getValue(!route_type.isEmpty() ? Integer.parseInt(route_type): DEFAULT_TYPE);
 			this.route_url = new URL(!route_url.isEmpty() ? route_url : DEFAULT_URL);
-			this.route_color = Color.valueOf(!route_color.isEmpty() ? route_color : DEFAULT_COLOR);
+			this.route_color = Color.valueOf(route_color); //!route_color.isEmpty() ? route_color : DEFAULT_COLOR
 			this.route_text_color = Color.valueOf(!route_text_color.isEmpty() ? route_text_color : DEFAULT_TEXT_COLOR);
 			this.route_sort_order = !route_sort_order.isEmpty() ? Integer.parseInt(route_sort_order) : DEFAULT_SORT_ORDER;
 			this.continuous_pickup = ContinuousPickupEnum.getValue(!continuous_pickup.isEmpty() ? Integer.parseInt(continuous_pickup): DEFAULT_CONTINUOUS);
