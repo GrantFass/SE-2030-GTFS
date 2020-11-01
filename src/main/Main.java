@@ -140,6 +140,10 @@ public class Main extends Application {
         mainWindowController.getData().attach(dataWindowController);
         mainWindowController.getData().attach(analysisWindowController);
 
+        //Set the default location of the main stage
+        mainWindowStage.setX(0);
+        mainWindowStage.setY(0);
+
         //functions
         //dataWindowStage.setOnCloseRequest(event -> mainWindowController.viewDataDisplayButton.setText("Show Data Display"));
     }
