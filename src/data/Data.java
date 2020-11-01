@@ -1,5 +1,8 @@
 package data;
 
+import interfaces.Subject;
+import interfaces.Observer;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -11,7 +14,7 @@ import java.util.zip.DataFormatException;
  * @version 1.0
  * @created 06-Oct-2020 10:28:30 AM
  */
-public class Data extends Observable {
+public class Data implements Subject {
 
 	//Radius of the earth in miles
 	private final static double EARTH_RADIUS = 3959;
@@ -20,12 +23,14 @@ public class Data extends Observable {
 	private StopTimes stop_times;
 	private Stops stops;
 	private Trips trips;
+	private ArrayList<Observer> observerList;
 
 	public Data() {
 		stops = new Stops();
 		stop_times = new StopTimes();
 		routes = new Routes();
 		trips = new Trips();
+		observerList = new ArrayList<>();
 	}
 
 	public Routes getRoutes() {
@@ -128,7 +133,6 @@ public class Data extends Observable {
 	public boolean loadRoutes(File file) throws FileNotFoundException, IOException,
 			InputMismatchException, DataFormatException {
 		boolean wasLineSkipped = routes.loadRoutes(file);
-		setChanged();
 		notifyObservers();
 		return wasLineSkipped;
 	}
@@ -145,7 +149,6 @@ public class Data extends Observable {
 	public boolean loadStops(File file) throws FileNotFoundException, IOException,
 			InputMismatchException, DataFormatException {
 		boolean wasLineSkipped = stops.loadStops(file);
-		setChanged();
 		notifyObservers();
 		return wasLineSkipped;
 	}
@@ -162,7 +165,6 @@ public class Data extends Observable {
 	public boolean loadStopTimes(File file) throws FileNotFoundException, IOException,
 			InputMismatchException, DataFormatException {
 		boolean wasLineSkipped = stop_times.loadStopTimes(file);
-		setChanged();
 		notifyObservers();
 		return wasLineSkipped;
 	}
@@ -179,7 +181,6 @@ public class Data extends Observable {
 	public boolean loadTrips(File file) throws FileNotFoundException, IOException,
 			InputMismatchException, DataFormatException {
 		boolean wasLineSkipped = trips.loadTrips(file);
-		setChanged();
 		notifyObservers();
 		return wasLineSkipped;
 	}
@@ -261,9 +262,43 @@ public class Data extends Observable {
 		return uniqueIDs;
 	}
 
-
 	//end feature 5
 
+	/**
+	 * add an observer to the list of observers to update
+	 * Based on a guide from GeeksForGeeks
+	 * found here: https://www.geeksforgeeks.org/observer-pattern-set-2-implementation/
+	 * @param o the observer to add
+	 * @author Grant Fass
+	 */
+	@Override
+	public void attach(Observer o) {
+		observerList.add(o);
+	}
 
+	/**
+	 * remove an observer from the list of observers to update
+	 * Based on a guide from GeeksForGeeks
+	 * found here: https://www.geeksforgeeks.org/observer-pattern-set-2-implementation/
+	 * @param o the observer to remove
+	 * @author Grant Fass
+	 */
+	@Override
+	public void detach(Observer o) {
+		observerList.remove(observerList.indexOf(o));
+	}
 
+	/**
+	 * notify all observers that information was changed
+	 * Based on a guide from GeeksForGeeks
+	 * found here: https://www.geeksforgeeks.org/observer-pattern-set-2-implementation/
+	 * @author Grant Fass
+	 */
+	@Override
+	public void notifyObservers() {
+		for (Iterator<Observer> observerIterator = observerList.iterator(); observerIterator.hasNext();) {
+			Observer o = observerIterator.next();
+			o.update(this);
+		}
+	}
 }//end Data

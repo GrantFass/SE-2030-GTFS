@@ -6,16 +6,14 @@
  */
 package gui;
 
-import javafx.event.ActionEvent;
+import data.Data;
+import interfaces.Observer;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleButton;
 import javafx.stage.Stage;
-
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * DataDisplayController Purpose: Controller for the data display window
@@ -124,36 +122,44 @@ public class DataWindowController implements Observer {
     }
 
     /**
-     * This method is called whenever the observed object is changed. An
-     * application calls an <tt>Observable</tt> object's
-     * <code>notifyObservers</code> method to have all the object's
-     * observers notified of the change.
-     *
-     * @param o   the observable object.
-     * @param arg an argument passed to the <code>notifyObservers</code>
+     * method to run when one of the toggle buttons is pressed
+     * used to make sure that the displayed data is up to date
      * @author Grant Fass
      */
-    @Override
-    public void update(Observable o, Object arg) {
-        updateData();
+    @FXML
+    private void buttonToggled() {
+        updateData(mainWindowController.getData());
     }
 
     /**
      * update the data if a toggle button is clicked to reflect the latest format
+     * @param data the data that was changed
      * @author Grant Fass
      */
-    @FXML
-    private void updateData() {
+    private void updateData(Data data) {
         if (expandedToggleButton.isSelected()) {
-            routesTextArea.setText(mainWindowController.getData().getRoutes().toString().isEmpty() ? "No Data Yet" : mainWindowController.getData().getRoutes().toString());
-            stopsTextArea.setText(mainWindowController.getData().getStops().toString().isEmpty() ? "No Data Yet" : mainWindowController.getData().getStops().toString());
-            stopTimesTextArea.setText(mainWindowController.getData().getStopTimes().toString().isEmpty() ? "No Data Yet" : mainWindowController.getData().getStopTimes().toString());
-            tripsTextArea.setText(mainWindowController.getData().getTrips().toString().isEmpty() ? "No Data Yet" : mainWindowController.getData().getTrips().toString());
+            routesTextArea.setText(data.getRoutes().toString().isEmpty() ? "No Data Yet" : data.getRoutes().toString());
+            stopsTextArea.setText(data.getStops().toString().isEmpty() ? "No Data Yet" : data.getStops().toString());
+            stopTimesTextArea.setText(data.getStopTimes().toString().isEmpty() ? "No Data Yet" : data.getStopTimes().toString());
+            tripsTextArea.setText(data.getTrips().toString().isEmpty() ? "No Data Yet" : data.getTrips().toString());
         } else {
-            routesTextArea.setText(mainWindowController.getData().getRoutes().toSimpleString().isEmpty() ? "No Data Yet" : mainWindowController.getData().getRoutes().toSimpleString());
-            stopsTextArea.setText(mainWindowController.getData().getStops().toSimpleString().isEmpty() ? "No Data Yet" : mainWindowController.getData().getStops().toSimpleString());
-            stopTimesTextArea.setText(mainWindowController.getData().getStopTimes().toSimpleString().isEmpty() ? "No Data Yet" : mainWindowController.getData().getStopTimes().toSimpleString());
-            tripsTextArea.setText(mainWindowController.getData().getTrips().toSimpleString().isEmpty() ? "No Data Yet" : mainWindowController.getData().getTrips().toSimpleString());
+            routesTextArea.setText(data.getRoutes().toSimpleString().isEmpty() ? "No Data Yet" : data.getRoutes().toSimpleString());
+            stopsTextArea.setText(data.getStops().toSimpleString().isEmpty() ? "No Data Yet" : data.getStops().toSimpleString());
+            stopTimesTextArea.setText(data.getStopTimes().toSimpleString().isEmpty() ? "No Data Yet" : data.getStopTimes().toSimpleString());
+            tripsTextArea.setText(data.getTrips().toSimpleString().isEmpty() ? "No Data Yet" : data.getTrips().toSimpleString());
         }
+    }
+
+    /**
+     * update the observers when the data is changed
+     * Based on a guide from GeeksForGeeks
+     * found here: https://www.geeksforgeeks.org/observer-pattern-set-2-implementation/
+     *
+     * @param data the data object that was changed
+     * @author Grant Fass
+     */
+    @Override
+    public void update(Data data) {
+        updateData(data);
     }
 }
