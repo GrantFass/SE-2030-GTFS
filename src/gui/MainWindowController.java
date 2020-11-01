@@ -21,6 +21,8 @@ import java.util.InputMismatchException;
 import java.util.zip.DataFormatException;
 
 public class MainWindowController {
+	@FXML
+	private TextArea description;
 	private Data data = new Data();
 	private Stage analysisWindowStage;
 	private AnalysisWindowController analysisWindowController;
@@ -93,6 +95,53 @@ public class MainWindowController {
 	}
 
 	/**
+	 * set the default values of the description
+	 * @author Grant Fass
+	 */
+	public void setDefaultValues() {
+		description.setText("This is the main window of the program. All functions can " +
+				"be accessed from this window. Click on one of the buttons below to go to get started.");
+	}
+
+	/**
+	 * Method to display help values to the program
+	 * Activates when help menu button is clicked
+	 * @author Grant Fass
+	 */
+	@FXML
+	private void displayHelp() {
+		displayAlert(Alert.AlertType.INFORMATION, "General Transit Feed Specification Tool Information",
+				"Main Window Help", "This is the main window of the General Transit" +
+						" Feed Specification Tool. To get started please click on one of the buttons" +
+						" on the main page." +
+						"\n'Import' will open a window used to import GTFS files into the program" +
+						"\n'Update' will open a window used to update information in the GTFS files" +
+						"\n'Export' will open a window used to export the data in the program as GTFS files" +
+						"\n'Data' will open a window used to view the data stored in the program" +
+						"\n'Analysis' will open a window used to view information calculated from the stored data" +
+						"\n'Search' will open a window used to search for pieces of stored data" +
+						"\n'Map' will open a window used to display some of the stored data" +
+						"\n'About' will open an alert with information about the program" +
+						"\n'Exit' will safely shut down the program");
+	}
+
+	/**
+	 * display information to the user about the programs creators
+	 * @author Grant Fass
+	 */
+	@FXML
+	private void displayAbout() {
+		displayAlert(Alert.AlertType.INFORMATION, "General Transit Feed Specification Tool Information: About",
+				null, "This program is designed to allow users to import, manipulate, and export" +
+						" GTFS files that are consistent with the specifications from the Google Transit GTFS" +
+						" Reference pages. Files are expected to be named as 'stops.txt', 'stop_times.txt'," +
+						" 'routes.txt', or 'trips.txt'.\nThis program was developed by Group G of the" +
+						" Software Engineering Tools And Practices class (SE 2030 - 021) at the Milwaukee School" +
+						" Of Engineering (MSOE) in the Fall term of 2020.\n" +
+						"Members: Grant Fass, Joy Cross, Simon Erickson, & Ryan Becker.");
+	}
+
+	/**
 	 * returns a copy of the data object
 	 * should not return the actual data object for security reasons
 	 * @return copy of the data object
@@ -133,17 +182,6 @@ public class MainWindowController {
 			stage.toFront();
 			stage.show();
 		}
-	}
-
-	/**
-	 * Method to display help values to the program
-	 * Activates when help menu button is clicked
-	 * @author Grant Fass
-	 */
-	@FXML
-	private void displayHelp() {
-		displayAlert(Alert.AlertType.INFORMATION, "General Transit Feed Specification Tool Information",
-				"Main Window Help", "Not Implemented Yet");
 	}
 
 	/**
@@ -207,29 +245,6 @@ public class MainWindowController {
 	@FXML
 	private void toggleUpdateWindow() {
 		toggleStage(updateWindowStage);
-	}
-
-	/**
-	 * display information to the user about the programs creators
-	 * @author Grant Fass
-	 */
-	@FXML
-	private void displayAbout() {
-		String aboutInfo = "Authors: SE 2030 - 021 Group G\n" +
-				"Members: Grant Fass, Joy Cross, Simon Erickson, & Ryan Becker\n" +
-				"Affiliation: Milwaukee School of Engineering (MSOE)\n" +
-				"Term: Fall 2020\n\n";
-		String acceptedFiles = "This program currently accepts four files:\n" +
-				"'stops.txt', 'stop_times.txt', 'routes.txt', & 'trips.txt'.\n" +
-				"All other files will not work with the program.\n" +
-				"Files are expected to be formatted matching the documentation found\n" +
-				"here: https://developers.google.com/transit/gtfs/reference and\n" +
-				"here: https://developers.google.com/transit/gtfs/examples/gtfs-feed.\n\n";
-		String introductionInformation = "This program is designed to allow " +
-				"the user to import, view, and manipulate GTFS files for a General " +
-				"Transit Feed Specification Tool.\n\n";
-		displayAlert(Alert.AlertType.INFORMATION, "General Transit Feed Specification Tool Information",
-				null, introductionInformation + acceptedFiles + aboutInfo);
 	}
 
 	/**

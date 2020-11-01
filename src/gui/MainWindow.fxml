@@ -8,30 +8,49 @@ Everything in this file has been setup in code.
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.geometry.Insets?>
-<VBox maxHeight="Infinity" maxWidth="Infinity" minHeight="400" minWidth="300" prefHeight="400.0" prefWidth="600"
-      xmlns="http://javafx.com/javafx/8.0.171" fx:controller="gui.MainWindowController" xmlns:fx="http://javafx.com/fxml" spacing="20">
+<VBox maxHeight="Infinity" maxWidth="Infinity" minHeight="400" minWidth="300" prefHeight="400.0"
+      prefWidth="600"
+      xmlns="http://javafx.com/javafx/8.0.171" fx:controller="gui.MainWindowController"
+      xmlns:fx="http://javafx.com/fxml" spacing="20">
     <padding>
         <Insets top="20" bottom="20" left="20" right="20"/>
     </padding>
-    <HBox spacing="10" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20">
-        <TextArea editable="false" text="Short Description" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20"/>
-        <Button text="?" onAction="#displayHelp" alignment="CENTER" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="100" maxHeight="100" minWidth="20" minHeight="20"/>
+    <HBox spacing="10" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100"
+          minWidth="20" minHeight="20">
+        <TextArea fx:id="description" wrapText="true" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+                  maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20"/>
+        <Button text="?" onAction="#displayHelp" alignment="CENTER" HBox.hgrow="ALWAYS"
+                VBox.vgrow="ALWAYS" maxWidth="100" maxHeight="100" minWidth="20" minHeight="20"/>
     </HBox>
     <HBox spacing="10" VBox.vgrow="ALWAYS">
         <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" spacing="10">
-            <Button text="Import" onAction="#toggleImportWindow" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" minWidth="75" minHeight="20"/>
-            <Button text="Data" onAction="#toggleDataWindow" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" minWidth="75" minHeight="20"/>
-            <Button text="Map" onAction="#toggleMapWindow" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" minWidth="75" minHeight="20"/>
+            <Button text="Import" onAction="#toggleImportWindow" HBox.hgrow="ALWAYS"
+                    VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" minWidth="75"
+                    minHeight="20"/>
+            <Button text="Data" onAction="#toggleDataWindow" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+                    maxWidth="Infinity" maxHeight="Infinity" minWidth="75" minHeight="20"/>
+            <Button text="Map" onAction="#toggleMapWindow" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+                    maxWidth="Infinity" maxHeight="Infinity" minWidth="75" minHeight="20"/>
         </VBox>
         <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" spacing="10">
-            <Button text="Update" onAction="#toggleUpdateWindow" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" minWidth="75" minHeight="20"/>
-            <Button text="Analysis" onAction="#toggleAnalysisWindow" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" minWidth="75" minHeight="20"/>
-            <Button text="About" onAction="#displayAbout" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" minWidth="75" minHeight="20"/>
+            <Button text="Update" onAction="#toggleUpdateWindow" HBox.hgrow="ALWAYS"
+                    VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" minWidth="75"
+                    minHeight="20"/>
+            <Button text="Analysis" onAction="#toggleAnalysisWindow" HBox.hgrow="ALWAYS"
+                    VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" minWidth="75"
+                    minHeight="20"/>
+            <Button text="About" onAction="#displayAbout" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+                    maxWidth="Infinity" maxHeight="Infinity" minWidth="75" minHeight="20"/>
         </VBox>
         <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" spacing="10">
-            <Button text="Export" onAction="#toggleExportWindow" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" minWidth="75" minHeight="20"/>
-            <Button text="Search" onAction="#toggleSearchWindow" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" minWidth="75" minHeight="20"/>
-            <Button text="Exit" onAction="#close" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" minWidth="75" minHeight="20"/>
+            <Button text="Export" onAction="#toggleExportWindow" HBox.hgrow="ALWAYS"
+                    VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" minWidth="75"
+                    minHeight="20"/>
+            <Button text="Search" onAction="#toggleSearchWindow" HBox.hgrow="ALWAYS"
+                    VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" minWidth="75"
+                    minHeight="20"/>
+            <Button text="Exit" onAction="#close" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+                    maxWidth="Infinity" maxHeight="Infinity" minWidth="75" minHeight="20"/>
         </VBox>
     </HBox>
 </VBox>

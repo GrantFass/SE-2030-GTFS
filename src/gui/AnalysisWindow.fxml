@@ -6,34 +6,46 @@ Everything in this file has been setup in code.
 
 @author Grant Fass
 -->
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
 <?import javafx.geometry.Insets?>
-<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="gui.AnalysisWindowController"
-      maxHeight="Infinity" maxWidth="Infinity" minHeight="400" minWidth="300" prefHeight="400.0" prefWidth="600" spacing="10">
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="gui.AnalysisWindowController"
+      maxHeight="Infinity" maxWidth="Infinity" minHeight="400" minWidth="300" prefHeight="400.0"
+      prefWidth="600" spacing="10">
     <padding>
         <Insets top="20" bottom="20" left="20" right="20"/>
     </padding>
-    <HBox spacing="10" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20">
-        <TextArea editable="false" text="Short Description" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20"/>
-        <Button text="?" onAction="#displayHelp" alignment="CENTER" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="100" maxHeight="100" minWidth="20" minHeight="20"/>
+    <HBox spacing="10" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100"
+          minWidth="20" minHeight="20">
+        <TextArea fx:id="description" wrapText="true" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity"
+                  maxHeight="100" minWidth="20" minHeight="20"/>
+        <Button text="?" onAction="#displayHelp" alignment="CENTER" HBox.hgrow="ALWAYS"
+                VBox.vgrow="ALWAYS" maxWidth="100" maxHeight="100" minWidth="20" minHeight="20"/>
     </HBox>
-    <HBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" spacing="10">
-        <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" spacing="10">
-            <Label alignment="CENTER" text="Distance" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="50" minWidth="20" minHeight="20"/>
-            <TextArea fx:id="distanceTextArea" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"/>
+    <HBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"
+          spacing="10">
+        <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"
+              spacing="10">
+            <Label alignment="CENTER" text="Distance" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+                   maxWidth="Infinity" maxHeight="50" minWidth="20" minHeight="20"/>
+            <TextArea fx:id="distanceTextArea" editable="false" HBox.hgrow="ALWAYS"
+                      VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"/>
         </VBox>
-        <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" spacing="10">
-            <Label alignment="CENTER" text="Speed" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="50" minWidth="20" minHeight="20"/>
-            <TextArea fx:id="speedTextArea" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"/>
+        <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"
+              spacing="10">
+            <Label alignment="CENTER" text="Speed" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+                   maxWidth="Infinity" maxHeight="50" minWidth="20" minHeight="20"/>
+            <TextArea fx:id="speedTextArea" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+                      maxWidth="Infinity" maxHeight="Infinity"/>
         </VBox>
-        <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" spacing="10">
-            <Label alignment="CENTER" text="Number of Trips" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="50" minWidth="20" minHeight="20"/>
-            <TextArea fx:id="numberTripsTextArea" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"/>
+        <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"
+              spacing="10">
+            <Label alignment="CENTER" text="Number of Trips" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+                   maxWidth="Infinity" maxHeight="50" minWidth="20" minHeight="20"/>
+            <TextArea fx:id="numberTripsTextArea" editable="false" HBox.hgrow="ALWAYS"
+                      VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"/>
         </VBox>
     </HBox>
 </VBox>

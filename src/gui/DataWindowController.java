@@ -23,6 +23,8 @@ import javafx.stage.Stage;
  */
 public class DataWindowController implements Observer {
     @FXML
+    private TextArea description;
+    @FXML
     private ToggleButton snapshotToggleButton;
     @FXML
     private ToggleButton expandedToggleButton;
@@ -110,6 +112,18 @@ public class DataWindowController implements Observer {
     }
 
     /**
+     * set the default values of the description
+     * @author Grant Fass
+     */
+    public void setDefaultValues() {
+        description.setText("This window displays the currently stored data. The values " +
+                "automatically update so that the most current data values are always displayed. Click on " +
+                "the 'View Snapshot' toggle button to view single line snapshots of the data. Click on the " +
+                "'View Expanded Data' toggle button to view all of the data associated with a given " +
+                "reference.");
+    }
+
+    /**
      * display help values to the program
      * Activates when help menu button is clicked
      *
@@ -118,7 +132,14 @@ public class DataWindowController implements Observer {
     @FXML
     private void displayHelp() {
         MainWindowController.displayAlert(Alert.AlertType.INFORMATION, "General Transit Feed Specification Tool Information",
-                "Import Window Help", "Not Implemented Yet");
+                "Import Window Help", "This window displays all of the data stored in\n" +
+                        "the four data classes: 'routes.txt', 'stops.txt', 'stop_times.txt', and 'trips.txt'.\n" +
+                        "The information that is displayed in this window is always up to date since it\n" +
+                        "automatically updates whenever any information in the data classes is changed.\n" +
+                        "There are two viewing modes for this window. The mode can be selected through\n" +
+                        "the use of the toggle buttons.\n'View Snapshot' displays only critical information " +
+                        "in a single line format.\n'View Expanded Data' displays all information for each entry " +
+                        "in the dta classes.");
     }
 
     /**

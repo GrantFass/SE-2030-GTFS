@@ -127,8 +127,14 @@ public class Main extends Application {
         updateWindowStage.hide();
 
         //set default values
-        importWindowController.setDefaultValues();
+        analysisWindowController.setDefaultValues();
+        dataWindowController.setDefaultValues();
         exportWindowController.setDefaultValues();
+        importWindowController.setDefaultValues();
+        mainWindowController.setDefaultValues();
+        mapWindowController.setDefaultValues();
+        searchWindowController.setDefaultValues();
+        updateWindowController.setDefaultValues();
 
         //set up observers
         mainWindowController.getData().attach(dataWindowController);

@@ -26,6 +26,8 @@ import java.util.List;
  */
 public class SearchWindowController {
     @FXML
+    private TextArea description;
+    @FXML
     private TextArea output;
     @FXML
     private ComboBox inputType;
@@ -104,6 +106,17 @@ public class SearchWindowController {
     }
 
     /**
+     * set the default values of the description
+     * @author Grant Fass
+     */
+    public void setDefaultValues() {
+        description.setText("This window is used to search for specific information. " +
+                "Use the 'Output Type' dropdown to select the data type to search for. Use the 'Input Type' " +
+                "dropdown to select the data type used to search for. Put your search into the Input Text " +
+                "Field then click on the 'Search' button to get started.");
+    }
+
+    /**
      * display help values to the program
      * Activates when help menu button is clicked
      *
@@ -112,7 +125,12 @@ public class SearchWindowController {
     @FXML
     private void displayHelp() {
         MainWindowController.displayAlert(Alert.AlertType.INFORMATION, "General Transit Feed Specification Tool Information",
-                "Import Window Help", "Not Implemented Yet");
+                "Import Window Help", "This window is used to search for information" +
+                        "\nHow To Use:" +
+                        "\n1. Click on the 'Output Type' dropdown and select the data type you are searching for" +
+                        "\n2. Click on the 'Input Type' dropdown and select the data type that you are going to use as input to search" +
+                        "\n3. Click on the 'Input' Text Field and enter the text to search for" +
+                        "\n4. Click on the 'Search' Button. The results of the search will be displayed in the 'Output' Text Area.");
     }
 
     @FXML
