@@ -8,38 +8,63 @@ Everything in this file has been setup in code.
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
-<VBox maxHeight="Infinity" maxWidth="Infinity" minHeight="400" minWidth="300" prefHeight="400.0" prefWidth="600" spacing="10"
-      xmlns="http://javafx.com/javafx/8.0.171" fx:controller="gui.DataWindowController" xmlns:fx="http://javafx.com/fxml">
+<VBox maxHeight="Infinity" maxWidth="Infinity" minHeight="400" minWidth="300" prefHeight="400.0"
+      prefWidth="600" spacing="10"
+      xmlns="http://javafx.com/javafx/8.0.171" fx:controller="gui.DataWindowController"
+      xmlns:fx="http://javafx.com/fxml">
     <padding>
         <Insets top="20" bottom="20" left="20" right="20"/>
     </padding>
-    <HBox spacing="10" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20">
-        <TextArea editable="false" text="Short Description" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20"/>
-        <Button text="?" onAction="#displayHelp" alignment="CENTER" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="100" maxHeight="100" minWidth="20" minHeight="20"/>
+    <HBox spacing="10" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100"
+          minWidth="20" minHeight="20">
+        <TextArea fx:id="description" wrapText="true" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100"
+                  minWidth="20" minHeight="20"/>
+        <Button text="?" onAction="#displayHelp" alignment="CENTER" HBox.hgrow="ALWAYS"
+                VBox.vgrow="ALWAYS" maxWidth="100" maxHeight="100" minWidth="20" minHeight="20"/>
     </HBox>
-    <HBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="50" minWidth="20" minHeight="30" spacing="10">
+    <HBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="50" minWidth="20"
+          minHeight="30" spacing="10">
         <fx:define>
             <ToggleGroup fx:id="group"/>
         </fx:define>
-        <ToggleButton onAction="#buttonToggled" toggleGroup="$group" fx:id="snapshotToggleButton" text="View Snapshot" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" minWidth="75" minHeight="20"/>
-        <ToggleButton onAction="#buttonToggled" toggleGroup="$group" fx:id="expandedToggleButton" text="View Expanded Data" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" minWidth="75" minHeight="20"/>
+        <ToggleButton onAction="#buttonToggled" toggleGroup="$group" fx:id="snapshotToggleButton"
+                      text="View Snapshot" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+                      maxWidth="Infinity" maxHeight="Infinity" minWidth="75" minHeight="20"/>
+        <ToggleButton onAction="#buttonToggled" toggleGroup="$group" fx:id="expandedToggleButton"
+                      text="View Expanded Data" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+                      maxWidth="Infinity" maxHeight="Infinity" minWidth="75" minHeight="20"/>
     </HBox>
-    <HBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" spacing="10">
-        <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" spacing="10">
-            <Label alignment="CENTER" text="Routes" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="50" minWidth="20" minHeight="20"/>
-            <TextArea fx:id="routesTextArea" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" minWidth="75" minHeight="20"/>
+    <HBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"
+          spacing="10">
+        <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"
+              spacing="10">
+            <Label alignment="CENTER" text="Routes" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+                   maxWidth="Infinity" maxHeight="50" minWidth="20" minHeight="20"/>
+            <TextArea fx:id="routesTextArea" editable="false" HBox.hgrow="ALWAYS"
+                      VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" minWidth="75"
+                      minHeight="20"/>
         </VBox>
-        <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" spacing="10">
-            <Label alignment="CENTER" text="Stops" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="50" minWidth="20" minHeight="20"/>
-            <TextArea fx:id="stopsTextArea" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" minWidth="75" minHeight="20"/>
+        <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"
+              spacing="10">
+            <Label alignment="CENTER" text="Stops" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+                   maxWidth="Infinity" maxHeight="50" minWidth="20" minHeight="20"/>
+            <TextArea fx:id="stopsTextArea" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+                      maxWidth="Infinity" maxHeight="Infinity" minWidth="75" minHeight="20"/>
         </VBox>
-        <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" spacing="10">
-            <Label alignment="CENTER" text="StopTimes" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="50" minWidth="20" minHeight="20"/>
-            <TextArea fx:id="stopTimesTextArea" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" minWidth="75" minHeight="20"/>
+        <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"
+              spacing="10">
+            <Label alignment="CENTER" text="StopTimes" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+                   maxWidth="Infinity" maxHeight="50" minWidth="20" minHeight="20"/>
+            <TextArea fx:id="stopTimesTextArea" editable="false" HBox.hgrow="ALWAYS"
+                      VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" minWidth="75"
+                      minHeight="20"/>
         </VBox>
-        <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" spacing="10">
-            <Label alignment="CENTER" text="Trips" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="50" minWidth="20" minHeight="20"/>
-            <TextArea fx:id="tripsTextArea" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" minWidth="75" minHeight="20"/>
+        <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"
+              spacing="10">
+            <Label alignment="CENTER" text="Trips" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+                   maxWidth="Infinity" maxHeight="50" minWidth="20" minHeight="20"/>
+            <TextArea fx:id="tripsTextArea" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+                      maxWidth="Infinity" maxHeight="Infinity" minWidth="75" minHeight="20"/>
         </VBox>
     </HBox>
 </VBox>

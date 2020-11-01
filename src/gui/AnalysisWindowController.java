@@ -22,6 +22,8 @@ import interfaces.Observer;
  */
 public class AnalysisWindowController implements Observer {
     @FXML
+    private TextArea description;
+    @FXML
     private TextArea distanceTextArea;
     @FXML
     private TextArea speedTextArea;
@@ -98,6 +100,16 @@ public class AnalysisWindowController implements Observer {
     }
 
     /**
+     * set the default values of the description
+     * @author Grant Fass
+     */
+    public void setDefaultValues() {
+        description.setText("This window displays information that is calculated and derived " +
+                "from the other stored data. This window automatically updates whenever " +
+                "the stored data is updated.");
+    }
+
+    /**
      * display help values to the program
      * Activates when help menu button is clicked
      *
@@ -106,7 +118,14 @@ public class AnalysisWindowController implements Observer {
     @FXML
     private void displayHelp() {
         MainWindowController.displayAlert(Alert.AlertType.INFORMATION, "General Transit Feed Specification Tool Information",
-                "Import Window Help", "Not Implemented Yet");
+                "Import Window Help", "This window is used to view information that\n" +
+                        "has been derived and or calculated from the various data classes.\n" +
+                        "data from 'routes.txt', 'stops.txt', 'stop_times.txt', and 'trips.txt'\n" +
+                        "are used for calculations. Some data can be partially displayed if not all\n" +
+                        "of the files are loaded. If the data display does not look correct\n" +
+                        "make sure that all files are loaded. The data displayed in this window\n" +
+                        "update whenever a change is made to any of the data classes. This ensures\n" +
+                        "that the most current information is always displayed.");
     }
 
     /**

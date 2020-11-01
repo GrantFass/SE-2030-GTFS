@@ -24,6 +24,8 @@ import java.time.LocalDateTime;
  */
 public class ExportWindowController {
     @FXML
+    private TextArea description;
+    @FXML
     private TextArea alertTextArea;
     @FXML
     private TextField directoryTextField;
@@ -130,7 +132,7 @@ public class ExportWindowController {
     }
 
     /**
-     * set the default values of the progress bars
+     * set the default values of the progress bars and descriptions
      * @author Grant Fass
      */
     public void setDefaultValues() {
@@ -138,6 +140,34 @@ public class ExportWindowController {
         stopsProgressBar.setVisible(false);
         stopTimesProgressBar.setVisible(false);
         tripsProgressBar.setVisible(false);
+        description.setText("This window is used to export files to a given directory. " +
+                "Use the 'browse' button to select the folder to save the exported file(s) to. Use the " +
+                "checkboxes to select which file(s) you would like to export. Use the 'Export' button to " +
+                "export the files.");
+    }
+
+    /**
+     * display help values to the program
+     * Activates when help menu button is clicked
+     *
+     * @author Grant Fass
+     */
+    @FXML
+    private void displayHelp() {
+        MainWindowController.displayAlert(Alert.AlertType.INFORMATION, "General Transit Feed Specification Tool Information",
+                "Import Window Help", "This window is used to export the files in the correct format." +
+                        "\nHow to use:" +
+                        "\n1. Click on the 'browse' button to open a Directory Chooser." +
+                        "\n2. Use the Directory Chooser to navigate to the location you would like" +
+                        " to save the exported files to." +
+                        "\n3. Click 'Select Folder' in the Directory Chooser to select the directory." +
+                        " After the Directory Chooser closes the selected directory will be shown in" +
+                        " the 'Directory' Text Field." +
+                        "\n4. Click on the check boxes of the files you would like to export." +
+                        "\n5. Click on Export. Once the files have finished exporting the progress" +
+                        " bars will turn green and the path to the saved file will be displayed" +
+                        " next to the checkbox. Any errors will be displayed to the 'Alert' Text" +
+                        " Area.");
     }
 
     /**
@@ -228,18 +258,6 @@ public class ExportWindowController {
         progressBar.setProgress(0);
         progressBar.setStyle("-fx-accent: blanchedalmond");
         progressBar.setVisible(true);
-    }
-
-    /**
-     * display help values to the program
-     * Activates when help menu button is clicked
-     *
-     * @author Grant Fass
-     */
-    @FXML
-    private void displayHelp() {
-        MainWindowController.displayAlert(Alert.AlertType.INFORMATION, "General Transit Feed Specification Tool Information",
-                "Import Window Help", "Not Implemented Yet");
     }
 
     /**

@@ -9,6 +9,7 @@ package gui;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 
 /**
@@ -18,6 +19,8 @@ import javafx.stage.Stage;
  * @version Created on 10/25/2020 at 1:27 AM
  */
 public class MapWindowController {
+    @FXML
+    private TextArea description;
     private Stage analysisWindowStage;
     private AnalysisWindowController analysisWindowController;
     private Stage dataWindowStage;
@@ -86,6 +89,14 @@ public class MapWindowController {
         this.mainWindowController = mainWindowController;
         this.searchWindowController = searchWindowController;
         this.updateWindowController = updateWindowController;
+    }
+
+    /**
+     * set the default values of the description
+     * @author Grant Fass
+     */
+    public void setDefaultValues() {
+        description.setText("");
     }
 
     /**
