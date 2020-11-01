@@ -1,24 +1,10 @@
 package gui;
 
 import data.Data;
-import data.Route;
-import data.Stop;
-import data.Trip;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.VBox;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.InputMismatchException;
-import java.util.zip.DataFormatException;
 
 public class MainWindowController {
 	@FXML
@@ -171,14 +157,17 @@ public class MainWindowController {
 	/**
 	 * method to toggle the visibility of a given stage
 	 * @param stage the stage to toggle the visibility of
+	 * @param xOffset the number of pixels to offset the window. Positive values move the window right.
+	 * @param yOffset the number of pixels to offset the window. Positive values move the window down.
 	 * @author Grant Fass
 	 */
-	private void toggleStage(Stage stage){
+	private void toggleStage(Stage stage, double xOffset, double yOffset){
 		if (stage.isShowing()) {
 			stage.hide();
 		} else {
-			stage.setX(mainWindowStage.getX() + mainWindowStage.getWidth());
-			stage.setY(mainWindowStage.getY());
+			final int windowOffset = 15;
+			stage.setX(mainWindowStage.getX() + xOffset);
+			stage.setY(mainWindowStage.getY() + yOffset);
 			stage.toFront();
 			stage.show();
 		}
@@ -190,7 +179,8 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void toggleAnalysisWindow() {
-		toggleStage(analysisWindowStage);
+		//open the analysis window under the main window and to the right two stages
+		toggleStage(analysisWindowStage, 2 * mainWindowStage.getWidth(), mainWindowStage.getHeight());
 	}
 
 	/**
@@ -199,7 +189,8 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void toggleDataWindow() {
-		toggleStage(dataWindowStage);
+		//open the data window under the main window and to the right one stage
+		toggleStage(dataWindowStage, mainWindowStage.getWidth(), mainWindowStage.getHeight());
 	}
 
 	/**
@@ -208,7 +199,8 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void toggleExportWindow() {
-		toggleStage(exportWindowStage);
+		//open the export window 2 stages right of the main window
+		toggleStage(exportWindowStage, 2 * mainWindowStage.getWidth(), 0);
 	}
 
 	/**
@@ -217,7 +209,8 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void toggleImportWindow() {
-		toggleStage(importWindowStage);
+		//open the import window directly to the right of the main window
+		toggleStage(importWindowStage, mainWindowStage.getWidth(), 0);
 	}
 
 	/**
@@ -226,7 +219,8 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void toggleMapWindow() {
-		toggleStage(mapWindowStage);
+		//open the map window two stages down and one stage right from the main window
+		toggleStage(mapWindowStage, mainWindowStage.getWidth(), 2 * mainWindowStage.getHeight());
 	}
 
 	/**
@@ -235,7 +229,8 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void toggleSearchWindow() {
-		toggleStage(searchWindowStage);
+		//open the search window directly under the main window
+		toggleStage(searchWindowStage, 0, mainWindowStage.getHeight());
 	}
 
 	/**
@@ -244,7 +239,8 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void toggleUpdateWindow() {
-		toggleStage(updateWindowStage);
+		//open the update window two stages down from the main window
+		toggleStage(updateWindowStage, 0, 2 * mainWindowStage.getHeight());
 	}
 
 	/**
