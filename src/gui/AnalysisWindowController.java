@@ -6,15 +6,13 @@
  */
 package gui;
 
-import javafx.event.ActionEvent;
+import data.Data;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 
-import java.util.HashMap;
-import java.util.Observable;
-import java.util.Observer;
+import interfaces.Observer;
 
 /**
  * AnalysisWindowController Purpose: Controller for the Analysis Window
@@ -112,19 +110,17 @@ public class AnalysisWindowController implements Observer {
     }
 
     /**
-     * This method is called whenever the observed object is changed. An
-     * application calls an <tt>Observable</tt> object's
-     * <code>notifyObservers</code> method to have all the object's
-     * observers notified of the change.
+     * update the observers when the data is changed
+     * Based on a guide from GeeksForGeeks
+     * found here: https://www.geeksforgeeks.org/observer-pattern-set-2-implementation/
      *
-     * @param o   the observable object.
-     * @param arg an argument passed to the <code>notifyObservers</code>
+     * @param data the data object that was changed
      * @author Grant Fass
      */
     @Override
-    public void update(Observable o, Object arg) {
-        distanceTextArea.setText(mainWindowController.getData().getTripDistances());
+    public void update(Data data) {
+        distanceTextArea.setText(data.getTripDistances().isEmpty() ? "No Data Yet!" : data.getTripDistances());
         speedTextArea.setText("Not Implemented Yet!");
-        numberTripsTextArea.setText(mainWindowController.getData().getStopTimes().getTripsPerStop().isEmpty() ? "No Data Yet!" : mainWindowController.getData().getStopTimes().getTripsPerStop());
+        numberTripsTextArea.setText(data.getStopTimes().getTripsPerStop().isEmpty() ? "No Data Yet!" : data.getStopTimes().getTripsPerStop());
     }
 }

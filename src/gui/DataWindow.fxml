@@ -21,8 +21,8 @@ Everything in this file has been setup in code.
         <fx:define>
             <ToggleGroup fx:id="group"/>
         </fx:define>
-        <ToggleButton onAction="#updateData" toggleGroup="$group" fx:id="snapshotToggleButton" text="View Snapshot" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" minWidth="75" minHeight="20"/>
-        <ToggleButton onAction="#updateData" toggleGroup="$group" fx:id="expandedToggleButton" text="View Expanded Data" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" minWidth="75" minHeight="20"/>
+        <ToggleButton onAction="#buttonToggled" toggleGroup="$group" fx:id="snapshotToggleButton" text="View Snapshot" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" minWidth="75" minHeight="20"/>
+        <ToggleButton onAction="#buttonToggled" toggleGroup="$group" fx:id="expandedToggleButton" text="View Expanded Data" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" minWidth="75" minHeight="20"/>
     </HBox>
     <HBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" spacing="10">
         <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" spacing="10">

@@ -1,15 +1,10 @@
 package main;
 
-import data.Data;
 import gui.*;
 import javafx.application.Application;
-import java.util.Observable;
-import java.util.Observer;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import java.util.Observable;
 
 public class Main extends Application {
 
@@ -136,8 +131,8 @@ public class Main extends Application {
         exportWindowController.setDefaultValues();
 
         //set up observers
-        mainWindowController.getData().addObserver(dataWindowController);
-        mainWindowController.getData().addObserver(analysisWindowController);
+        mainWindowController.getData().attach(dataWindowController);
+        mainWindowController.getData().attach(analysisWindowController);
 
         //functions
         //dataWindowStage.setOnCloseRequest(event -> mainWindowController.viewDataDisplayButton.setText("Show Data Display"));
