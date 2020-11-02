@@ -65,6 +65,21 @@ public class Data implements Subject {
 	}
 
 	/**
+	 * compile all of the trip speeds into a single string
+	 * @return the trip speeds as a single string
+	 * @author Simon Erickson
+	 */
+	public String getTripSpeeds() {
+		StringBuilder stringBuilder = new StringBuilder();
+		Iterator mapIterator = tripSpeeds().entrySet().iterator();
+		while (mapIterator.hasNext()) {
+			Map.Entry mapElement = (Map.Entry) mapIterator.next();
+			stringBuilder.append(mapElement.getKey()).append(" | ").append(mapElement.getValue()).append("\n");
+		}
+		return stringBuilder.toString();
+	}
+
+	/**
 	 * Method that creates a HashMap with all trips with there lengths.
 	 * TODO: @FassG Use this method for GUI
 	 * @author Simon Erickson
@@ -84,6 +99,37 @@ public class Data implements Subject {
 				tripAndDistance.put(k, tripDistance(stops.getStop(value[1]), stops.getStop(value[3])));
 			});
 			returnHashMap = tripAndDistance;
+		}
+
+		return returnHashMap;
+	}
+
+	/**
+	 * Method that calculates the average speed based on the start and end times of a trip
+	 *
+	 * @author Simon Erickson
+	 * @return tripAndSpeed The HashMap with all trips with there average speeds.
+	 */
+	private HashMap<String, String> tripSpeeds(){
+		HashMap<String, String> returnHashMap = new HashMap();
+		if(!(stop_times == null | stops == null)){
+			//HashMap<trip_id, first_time--first_stop_id--last_time--last_stop_id>
+			HashMap<String, String> tripStartAndEnd = stop_times.getTripStartAndEnd();
+
+			//HashMap<trip_id, speed in miles per hour>
+			HashMap<String, String> tripAndSpeed = new HashMap<>();
+
+			tripStartAndEnd.forEach((k,v)->{
+				String[] value = v.split("--");
+				long time = Long.parseLong(value[2]) - Long.parseLong(value[1]);
+
+				int km = tripDistance(stops.getStop(value[1]), stops.getStop(value[3]));
+
+				long hours = time/3600000;
+				tripAndSpeed.put(k,km/hours+" Kilometers per Hour");
+
+			});
+			returnHashMap = tripAndSpeed;
 		}
 
 		return returnHashMap;

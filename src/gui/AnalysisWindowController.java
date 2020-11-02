@@ -139,6 +139,7 @@ public class AnalysisWindowController implements Observer {
     @Override
     public void update(Data data) {
         distanceTextArea.setText(data.getTripDistances().isEmpty() ? "No Data Yet!" : data.getTripDistances());
+        //speedTextArea.setText(data.getTripSpeeds().isEmpty() ? "No Data Yet!" : data.getTripSpeeds());
         speedTextArea.setText("Not Implemented Yet!");
         numberTripsTextArea.setText(data.getStopTimes().getTripsPerStop().isEmpty() ? "No Data Yet!" : data.getStopTimes().getTripsPerStop());
     }
