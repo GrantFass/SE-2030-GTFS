@@ -55,14 +55,21 @@ public class Data implements Subject {
 	 * @author Grant Fass
 	 */
 	public String getTripDistances() {
+		//TODO make sure distance is in km
 		StringBuilder stringBuilder = new StringBuilder();
 		Iterator mapIterator = tripDistances().entrySet().iterator();
 		while (mapIterator.hasNext()) {
 			Map.Entry mapElement = (Map.Entry) mapIterator.next();
-			stringBuilder.append(mapElement.getKey()).append(" | ").append(mapElement.getValue()).append("\n");
+			stringBuilder.append("Trip id: ").append(mapElement.getKey()).append(" | ")
+					.append(mapElement.getValue()).append(" km\n");
 		}
 		return stringBuilder.toString();
 	}
+
+
+
+
+
 
 	/**
 	 * Method that creates a HashMap with all trips with there lengths.
