@@ -22,6 +22,8 @@ import javafx.stage.Stage;
  */
 public class MapWindowController {
     @FXML
+    private WebView map;
+    @FXML
     private VBox primaryVBox;
     @FXML
     private TextArea description;
@@ -101,8 +103,8 @@ public class MapWindowController {
      */
     public void setDefaultValues() {
         description.setText("");
-
-        //primaryVBox.getChildren().add(map);
+        WebEngine webEngine = map.getEngine();
+        webEngine.load("http://google.com/maps");
     }
 
     /**
