@@ -15,6 +15,7 @@ import java.util.zip.DataFormatException;
 public class Trips {
 
     private HashMap<String, Trip> trips;
+    private final int maxDisplay = Integer.MAX_VALUE;
 
     /**
      * Trips constructor initialized with empty hash map
@@ -148,41 +149,12 @@ public class Trips {
     }
 
     /**
-     * Method to output data as a single concatenated string
-     *
-     * @return string of data
+     * get the hashmap value
+     * @return the hashmap value
      * @author Grant Fass
      */
-    @Override
-    public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        int maxDisplay = 100;
-        int count = 0;
-        Iterator mapIterator = trips.entrySet().iterator();
-        while (mapIterator.hasNext() && count < maxDisplay) {
-            Map.Entry mapElement = (Map.Entry) mapIterator.next();
-            stringBuilder.append(getTrip(mapElement.getKey().toString()).toString()).append("\n");
-            count++;
-        }
-        return stringBuilder.toString();
-    }
-
-    /**
-     * output simplified data as a single concatenated string
-     * @return string of data
-     * @author Grant Fass
-     */
-    public String toSimpleString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        int maxDisplay = 100;
-        int count = 0;
-        Iterator mapIterator = trips.entrySet().iterator();
-        while (mapIterator.hasNext() && count < maxDisplay) {
-            Map.Entry mapElement = (Map.Entry) mapIterator.next();
-            stringBuilder.append(getTrip(mapElement.getKey().toString()).toSimpleString()).append("\n");
-            count++;
-        }
-        return stringBuilder.toString();
+    public HashMap<String, Trip> getTrips() {
+        return trips;
     }
 
     /**

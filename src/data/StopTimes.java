@@ -1,12 +1,8 @@
 package data;
 
 import java.io.*;
-import java.sql.Array;
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -21,7 +17,7 @@ public class StopTimes {
 
 	private HashMap<String, StopTime> stop_times;
 	private HashMap<String, String> tripStartAndEnd;
-	private final int MAX_DISPLAY = 100;
+	private final int maxDisplay = 2000;
 
 	/**
 	 * StopTimes Constructor: creates empty instance of stop_times object
@@ -247,68 +243,12 @@ public class StopTimes {
 	}
 
 	/**
-	 * Method to output first 1000 StopTimes as a single concatenated string
-	 * @author Joy Cross, Grant Fass
-	 * @return string of data
-	 */
-	@Override
-	public String toString() {
-		StringBuilder toReturn = new StringBuilder();
-		int maxDisplay = 100;
-		Object[] keys = stop_times.keySet().toArray();
-		if (keys.length == 0) {
-			return "";
-		}
-		for(int i = 0; i < maxDisplay; i++){
-			toReturn.append(stop_times.get(keys[i]).toString() + "\n");
-		}
-		return toReturn.toString();
-	}
-
-	/**
-	 * output simplified data as a single concatenated string
-	 * @return string of data
+	 * get the hashmap value
+	 * @return the hashmap value
 	 * @author Grant Fass
 	 */
-	public String toSimpleString() {
-		StringBuilder toReturn = new StringBuilder();
-		Object[] keys = stop_times.keySet().toArray();
-		if (keys.length == 0) {
-			return "";
-		}
-		for(int i = 0; i < MAX_DISPLAY; i++){
-			toReturn.append(stop_times.get(keys[i]).toSimpleString() + "\n");
-		}
-		return toReturn.toString();
-	}
-
-	/**
-	 * Gets the count of trips that is associated with a stop
-	 * @return the number of trips that each stop is found on
-	 * @author Joy Cross
-	 */
-	public String getTripsPerStop() {
-		Object[] keys = stop_times.keySet().toArray();
-
-		// separate stop_id from trip_id
-		for(int i = 0; i < keys.length; i++){
-			String value = keys[i].toString();
-			keys[i] = value.substring(0, value.indexOf(';'));
-		}
-
-		// count distinct stops which returns number of how much a stop is used by trips
-		StringBuilder sb = new StringBuilder();
-		int[] i = {0};
-		Arrays.stream(keys).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
-				.entrySet()
-				.forEach(object -> {
-						if(i[0]<=MAX_DISPLAY){
-							sb.append(String.format("%s Trips contain Stop ID: %s\n", object.toString().substring(object.toString().indexOf('=') + 1), object.toString().substring(0, object.toString().indexOf('='))));
-						}
-						i[0] = i[0] + 1;
-				});
-
-		return sb.toString();
+	public HashMap<String, StopTime> getStop_times() {
+		return stop_times;
 	}
 
 	/**

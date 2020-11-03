@@ -30,21 +30,21 @@ Everything in this file has been setup in code.
               spacing="10">
             <Label alignment="CENTER" text="Distance" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
                    maxWidth="Infinity" maxHeight="50" minWidth="20" minHeight="20"/>
-            <TextArea fx:id="distanceTextArea" editable="false" HBox.hgrow="ALWAYS"
+            <ListView fx:id="distanceListView" editable="false" HBox.hgrow="ALWAYS"
                       VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"/>
         </VBox>
         <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"
               spacing="10">
             <Label alignment="CENTER" text="Speed" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
                    maxWidth="Infinity" maxHeight="50" minWidth="20" minHeight="20"/>
-            <TextArea fx:id="speedTextArea" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+            <ListView fx:id="speedListView" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
                       maxWidth="Infinity" maxHeight="Infinity"/>
         </VBox>
         <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"
               spacing="10">
             <Label alignment="CENTER" text="Number of Trips" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
                    maxWidth="Infinity" maxHeight="50" minWidth="20" minHeight="20"/>
-            <TextArea fx:id="numberTripsTextArea" editable="false" HBox.hgrow="ALWAYS"
+            <ListView fx:id="numberTripsListView" editable="false" HBox.hgrow="ALWAYS"
                       VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"/>
         </VBox>
     </HBox>

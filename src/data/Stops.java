@@ -14,6 +14,7 @@ public class Stops {
 
 	private HashMap<String, Stop> stops;
 	private Headers headers = new Headers();
+	private final int maxDisplay = Integer.MAX_VALUE;
 
 	/**
 	 * Stops Constructor: creates empty instance of stops object
@@ -251,40 +252,12 @@ public class Stops {
 	}
 
 	/**
-	 * Method to output data as a single concatenated string
-	 * @author Grant Fass
-	 * @return string of data
-	 */
-	@Override
-	public String toString() {
-		StringBuilder stringBuilder = new StringBuilder();
-		int maxDisplay = 100;
-		int count = 0;
-		Iterator mapIterator = stops.entrySet().iterator();
-		while (mapIterator.hasNext() && count < maxDisplay) {
-			Map.Entry mapElement = (Map.Entry) mapIterator.next();
-			stringBuilder.append(getStop(mapElement.getKey().toString()).toString()).append("\n");
-			count++;
-		}
-		return stringBuilder.toString();
-	}
-
-	/**
-	 * output simplified data as a single concatenated string
-	 * @return string of data
+	 * get the hashmap value
+	 * @return the hashmap value
 	 * @author Grant Fass
 	 */
-	public String toSimpleString() {
-		StringBuilder stringBuilder = new StringBuilder();
-		int maxDisplay = 100;
-		int count = 0;
-		Iterator mapIterator = stops.entrySet().iterator();
-		while (mapIterator.hasNext() && count < maxDisplay) {
-			Map.Entry mapElement = (Map.Entry) mapIterator.next();
-			stringBuilder.append(getStop(mapElement.getKey().toString()).toSimpleString()).append("\n");
-			count++;
-		}
-		return stringBuilder.toString();
+	public HashMap<String, Stop> getStops() {
+		return stops;
 	}
 
 	/**

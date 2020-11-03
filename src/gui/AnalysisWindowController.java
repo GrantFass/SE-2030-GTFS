@@ -9,6 +9,7 @@ package gui;
 import data.Data;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 
@@ -24,11 +25,11 @@ public class AnalysisWindowController implements Observer {
     @FXML
     private TextArea description;
     @FXML
-    private TextArea distanceTextArea;
+    private ListView distanceListView;
     @FXML
-    private TextArea speedTextArea;
+    private ListView speedListView;
     @FXML
-    private TextArea numberTripsTextArea;
+    private ListView numberTripsListView;
     private Stage analysisWindowStage;
     private Stage dataWindowStage;
     private DataWindowController dataWindowController;
@@ -138,8 +139,8 @@ public class AnalysisWindowController implements Observer {
      */
     @Override
     public void update(Data data) {
-        distanceTextArea.setText(data.getTripDistances().isEmpty() ? "No Data Yet!" : data.getTripDistances());
-        speedTextArea.setText(data.getTripSpeeds().isEmpty() ? "No Data Yet!" : data.getTripSpeeds());
-        numberTripsTextArea.setText(data.getStopTimes().getTripsPerStop().isEmpty() ? "No Data Yet!" : data.getStopTimes().getTripsPerStop());
+        data.displayAnalysis(0, distanceListView);
+        data.displayAnalysis(1, speedListView);
+        data.displayAnalysis(2, numberTripsListView);
     }
 }
