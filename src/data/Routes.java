@@ -18,6 +18,24 @@ import java.util.zip.DataFormatException;
 public class Routes {
 
 	private HashMap<String, Route> routes;
+	private Headers headers = new Headers();
+
+	/**
+	 * Creates header line from input headers
+	 * @param headers headers to put into a String output
+	 * @return String
+	 * @author Joy Cross
+	 */
+	public String createHeaderLine(Headers headers) {
+		StringBuilder sb = new StringBuilder();
+		int i;
+		for(i = 0; i < headers.length()-1; i++){
+			sb.append(headers.getHeaderName(i) + ",");
+		}
+		sb.append(headers.getHeaderName(i) + "\n");
+
+		return sb.toString();
+	}
 
 
 	/**
@@ -72,15 +90,15 @@ public class Routes {
 	 * @param file the directory to save the file to
 	 * @return true
 	 * @throws IOException if an issue was encountered saving the file
-	 * @author Grant Fass
+	 * @author Grant Fass, Joy Cross
 	 */
 	public boolean exportRoutes(File file) throws IOException {
 		File routeFile = new File(file, "routes.txt");
 		FileWriter writer = new FileWriter(routeFile.getAbsoluteFile());
 
-		writer.append(Route.getHeaderLine()).append("\n");
+		writer.append(createHeaderLine(headers));
 		for(String key : routes.keySet()){
-			writer.append(routes.get(key).getDataLine());
+			writer.append(routes.get(key).getDataLine(headers));
 		}
 		writer.close();
 		return true;
@@ -102,8 +120,6 @@ public class Routes {
 
 	    Scanner read_header = new Scanner(file);
 	    String full_header = read_header.nextLine();
-
-	    Headers headers;
 
 	    // Throws IllegalArgumentException if header is not valid
         try {

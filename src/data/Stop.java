@@ -156,8 +156,8 @@ public class Stop {
 					sb.append(wheelchair_boarding.getValue());
 					break;
 				case "stop_url":
-					String url = null;
-					if(stop_timezone != null){
+					String url = "";
+					if(stop_url != null){
 						url = stop_url.toString();
 					}
 					sb.append(url);

@@ -1,13 +1,16 @@
 package data;
 
 
+import com.sun.xml.internal.ws.commons.xmlutil.Converter;
 import enumerators.ContinuousDropOffEnum;
 import enumerators.ContinuousPickupEnum;
 import enumerators.RouteTypeEnum;
 import javafx.scene.paint.Color;
 
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.ParseException;
 
 
 /**
@@ -100,7 +103,8 @@ public class Route {
 		final int DEFAULT_SORT_ORDER = 0;
 		final int DEFAULT_CONTINUOUS = -1; //continuous stopping pickup or drop-off
 
-		final String DEFAULT_URL = "http://NULL"; //Error is thrown otherwise
+		//final String DEFAULT_URL = "http://NULL"; //Error is thrown otherwise
+		//this.route_url = new URL(!route_url.isEmpty() ? route_url : DEFAULT_URL);
 
 
 		this.route_id = route_id;
@@ -112,7 +116,9 @@ public class Route {
 		//End can be empty
 		try{
 			this.route_type = RouteTypeEnum.getValue(!route_type.isEmpty() ? Integer.parseInt(route_type): DEFAULT_TYPE);
-			this.route_url = new URL(!route_url.isEmpty() ? route_url : DEFAULT_URL);
+			if(!route_url.isEmpty() && !route_url.equals("null")) {
+				this.route_url = new URL(route_url);
+			}
 			this.route_color = Color.valueOf(route_color); //!route_color.isEmpty() ? route_color : DEFAULT_COLOR
 			this.route_text_color = Color.valueOf(!route_text_color.isEmpty() ? route_text_color : DEFAULT_TEXT_COLOR);
 			this.route_sort_order = !route_sort_order.isEmpty() ? Integer.parseInt(route_sort_order) : DEFAULT_SORT_ORDER;
@@ -256,13 +262,64 @@ public class Route {
 
 	/**
 	 * returns String of the data used in exporting routes.txt
-	 * @author Ryan Becker
+	 * @author Ryan Becker, Joy Cross
 	 * @return String of the data line read from file, and defaulted values where applicable
 	 */
-	public String getDataLine(){
-		return String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n",route_id, agency_id, route_short_name,
-				route_long_name, route_desc, route_type.getValue(), route_url, route_color, route_text_color, route_sort_order,
-				continuous_pickup.getValue(), continuous_drop_off.getValue());
+	public String getDataLine(Headers headers){
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < headers.length(); i++){
+			switch (headers.getHeaderName(i)) {
+				case "route_id":
+					sb.append(route_id);
+					break;
+				case "agency_id":
+					sb.append(agency_id);
+					break;
+				case "route_short_name":
+					sb.append(route_short_name);
+					break;
+				case "route_long_name":
+					sb.append(route_long_name);
+					break;
+				case "route_desc":
+				case "route_description":
+					sb.append(route_desc);
+					break;
+				case "route_type":
+					sb.append(route_type.getValue());
+					break;
+				case "route_color":
+					int r = (int)(route_color.getRed()*256);
+					int b = (int)(route_color.getBlue()*256);
+					int g = (int)(route_color.getGreen()*256);
+					String hex = String.format("%02x%02x%02x", r, g, b);
+					sb.append(hex);
+					break;
+				case "route_text_color":
+					sb.append(route_text_color);
+					break;
+				case "route_sort_order":
+					sb.append(route_sort_order);
+					break;
+				case "continuous_pickup":
+					sb.append(continuous_pickup.getValue());
+					break;
+				case "route_url":
+					String url = "";
+					if(route_url != null){
+						url = route_url.toString();
+					}
+					sb.append(url);
+					break;
+				case "continuous_drop_off":
+					sb.append(continuous_drop_off.getValue());
+					break;
+			}
+			sb.append(',');
+		}
+		sb.deleteCharAt(sb.length()-1);
+		sb.append('\n');
+		return sb.toString();
 	}
 
 

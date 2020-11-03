@@ -291,6 +291,7 @@ public class Stops {
 	 * Creates header line from input headers
 	 * @param headers headers to put into a String output
 	 * @return String
+	 * @author Joy Cross
 	 */
 	public String createHeaderLine(Headers headers) {
 		StringBuilder sb = new StringBuilder();

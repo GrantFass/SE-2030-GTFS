@@ -21,6 +21,7 @@ public class StopTimes {
 
 	private HashMap<String, StopTime> stop_times;
 	private HashMap<String, String> tripStartAndEnd;
+	private Headers headers = new Headers();
 	private final int MAX_DISPLAY = 100;
 
 	/**
@@ -93,7 +94,7 @@ public class StopTimes {
 	 * @param file the directory to save the file to
 	 * @return true
 	 * @throws IOException if an issue was encountered saving the file
-	 * @author Grant Fass
+	 * @author Grant Fass, Joy Cross
 	 */
 	public boolean exportStopTimes(File file) throws IOException {
 		File outFile = new File(file, "stop_times.txt");
@@ -102,9 +103,9 @@ public class StopTimes {
 		}
 		FileWriter out = new FileWriter(outFile.getAbsoluteFile());
 		StringBuilder outputString = new StringBuilder();
-		outputString.append(StopTime.getHeaderLine());
+		outputString.append(createHeaderLine(headers));
 		for (String key: stop_times.keySet()) {
-			outputString.append(stop_times.get(key).getDataLine());
+			outputString.append(stop_times.get(key).getDataLine(headers));
 		}
 		out.append(outputString);
 		out.close();
@@ -129,7 +130,6 @@ public class StopTimes {
 			tripStartAndEnd.clear();
 		}
 		Scanner fileInput = new Scanner(file);
-		Headers headers;
 		try {
 			headers = validateHeader(fileInput.nextLine());
 		} catch (IllegalArgumentException e) {
@@ -263,6 +263,23 @@ public class StopTimes {
 			toReturn.append(stop_times.get(keys[i]).toString() + "\n");
 		}
 		return toReturn.toString();
+	}
+
+	/**
+	 * Creates header line from input headers
+	 * @param headers headers to put into a String output
+	 * @return String
+	 * @author Joy Cross
+	 */
+	public String createHeaderLine(Headers headers) {
+		StringBuilder sb = new StringBuilder();
+		int i;
+		for(i = 0; i < headers.length()-1; i++){
+			sb.append(headers.getHeaderName(i) + ",");
+		}
+		sb.append(headers.getHeaderName(i) + "\n");
+
+		return sb.toString();
 	}
 
 	/**
