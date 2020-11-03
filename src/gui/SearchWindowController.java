@@ -176,6 +176,7 @@ public class SearchWindowController {
                         String inputText = (input.getText()).toLowerCase();
                         List<String> list = mainWindowController.getData().getStopTimes().searchStopDisplayTrips(inputText);
                         StringBuilder sb = new StringBuilder();
+                        sb.append("***Note:Trips closest to the current time are displayed first***\n");
                         for(int i = 0; i < list.size(); i++){
                             int j = i + 1;
                             sb.append(j + ": " + list.get(i) + "\n");
