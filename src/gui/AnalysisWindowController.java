@@ -7,14 +7,18 @@
 package gui;
 
 import data.Data;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import interfaces.Observer;
 
+import java.time.LocalDateTime;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 
 /**
@@ -24,6 +28,8 @@ import java.util.HashMap;
  * @version Created on 10/25/2020 at 1:26 AM
  */
 public class AnalysisWindowController implements Observer {
+    @FXML
+    private TextField lastUpdatedTextField;
     @FXML
     private TextArea description;
     @FXML
@@ -135,14 +141,56 @@ public class AnalysisWindowController implements Observer {
      * update the observers when the data is changed
      * Based on a guide from GeeksForGeeks
      * found here: https://www.geeksforgeeks.org/observer-pattern-set-2-implementation/
+     * Will update the observers in a separate thread so program does not stall
+     * If there is an error it will try to update again after a short delay
      *
      * @param data the data object that was changed
      * @author Grant Fass
      */
     @Override
     public void update(Data data) {
+        Thread thread = new Thread(() -> {
+            try {
+                updateStatus(lastUpdatedTextField, "UPDATE IN PROGRESS");
+                updateData(data);
+            } catch (ConcurrentModificationException e) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException interruptedException) {
+                    interruptedException.printStackTrace();
+                }
+                update(data);
+            }
+        });
+        thread.start();
+    }
+
+    /**
+     * Updates all of the displayed data
+     * @param data the data used for updating
+     * @author Grant Fass
+     */
+    private void updateData(Data data) throws ConcurrentModificationException {
+        updateStatus(lastUpdatedTextField, "UPDATE IN PROGRESS");
         data.displayAnalysis(0, distanceListView);
         data.displayAnalysis(1, speedListView);
         data.displayAnalysis(2, numberTripsListView);
+        updateStatus(lastUpdatedTextField, String.format("Last Updated at: %s", LocalDateTime.now()));
+    }
+
+    /**
+     * sets a message to the specified textField
+     * format changes depending on if a task is running
+     * based on https://stackoverflow.com/questions/36638617/javafx-textarea-update-immediately
+     * @param textField the text field to update
+     * @param message the message to post
+     * @author Grant Fass
+     */
+    private void updateStatus(TextField textField, String message) {
+        if (Platform.isFxApplicationThread()) {
+            textField.setText(message);
+        } else {
+            Platform.runLater(() -> textField.setText(message));
+        }
     }
 }

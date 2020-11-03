@@ -2,9 +2,11 @@ package data;
 
 import interfaces.Subject;
 import interfaces.Observer;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import javafx.concurrent.Task;
 import javafx.scene.control.ListView;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -189,7 +191,9 @@ public class Data implements Subject {
 							int tripCount = Integer.parseInt(object.toString().substring(object.toString().indexOf('=') + 1));
 								items.add(String.format("%s Trips contain Stop ID: %s\n", tripCount, stop_id));
 							i[0] = i[0] + 1;
-							stops.getStop(stop_id).setTripsPerStop(tripCount);
+							if (stops.getStop(stop_id) != null) {
+								stops.getStop(stop_id).setTripsPerStop(tripCount);
+							}
 						});
 				break;
 		}
@@ -212,7 +216,7 @@ public class Data implements Subject {
 	public boolean loadRoutes(File file) throws FileNotFoundException, IOException,
 			InputMismatchException, DataFormatException {
 		boolean wasLineSkipped = routes.loadRoutes(file);
-		notifyObservers();
+		Platform.runLater(this::notifyObservers);
 		return wasLineSkipped;
 	}
 	/**
@@ -228,7 +232,7 @@ public class Data implements Subject {
 	public boolean loadStops(File file) throws FileNotFoundException, IOException,
 			InputMismatchException, DataFormatException {
 		boolean wasLineSkipped = stops.loadStops(file);
-		notifyObservers();
+		Platform.runLater(this::notifyObservers);
 		return wasLineSkipped;
 	}
 
@@ -245,7 +249,7 @@ public class Data implements Subject {
 	public boolean loadStopTimes(File file) throws FileNotFoundException, IOException,
 			InputMismatchException, DataFormatException {
 		boolean wasLineSkipped = stop_times.loadStopTimes(file);
-		notifyObservers();
+		Platform.runLater(this::notifyObservers);
 		return wasLineSkipped;
 	}
 
@@ -262,7 +266,7 @@ public class Data implements Subject {
 	public boolean loadTrips(File file) throws FileNotFoundException, IOException,
 			InputMismatchException, DataFormatException {
 		boolean wasLineSkipped = trips.loadTrips(file);
-		notifyObservers();
+		Platform.runLater(this::notifyObservers);
 		return wasLineSkipped;
 	}
 
