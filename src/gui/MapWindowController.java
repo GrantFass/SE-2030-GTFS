@@ -6,10 +6,12 @@
  */
 package gui;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.VBox;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
 /**
@@ -19,6 +21,8 @@ import javafx.stage.Stage;
  * @version Created on 10/25/2020 at 1:27 AM
  */
 public class MapWindowController {
+    @FXML
+    private VBox primaryVBox;
     @FXML
     private TextArea description;
     private Stage analysisWindowStage;
@@ -97,6 +101,8 @@ public class MapWindowController {
      */
     public void setDefaultValues() {
         description.setText("");
+
+        //primaryVBox.getChildren().add(map);
     }
 
     /**
