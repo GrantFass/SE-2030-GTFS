@@ -15,6 +15,8 @@ import javafx.stage.Stage;
 
 import interfaces.Observer;
 
+import java.util.HashMap;
+
 /**
  * AnalysisWindowController Purpose: Controller for the Analysis Window
  *

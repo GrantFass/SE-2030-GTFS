@@ -14,7 +14,11 @@ public class Stops {
 
 	private HashMap<String, Stop> stops;
 	private Headers headers = new Headers();
+<<<<<<< HEAD
 	private final int maxDisplay = Integer.MAX_VALUE;
+=======
+	private HashMap<String, String> tripsPerStop;
+>>>>>>> 67c6fda4e7a185cfd5a784391dc106f9070f9892
 
 	/**
 	 * Stops Constructor: creates empty instance of stops object
@@ -134,6 +138,22 @@ public class Stops {
 		out.append(outputString);
 		out.close();
 		return true;
+	}
+
+	/**
+	 * Sets the number of trips per stop
+	 * @param tripsPerStop obtained from StopTimes class
+	 * @author Joy Cross
+	 */
+	public void setTripsPerStop(HashMap<String, String> tripsPerStop){
+		this.tripsPerStop = tripsPerStop;
+	}
+
+	/**
+	 * @author Joy Cross
+	 */
+	public HashMap<String, String> getTripsPerStop(){
+		return tripsPerStop;
 	}
 
 	/**
@@ -264,6 +284,7 @@ public class Stops {
 	 * Creates header line from input headers
 	 * @param headers headers to put into a String output
 	 * @return String
+	 * @author Joy Cross
 	 */
 	public String createHeaderLine(Headers headers) {
 		StringBuilder sb = new StringBuilder();
