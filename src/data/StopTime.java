@@ -310,13 +310,55 @@ public class StopTime {
 	 * gets the data line for a single stop
 	 * used for exporting stop times
 	 * @return stop time data in a single line data format
-	 * @author Grant Fass
+	 * @author Grant Fass, Joy Cross
 	 */
-	public String getDataLine() {
+	public String getDataLine(Headers headers) {
+		StringBuilder sb = new StringBuilder();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-		return String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", trip_id, stop_id, stop_sequence,
-				dateFormat.format(arrival_time), dateFormat.format(departure_time), continuous_drop_off.getValue(), continuous_pickup.getValue(), drop_off_type.getValue(),
-				pickup_type.getValue(), shape_dist_traveled, stop_headsign, timepoint.getValue());
+		for (int i = 0; i < headers.length(); i++){
+			switch (headers.getHeaderName(i)) {
+				case "trip_id":
+					sb.append(trip_id);
+					break;
+				case "stop_id":
+					sb.append(stop_id);
+					break;
+				case "stop_sequence":
+					sb.append(stop_sequence);
+					break;
+				case "arrival_time":
+					sb.append(dateFormat.format(arrival_time));
+					break;
+				case "departure_time":
+					sb.append(dateFormat.format(departure_time));
+					break;
+				case "continuous_drop_off":
+					sb.append(continuous_drop_off.getValue());
+					break;
+				case "continuous_pickup":
+					sb.append(continuous_pickup.getValue());
+					break;
+				case "drop_off_type":
+					sb.append(drop_off_type.getValue());
+					break;
+				case "pickup_type":
+					sb.append(pickup_type.getValue());
+					break;
+				case "shape_dist_traveled":
+					sb.append(shape_dist_traveled);
+					break;
+				case "stop_headsign":
+					sb.append(stop_headsign);
+					break;
+				case "timepoint":
+					sb.append(timepoint.getValue());
+					break;
+			}
+			sb.append(',');
+		}
+		sb.deleteCharAt(sb.length()-1);
+		sb.append('\n');
+		return sb.toString();
 	}
 
 	/**

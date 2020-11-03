@@ -15,6 +15,7 @@ import java.util.zip.DataFormatException;
 public class Trips {
 
     private HashMap<String, Trip> trips;
+    private Headers headers = new Headers();
 
     /**
      * Trips constructor initialized with empty hash map
@@ -96,7 +97,6 @@ public class Trips {
         try (Scanner in = new Scanner(file)) {
 
             //Header object
-            Headers headers;
             try {
                 headers = validateHeader(in.nextLine());
             } catch (IllegalArgumentException e) {
@@ -129,7 +129,7 @@ public class Trips {
      * @param file the trips.txt file desired location
      * @return true if file was written successfully, false otherwise
      * @throws IOException if something went wrong
-     * @author Simon Erickson
+     * @author Simon Erickson, Joy Cross
      */
     public boolean exportTrips(File file) throws IOException {
 
@@ -137,34 +137,31 @@ public class Trips {
         try (PrintWriter write = new PrintWriter(new BufferedOutputStream(new FileOutputStream(new File(file, "trips.txt"))))) {
 
             //write header: route_id,service_id,trip_id,trip_headsign,direction_id,block_id,shape_id
-            write.println(Trip.getHeaderLine());
+            write.append(createHeaderLine(headers));
 
             //write body
             for (String key : trips.keySet()) {
-                write.append(trips.get(key).getDataLine());
+                write.append(trips.get(key).getDataLine(headers));
             }
             return true;
         }
     }
 
     /**
-     * Method to output data as a single concatenated string
-     *
-     * @return string of data
-     * @author Grant Fass
+     * Creates header line from input headers
+     * @param headers headers to put into a String output
+     * @return String
+     * @author Joy Cross
      */
-    @Override
-    public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        int maxDisplay = 100;
-        int count = 0;
-        Iterator mapIterator = trips.entrySet().iterator();
-        while (mapIterator.hasNext() && count < maxDisplay) {
-            Map.Entry mapElement = (Map.Entry) mapIterator.next();
-            stringBuilder.append(getTrip(mapElement.getKey().toString()).toString()).append("\n");
-            count++;
+    public String createHeaderLine(Headers headers) {
+        StringBuilder sb = new StringBuilder();
+        int i;
+        for(i = 0; i < headers.length()-1; i++){
+            sb.append(headers.getHeaderName(i) + ",");
         }
-        return stringBuilder.toString();
+        sb.append(headers.getHeaderName(i) + "\n");
+
+        return sb.toString();
     }
 
     /**
@@ -172,17 +169,8 @@ public class Trips {
      * @return string of data
      * @author Grant Fass
      */
-    public String toSimpleString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        int maxDisplay = 100;
-        int count = 0;
-        Iterator mapIterator = trips.entrySet().iterator();
-        while (mapIterator.hasNext() && count < maxDisplay) {
-            Map.Entry mapElement = (Map.Entry) mapIterator.next();
-            stringBuilder.append(getTrip(mapElement.getKey().toString()).toSimpleString()).append("\n");
-            count++;
-        }
-        return stringBuilder.toString();
+    public HashMap<String, Trip> getTrips() {
+        return trips;
     }
 
     /**

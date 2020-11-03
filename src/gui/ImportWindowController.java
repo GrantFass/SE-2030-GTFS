@@ -27,6 +27,8 @@ import java.util.zip.DataFormatException;
  */
 public class ImportWindowController {
     @FXML
+    private TextArea description;
+    @FXML
     private TextArea alertTextArea;
     @FXML
     private VBox routesVBox;
@@ -142,6 +144,32 @@ public class ImportWindowController {
         stopsProgressBar.setVisible(false);
         stopTimesProgressBar.setVisible(false);
         tripsProgressBar.setVisible(false);
+        description.setText("This window is used to import files into the program. " +
+                "Use the checkboxes to select which file(s) to import. Use the 'browse' buttons to select " +
+                "the location of the given file to import. Use the 'Import' button to import the files.");
+    }
+
+    /**
+     * display help values to the program
+     * Activates when help menu button is clicked
+     *
+     * @author Grant Fass
+     */
+    @FXML
+    private void displayHelp() {
+        MainWindowController.displayAlert(Alert.AlertType.INFORMATION, "General Transit Feed Specification Tool Information",
+                "Import Window Help", "This window is used to import GTFS files into the program" +
+                        "\nHow To Use:" +
+                        "\n1. Click the checkbox next to the file type you would like to import" +
+                        "\n2. Click the 'browse' button to open a File Chooser" +
+                        "\n3. Use the File Chooser to navigate to the file that you would like to import." +
+                        " Note that files are expected to be named 'routes.txt', 'stops.txt', 'stop_times.txt', or 'trips.txt'" +
+                        "\n4. Select the file in the File Chooser and click 'Open' The File chooser will" +
+                        " then close and the path will be displayed in the Text Field." +
+                        "\n5. Repeat steps 1 - 4 for all file types you would like to import." +
+                        "\n6. Click the 'Import' Button to load the selected GTFS files into the program." +
+                        " Note that this will take some time. After files are loaded the progress" +
+                        " bars will turn green and alerts will be displayed to the Alerts Text Area.");
     }
 
     /**
@@ -215,18 +243,6 @@ public class ImportWindowController {
         fileChooser.setInitialDirectory(new File("C:\\\\users\\\\" +
                 System.getProperty("user.name") + "\\\\Documents"));
         return fileChooser.showOpenDialog(mainWindowStage);
-    }
-
-    /**
-     * display help values to the program
-     * Activates when help menu button is clicked
-     *
-     * @author Grant Fass
-     */
-    @FXML
-    private void displayHelp() {
-        MainWindowController.displayAlert(Alert.AlertType.INFORMATION, "General Transit Feed Specification Tool Information",
-                "Import Window Help", "Not Implemented Yet");
     }
 
     /**
