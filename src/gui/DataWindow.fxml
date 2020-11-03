@@ -18,10 +18,11 @@ Everything in this file has been setup in code.
     <HBox spacing="10" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100"
           minWidth="20" minHeight="20">
         <TextArea fx:id="description" wrapText="true" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100"
-                  minWidth="20" minHeight="20"/>
+                  minWidth="20" minHeight="60"/>
         <Button text="?" onAction="#displayHelp" alignment="CENTER" HBox.hgrow="ALWAYS"
                 VBox.vgrow="ALWAYS" maxWidth="100" maxHeight="100" minWidth="20" minHeight="20"/>
     </HBox>
+    <HBox minHeight="30" prefHeight="30" maxHeight="30"/>
     <HBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="50" minWidth="20"
           minHeight="30" spacing="10">
         <fx:define>
@@ -40,7 +41,7 @@ Everything in this file has been setup in code.
               spacing="10">
             <Label alignment="CENTER" text="Routes" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
                    maxWidth="Infinity" maxHeight="50" minWidth="20" minHeight="20"/>
-            <ListView fx:id="routesListView" editable="false" HBox.hgrow="ALWAYS"
+            <ListView fx:id="routesListView" HBox.hgrow="ALWAYS"
                       VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" minWidth="75"
                       minHeight="20"/>
         </VBox>
@@ -48,14 +49,14 @@ Everything in this file has been setup in code.
               spacing="10">
             <Label alignment="CENTER" text="Stops" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
                    maxWidth="Infinity" maxHeight="50" minWidth="20" minHeight="20"/>
-            <ListView fx:id="stopsListView" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+            <ListView fx:id="stopsListView" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
                       maxWidth="Infinity" maxHeight="Infinity" minWidth="75" minHeight="20"/>
         </VBox>
         <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"
               spacing="10">
             <Label alignment="CENTER" text="StopTimes" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
                    maxWidth="Infinity" maxHeight="50" minWidth="20" minHeight="20"/>
-            <ListView fx:id="stopTimesListView" editable="false" HBox.hgrow="ALWAYS"
+            <ListView fx:id="stopTimesListView" HBox.hgrow="ALWAYS"
                       VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" minWidth="75"
                       minHeight="20"/>
         </VBox>
@@ -63,7 +64,7 @@ Everything in this file has been setup in code.
               spacing="10">
             <Label alignment="CENTER" text="Trips" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
                    maxWidth="Infinity" maxHeight="50" minWidth="20" minHeight="20"/>
-            <ListView fx:id="tripsListView" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+            <ListView fx:id="tripsListView" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
                       maxWidth="Infinity" maxHeight="Infinity" minWidth="75" minHeight="20"/>
         </VBox>
     </HBox>

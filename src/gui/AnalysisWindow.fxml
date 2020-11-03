@@ -20,31 +20,32 @@ Everything in this file has been setup in code.
     <HBox spacing="10" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100"
           minWidth="20" minHeight="20">
         <TextArea fx:id="description" wrapText="true" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity"
-                  maxHeight="100" minWidth="20" minHeight="20"/>
+                  maxHeight="100" minWidth="20" minHeight="60"/>
         <Button text="?" onAction="#displayHelp" alignment="CENTER" HBox.hgrow="ALWAYS"
                 VBox.vgrow="ALWAYS" maxWidth="100" maxHeight="100" minWidth="20" minHeight="20"/>
     </HBox>
+    <HBox minHeight="30" prefHeight="30" maxHeight="30"/>
     <HBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"
           spacing="10">
         <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"
               spacing="10">
             <Label alignment="CENTER" text="Distance" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
                    maxWidth="Infinity" maxHeight="50" minWidth="20" minHeight="20"/>
-            <ListView fx:id="distanceListView" editable="false" HBox.hgrow="ALWAYS"
+            <ListView fx:id="distanceListView" HBox.hgrow="ALWAYS"
                       VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"/>
         </VBox>
         <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"
               spacing="10">
             <Label alignment="CENTER" text="Speed" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
                    maxWidth="Infinity" maxHeight="50" minWidth="20" minHeight="20"/>
-            <ListView fx:id="speedListView" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+            <ListView fx:id="speedListView" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
                       maxWidth="Infinity" maxHeight="Infinity"/>
         </VBox>
         <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"
               spacing="10">
             <Label alignment="CENTER" text="Number of Trips" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
                    maxWidth="Infinity" maxHeight="50" minWidth="20" minHeight="20"/>
-            <ListView fx:id="numberTripsListView" editable="false" HBox.hgrow="ALWAYS"
+            <ListView fx:id="numberTripsListView" HBox.hgrow="ALWAYS"
                       VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"/>
         </VBox>
     </HBox>
