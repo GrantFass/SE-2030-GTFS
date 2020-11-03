@@ -13,6 +13,7 @@ import java.util.zip.DataFormatException;
 public class Stops {
 
 	private HashMap<String, Stop> stops;
+	private Headers headers = new Headers();
 
 	/**
 	 * Stops Constructor: creates empty instance of stops object
@@ -89,7 +90,6 @@ public class Stops {
 			stops.clear();
 		}
 		Scanner sc = new Scanner(file);
-		Headers headers;
 		try {
 			headers = validateHeader(sc.nextLine());
 		} catch (DataFormatException e) {
@@ -126,9 +126,9 @@ public class Stops {
 		}
 		FileWriter out = new FileWriter(outFile.getAbsoluteFile());
 		StringBuilder outputString = new StringBuilder();
-		outputString.append(Stop.getHeaderLine());
+		outputString.append(createHeaderLine(headers));
 		for (String key: stops.keySet()) {
-			outputString.append(stops.get(key).getDataLine());
+			outputString.append(stops.get(key).getDataLine(headers));
 		}
 		out.append(outputString);
 		out.close();
@@ -161,6 +161,7 @@ public class Stops {
 		final String possibleHeaders = Stop.getHeaderLine().toLowerCase();
 		for (int i = 0; i < headerDataArray.length; i++) {
 			String indivHeader = headerDataArray[i].trim();
+			/*
 			// checks if header is abbreviated to something else and normalizes it
 			switch (indivHeader) {
 				case "stop_desc":
@@ -173,6 +174,7 @@ public class Stops {
 					indivHeader = "stop_longitude";
 					break;
 			}
+			*/
 
 			// check to make sure header isn't empty or not valid
 			if (!indivHeader.isEmpty() && possibleHeaders.contains(indivHeader)) {
@@ -204,7 +206,13 @@ public class Stops {
 		//Required Fields
 		String stop_id = setDefaultDataValue(dataArray, headers, "stop_id");
 		String stop_latitude = setDefaultDataValue(dataArray, headers, "stop_latitude");
+		if(stop_latitude.isEmpty()){
+			stop_latitude = setDefaultDataValue(dataArray, headers, "stop_lat");
+		}
 		String stop_longitude = setDefaultDataValue(dataArray, headers, "stop_longitude");
+		if(stop_longitude.isEmpty()){
+			stop_longitude = setDefaultDataValue(dataArray, headers, "stop_lon");
+		}
 
 		//Optional Fields
 		String level_id = setDefaultDataValue(dataArray, headers, "level_id");
@@ -213,6 +221,9 @@ public class Stops {
 		String platform_code = setDefaultDataValue(dataArray, headers, "platform_code");
 		String stop_code = setDefaultDataValue(dataArray, headers, "stop_code");
 		String stop_description = setDefaultDataValue(dataArray, headers, "stop_description");
+		if(stop_description.isEmpty()){
+			stop_description = setDefaultDataValue(dataArray, headers, "stop_desc");
+		}
 		String stop_name = setDefaultDataValue(dataArray, headers, "stop_name");
 		String stop_timezone = setDefaultDataValue(dataArray, headers, "stop_timezone");
 		String stop_url = setDefaultDataValue(dataArray, headers, "stop_url");
@@ -276,8 +287,12 @@ public class Stops {
 		return stringBuilder.toString();
 	}
 
-	/*
-	public static String createHeaderLine(Headers headers) {
+	/**
+	 * Creates header line from input headers
+	 * @param headers headers to put into a String output
+	 * @return String
+	 */
+	public String createHeaderLine(Headers headers) {
 		StringBuilder sb = new StringBuilder();
 		int i;
 		for(i = 0; i < headers.length()-1; i++){
@@ -287,7 +302,7 @@ public class Stops {
 
 		return sb.toString();
 	}
-	*/
+
 
 
 
