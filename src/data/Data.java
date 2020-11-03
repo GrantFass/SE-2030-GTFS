@@ -59,7 +59,8 @@ public class Data implements Subject {
 		Iterator mapIterator = tripDistances().entrySet().iterator();
 		while (mapIterator.hasNext()) {
 			Map.Entry mapElement = (Map.Entry) mapIterator.next();
-			stringBuilder.append(mapElement.getKey()).append(" | ").append(mapElement.getValue()).append("\n");
+			stringBuilder.append("Trip id: ").append(mapElement.getKey()).append(" | ")
+					.append(mapElement.getValue()).append(" miles\n");
 		}
 		return stringBuilder.toString();
 	}
