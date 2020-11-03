@@ -254,7 +254,7 @@ public class Data implements Subject {
 	 */
 	public String getRouteIDs_fromStopID(String stop_id){
 	    ArrayList<String> route_ids = searchStopForRoute_IDs(stop_id);
-	    return formatRoute_IDs(stop_id, route_ids);
+	    return formatRoute_IDs(route_ids);
 	}
 
 	/**
@@ -279,16 +279,15 @@ public class Data implements Subject {
 	/**
 	 * Helper method for getRouteIDs_fromStopID() that formats a string similarly to a toString() method
 	 * to display every route_id associated with a stop_id
-	 * @param stop_id of a Stop being searched
 	 * @param route_ids ArrayList of every route_id associated with stop_id
 	 * @return String formatting every route_id associated with stop_id on new lines
 	 */
-	private String formatRoute_IDs(String stop_id, ArrayList<String> route_ids){
+	private String formatRoute_IDs(ArrayList<String> route_ids){
 		StringBuilder sb = new StringBuilder();
-		sb.append("route_id(s) that contain the stop_id: " + stop_id);
-		for(String route_id : route_ids){
-			sb.append("\n- " + route_id);
-		}
+		for(int i = 0; i < route_ids.size(); ++i){
+		    sb.append((i+1) + ": " + route_ids.get(i) + "\n");
+        }
+
 		return sb.toString();
 	}
 

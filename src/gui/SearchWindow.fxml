@@ -56,8 +56,8 @@ Everything in this file has been setup in code.
                           VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity">
                     <items>
                         <FXCollections fx:factory="observableArrayList">
-                            <String fx:value="stop_id"/>
                             <String fx:value="route_id"/>
+                            <String fx:value="stop_id"/>
                             <String fx:value="StopTime"/>
                             <String fx:value="trip_id"/>
                         </FXCollections>
