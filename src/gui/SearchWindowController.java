@@ -139,13 +139,13 @@ public class SearchWindowController {
         switch (((String)outputType.getValue()).toLowerCase()) {
             case "route_id":
                 if(!(inputType.getValue()).equals("stop_id")){
-                    output.appendText("Search type is invalid:\nTo search for route_ids, search type must be stop_id");
+                    output.appendText("Input type not yet implemented");
                 } else if(mainWindowController.getData().getStops().getStop(input.getText()) != null){
                     String route_ids = mainWindowController.getData().getRouteIDs_fromStopID(input.getText());
 
                     output.appendText(route_ids);
                 } else {
-                    output.appendText("No Stops were found to be associated with the given stop_id");
+                    output.appendText("stop_id does not exist");
                 }
                 break;
             case "stop_id":
@@ -155,17 +155,19 @@ public class SearchWindowController {
                 output.appendText("not ready");
                 break;
             case "trip_id":
-                if(((String)inputType.getValue()).toLowerCase().equals("stop_id")){
+                if(!(inputType.getValue().equals("stop_id"))){
+                    output.appendText("Input type not yet implemented");
+                } else if(mainWindowController.getData().getStops().getStop(input.getText()) == null){
+                    output.appendText("stop_id does not exist");
+                } else {
                     String inputText = (input.getText()).toLowerCase();
                     List<String> list = mainWindowController.getData().getStopTimes().searchStopDisplayTrips(inputText);
                     StringBuilder sb = new StringBuilder();
-                    for(int i = 0; i < list.size(); i++){
+                    for (int i = 0; i < list.size(); i++) {
                         int j = i + 1;
                         sb.append(j + ": " + list.get(i) + "\n");
                     }
                     output.appendText(sb.toString());
-                } else{
-                    output.appendText("Input type not yet implemented");
                 }
                 break;
         }
