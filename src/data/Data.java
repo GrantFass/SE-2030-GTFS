@@ -185,8 +185,11 @@ public class Data implements Subject {
 				Arrays.stream(keys).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
 						.entrySet()
 						.forEach(object -> {
-								items.add(String.format("%s Trips contain Stop ID: %s\n", object.toString().substring(object.toString().indexOf('=') + 1), object.toString().substring(0, object.toString().indexOf('='))));
+							String stop_id = object.toString().substring(0, object.toString().indexOf('='));
+							int tripCount = Integer.parseInt(object.toString().substring(object.toString().indexOf('=') + 1));
+								items.add(String.format("%s Trips contain Stop ID: %s\n", tripCount, stop_id));
 							i[0] = i[0] + 1;
+							stops.getStop(stop_id).setTripsPerStop(tripCount);
 						});
 				break;
 		}
