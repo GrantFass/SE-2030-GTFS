@@ -141,7 +141,7 @@ public class SearchWindowController {
             switch ((String)outputType.getValue()) {
                 case "route_id":
                     if (inputType.getValue().equals("stop_id") && mainWindowController.getData().getStops().getStop(input.getText()) != null) {
-                        output.setText(mainWindowController.getData().getRouteIDs_fromStopID(input.getText()).isEmpty() ? "No Results Found" : mainWindowController.getData().getRouteIDs_fromStopID(input.getText()));
+                        output.appendText(mainWindowController.getData().getRouteIDs_fromStopID(input.getText()).isEmpty() ? "No Results Found" : mainWindowController.getData().getRouteIDs_fromStopID(input.getText()));
                     } else if (inputType.getValue().equals("stop_id")) {
                         output.setText("No Stops were found to be associated with the given stop_id");
                     } else if (inputType.getValue().equals("route_id")){
