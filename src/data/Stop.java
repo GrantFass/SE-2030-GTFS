@@ -22,6 +22,7 @@ public class Stop {
 	private String stop_code;
 	private String stop_description;
 	private final String stop_id;
+	private int tripsPerStop;
 	private double stop_latitude;
 	private double stop_longitude;
 	private String stop_name;
@@ -264,6 +265,13 @@ public class Stop {
 		return wheelchair_boarding;
 	}
 
+	/**
+	 * @author Joy Cross
+	 */
+	public void setTripsPerStop(int tripsPerStop){
+		this.tripsPerStop = tripsPerStop;
+	}
+
 	/*
 	/**
 	 * @author Joy Cross
@@ -368,9 +376,10 @@ public class Stop {
 				"Stop Longitude: %s\n\t" +
 				"Stop Timezone: %s\n\t" +
 				"Stop URL: %s\n\t" +
-				"Wheelchair Boarding: %s\n", stop_name, stop_id, level_id, location_type,
+				"Wheelchair Boarding: %s\n\t" +
+				"Trips that contain stop: %s\n", stop_name, stop_id, level_id, location_type,
 				parent_station, platform_code, stop_code, stop_description, stop_latitude,
-				stop_longitude, stop_timezone, stop_url, wheelchair_boarding);
+				stop_longitude, stop_timezone, stop_url, wheelchair_boarding,tripsPerStop);
 	}
 
 	/**

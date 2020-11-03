@@ -296,7 +296,11 @@ public class Route {
 					sb.append(hex);
 					break;
 				case "route_text_color":
-					sb.append(route_text_color);
+					r = (int)(route_text_color.getRed()*256);
+					b = (int)(route_text_color.getBlue()*256);
+					g = (int)(route_text_color.getGreen()*256);
+					hex = String.format("%02x%02x%02x", r, g, b);
+					sb.append(hex);
 					break;
 				case "route_sort_order":
 					sb.append(route_sort_order);
