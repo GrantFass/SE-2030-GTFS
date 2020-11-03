@@ -123,10 +123,10 @@ public class Data implements Subject {
 				String[] value = v.split("--");
 				long time = Long.parseLong(value[2]) - Long.parseLong(value[1]);
 
-				int km = tripDistance(stops.getStop(value[1]), stops.getStop(value[3]));
+				int miles = tripDistance(stops.getStop(value[1]), stops.getStop(value[3]));
 
 				long hours = time/3600000;
-				tripAndSpeed.put(k,km/hours+" Kilometers per Hour");
+				tripAndSpeed.put(k,miles/hours+" Miles per Hour");
 
 			});
 			returnHashMap = tripAndSpeed;
