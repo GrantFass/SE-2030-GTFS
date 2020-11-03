@@ -186,11 +186,12 @@ public class ExportWindowController {
     @FXML
     private void exportFiles() {
         alertTextArea.clear();
-        alertTextArea.appendText(LocalDateTime.now().toString() + "\n");
+        alertTextArea.appendText(String.format("Export of selected files started at: %s\n", LocalDateTime.now()));
         exportFile(routesCheckBox, routesProgressBar, "Routes");
         exportFile(stopsCheckBox, stopsProgressBar, "Stops");
         exportFile(stopTimesCheckBox, stopTimesProgressBar, "StopTimes");
         exportFile(tripsCheckBox, tripsProgressBar, "Trips");
+        alertTextArea.appendText(String.format("Export of selected files completed at: %s\n", LocalDateTime.now()));
     }
 
     private void exportFile(CheckBox checkBox, ProgressBar progressBar, String fileType) {

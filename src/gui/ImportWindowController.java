@@ -315,11 +315,12 @@ public class ImportWindowController {
     @FXML
     private void importFiles() {
         alertTextArea.clear();
-        alertTextArea.appendText(LocalDateTime.now().toString() + "\n");
+        alertTextArea.appendText(String.format("Import of selected files started at: %s\n", LocalDateTime.now()));
         importFile(routesCheckBox, routesTextField, routesProgressBar, "Routes");
         importFile(stopsCheckBox, stopsTextField, stopsProgressBar, "Stops");
         importFile(stopTimesCheckBox, stopTimesTextField, stopTimesProgressBar, "Stop_Times");
         importFile(tripsCheckBox, tripsTextField, tripsProgressBar, "Trips");
+        alertTextArea.appendText(String.format("Import of selected files completed at: %s\n", LocalDateTime.now()));
     }
 
     /**
