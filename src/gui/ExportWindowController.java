@@ -186,23 +186,23 @@ public class ExportWindowController {
     @FXML
     private void exportFiles() {
         alertTextArea.clear();
-        alertTextArea.appendText(String.format("Export of selected files started at: %s\n", LocalDateTime.now()));
-        exportFile(routesCheckBox, routesProgressBar, "Routes");
-        exportFile(stopsCheckBox, stopsProgressBar, "Stops");
-        exportFile(stopTimesCheckBox, stopTimesProgressBar, "StopTimes");
-        exportFile(tripsCheckBox, tripsProgressBar, "Trips");
-        alertTextArea.appendText(String.format("Export of selected files completed at: %s\n", LocalDateTime.now()));
+        if (!directoryTextField.getText().isEmpty()) {
+            alertTextArea.appendText(String.format("Export of selected files started at: %s\n", LocalDateTime.now()));
+            exportFile(routesCheckBox, routesProgressBar, "Routes");
+            exportFile(stopsCheckBox, stopsProgressBar, "Stops");
+            exportFile(stopTimesCheckBox, stopTimesProgressBar, "StopTimes");
+            exportFile(tripsCheckBox, tripsProgressBar, "Trips");
+            alertTextArea.appendText(String.format("Export of selected files completed at: %s\n", LocalDateTime.now()));
+        }
+        else alertTextArea.setText("SKIPPING ALL: No Directory Selected!");
     }
 
     private void exportFile(CheckBox checkBox, ProgressBar progressBar, String fileType) {
         progressBar.setProgress(ProgressBar.INDETERMINATE_PROGRESS);
-        if (checkBox.isSelected() && !directoryTextField.getText().isEmpty()) {
+        if (checkBox.isSelected()) {
             alertTextArea.appendText("OUT: " + fileType + "\n");
             exportFile(new File(directoryTextField.getText()), fileType.toLowerCase());
             progressBar.setStyle("-fx-accent: green");
-        } else if (checkBox.isSelected()) {
-            alertTextArea.appendText("SKIP: " + fileType + " - Empty Directory Location\n");
-            progressBar.setStyle("-fx-accent: red");
         } else {
             alertTextArea.appendText("SKIP: " + fileType + " - Not Selected\n");
             progressBar.setStyle("-fx-accent: red");
@@ -216,15 +216,19 @@ public class ExportWindowController {
                 case "routes":
                     mainWindowController.getData().getRoutes().exportRoutes(file);
                     routeTextField.setText(file.toString() + "//routes.txt");
+                    break;
                 case "stops":
                     mainWindowController.getData().getStops().exportStops(file);
                     stopTextField.setText(file.toString() + "//stops.txt");
+                    break;
                 case "stoptimes":
                     mainWindowController.getData().getStopTimes().exportStopTimes(file);
                     stopTimeTextField.setText(file.toString() + "//stop_times.txt");
+                    break;
                 case "trips":
                     mainWindowController.getData().getTrips().exportTrips(file);
                     tripTextField.setText(file.toString() + "//trips.txt");
+                    break;
             }
         } catch (IOException e) {
             alertTextArea.appendText("\tERROR: IOException - " + e.getMessage() + "\n");
