@@ -21,7 +21,6 @@ import java.util.zip.DataFormatException;
  */
 public class Data implements Subject {
 	//Radius of the earth in miles
-
 	private final static double EARTH_RADIUS = 3959;
 	private Routes routes;
 	private StopTimes stop_times;

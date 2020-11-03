@@ -15,11 +15,7 @@ import java.util.zip.DataFormatException;
 public class Trips {
 
     private HashMap<String, Trip> trips;
-<<<<<<< HEAD
-    private final int maxDisplay = Integer.MAX_VALUE;
-=======
     private Headers headers = new Headers();
->>>>>>> 67c6fda4e7a185cfd5a784391dc106f9070f9892
 
     /**
      * Trips constructor initialized with empty hash map
@@ -152,30 +148,6 @@ public class Trips {
     }
 
     /**
-<<<<<<< HEAD
-     * get the hashmap value
-     * @return the hashmap value
-=======
-     * Method to output data as a single concatenated string
-     *
-     * @return string of data
-     * @author Grant Fass
-     */
-    @Override
-    public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        int maxDisplay = 100;
-        int count = 0;
-        Iterator mapIterator = trips.entrySet().iterator();
-        while (mapIterator.hasNext() && count < maxDisplay) {
-            Map.Entry mapElement = (Map.Entry) mapIterator.next();
-            stringBuilder.append(getTrip(mapElement.getKey().toString()).toString()).append("\n");
-            count++;
-        }
-        return stringBuilder.toString();
-    }
-
-    /**
      * Creates header line from input headers
      * @param headers headers to put into a String output
      * @return String
@@ -195,7 +167,6 @@ public class Trips {
     /**
      * output simplified data as a single concatenated string
      * @return string of data
->>>>>>> 67c6fda4e7a185cfd5a784391dc106f9070f9892
      * @author Grant Fass
      */
     public HashMap<String, Trip> getTrips() {
