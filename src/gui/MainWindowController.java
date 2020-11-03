@@ -1,26 +1,16 @@
 package gui;
 
 import data.Data;
-import data.Route;
-import data.Stop;
-import data.Trip;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.VBox;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.InputMismatchException;
-import java.util.zip.DataFormatException;
 
 public class MainWindowController {
+	@FXML
+	private TextArea description;
 	private Data data = new Data();
 	private Stage analysisWindowStage;
 	private AnalysisWindowController analysisWindowController;
@@ -37,6 +27,10 @@ public class MainWindowController {
 	private SearchWindowController searchWindowController;
 	private Stage updateWindowStage;
 	private UpdateWindowController updateWindowController;
+	private static final Rectangle2D PRIMARY_SCREEN_BOUNDS = Screen.getPrimary().getVisualBounds();
+	private static final double WINDOW_WIDTH = PRIMARY_SCREEN_BOUNDS.getWidth() / 3.0;
+	private static final double WINDOW_HEIGHT = PRIMARY_SCREEN_BOUNDS.getHeight() / 3.0;
+
 
 	/**
 	 * set the local values of all of the stages.
@@ -62,6 +56,8 @@ public class MainWindowController {
 		this.mapWindowStage = mapWindowStage;
 		this.searchWindowStage = searchWindowStage;
 		this.updateWindowStage = updateWindowStage;
+		mainWindowStage.setWidth(WINDOW_WIDTH);
+		mainWindowStage.setHeight(WINDOW_HEIGHT);
 	}
 
 	/**
@@ -90,6 +86,53 @@ public class MainWindowController {
 		this.mapWindowController = mapWindowController;
 		this.searchWindowController = searchWindowController;
 		this.updateWindowController = updateWindowController;
+	}
+
+	/**
+	 * set the default values of the description
+	 * @author Grant Fass
+	 */
+	public void setDefaultValues() {
+		description.setText("This is the main window of the program. All functions can " +
+				"be accessed from this window. Click on one of the buttons below to go to get started.");
+	}
+
+	/**
+	 * Method to display help values to the program
+	 * Activates when help menu button is clicked
+	 * @author Grant Fass
+	 */
+	@FXML
+	private void displayHelp() {
+		displayAlert(Alert.AlertType.INFORMATION, "General Transit Feed Specification Tool Information",
+				"Main Window Help", "This is the main window of the General Transit" +
+						" Feed Specification Tool. To get started please click on one of the buttons" +
+						" on the main page." +
+						"\n'Import' will open a window used to import GTFS files into the program" +
+						"\n'Update' will open a window used to update information in the GTFS files" +
+						"\n'Export' will open a window used to export the data in the program as GTFS files" +
+						"\n'Data' will open a window used to view the data stored in the program" +
+						"\n'Analysis' will open a window used to view information calculated from the stored data" +
+						"\n'Search' will open a window used to search for pieces of stored data" +
+						"\n'Map' will open a window used to display some of the stored data" +
+						"\n'About' will open an alert with information about the program" +
+						"\n'Exit' will safely shut down the program");
+	}
+
+	/**
+	 * display information to the user about the programs creators
+	 * @author Grant Fass
+	 */
+	@FXML
+	private void displayAbout() {
+		displayAlert(Alert.AlertType.INFORMATION, "General Transit Feed Specification Tool Information: About",
+				null, "This program is designed to allow users to import, manipulate, and export" +
+						" GTFS files that are consistent with the specifications from the Google Transit GTFS" +
+						" Reference pages. Files are expected to be named as 'stops.txt', 'stop_times.txt'," +
+						" 'routes.txt', or 'trips.txt'.\nThis program was developed by Group G of the" +
+						" Software Engineering Tools And Practices class (SE 2030 - 021) at the Milwaukee School" +
+						" Of Engineering (MSOE) in the Fall term of 2020.\n" +
+						"Members: Grant Fass, Joy Cross, Simon Erickson, & Ryan Becker.");
 	}
 
 	/**
@@ -122,28 +165,22 @@ public class MainWindowController {
 	/**
 	 * method to toggle the visibility of a given stage
 	 * @param stage the stage to toggle the visibility of
+	 * @param xOffset the number of pixels to offset the window. Positive values move the window right.
+	 * @param yOffset the number of pixels to offset the window. Positive values move the window down.
 	 * @author Grant Fass
 	 */
-	private void toggleStage(Stage stage){
+	private void toggleStage(Stage stage, double xOffset, double yOffset){
 		if (stage.isShowing()) {
 			stage.hide();
 		} else {
-			stage.setX(mainWindowStage.getX() + mainWindowStage.getWidth());
-			stage.setY(mainWindowStage.getY());
+			final int windowOffset = 15;
+			stage.setX(mainWindowStage.getX() + xOffset);
+			stage.setY(mainWindowStage.getY() + yOffset);
+			stage.setWidth(WINDOW_WIDTH);
+			stage.setHeight(WINDOW_HEIGHT);
 			stage.toFront();
 			stage.show();
 		}
-	}
-
-	/**
-	 * Method to display help values to the program
-	 * Activates when help menu button is clicked
-	 * @author Grant Fass
-	 */
-	@FXML
-	private void displayHelp() {
-		displayAlert(Alert.AlertType.INFORMATION, "General Transit Feed Specification Tool Information",
-				"Main Window Help", "Not Implemented Yet");
 	}
 
 	/**
@@ -152,7 +189,8 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void toggleAnalysisWindow() {
-		toggleStage(analysisWindowStage);
+		//open the analysis window under the main window and to the right two stages
+		toggleStage(analysisWindowStage, 2 * mainWindowStage.getWidth(), mainWindowStage.getHeight());
 	}
 
 	/**
@@ -161,7 +199,8 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void toggleDataWindow() {
-		toggleStage(dataWindowStage);
+		//open the data window under the main window and to the right one stage
+		toggleStage(dataWindowStage, mainWindowStage.getWidth(), mainWindowStage.getHeight());
 	}
 
 	/**
@@ -170,7 +209,8 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void toggleExportWindow() {
-		toggleStage(exportWindowStage);
+		//open the export window 2 stages right of the main window
+		toggleStage(exportWindowStage, 2 * mainWindowStage.getWidth(), 0);
 	}
 
 	/**
@@ -179,7 +219,8 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void toggleImportWindow() {
-		toggleStage(importWindowStage);
+		//open the import window directly to the right of the main window
+		toggleStage(importWindowStage, mainWindowStage.getWidth(), 0);
 	}
 
 	/**
@@ -188,7 +229,8 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void toggleMapWindow() {
-		toggleStage(mapWindowStage);
+		//open the map window two stages down and one stage right from the main window
+		toggleStage(mapWindowStage, mainWindowStage.getWidth(), 2 * mainWindowStage.getHeight());
 	}
 
 	/**
@@ -197,7 +239,8 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void toggleSearchWindow() {
-		toggleStage(searchWindowStage);
+		//open the search window directly under the main window
+		toggleStage(searchWindowStage, 0, mainWindowStage.getHeight());
 	}
 
 	/**
@@ -206,30 +249,8 @@ public class MainWindowController {
 	 */
 	@FXML
 	private void toggleUpdateWindow() {
-		toggleStage(updateWindowStage);
-	}
-
-	/**
-	 * display information to the user about the programs creators
-	 * @author Grant Fass
-	 */
-	@FXML
-	private void displayAbout() {
-		String aboutInfo = "Authors: SE 2030 - 021 Group G\n" +
-				"Members: Grant Fass, Joy Cross, Simon Erickson, & Ryan Becker\n" +
-				"Affiliation: Milwaukee School of Engineering (MSOE)\n" +
-				"Term: Fall 2020\n\n";
-		String acceptedFiles = "This program currently accepts four files:\n" +
-				"'stops.txt', 'stop_times.txt', 'routes.txt', & 'trips.txt'.\n" +
-				"All other files will not work with the program.\n" +
-				"Files are expected to be formatted matching the documentation found\n" +
-				"here: https://developers.google.com/transit/gtfs/reference and\n" +
-				"here: https://developers.google.com/transit/gtfs/examples/gtfs-feed.\n\n";
-		String introductionInformation = "This program is designed to allow " +
-				"the user to import, view, and manipulate GTFS files for a General " +
-				"Transit Feed Specification Tool.\n\n";
-		displayAlert(Alert.AlertType.INFORMATION, "General Transit Feed Specification Tool Information",
-				null, introductionInformation + acceptedFiles + aboutInfo);
+		//open the update window two stages down from the main window
+		toggleStage(updateWindowStage, 0, 2 * mainWindowStage.getHeight());
 	}
 
 	/**

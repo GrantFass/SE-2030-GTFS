@@ -6,15 +6,16 @@
  */
 package gui;
 
-import javafx.event.ActionEvent;
+import data.Data;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 
+import interfaces.Observer;
+
 import java.util.HashMap;
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * AnalysisWindowController Purpose: Controller for the Analysis Window
@@ -24,11 +25,13 @@ import java.util.Observer;
  */
 public class AnalysisWindowController implements Observer {
     @FXML
-    private TextArea distanceTextArea;
+    private TextArea description;
     @FXML
-    private TextArea speedTextArea;
+    private ListView distanceListView;
     @FXML
-    private TextArea numberTripsTextArea;
+    private ListView speedListView;
+    @FXML
+    private ListView numberTripsListView;
     private Stage analysisWindowStage;
     private Stage dataWindowStage;
     private DataWindowController dataWindowController;
@@ -100,6 +103,16 @@ public class AnalysisWindowController implements Observer {
     }
 
     /**
+     * set the default values of the description
+     * @author Grant Fass
+     */
+    public void setDefaultValues() {
+        description.setText("This window displays information that is calculated and derived " +
+                "from the other stored data. This window automatically updates whenever " +
+                "the stored data is updated.");
+    }
+
+    /**
      * display help values to the program
      * Activates when help menu button is clicked
      *
@@ -108,23 +121,28 @@ public class AnalysisWindowController implements Observer {
     @FXML
     private void displayHelp() {
         MainWindowController.displayAlert(Alert.AlertType.INFORMATION, "General Transit Feed Specification Tool Information",
-                "Import Window Help", "Not Implemented Yet");
+                "Import Window Help", "This window is used to view information that\n" +
+                        "has been derived and or calculated from the various data classes.\n" +
+                        "data from 'routes.txt', 'stops.txt', 'stop_times.txt', and 'trips.txt'\n" +
+                        "are used for calculations. Some data can be partially displayed if not all\n" +
+                        "of the files are loaded. If the data display does not look correct\n" +
+                        "make sure that all files are loaded. The data displayed in this window\n" +
+                        "update whenever a change is made to any of the data classes. This ensures\n" +
+                        "that the most current information is always displayed.");
     }
 
     /**
-     * This method is called whenever the observed object is changed. An
-     * application calls an <tt>Observable</tt> object's
-     * <code>notifyObservers</code> method to have all the object's
-     * observers notified of the change.
+     * update the observers when the data is changed
+     * Based on a guide from GeeksForGeeks
+     * found here: https://www.geeksforgeeks.org/observer-pattern-set-2-implementation/
      *
-     * @param o   the observable object.
-     * @param arg an argument passed to the <code>notifyObservers</code>
+     * @param data the data object that was changed
      * @author Grant Fass
      */
     @Override
-    public void update(Observable o, Object arg) {
-        distanceTextArea.setText(mainWindowController.getData().getTripDistances());
-        speedTextArea.setText("Not Implemented Yet!");
-        numberTripsTextArea.setText(mainWindowController.getData().getStopTimes().getTripsPerStop().isEmpty() ? "No Data Yet!" : mainWindowController.getData().getStopTimes().getTripsPerStop());
+    public void update(Data data) {
+        data.displayAnalysis(0, distanceListView);
+        data.displayAnalysis(1, speedListView);
+        data.displayAnalysis(2, numberTripsListView);
     }
 }

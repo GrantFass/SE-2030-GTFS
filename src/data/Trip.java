@@ -190,10 +190,38 @@ public class Trip {
     /**
      * gets the data line for a single trip for trips
      * @return trip data in a single line data format
-     * @author Simon Erickson
+     * @author Simon Erickson, Joy Cross
      */
-    public String getDataLine() {
-        return String.format("%s,%s,%s,%s,%s,%s,%s\n", route_id,service_id,trip_id,trip_headsign,
-                direction_id.getValue(),block_id,shape_id);
+    public String getDataLine(Headers headers) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < headers.length(); i++){
+            switch (headers.getHeaderName(i)) {
+                case "route_id":
+                    sb.append(route_id);
+                    break;
+                case "service_id":
+                    sb.append(service_id);
+                    break;
+                case "trip_id":
+                    sb.append(trip_id);
+                    break;
+                case "trip_headsign":
+                    sb.append(trip_headsign);
+                    break;
+                case "direction_id":
+                    sb.append(direction_id.getValue());
+                    break;
+                case "block_id":
+                    sb.append(block_id);
+                    break;
+                case "shape_id":
+                    sb.append(shape_id);
+                    break;
+            }
+            sb.append(',');
+        }
+        sb.deleteCharAt(sb.length()-1);
+        sb.append('\n');
+        return sb.toString();
     }
 }//end Trip

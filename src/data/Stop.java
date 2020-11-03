@@ -22,6 +22,7 @@ public class Stop {
 	private String stop_code;
 	private String stop_description;
 	private final String stop_id;
+	private int tripsPerStop;
 	private double stop_latitude;
 	private double stop_longitude;
 	private String stop_name;
@@ -100,8 +101,8 @@ public class Stop {
 	 * @author Joy Cross
 	 */
 	public static String getHeaderLine() {
-		return "stop_id,stop_longitude,stop_latitude,stop_name,stop_description,stop_code," +
-				"platform_code,level_id,location_type," +
+		return "stop_id,stop_longitude,stop_lon,stop_latitude,stop_lat,stop_name,stop_description,stop_desc" +
+				",stop_code,platform_code,level_id,location_type," +
 				"stop_timezone,wheelchair_boarding,stop_url,parent_station\n";
 	}
 
@@ -111,18 +112,66 @@ public class Stop {
 	 * @return stop time data in a single line data format
 	 * @author Joy Cross
 	 */
-	public String getDataLine() {
-		String timezone = null;
-		if(stop_timezone != null){
-			timezone = stop_timezone.getID();
+	public String getDataLine(Headers headers) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < headers.length(); i++){
+			switch (headers.getHeaderName(i)) {
+				case "stop_id":
+					sb.append(stop_id);
+					break;
+				case "stop_longitude":
+				case "stop_lon":
+					sb.append(stop_longitude);
+					break;
+				case "stop_latitude":
+				case "stop_lat":
+					sb.append(stop_latitude);
+					break;
+				case "stop_name":
+					sb.append(stop_name);
+					break;
+				case "stop_description":
+				case "stop_desc":
+					sb.append(stop_description);
+					break;
+				case "stop_code":
+					sb.append(stop_code);
+					break;
+				case "platform_code":
+					sb.append(platform_code);
+					break;
+				case "level_id":
+					sb.append(level_id);
+					break;
+				case "location_type":
+					sb.append(location_type.getValue());
+					break;
+				case "stop_timezone":
+					String timezone = null;
+					if(stop_timezone != null){
+						timezone = stop_timezone.getID();
+					}
+					sb.append(timezone);
+					break;
+				case "wheelchair_boarding":
+					sb.append(wheelchair_boarding.getValue());
+					break;
+				case "stop_url":
+					String url = "";
+					if(stop_url != null){
+						url = stop_url.toString();
+					}
+					sb.append(url);
+					break;
+				case "parent_station":
+					sb.append(parent_station);
+					break;
+			}
+			sb.append(',');
 		}
-		String url = null;
-		if(stop_timezone != null){
-			url = stop_url.toString();
-		}
-		return String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", stop_id, stop_longitude, stop_latitude, stop_name,
-				stop_description, stop_code, platform_code, level_id, location_type.getValue(),
-				timezone, wheelchair_boarding.getValue(), url, parent_station);
+		sb.deleteCharAt(sb.length()-1);
+		sb.append('\n');
+		return sb.toString();
 	}
 
 	/**
@@ -214,6 +263,13 @@ public class Stop {
 	 */
 	public WheelchairBoardingEnum getWheelchairBoarding(){
 		return wheelchair_boarding;
+	}
+
+	/**
+	 * @author Joy Cross
+	 */
+	public void setTripsPerStop(int tripsPerStop){
+		this.tripsPerStop = tripsPerStop;
 	}
 
 	/*
@@ -320,9 +376,10 @@ public class Stop {
 				"Stop Longitude: %s\n\t" +
 				"Stop Timezone: %s\n\t" +
 				"Stop URL: %s\n\t" +
-				"Wheelchair Boarding: %s\n", stop_name, stop_id, level_id, location_type,
+				"Wheelchair Boarding: %s\n\t" +
+				"Trips that contain stop: %s\n", stop_name, stop_id, level_id, location_type,
 				parent_station, platform_code, stop_code, stop_description, stop_latitude,
-				stop_longitude, stop_timezone, stop_url, wheelchair_boarding);
+				stop_longitude, stop_timezone, stop_url, wheelchair_boarding,tripsPerStop);
 	}
 
 	/**

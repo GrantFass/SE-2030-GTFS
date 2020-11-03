@@ -6,16 +6,11 @@
  */
 package gui;
 
-import javafx.event.ActionEvent;
+import data.Data;
+import interfaces.Observer;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
-
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * DataDisplayController Purpose: Controller for the data display window
@@ -25,17 +20,19 @@ import java.util.Observer;
  */
 public class DataWindowController implements Observer {
     @FXML
+    private ListView stopTimesListView;
+    @FXML
+    private TextArea description;
+    @FXML
     private ToggleButton snapshotToggleButton;
     @FXML
     private ToggleButton expandedToggleButton;
     @FXML
-    private TextArea routesTextArea;
+    private ListView routesListView;
     @FXML
-    private TextArea stopsTextArea;
+    private ListView stopsListView;
     @FXML
-    private TextArea stopTimesTextArea;
-    @FXML
-    private TextArea tripsTextArea;
+    private ListView tripsListView;
     @FXML
     private TextArea dataDisplayTextArea;
     @FXML
@@ -112,6 +109,18 @@ public class DataWindowController implements Observer {
     }
 
     /**
+     * set the default values of the description
+     * @author Grant Fass
+     */
+    public void setDefaultValues() {
+        description.setText("This window displays the currently stored data. The values " +
+                "automatically update so that the most current data values are always displayed. Click on " +
+                "the 'View Snapshot' toggle button to view single line snapshots of the data. Click on the " +
+                "'View Expanded Data' toggle button to view all of the data associated with a given " +
+                "reference.");
+    }
+
+    /**
      * display help values to the program
      * Activates when help menu button is clicked
      *
@@ -120,40 +129,55 @@ public class DataWindowController implements Observer {
     @FXML
     private void displayHelp() {
         MainWindowController.displayAlert(Alert.AlertType.INFORMATION, "General Transit Feed Specification Tool Information",
-                "Import Window Help", "Not Implemented Yet");
+                "Import Window Help", "This window displays all of the data stored in\n" +
+                        "the four data classes: 'routes.txt', 'stops.txt', 'stop_times.txt', and 'trips.txt'.\n" +
+                        "The information that is displayed in this window is always up to date since it\n" +
+                        "automatically updates whenever any information in the data classes is changed.\n" +
+                        "There are two viewing modes for this window. The mode can be selected through\n" +
+                        "the use of the toggle buttons.\n'View Snapshot' displays only critical information " +
+                        "in a single line format.\n'View Expanded Data' displays all information for each entry " +
+                        "in the dta classes.");
     }
 
     /**
-     * This method is called whenever the observed object is changed. An
-     * application calls an <tt>Observable</tt> object's
-     * <code>notifyObservers</code> method to have all the object's
-     * observers notified of the change.
-     *
-     * @param o   the observable object.
-     * @param arg an argument passed to the <code>notifyObservers</code>
+     * method to run when one of the toggle buttons is pressed
+     * used to make sure that the displayed data is up to date
      * @author Grant Fass
      */
-    @Override
-    public void update(Observable o, Object arg) {
-        updateData();
+    @FXML
+    private void buttonToggled() {
+        updateData(mainWindowController.getData());
     }
 
     /**
      * update the data if a toggle button is clicked to reflect the latest format
+     * @param data the data that was changed
      * @author Grant Fass
      */
-    @FXML
-    private void updateData() {
+    private void updateData(Data data) {
         if (expandedToggleButton.isSelected()) {
-            routesTextArea.setText(mainWindowController.getData().getRoutes().toString().isEmpty() ? "No Data Yet" : mainWindowController.getData().getRoutes().toString());
-            stopsTextArea.setText(mainWindowController.getData().getStops().toString().isEmpty() ? "No Data Yet" : mainWindowController.getData().getStops().toString());
-            stopTimesTextArea.setText(mainWindowController.getData().getStopTimes().toString().isEmpty() ? "No Data Yet" : mainWindowController.getData().getStopTimes().toString());
-            tripsTextArea.setText(mainWindowController.getData().getTrips().toString().isEmpty() ? "No Data Yet" : mainWindowController.getData().getTrips().toString());
+            data.displayData(0, 1, routesListView);
+            data.displayData(1, 1, stopsListView);
+            data.displayData(2, 1, stopTimesListView);
+            data.displayData(3, 1, tripsListView);
         } else {
-            routesTextArea.setText(mainWindowController.getData().getRoutes().toSimpleString().isEmpty() ? "No Data Yet" : mainWindowController.getData().getRoutes().toSimpleString());
-            stopsTextArea.setText(mainWindowController.getData().getStops().toSimpleString().isEmpty() ? "No Data Yet" : mainWindowController.getData().getStops().toSimpleString());
-            stopTimesTextArea.setText(mainWindowController.getData().getStopTimes().toSimpleString().isEmpty() ? "No Data Yet" : mainWindowController.getData().getStopTimes().toSimpleString());
-            tripsTextArea.setText(mainWindowController.getData().getTrips().toSimpleString().isEmpty() ? "No Data Yet" : mainWindowController.getData().getTrips().toSimpleString());
+            data.displayData(0, 0, routesListView);
+            data.displayData(1, 0, stopsListView);
+            data.displayData(2, 0, stopTimesListView);
+            data.displayData(3, 0, tripsListView);
         }
+    }
+
+    /**
+     * update the observers when the data is changed
+     * Based on a guide from GeeksForGeeks
+     * found here: https://www.geeksforgeeks.org/observer-pattern-set-2-implementation/
+     *
+     * @param data the data object that was changed
+     * @author Grant Fass
+     */
+    @Override
+    public void update(Data data) {
+        updateData(data);
     }
 }

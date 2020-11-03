@@ -46,6 +46,11 @@ class RouteTest {
         assertThrows(IllegalArgumentException.class, () -> new Route("", agency_id, route_short_name, route_long_name, route_desc, route_type,
                 route_url, route_color, route_text_color, route_sort_order, continuous_pickup, continuous_drop_off));
 
+        //Exception thrown when route_color is empty
+        assertThrows(IllegalArgumentException.class, () ->{ new Route(route_id, agency_id, route_short_name, route_long_name, route_desc, route_type,
+                route_url, "", route_text_color, route_sort_order, continuous_pickup, continuous_drop_off);
+        });
+
         //Exception thrown when route_color is invalid
         assertThrows(IllegalArgumentException.class, () -> new Route(route_id, agency_id, route_short_name, route_long_name, route_desc, route_type,
                 route_url, "IM_INVALID", route_text_color, route_sort_order, continuous_pickup, continuous_drop_off));
@@ -62,14 +67,15 @@ class RouteTest {
         assertThrows(IllegalArgumentException.class, () -> new Route(route_id, agency_id, route_short_name, route_long_name, route_desc, route_type,
                 "invalid", route_color, route_text_color, route_sort_order, continuous_pickup, continuous_drop_off));
 
-        //Tests if class can be made as long as route_id exists
+        //Tests if class can be made as long as route_id and route_color exists and are valid
         try{
             new Route(route_id, "", "", "", "",
-                    "", "", "", "", "", "",
+                    "", "", route_color, "", "", "",
                     "");
         } catch (IllegalArgumentException invalidClass){
             fail();
         }
+
 
 
 
@@ -205,27 +211,18 @@ class RouteTest {
         //Makes sure route_url can be empty
         test_route = new Route(route_id, agency_id, route_short_name, route_long_name, route_desc, route_type,
                 "", route_color, route_text_color, route_sort_order, continuous_pickup, continuous_drop_off);
-        try{
-            assertEquals(new URL("http://NULL"), test_route.getRouteURL());
-        }catch (MalformedURLException invalidURL){
-            fail();
-        }
+        assertEquals(null, test_route.getRouteURL());
+
     }
 
     /**
      * Makes sure route_color is returned correctly
-     * Makes sure route_color is defaulted to white if empty
      * @author Ryan Becker
      */
     @Test
     void getRouteColor() {
         //Makes sure route_color is returned
         assertEquals(Color.valueOf("ff0000"), test_route.getRouteColor());
-
-        //Makes sure route_color defaults to white ("ffffff") if empty
-        test_route = new Route(route_id, agency_id, route_short_name, route_long_name, route_desc, route_type,
-                route_url, "", route_text_color, route_sort_order, continuous_pickup, continuous_drop_off);
-        assertEquals(Color.valueOf("ffffff"), test_route.getRouteColor());
     }
 
     /**
