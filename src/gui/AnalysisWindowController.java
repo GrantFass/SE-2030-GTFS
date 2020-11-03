@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 
 import interfaces.Observer;
 
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 
 /**
@@ -135,14 +136,28 @@ public class AnalysisWindowController implements Observer {
      * update the observers when the data is changed
      * Based on a guide from GeeksForGeeks
      * found here: https://www.geeksforgeeks.org/observer-pattern-set-2-implementation/
+     * Will update the observers in a separate thread so program does not stall
+     * If there is an error it will try to update again after a short delay
      *
      * @param data the data object that was changed
      * @author Grant Fass
      */
     @Override
     public void update(Data data) {
-        data.displayAnalysis(0, distanceListView);
-        data.displayAnalysis(1, speedListView);
-        data.displayAnalysis(2, numberTripsListView);
+        Thread thread = new Thread(() -> {
+            try {
+                data.displayAnalysis(0, distanceListView);
+                data.displayAnalysis(1, speedListView);
+                data.displayAnalysis(2, numberTripsListView);
+            } catch (ConcurrentModificationException e) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException interruptedException) {
+                    interruptedException.printStackTrace();
+                }
+                update(data);
+            }
+        });
+        thread.start();
     }
 }

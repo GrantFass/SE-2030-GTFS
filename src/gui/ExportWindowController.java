@@ -6,6 +6,7 @@
  */
 package gui;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
@@ -186,28 +187,82 @@ public class ExportWindowController {
     @FXML
     private void exportFiles() {
         alertTextArea.clear();
+        updateStatus("Times Formatted in HH::MM::SS\n");
         if (!directoryTextField.getText().isEmpty()) {
-            alertTextArea.appendText(String.format("Export of selected files started at: %s\n", LocalDateTime.now()));
             exportFile(routesCheckBox, routesProgressBar, "Routes");
             exportFile(stopsCheckBox, stopsProgressBar, "Stops");
             exportFile(stopTimesCheckBox, stopTimesProgressBar, "StopTimes");
             exportFile(tripsCheckBox, tripsProgressBar, "Trips");
-            alertTextArea.appendText(String.format("Export of selected files completed at: %s\n", LocalDateTime.now()));
         }
-        else alertTextArea.setText("SKIPPING ALL: No Directory Selected!");
+        else updateStatus("SKIPPING ALL: No Directory Selected!");
     }
 
     private void exportFile(CheckBox checkBox, ProgressBar progressBar, String fileType) {
-        progressBar.setProgress(ProgressBar.INDETERMINATE_PROGRESS);
-        if (checkBox.isSelected()) {
-            alertTextArea.appendText("OUT: " + fileType + "\n");
-            exportFile(new File(directoryTextField.getText()), fileType.toLowerCase());
-            progressBar.setStyle("-fx-accent: green");
+        Thread thread = new Thread(() -> {
+            updateStatus(progressBar, ProgressBar.INDETERMINATE_PROGRESS, "-fx-accent: orange");
+            if (checkBox.isSelected()) {
+                updateStatus(String.format("OUT: Export of %s started at: %s::%s::%s\n", fileType, LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getSecond()));
+                exportFile(new File(directoryTextField.getText()), fileType.toLowerCase());
+                updateStatus(progressBar, 100, "-fx-accent: green");
+                updateStatus(String.format("✓: Export of %s completed at: %s::%s::%s\n", fileType, LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getSecond()));
+            } else {
+                updateStatus("SKIP: " + fileType + " - Not Selected\n");
+                updateStatus(progressBar, 100, "-fx-accent: white");
+            }
+        });
+        thread.start();
+    }
+
+    /**
+     * appends a message to the alert area
+     * format changes depending on if a task is running
+     * based on https://stackoverflow.com/questions/36638617/javafx-textarea-update-immediately
+     * @param message the message to post
+     * @author Grant Fass
+     */
+    private void updateStatus(String message) {
+        if (Platform.isFxApplicationThread()) {
+            alertTextArea.appendText(message);
         } else {
-            alertTextArea.appendText("SKIP: " + fileType + " - Not Selected\n");
-            progressBar.setStyle("-fx-accent: red");
+            Platform.runLater(() -> alertTextArea.appendText(message));
         }
-        progressBar.setProgress(100);
+    }
+
+    /**
+     * updates a progress bar with the specified value
+     * format changes depending on if a task is running
+     * based on https://stackoverflow.com/questions/36638617/javafx-textarea-update-immediately
+     * @param progressBar the progress bar to update
+     * @param value the value to update the progress bar to
+     * @param style the -fx-accent style to apply to the progress bar
+     * @author Grant Fass
+     */
+    private void updateStatus(ProgressBar progressBar, double value, String style) {
+        if (Platform.isFxApplicationThread()) {
+            progressBar.setProgress(value);
+            progressBar.setStyle(style);
+        } else {
+            Platform.runLater(() -> {
+                progressBar.setProgress(value);
+                progressBar.setStyle(style);
+            });
+        }
+    }
+
+    /**
+     * sets a message to the specified textField
+     * format changes depending on if a task is running
+     * based on https://stackoverflow.com/questions/36638617/javafx-textarea-update-immediately
+     * @param textField the text field to update
+     * @param message the message to post
+     * @author Grant Fass
+     */
+    private void updateStatus(TextField textField, String message) {
+        if (Platform.isFxApplicationThread()) {
+            textField.setText(message);
+        } else {
+            Platform.runLater(() -> textField.setText(message));
+        }
     }
 
     private void exportFile(File file, String fileType) {
@@ -215,23 +270,23 @@ public class ExportWindowController {
             switch (fileType) {
                 case "routes":
                     mainWindowController.getData().getRoutes().exportRoutes(file);
-                    routeTextField.setText(file.toString() + "//routes.txt");
+                    updateStatus(routeTextField, file.toString() + "//routes.txt");
                     break;
                 case "stops":
                     mainWindowController.getData().getStops().exportStops(file);
-                    stopTextField.setText(file.toString() + "//stops.txt");
+                    updateStatus(stopTextField, file.toString() + "//stops.txt");
                     break;
                 case "stoptimes":
                     mainWindowController.getData().getStopTimes().exportStopTimes(file);
-                    stopTimeTextField.setText(file.toString() + "//stop_times.txt");
+                    updateStatus(stopTimeTextField, file.toString() + "//stop_times.txt");
                     break;
                 case "trips":
                     mainWindowController.getData().getTrips().exportTrips(file);
-                    tripTextField.setText(file.toString() + "//trips.txt");
+                    updateStatus(tripTextField, file.toString() + "//trips.txt");
                     break;
             }
         } catch (IOException e) {
-            alertTextArea.appendText("\tERROR: IOException - " + e.getMessage() + "\n");
+            updateStatus("\tERROR: IOException - " + e.getMessage() + "\n");
         }
     }
 
@@ -244,7 +299,7 @@ public class ExportWindowController {
     private void browseDirectory() {
         try {
             File file = getExportDirectory();
-            directoryTextField.setText(file.toString());
+            updateStatus(directoryTextField, file.toString());
             initializeProgressBar(routesProgressBar);
             initializeProgressBar(stopsProgressBar);
             initializeProgressBar(stopTimesProgressBar);

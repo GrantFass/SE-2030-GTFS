@@ -8,9 +8,12 @@ package gui;
 
 import data.Data;
 import interfaces.Observer;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+
+import java.util.ConcurrentModificationException;
 
 /**
  * DataDisplayController Purpose: Controller for the data display window
@@ -172,12 +175,26 @@ public class DataWindowController implements Observer {
      * update the observers when the data is changed
      * Based on a guide from GeeksForGeeks
      * found here: https://www.geeksforgeeks.org/observer-pattern-set-2-implementation/
+     * Will update the observers in a separate thread so program does not stall
+     * If there is an error it will try to update again after a short delay
      *
      * @param data the data object that was changed
      * @author Grant Fass
      */
     @Override
     public void update(Data data) {
-        updateData(data);
+        Thread thread = new Thread(() -> {
+            try {
+                updateData(data);
+            } catch (ConcurrentModificationException e) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException interruptedException) {
+                    interruptedException.printStackTrace();
+                }
+                update(data);
+            }
+        });
+        thread.start();
     }
 }

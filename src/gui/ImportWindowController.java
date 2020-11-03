@@ -6,6 +6,8 @@
  */
 package gui;
 
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
@@ -315,12 +317,11 @@ public class ImportWindowController {
     @FXML
     private void importFiles() {
         alertTextArea.clear();
-        alertTextArea.appendText(String.format("Import of selected files started at: %s\n", LocalDateTime.now()));
+        updateStatus("Times Formatted in HH::MM::SS\n");
         importFile(routesCheckBox, routesTextField, routesProgressBar, "Routes");
         importFile(stopsCheckBox, stopsTextField, stopsProgressBar, "Stops");
         importFile(stopTimesCheckBox, stopTimesTextField, stopTimesProgressBar, "Stop_Times");
         importFile(tripsCheckBox, tripsTextField, tripsProgressBar, "Trips");
-        alertTextArea.appendText(String.format("Import of selected files completed at: %s\n", LocalDateTime.now()));
     }
 
     /**
@@ -332,19 +333,57 @@ public class ImportWindowController {
      * @author Grant Fass
      */
     private void importFile(CheckBox checkBox, TextField textField, ProgressBar progressBar, String fileType) {
-        progressBar.setProgress(ProgressBar.INDETERMINATE_PROGRESS);
-        if (checkBox.isSelected() && !textField.getText().isEmpty()) {
-            alertTextArea.appendText("IN: " + fileType + "\n");
-            importFile(new File(textField.getText()), progressBar);
-            progressBar.setStyle("-fx-accent: green");
-        } else if (checkBox.isSelected()) {
-            alertTextArea.appendText("SKIP: " + fileType + " - Empty File Location\n");
-            progressBar.setStyle("-fx-accent: red");
+        Thread thread = new Thread(() -> {
+            updateStatus(progressBar, ProgressBar.INDETERMINATE_PROGRESS, "-fx-accent: orange");
+            if (checkBox.isSelected() && !textField.getText().isEmpty()) {
+                updateStatus(String.format("IN: Import of %s started at: %s::%s::%s\n", fileType, LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getSecond()));
+                importFile(new File(textField.getText()), progressBar);
+                updateStatus(progressBar, 100, "-fx-accent: green");
+            } else if (checkBox.isSelected()) {
+                updateStatus("SKIP: " + fileType + " - Empty File Location\n");
+                updateStatus(progressBar, 100, "-fx-accent: white");
+            } else {
+                updateStatus("SKIP: " + fileType + " - Not Selected\n");
+                updateStatus(progressBar, 100, "-fx-accent: red");
+            }
+        });
+        thread.start();
+    }
+
+    /**
+     * appends a message to the alert area
+     * format changes depending on if a task is running
+     * based on https://stackoverflow.com/questions/36638617/javafx-textarea-update-immediately
+     * @param message the message to post
+     * @author Grant Fass
+     */
+    private void updateStatus(String message) {
+        if (Platform.isFxApplicationThread()) {
+            alertTextArea.appendText(message);
         } else {
-            alertTextArea.appendText("SKIP: " + fileType + " - Not Selected\n");
-            progressBar.setStyle("-fx-accent: red");
+            Platform.runLater(() -> alertTextArea.appendText(message));
         }
-        progressBar.setProgress(100);
+    }
+
+    /**
+     * updates a progress bar with the specified value
+     * format changes depending on if a task is running
+     * based on https://stackoverflow.com/questions/36638617/javafx-textarea-update-immediately
+     * @param progressBar the progress bar to update
+     * @param value the value to update the progress bar to
+     * @param style the -fx-accent style to apply to the progress bar
+     * @author Grant Fass
+     */
+    private void updateStatus(ProgressBar progressBar, double value, String style) {
+        if (Platform.isFxApplicationThread()) {
+            progressBar.setProgress(value);
+            progressBar.setStyle(style);
+        } else {
+            Platform.runLater(() -> {
+                progressBar.setProgress(value);
+                progressBar.setStyle(style);
+            });
+        }
     }
 
     /**
@@ -359,7 +398,6 @@ public class ImportWindowController {
             String prefix = checkFilePrefix(file.toString().substring(0,
                     file.toString().indexOf('.')));
             boolean wasLineSkipped = false;
-            progressBar.setProgress(25);
             switch (prefix) {
                 case "stop_times":
                     wasLineSkipped = mainWindowController.getData().loadStopTimes(file);
@@ -374,21 +412,20 @@ public class ImportWindowController {
                     wasLineSkipped = mainWindowController.getData().loadTrips(file);
                     break;
             }
-            if (!wasLineSkipped) {
-                alertTextArea.appendText("\tINFO: " + prefix + " data imported successfully\n");
-            } else {
-                alertTextArea.appendText("\tWARN: one or more lines in " + prefix + " were incorrectly formatted and skipped\n");
+            updateStatus(String.format("✓: INFO: Import of %s completed at: %s::%s::%s\n", prefix, LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getSecond()));
+            if (wasLineSkipped) {
+                updateStatus("\t✓: WARN: one or more lines in " + prefix + " were incorrectly formatted and skipped\n");
             }
         } catch (IllegalArgumentException e) {
-            alertTextArea.appendText("\tERROR: IllegalArgumentException - " + e.getMessage() + "\n");
+            updateStatus("\tERROR: IllegalArgumentException - " + e.getMessage() + "\n");
         } catch (InputMismatchException e) {
-            alertTextArea.appendText("\tERROR: InputMismatchException - " + e.getMessage() + "\n");
+            updateStatus("\tERROR: InputMismatchException - " + e.getMessage() + "\n");
         } catch (FileNotFoundException e) {
-            alertTextArea.appendText("\tERROR: FileNotFoundException - " + e.getMessage() + "\n");
+            updateStatus("\tERROR: FileNotFoundException - " + e.getMessage() + "\n");
         } catch (IOException e) {
-            alertTextArea.appendText("\tERROR: IOException - " + e.getMessage() + "\n");
+            updateStatus("\tERROR: IOException - " + e.getMessage() + "\n");
         } catch (DataFormatException e) {
-            alertTextArea.appendText(String.format("\tWARN: Data Overwritten - The data from the" +
+            updateStatus(String.format("\tWARN: Data Overwritten - The data from the" +
                     " previous '%s' file was overwritten with the new data. The program" +
                     " may work unexpectedly if the new data from '%s' does not match" +
                     " the existing data in the remaining files.\n", e.getMessage(), e.getMessage()));
