@@ -14,6 +14,7 @@ public class Stops {
 
 	private HashMap<String, Stop> stops;
 	private Headers headers = new Headers();
+	private HashMap<String, String> tripsPerStop;
 
 	/**
 	 * Stops Constructor: creates empty instance of stops object
@@ -133,6 +134,22 @@ public class Stops {
 		out.append(outputString);
 		out.close();
 		return true;
+	}
+
+	/**
+	 * Sets the number of trips per stop
+	 * @param tripsPerStop obtained from StopTimes class
+	 * @author Joy Cross
+	 */
+	public void setTripsPerStop(HashMap<String, String> tripsPerStop){
+		this.tripsPerStop = tripsPerStop;
+	}
+
+	/**
+	 * @author Joy Cross
+	 */
+	public HashMap<String, String> getTripsPerStop(){
+		return tripsPerStop;
 	}
 
 	/**

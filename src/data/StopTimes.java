@@ -304,7 +304,7 @@ public class StopTimes {
 	 * @return the number of trips that each stop is found on
 	 * @author Joy Cross
 	 */
-	public String getTripsPerStop() {
+	public HashMap<String, String> getTripsPerStop() {
 		Object[] keys = stop_times.keySet().toArray();
 
 		// separate stop_id from trip_id
@@ -315,16 +315,33 @@ public class StopTimes {
 
 		// count distinct stops which returns number of how much a stop is used by trips
 		StringBuilder sb = new StringBuilder();
+		HashMap<String, String> tripsPerStop = new HashMap<>();
 		int[] i = {0};
 		Arrays.stream(keys).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
 				.entrySet()
 				.forEach(object -> {
+						String number = object.toString().substring(object.toString().indexOf('=') + 1);
+						String stop_id = object.toString().substring(0, object.toString().indexOf('='));
 						if(i[0]<=MAX_DISPLAY){
-							sb.append(String.format("%s Trips contain Stop ID: %s\n", object.toString().substring(object.toString().indexOf('=') + 1), object.toString().substring(0, object.toString().indexOf('='))));
+							sb.append(String.format("%s Trips contain Stop ID: %s\n", number, stop_id));
 						}
+						tripsPerStop.put(stop_id, number);
 						i[0] = i[0] + 1;
 				});
+		return tripsPerStop;
+	}
 
+	/**
+	 * Returns a String of the count of trips that contain a stop
+	 * @param tripsPerStop hashmap obtained from calling getTripsPerStop()
+	 * @author Joy Cross
+	 */
+	public String getTripsPerStop(HashMap<String, String> tripsPerStop) {
+		Object[] keys = tripsPerStop.keySet().toArray();
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0; i < MAX_DISPLAY && i < keys.length; i++){
+			sb.append(tripsPerStop.get(keys[i]) + " Trips contain Stop ID: " + keys[i].toString() + "\n");
+		}
 		return sb.toString();
 	}
 

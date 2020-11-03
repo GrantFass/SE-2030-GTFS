@@ -14,6 +14,8 @@ import javafx.stage.Stage;
 
 import interfaces.Observer;
 
+import java.util.HashMap;
+
 /**
  * AnalysisWindowController Purpose: Controller for the Analysis Window
  *
@@ -140,6 +142,8 @@ public class AnalysisWindowController implements Observer {
     public void update(Data data) {
         distanceTextArea.setText(data.getTripDistances().isEmpty() ? "No Data Yet!" : data.getTripDistances());
         speedTextArea.setText(data.getTripSpeeds().isEmpty() ? "No Data Yet!" : data.getTripSpeeds());
-        numberTripsTextArea.setText(data.getStopTimes().getTripsPerStop().isEmpty() ? "No Data Yet!" : data.getStopTimes().getTripsPerStop());
+        HashMap<String, String> tripsPerStop = data.getStopTimes().getTripsPerStop();
+        data.getStops().setTripsPerStop(tripsPerStop);
+        numberTripsTextArea.setText(data.getStopTimes().getTripsPerStop().isEmpty() ? "No Data Yet!" : data.getStopTimes().getTripsPerStop(tripsPerStop));
     }
 }
