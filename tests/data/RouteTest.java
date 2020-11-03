@@ -211,11 +211,8 @@ class RouteTest {
         //Makes sure route_url can be empty
         test_route = new Route(route_id, agency_id, route_short_name, route_long_name, route_desc, route_type,
                 "", route_color, route_text_color, route_sort_order, continuous_pickup, continuous_drop_off);
-        try{
-            assertEquals(new URL("http://NULL"), test_route.getRouteURL());
-        }catch (MalformedURLException invalidURL){
-            fail();
-        }
+        assertEquals(null, test_route.getRouteURL());
+
     }
 
     /**
