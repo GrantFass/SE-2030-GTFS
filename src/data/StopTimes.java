@@ -303,10 +303,7 @@ public class StopTimes {
 				.entrySet()
 				.forEach(object -> {
 						if(i[0]<=MAX_DISPLAY){
-						sb.append("Stop_id: " + object.toString()
-								.substring(0, object.toString().indexOf('=')) +
-								"; Number of trips containing stop: " + object.toString()
-								.substring(object.toString().indexOf('=') + 1) + "\n");
+							sb.append(String.format("%s Trips contain Stop ID: %s\n", object.toString().substring(object.toString().indexOf('=') + 1), object.toString().substring(0, object.toString().indexOf('='))));
 						}
 						i[0] = i[0] + 1;
 				});
