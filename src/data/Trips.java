@@ -148,26 +148,6 @@ public class Trips {
     }
 
     /**
-     * Method to output data as a single concatenated string
-     *
-     * @return string of data
-     * @author Grant Fass
-     */
-    @Override
-    public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        int maxDisplay = 100;
-        int count = 0;
-        Iterator mapIterator = trips.entrySet().iterator();
-        while (mapIterator.hasNext() && count < maxDisplay) {
-            Map.Entry mapElement = (Map.Entry) mapIterator.next();
-            stringBuilder.append(getTrip(mapElement.getKey().toString()).toString()).append("\n");
-            count++;
-        }
-        return stringBuilder.toString();
-    }
-
-    /**
      * Creates header line from input headers
      * @param headers headers to put into a String output
      * @return String
@@ -189,17 +169,8 @@ public class Trips {
      * @return string of data
      * @author Grant Fass
      */
-    public String toSimpleString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        int maxDisplay = 100;
-        int count = 0;
-        Iterator mapIterator = trips.entrySet().iterator();
-        while (mapIterator.hasNext() && count < maxDisplay) {
-            Map.Entry mapElement = (Map.Entry) mapIterator.next();
-            stringBuilder.append(getTrip(mapElement.getKey().toString()).toSimpleString()).append("\n");
-            count++;
-        }
-        return stringBuilder.toString();
+    public HashMap<String, Trip> getTrips() {
+        return trips;
     }
 
     /**

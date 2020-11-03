@@ -9,10 +9,7 @@ package gui;
 import data.Data;
 import interfaces.Observer;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 /**
@@ -23,19 +20,19 @@ import javafx.stage.Stage;
  */
 public class DataWindowController implements Observer {
     @FXML
+    private ListView stopTimesListView;
+    @FXML
     private TextArea description;
     @FXML
     private ToggleButton snapshotToggleButton;
     @FXML
     private ToggleButton expandedToggleButton;
     @FXML
-    private TextArea routesTextArea;
+    private ListView routesListView;
     @FXML
-    private TextArea stopsTextArea;
+    private ListView stopsListView;
     @FXML
-    private TextArea stopTimesTextArea;
-    @FXML
-    private TextArea tripsTextArea;
+    private ListView tripsListView;
     @FXML
     private TextArea dataDisplayTextArea;
     @FXML
@@ -159,15 +156,15 @@ public class DataWindowController implements Observer {
      */
     private void updateData(Data data) {
         if (expandedToggleButton.isSelected()) {
-            routesTextArea.setText(data.getRoutes().toString().isEmpty() ? "No Data Yet" : data.getRoutes().toString());
-            stopsTextArea.setText(data.getStops().toString().isEmpty() ? "No Data Yet" : data.getStops().toString());
-            stopTimesTextArea.setText(data.getStopTimes().toString().isEmpty() ? "No Data Yet" : data.getStopTimes().toString());
-            tripsTextArea.setText(data.getTrips().toString().isEmpty() ? "No Data Yet" : data.getTrips().toString());
+            data.displayData(0, 1, routesListView);
+            data.displayData(1, 1, stopsListView);
+            data.displayData(2, 1, stopTimesListView);
+            data.displayData(3, 1, tripsListView);
         } else {
-            routesTextArea.setText(data.getRoutes().toSimpleString().isEmpty() ? "No Data Yet" : data.getRoutes().toSimpleString());
-            stopsTextArea.setText(data.getStops().toSimpleString().isEmpty() ? "No Data Yet" : data.getStops().toSimpleString());
-            stopTimesTextArea.setText(data.getStopTimes().toSimpleString().isEmpty() ? "No Data Yet" : data.getStopTimes().toSimpleString());
-            tripsTextArea.setText(data.getTrips().toSimpleString().isEmpty() ? "No Data Yet" : data.getTrips().toSimpleString());
+            data.displayData(0, 0, routesListView);
+            data.displayData(1, 0, stopsListView);
+            data.displayData(2, 0, stopTimesListView);
+            data.displayData(3, 0, tripsListView);
         }
     }
 

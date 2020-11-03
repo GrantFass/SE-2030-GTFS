@@ -37,7 +37,6 @@ public class Routes {
 		return sb.toString();
 	}
 
-
 	/**
 	 * Routes constructor initialized with empty hash map
 	 * @author Ryan Becker
@@ -163,40 +162,12 @@ public class Routes {
 	}
 
 	/**
-	 * Method to output data as a single concatenated string
-	 * @author Grant Fass
-	 * @return string of data
-	 */
-	@Override
-	public String toString() {
-		StringBuilder stringBuilder = new StringBuilder();
-		int maxDisplay = 100;
-		int count = 0;
-		Iterator mapIterator = routes.entrySet().iterator();
-		while (mapIterator.hasNext() && count < maxDisplay) {
-			Map.Entry mapElement = (Map.Entry) mapIterator.next();
-			stringBuilder.append(getRoute(mapElement.getKey().toString()).toString()).append("\n");
-			count++;
-		}
-		return stringBuilder.toString();
-	}
-
-	/**
-	 * output simplified data as a single concatenated string
-	 * @return string of data
+	 * get the hashmap value
+	 * @return the hashmap value
 	 * @author Grant Fass
 	 */
-	public String toSimpleString() {
-		StringBuilder stringBuilder = new StringBuilder();
-		int maxDisplay = 100;
-		int count = 0;
-		Iterator mapIterator = routes.entrySet().iterator();
-		while (mapIterator.hasNext() && count < maxDisplay) {
-			Map.Entry mapElement = (Map.Entry) mapIterator.next();
-			stringBuilder.append(getRoute(mapElement.getKey().toString()).toSimpleString()).append("\n");
-			count++;
-		}
-		return stringBuilder.toString();
+	public HashMap<String, Route> getRoutes() {
+		return routes;
 	}
 
 	/**
@@ -294,77 +265,4 @@ public class Routes {
         }
 	    return "";
     }
-
-	/**
-	 * @deprecated
-	 * Initializes a default Headers object that should be the order of header elements within a routes.txt file
-	 * @author Ryan Becker
-	 * @return Headers object containing Header objects each with a header field and index value
-	 */
-	private Headers createDefaultHeader(){
-		final String DEFAULT_HEADER = "route_id,agency_id,route_short_name,route_long_name,route_desc,route_type," +
-				"route_url,route_color,route_text_color";
-		Headers default_headers = new Headers();
-		String[] header_list = DEFAULT_HEADER.split(",");
-
-		for(int i = 0; i < header_list.length; i++){
-			default_headers.addHeader(new Header(header_list[i], i));
-		}
-		return default_headers;
-
-	}
-
-	/**
-	 * @deprecated
-	 * @author Ryan Becker
-	 * @param headers Headers object of all fields within the header line in addition to their position in the header
-	 * @param DEFAULT_HEADERS expected parameters within header
-	 * @return true if the read-in header line is valid per the expected header in DEFAULT_HEADERS, false otherwise
-	 */
-	private boolean validHeader (Headers headers, Headers DEFAULT_HEADERS){
-		boolean isEqual = true;
-
-		if(headers.length()!=DEFAULT_HEADERS.length()){
-			isEqual = false;
-			return isEqual;
-		}
-
-		//System.out.println();
-		for(int i = 0; i < DEFAULT_HEADERS.length(); i++){
-			if(!headers.getHeaderName(i).equals(DEFAULT_HEADERS.getHeaderName(i))){
-				isEqual = false;
-			}
-		}
-		return isEqual;
-	}
-
-	/**
-	 * @deprecated
-	 * Helper method for loadRoutes(). Refreshes hashmap to default parameters for use in a new line of data
-	 * @author Ryan Becker
-	 * @param fields hash-map where the key value is stored as a String of a header element,
-	 *               and the value is a String of the data element associated with the key
-	 */
-	private void initializeKeys(HashMap<String, String> fields){
-		final String DEFAULT_TYPE = "3"; //bus routes
-		final String DEFAULT_COLOR = "FFFFFF";
-		final String DEFAULT_TEXT_COLOR = "000000";
-		final String DEFAULT_SORT_ORDER = "0";
-		final String DEFAULT_CONTINUOUS = "0"; //continuous stopping pickup or drop-off
-
-		final String DEFAULT_URL = "http://NULL_URL"; //Error is thrown otherwise
-
-		fields.put("route_id", null);
-		fields.put("agency_id", null);
-		fields.put("route_short_name", null);
-		fields.put("route_long_name", null);
-		fields.put("route_desc", null);
-		fields.put("route_type", DEFAULT_TYPE);
-		fields.put("route_url", DEFAULT_URL);
-		fields.put("route_color", DEFAULT_COLOR);
-		fields.put("route_text_color", DEFAULT_TEXT_COLOR);
-		fields.put("route_sort_order", DEFAULT_SORT_ORDER);
-		fields.put("continuous_pickup", DEFAULT_CONTINUOUS);
-		fields.put("continuous_drop_off", DEFAULT_CONTINUOUS);
-	}
 }//end Routes

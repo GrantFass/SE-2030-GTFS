@@ -14,7 +14,6 @@ public class Stops {
 
 	private HashMap<String, Stop> stops;
 	private Headers headers = new Headers();
-	private HashMap<String, String> tripsPerStop;
 
 	/**
 	 * Stops Constructor: creates empty instance of stops object
@@ -137,22 +136,6 @@ public class Stops {
 	}
 
 	/**
-	 * Sets the number of trips per stop
-	 * @param tripsPerStop obtained from StopTimes class
-	 * @author Joy Cross
-	 */
-	public void setTripsPerStop(HashMap<String, String> tripsPerStop){
-		this.tripsPerStop = tripsPerStop;
-	}
-
-	/**
-	 * @author Joy Cross
-	 */
-	public HashMap<String, String> getTripsPerStop(){
-		return tripsPerStop;
-	}
-
-	/**
 	 * checks to confirm that the header is valid and matches an expected format
 	 * @param header the header text line to validate
 	 * @return a Headers object containing the ordering of the headers
@@ -268,40 +251,12 @@ public class Stops {
 	}
 
 	/**
-	 * Method to output data as a single concatenated string
-	 * @author Grant Fass
-	 * @return string of data
-	 */
-	@Override
-	public String toString() {
-		StringBuilder stringBuilder = new StringBuilder();
-		int maxDisplay = 100;
-		int count = 0;
-		Iterator mapIterator = stops.entrySet().iterator();
-		while (mapIterator.hasNext() && count < maxDisplay) {
-			Map.Entry mapElement = (Map.Entry) mapIterator.next();
-			stringBuilder.append(getStop(mapElement.getKey().toString()).toString()).append("\n");
-			count++;
-		}
-		return stringBuilder.toString();
-	}
-
-	/**
-	 * output simplified data as a single concatenated string
-	 * @return string of data
+	 * get the hashmap value
+	 * @return the hashmap value
 	 * @author Grant Fass
 	 */
-	public String toSimpleString() {
-		StringBuilder stringBuilder = new StringBuilder();
-		int maxDisplay = 100;
-		int count = 0;
-		Iterator mapIterator = stops.entrySet().iterator();
-		while (mapIterator.hasNext() && count < maxDisplay) {
-			Map.Entry mapElement = (Map.Entry) mapIterator.next();
-			stringBuilder.append(getStop(mapElement.getKey().toString()).toSimpleString()).append("\n");
-			count++;
-		}
-		return stringBuilder.toString();
+	public HashMap<String, Stop> getStops() {
+		return stops;
 	}
 
 	/**
