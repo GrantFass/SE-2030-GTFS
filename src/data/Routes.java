@@ -184,36 +184,6 @@ public class Routes {
 	}
 
 	/**
-     * @deprecated
-	 * Helper method for loadRoutes(). Refreshes hashmap to default parameters for use in a new line of data
-	 * @author Ryan Becker
-	 * @param fields hash-map where the key value is stored as a String of a header element,
-	 *               and the value is a String of the data element associated with the key
-	 */
-	private void initializeKeys(HashMap<String, String> fields){
-		final String DEFAULT_TYPE = "3"; //bus routes
-		final String DEFAULT_COLOR = "FFFFFF";
-		final String DEFAULT_TEXT_COLOR = "000000";
-		final String DEFAULT_SORT_ORDER = "0";
-		final String DEFAULT_CONTINUOUS = "0"; //continuous stopping pickup or drop-off
-
-		final String DEFAULT_URL = "http://NULL_URL"; //Error is thrown otherwise
-
-		fields.put("route_id", null);
-		fields.put("agency_id", null);
-		fields.put("route_short_name", null);
-		fields.put("route_long_name", null);
-		fields.put("route_desc", null);
-		fields.put("route_type", DEFAULT_TYPE);
-		fields.put("route_url", DEFAULT_URL);
-		fields.put("route_color", DEFAULT_COLOR);
-		fields.put("route_text_color", DEFAULT_TEXT_COLOR);
-		fields.put("route_sort_order", DEFAULT_SORT_ORDER);
-		fields.put("continuous_pickup", DEFAULT_CONTINUOUS);
-		fields.put("continuous_drop_off", DEFAULT_CONTINUOUS);
-	}
-
-	/**
 	 * Confirms the header of the loaded routes.txt file is valid
 	 * @author Ryan Becker
 	 * @param header String of read-in header from file
@@ -261,7 +231,6 @@ public class Routes {
 	}
 
     /**
-     *
      * @author Ryan Becker
      * @param full_data String of line of data
      * @param headers Headers object of all fields within the header line in addition to their position in the header
@@ -296,7 +265,6 @@ public class Routes {
 	}
 
     /**
-     *
      * @author Grant Fass, Ryan Becker
      * @param split_data array of segmented data
      * @param headers Headers object of all fields within the header line in addition to their position in the header
@@ -310,7 +278,6 @@ public class Routes {
         }
 	    return "";
     }
-
 
 	/**
 	 * @deprecated
@@ -355,6 +322,33 @@ public class Routes {
 		return isEqual;
 	}
 
+	/**
+	 * @deprecated
+	 * Helper method for loadRoutes(). Refreshes hashmap to default parameters for use in a new line of data
+	 * @author Ryan Becker
+	 * @param fields hash-map where the key value is stored as a String of a header element,
+	 *               and the value is a String of the data element associated with the key
+	 */
+	private void initializeKeys(HashMap<String, String> fields){
+		final String DEFAULT_TYPE = "3"; //bus routes
+		final String DEFAULT_COLOR = "FFFFFF";
+		final String DEFAULT_TEXT_COLOR = "000000";
+		final String DEFAULT_SORT_ORDER = "0";
+		final String DEFAULT_CONTINUOUS = "0"; //continuous stopping pickup or drop-off
 
+		final String DEFAULT_URL = "http://NULL_URL"; //Error is thrown otherwise
 
+		fields.put("route_id", null);
+		fields.put("agency_id", null);
+		fields.put("route_short_name", null);
+		fields.put("route_long_name", null);
+		fields.put("route_desc", null);
+		fields.put("route_type", DEFAULT_TYPE);
+		fields.put("route_url", DEFAULT_URL);
+		fields.put("route_color", DEFAULT_COLOR);
+		fields.put("route_text_color", DEFAULT_TEXT_COLOR);
+		fields.put("route_sort_order", DEFAULT_SORT_ORDER);
+		fields.put("continuous_pickup", DEFAULT_CONTINUOUS);
+		fields.put("continuous_drop_off", DEFAULT_CONTINUOUS);
+	}
 }//end Routes
