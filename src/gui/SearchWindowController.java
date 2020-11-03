@@ -130,44 +130,66 @@ public class SearchWindowController {
                         "\n1. Click on the 'Output Type' dropdown and select the data type you are searching for" +
                         "\n2. Click on the 'Input Type' dropdown and select the data type that you are going to use as input to search" +
                         "\n3. Click on the 'Input' Text Field and enter the text to search for" +
-                        "\n4. Click on the 'Search' Button. The results of the search will be displayed in the 'Output' Text Area.");
+                        "\n4. Click on the 'Search' Button. The results of the search will be displayed in the 'Output' Text Area." +
+                        "\nNote: StopTimes must be entered as 'stop_id, trip_id'");
     }
 
     @FXML
     private void search() {
-        output.setText("Searching For: " + ((String)outputType.getValue()).toUpperCase() + "S\n");
-        switch (((String)outputType.getValue()).toLowerCase()) {
-            case "route_id":
-                if(!(inputType.getValue()).equals("stop_id")){
-                    output.appendText("Search type is invalid:\nTo search for route_ids, search type must be stop_id");
-                } else if(mainWindowController.getData().getStops().getStop(input.getText()) != null){
-                    String route_ids = mainWindowController.getData().getRouteIDs_fromStopID(input.getText());
-
-                    output.appendText(route_ids);
-                } else {
-                    output.appendText("No Stops were found to be associated with the given stop_id");
-                }
-                break;
-            case "stop_id":
-                output.appendText("not ready");
-                break;
-            case "stoptime":
-                output.appendText("not ready");
-                break;
-            case "trip_id":
-                if(((String)inputType.getValue()).toLowerCase().equals("stop_id")){
-                    String inputText = (input.getText()).toLowerCase();
-                    List<String> list = mainWindowController.getData().getStopTimes().searchStopDisplayTrips(inputText);
-                    StringBuilder sb = new StringBuilder();
-                    for(int i = 0; i < list.size(); i++){
-                        int j = i + 1;
-                        sb.append(j + ": " + list.get(i) + "\n");
+        if (!inputType.getValue().equals("")) {
+            output.setText("Searching For: " + ((String)outputType.getValue()).toUpperCase() + "S\n");
+            switch ((String)outputType.getValue()) {
+                case "route_id":
+                    if (inputType.getValue().equals("stop_id") && mainWindowController.getData().getStops().getStop(input.getText()) != null) {
+                        output.setText(mainWindowController.getData().getRouteIDs_fromStopID(input.getText()).isEmpty() ? "No Results Found" : mainWindowController.getData().getRouteIDs_fromStopID(input.getText()));
+                    } else if (inputType.getValue().equals("stop_id")) {
+                        output.setText("No Stops were found to be associated with the given stop_id");
+                    } else if (inputType.getValue().equals("route_id")){
+                        output.setText(mainWindowController.getData().getRoutes().getRoute(input.getText()) ==  null ? "No Results Found" : mainWindowController.getData().getRoutes().getRoute(input.getText()).toString());
+                    } else  {
+                        output.setText("Search type is not implemented yet");
                     }
-                    output.appendText(sb.toString());
-                } else{
-                    output.appendText("Input type not yet implemented");
-                }
-                break;
+                    break;
+                case "stop_id":
+                    if (inputType.getValue().equals("stop_id")) {
+                        output.setText(mainWindowController.getData().getStops().getStop(input.getText()) ==  null ? "No Results Found" : mainWindowController.getData().getStops().getStop(input.getText()).toString());
+                    } else {
+                        output.setText("Search type is not implemented yet");
+                    }
+                    break;
+                case "StopTime":
+                    if (inputType.getValue().equals("StopTime")) {
+                        String inputString = input.getText().replaceAll(" ", "");
+                        if (inputString.contains(",")) {
+                            String stop_id = inputString.substring(0, inputString.indexOf(','));
+                            String trip_id = inputString.substring(inputString.indexOf(',') + 1);
+                            output.setText(mainWindowController.getData().getStopTimes().getStopTime(stop_id, trip_id) ==  null ? "No Results Found" :  mainWindowController.getData().getStopTimes().getStopTime(stop_id, trip_id).toString());
+                        } else {
+                            output.setText("Input is not formatted correctly!");
+                        }
+                    } else {
+                        output.setText("Search type is not implemented yet");
+                    }
+                    break;
+                case "trip_id":
+                    if (inputType.getValue().equals("stop_id")) {
+                        String inputText = (input.getText()).toLowerCase();
+                        List<String> list = mainWindowController.getData().getStopTimes().searchStopDisplayTrips(inputText);
+                        StringBuilder sb = new StringBuilder();
+                        for(int i = 0; i < list.size(); i++){
+                            int j = i + 1;
+                            sb.append(j + ": " + list.get(i) + "\n");
+                        }
+                        output.appendText(sb.toString());
+                    } else if (inputType.getValue().equals("trip_id")) {
+                        output.setText(mainWindowController.getData().getTrips().getTrip(input.getText()) ==  null ? "No Results Found" : mainWindowController.getData().getTrips().getTrip(input.getText()).toString());
+                    } else{
+                        output.setText("Input type not yet implemented");
+                    }
+                    break;
+            }
+        } else {
+            output.setText("Input field is empty!");
         }
     }
 }
