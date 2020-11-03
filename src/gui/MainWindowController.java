@@ -2,8 +2,10 @@ package gui;
 
 import data.Data;
 import javafx.fxml.FXML;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextArea;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class MainWindowController {
@@ -25,6 +27,10 @@ public class MainWindowController {
 	private SearchWindowController searchWindowController;
 	private Stage updateWindowStage;
 	private UpdateWindowController updateWindowController;
+	private static final Rectangle2D PRIMARY_SCREEN_BOUNDS = Screen.getPrimary().getVisualBounds();
+	private static final double WINDOW_WIDTH = PRIMARY_SCREEN_BOUNDS.getWidth() / 3.0;
+	private static final double WINDOW_HEIGHT = PRIMARY_SCREEN_BOUNDS.getHeight() / 3.0;
+
 
 	/**
 	 * set the local values of all of the stages.
@@ -50,6 +56,8 @@ public class MainWindowController {
 		this.mapWindowStage = mapWindowStage;
 		this.searchWindowStage = searchWindowStage;
 		this.updateWindowStage = updateWindowStage;
+		mainWindowStage.setWidth(WINDOW_WIDTH);
+		mainWindowStage.setHeight(WINDOW_HEIGHT);
 	}
 
 	/**
@@ -168,6 +176,8 @@ public class MainWindowController {
 			final int windowOffset = 15;
 			stage.setX(mainWindowStage.getX() + xOffset);
 			stage.setY(mainWindowStage.getY() + yOffset);
+			stage.setWidth(WINDOW_WIDTH);
+			stage.setHeight(WINDOW_HEIGHT);
 			stage.toFront();
 			stage.show();
 		}
