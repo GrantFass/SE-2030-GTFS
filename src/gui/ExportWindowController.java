@@ -187,21 +187,21 @@ public class ExportWindowController {
     private void exportFiles() {
         alertTextArea.clear();
         alertTextArea.appendText(LocalDateTime.now().toString() + "\n");
-        exportFile(routesCheckBox, routesProgressBar, "Routes");
-        exportFile(stopsCheckBox, stopsProgressBar, "Stops");
-        exportFile(stopTimesCheckBox, stopTimesProgressBar, "StopTimes");
-        exportFile(tripsCheckBox, tripsProgressBar, "Trips");
+        if (!directoryTextField.getText().isEmpty()) {
+            exportFile(routesCheckBox, routesProgressBar, "Routes");
+            exportFile(stopsCheckBox, stopsProgressBar, "Stops");
+            exportFile(stopTimesCheckBox, stopTimesProgressBar, "StopTimes");
+            exportFile(tripsCheckBox, tripsProgressBar, "Trips");
+        }
+        else alertTextArea.setText("SKIPPING ALL: No Directory Selected!");
     }
 
     private void exportFile(CheckBox checkBox, ProgressBar progressBar, String fileType) {
         progressBar.setProgress(ProgressBar.INDETERMINATE_PROGRESS);
-        if (checkBox.isSelected() && !directoryTextField.getText().isEmpty()) {
+        if (checkBox.isSelected()) {
             alertTextArea.appendText("OUT: " + fileType + "\n");
             exportFile(new File(directoryTextField.getText()), fileType.toLowerCase());
             progressBar.setStyle("-fx-accent: green");
-        } else if (checkBox.isSelected()) {
-            alertTextArea.appendText("SKIP: " + fileType + " - Empty Directory Location\n");
-            progressBar.setStyle("-fx-accent: red");
         } else {
             alertTextArea.appendText("SKIP: " + fileType + " - Not Selected\n");
             progressBar.setStyle("-fx-accent: red");
@@ -215,15 +215,19 @@ public class ExportWindowController {
                 case "routes":
                     mainWindowController.getData().getRoutes().exportRoutes(file);
                     routeTextField.setText(file.toString() + "//routes.txt");
+                    break;
                 case "stops":
                     mainWindowController.getData().getStops().exportStops(file);
                     stopTextField.setText(file.toString() + "//stops.txt");
+                    break;
                 case "stoptimes":
                     mainWindowController.getData().getStopTimes().exportStopTimes(file);
                     stopTimeTextField.setText(file.toString() + "//stop_times.txt");
+                    break;
                 case "trips":
                     mainWindowController.getData().getTrips().exportTrips(file);
                     tripTextField.setText(file.toString() + "//trips.txt");
+                    break;
             }
         } catch (IOException e) {
             alertTextArea.appendText("\tERROR: IOException - " + e.getMessage() + "\n");
