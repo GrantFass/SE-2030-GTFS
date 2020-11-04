@@ -6,12 +6,17 @@
  */
 package gui;
 
+import com.sothawo.mapjfx.*;
+import com.sothawo.mapjfx.event.MapViewEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 /**
@@ -22,7 +27,11 @@ import javafx.stage.Stage;
  */
 public class MapWindowController {
     @FXML
-    private WebView map;
+    private Label labelCenter;
+    @FXML
+    private Label labelZoom;
+    @FXML
+    private MapView map;
     @FXML
     private VBox primaryVBox;
     @FXML
@@ -42,6 +51,7 @@ public class MapWindowController {
     private SearchWindowController searchWindowController;
     private Stage updateWindowStage;
     private UpdateWindowController updateWindowController;
+    private static final Coordinate msoeAthleticField = new Coordinate(43.044056044993994, -87.90621316829471);
 
     /**
      * set the local values of all of the stages.
@@ -99,12 +109,54 @@ public class MapWindowController {
 
     /**
      * set the default values of the description
+     * set up the map view and initialize it
+     * based on Version 2.3.0 of mapjfx from https://www.sothawo.com/projects/mapjfx/
      * @author Grant Fass
      */
     public void setDefaultValues() {
-        description.setText("");
-        WebEngine webEngine = map.getEngine();
-        webEngine.load("http://google.com/maps");
+        description.setText("Hold 'CTRL' then drag over the map to zoom.");
+        map.setAnimationDuration(100);
+        // add listener for mapView initialization state
+        map.initializedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                // a map is only displayed when an initial coordinate is set
+
+                map.setCenter(msoeAthleticField);
+//                mapView.setExtent(extentAll);
+//                mapView.setZoom(0);
+
+                // add two markers without keeping a ref to them, they should disappear from the map when gc'ed
+                map.addMarker(Marker.createProvided(Marker.Provided.GREEN).setPosition(msoeAthleticField)
+                        .setVisible(true));
+                map.addMarker(
+                        Marker.createProvided(Marker.Provided.ORANGE).setPosition(msoeAthleticField).setVisible(
+                                true));
+
+                // add a coordinate line to be gc'ed
+                map.addCoordinateLine(
+                        new CoordinateLine(msoeAthleticField)
+                                .setVisible(true)
+                                .setColor(Color.FUCHSIA).setWidth(5));
+
+                // add a label to be gc'ed
+                map.addLabel(new MapLabel("clean me up").setPosition(msoeAthleticField)
+                        .setVisible(true));
+            }
+        });
+        map.initialize();
+        //change zoom to match when the user holds 'ctrl' and drags over the map
+        map.addEventHandler(MapViewEvent.MAP_EXTENT, event -> {
+            event.consume();
+            map.setExtent(event.getExtent());
+        });
+        // add an observer for the map's center property to adjust the corresponding label
+        map.centerProperty().addListener((observable, oldValue, newValue) -> {
+            labelCenter.setText(newValue == null ? "" : ("center: " + newValue.toString()));
+        });
+        // add an observer to adjust the label
+        map.zoomProperty().addListener((observable, oldValue, newValue) -> {
+            labelZoom.setText(null == newValue ? "" : ("zoom: " + newValue.toString()));
+        });
     }
 
     /**
