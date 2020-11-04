@@ -11,7 +11,6 @@ import com.sothawo.mapjfx.event.MapViewEvent;
 import data.Data;
 import data.Route;
 import data.Stop;
-import data.Trip;
 import interfaces.Observer;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -23,6 +22,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 /**
@@ -245,7 +245,6 @@ public class MapWindowController implements Observer {
         map.removeCoordinateLine(coordinateLine);
     }
 
-
     /**
      * update the observers when the data is changed
      * Based on a guide from GeeksForGeeks
@@ -259,6 +258,8 @@ public class MapWindowController implements Observer {
         if (!data.getRoutes().getRoutes().isEmpty() && !data.getStops().getStops().isEmpty() && !data.getStopTimes().getStop_times().isEmpty() && !data.getTrips().getTrips().isEmpty()) {
             updateRoutes(data);
             updateBusses(data);
+            //This is an example of how this method is called
+//            getClosestStopToClick(data.getStopsPerRoute());
         }
     }
 
@@ -309,5 +310,67 @@ public class MapWindowController implements Observer {
                 }
             }
         });
+    }
+
+    /**
+     * creates and returns the absolute value of the input value
+     * @param value the value to make positive
+     * @return the absolute value of the input value
+     * @author Grant Fass
+     */
+    private double absoluteValue(double value) {
+        return value < 0 ? value * -1 : value;
+    }
+
+    /**
+     * finds the percent difference between the two values
+     * @param value1 the first value to use for percent difference
+     * @param value2 the second value to use for percent difference
+     * @return the percent difference between the two numbers
+     * @author Grant Fass
+     */
+    private double percentDifference(double value1, double value2) {
+        double valueSum = absoluteValue(value1 + value2);
+        double valueDifference = absoluteValue(value1 - value2);
+        return (valueDifference / (valueSum / 2)) * 100;
+    }
+
+    /**
+     * calculates the closest stop to the location the user clicked on the map at by calculating
+     * the percent difference of the latitudes and longitudes between the click location and all
+     * stops.
+     * @param stopsPerRoute the map containing all of the stops associated with all routes
+     * @return the Stop that is closest to the click location
+     * @author Grant Fass
+     */
+    private Stop getClosestStopToClick(HashMap<Route, ArrayList<Stop>> stopsPerRoute) {
+        AtomicReference<Stop> overallClosestStop = new AtomicReference<>();
+        map.addEventHandler(MapViewEvent.MAP_CLICKED, event -> {
+            Coordinate coordinateOfClick = event.getCoordinate();
+            event.consume();
+            //loop through all stops and return the stop with the lowest percent difference between coordinates
+            double lowestDifference = 9999;
+            Stop closestStop = null;
+            for (Route route: stopsPerRoute.keySet()) {
+                for (Stop stop: stopsPerRoute.get(route)) {
+                    double difference = percentDifference(coordinateOfClick.getLatitude(), stop.getStopLatitude()) + percentDifference(coordinateOfClick.getLongitude(), stop.getStopLongitude());
+                    if (lowestDifference == 9999 || lowestDifference > difference) {
+                        lowestDifference = difference;
+                        closestStop = stop;
+                    }
+                }
+            }
+            overallClosestStop.set(closestStop);
+//            System.out.println(overallClosestStop.get() != null ? overallClosestStop.get() : "Null Stop");
+        });
+//        System.out.println(overallClosestStop.get() != null ? overallClosestStop.get() : "Null Stop");
+        return overallClosestStop.get();
+    }
+
+    /**
+     * Updates the location of a stop.
+     */
+    private void updateStopLocation() {
+
     }
 }
