@@ -188,20 +188,21 @@ public class DataWindowController implements Observer {
      */
     @Override
     public void update(Data data) {
-        Thread thread = new Thread(() -> {
-            try {
+        //TODO: undo multithread, only thread first command to set progress bar / text field at start.
+//        Thread thread = new Thread(() -> {
+//            try {
                 updateStatus(lastUpdatedTextField, "UPDATE IN PROGRESS");
                 updateData(data);
-            } catch (ConcurrentModificationException e) {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException interruptedException) {
-                    interruptedException.printStackTrace();
-                }
-                update(data);
-            }
-        });
-        thread.start();
+//            } catch (ConcurrentModificationException e) {
+//                try {
+//                    Thread.sleep(100);
+//                } catch (InterruptedException interruptedException) {
+//                    interruptedException.printStackTrace();
+//                }
+//                update(data);
+//            }
+//        });
+//        thread.start();
     }
 
     /**

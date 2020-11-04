@@ -149,20 +149,20 @@ public class AnalysisWindowController implements Observer {
      */
     @Override
     public void update(Data data) {
-        Thread thread = new Thread(() -> {
-            try {
+//        Thread thread = new Thread(() -> {
+//            try {
                 updateStatus(lastUpdatedTextField, "UPDATE IN PROGRESS");
                 updateData(data);
-            } catch (ConcurrentModificationException e) {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException interruptedException) {
-                    interruptedException.printStackTrace();
-                }
-                update(data);
-            }
-        });
-        thread.start();
+//            } catch (ConcurrentModificationException e) {
+//                try {
+//                    Thread.sleep(100);
+//                } catch (InterruptedException interruptedException) {
+//                    interruptedException.printStackTrace();
+//                }
+//                update(data);
+//            }
+//        });
+//        thread.start();
     }
 
     /**
