@@ -1,16 +1,11 @@
 package data;
 
-
-import com.sun.xml.internal.ws.commons.xmlutil.Converter;
 import enumerators.ContinuousDropOffEnum;
 import enumerators.ContinuousPickupEnum;
 import enumerators.RouteTypeEnum;
 import javafx.scene.paint.Color;
-
-import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.ParseException;
 
 
 /**

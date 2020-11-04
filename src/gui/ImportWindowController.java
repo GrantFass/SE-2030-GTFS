@@ -333,7 +333,7 @@ public class ImportWindowController {
      * @author Grant Fass
      */
     private void importFile(CheckBox checkBox, TextField textField, ProgressBar progressBar, String fileType) {
-        Thread thread = new Thread(() -> {
+//        Thread thread = new Thread(() -> {
             updateStatus(progressBar, ProgressBar.INDETERMINATE_PROGRESS, "-fx-accent: orange");
             if (checkBox.isSelected() && !textField.getText().isEmpty()) {
                 updateStatus(String.format("IN: Import of %s started at: %s::%s::%s\n", fileType, LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getSecond()));
@@ -346,8 +346,8 @@ public class ImportWindowController {
                 updateStatus("SKIP: " + fileType + " - Not Selected\n");
                 updateStatus(progressBar, 100, "-fx-accent: red");
             }
-        });
-        thread.start();
+//        });
+//        thread.start();
     }
 
     /**

@@ -140,7 +140,11 @@ public class Data implements Subject {
 		if (items.isEmpty()) {
 			items.add("No Data Yet");
 		}
-		listView.setItems(items);
+		if(Platform.isFxApplicationThread()) {
+			listView.setItems(items);
+		} else {
+			Platform.runLater(() -> listView.setItems(items));
+		}
 	}
 
 	/**
@@ -200,7 +204,11 @@ public class Data implements Subject {
 		if (items.isEmpty()) {
 			items.add("No Data Yet");
 		}
-		listView.setItems(items);
+		if (Platform.isFxApplicationThread()) {
+			listView.setItems(items);
+		} else {
+			Platform.runLater(() -> listView.setItems(items));
+		}
 	}
 
 	/**
