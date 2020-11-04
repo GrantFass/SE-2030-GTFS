@@ -126,7 +126,7 @@ public class MapWindowController implements Observer {
      * @author Grant Fass
      */
     public void setDefaultValues() {
-        description.setText("Hold 'CTRL' then drag over the map to zoom.");
+        description.setText("Hold 'CTRL' then drag over the map to zoom.\nMap will not update unless all classes have been loaded");
         map.setAnimationDuration(100);
         // add listener for mapView initialization state
         map.initializedProperty().addListener((observable, oldValue, newValue) -> {
@@ -194,15 +194,29 @@ public class MapWindowController implements Observer {
     }
 
     /**
-     * Plots a coordinate line onto the map
-     * @param route the route that all of the stops are associated to (Used for route color)
-     *              TODO: Fix This!
-     * @param stops the stops to plot on the line
+     * plots the specified marker
+     * @param marker the marker to plot
      * @author Grant Fass
      */
-    private void plotCoordinateLine (Route route, ArrayList<Stop> stops) {
+    private void plotCoordinate(Marker marker) {
+        map.addMarker(marker);
+    }
+
+    /**
+     * Plots a coordinate line onto the map
+     * @param route the route that all of the stops are associated to (Used for route color)
+     * @param stops the stops to plot on the line
+     * @param overrideDefaultColors will override the default colors if true
+     * @author Grant Fass
+     */
+    private void plotCoordinateLine (Route route, ArrayList<Stop> stops, boolean overrideDefaultColors) {
         final boolean fillRoutes = false;
         final int routeWidth = 3;
+        final double red = Math.random();
+        final double green = Math.random();
+        final double blue = Math.random();
+        final double alpha = 1;
+        final Color color = new Color(red, green, blue, alpha);
         /*
          * Task to generate the coordinate line that is created from all of the stops associated
          * with a single route
@@ -214,12 +228,17 @@ public class MapWindowController implements Observer {
                 for (Stop stop : stops) {
                     coordinates.add(new Coordinate(stop.getStopLatitude(), stop.getStopLongitude()));
                 }
-                return new CoordinateLine(coordinates)
+                CoordinateLine coordinateLine = new CoordinateLine(coordinates)
                         .setVisible(true)
-                        .setColor(route.getRouteColor())
                         .setWidth(routeWidth)
                         .setClosed(fillRoutes)
                         .setFillColor(Color.web("lawngreen", 0.5));
+                if (overrideDefaultColors) {
+                    coordinateLine.setColor(color);
+                } else {
+                    coordinateLine.setColor(route.getRouteColor());
+                }
+                return coordinateLine;
             }
         };
         task.setOnSucceeded(e -> {
@@ -238,7 +257,7 @@ public class MapWindowController implements Observer {
      */
     private void plotStops(@NotNull HashMap<Route, ArrayList<Stop>> hashMap) {
         for(Route route: hashMap.keySet()) {
-            plotCoordinateLine(route, hashMap.get(route));
+            plotCoordinateLine(route, hashMap.get(route), true);
         }
     }
 
@@ -304,21 +323,21 @@ public class MapWindowController implements Observer {
      */
     @Override
     public void update(Data data) {
-        try {
-            if (data.getRoutes() != null && data.getStops() != null && data.getStopTimes() != null && data.getTrips()!= null) {
+//        try {
+            if (!data.getRoutes().getRoutes().isEmpty() && !data.getStops().getStops().isEmpty() && !data.getStopTimes().getStop_times().isEmpty() && !data.getTrips().getTrips().isEmpty()) {
                 if (Platform.isFxApplicationThread()) {
                     plotStops(getStopsPerRoute());
                 } else {
                     Platform.runLater(() -> plotStops(getStopsPerRoute()));
                 }
             }
-        } catch (ConcurrentModificationException e) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException interruptedException) {
-                interruptedException.printStackTrace();
-            }
-            update(data);
-        }
+//        } catch (ConcurrentModificationException e) {
+//            try {
+//                Thread.sleep(100);
+//            } catch (InterruptedException interruptedException) {
+//                interruptedException.printStackTrace();
+//            }
+//            update(data);
+//        }
     }
 }
