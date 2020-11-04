@@ -139,6 +139,7 @@ public class Main extends Application {
         //set up observers
         mainWindowController.getData().attach(dataWindowController);
         mainWindowController.getData().attach(analysisWindowController);
+        mainWindowController.getData().attach(mapWindowController);
 
         //Set the default location of the main stage
         mainWindowStage.setX(0);
