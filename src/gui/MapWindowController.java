@@ -16,6 +16,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
@@ -32,6 +33,10 @@ import java.util.stream.Collectors;
  * @version Created on 10/25/2020 at 1:27 AM
  */
 public class MapWindowController implements Observer {
+    @FXML
+    private ToggleButton enableStopUpdateToggle;
+    @FXML
+    private ToggleButton useRandomRouteColorsToggle;
     @FXML
     private ListView routeListView;
     @FXML
@@ -63,14 +68,15 @@ public class MapWindowController implements Observer {
 
     /**
      * set the local values of all of the stages.
+     *
      * @param analysisWindowStage the stage for the AnalysisWindow
-     * @param dataWindowStage the stage for the DataWindow
-     * @param exportWindowStage the stage for the ExportWindow
-     * @param importWindowStage the stage for the ImportWindow
-     * @param mainWindowStage the stage for the MainWindow
-     * @param mapWindowStage the stage for the MapWindow
-     * @param searchWindowStage the stage for the SearchWindow
-     * @param updateWindowStage the stage for the UpdateWindow
+     * @param dataWindowStage     the stage for the DataWindow
+     * @param exportWindowStage   the stage for the ExportWindow
+     * @param importWindowStage   the stage for the ImportWindow
+     * @param mainWindowStage     the stage for the MainWindow
+     * @param mapWindowStage      the stage for the MapWindow
+     * @param searchWindowStage   the stage for the SearchWindow
+     * @param updateWindowStage   the stage for the UpdateWindow
      * @author Grant Fass
      */
     public void setStages(Stage analysisWindowStage, Stage dataWindowStage,
@@ -90,13 +96,14 @@ public class MapWindowController implements Observer {
     /**
      * Sets the values of the controller associated with the respective files
      * Makes sure the same instance of the controller is used everywhere
+     *
      * @param analysisWindowController reference to the AnalysisWindowController in use
-     * @param dataWindowController reference to the DataWindowController in use
-     * @param exportWindowController reference to the ExportWindowController in use
-     * @param importWindowController reference to the ImportWindowController in use
-     * @param mainWindowController reference to the MainWindowController in use
-     * @param searchWindowController reference to the SearchWindowController in use
-     * @param updateWindowController reference to the UpdateWindowController in use
+     * @param dataWindowController     reference to the DataWindowController in use
+     * @param exportWindowController   reference to the ExportWindowController in use
+     * @param importWindowController   reference to the ImportWindowController in use
+     * @param mainWindowController     reference to the MainWindowController in use
+     * @param searchWindowController   reference to the SearchWindowController in use
+     * @param updateWindowController   reference to the UpdateWindowController in use
      * @author Grant Fass
      */
     public void setControllers(AnalysisWindowController analysisWindowController,
@@ -119,6 +126,7 @@ public class MapWindowController implements Observer {
      * set the default values of the description
      * set up the map view and initialize it
      * based on Version 2.3.0 of mapjfx from https://www.sothawo.com/projects/mapjfx/
+     *
      * @author Grant Fass
      */
     public void setDefaultValues() {
@@ -145,7 +153,7 @@ public class MapWindowController implements Observer {
                                 .setColor(Color.FUCHSIA).setWidth(5));
 
                 // add a label to be gc'ed
-                map.addLabel(new MapLabel("clean me up").setPosition(msoeAthleticField)
+                map.addLabel(new MapLabel("Loading Map...").setPosition(msoeAthleticField)
                         .setVisible(true));
             }
         });
@@ -157,7 +165,7 @@ public class MapWindowController implements Observer {
         });
         // add an observer for the map's center property to adjust the corresponding label
         map.centerProperty().addListener((observable, oldValue, newValue) -> {
-            labelCenter.setText(newValue == null ? "" : ("center: " + newValue.toString()));
+            labelCenter.setText(newValue == null ? "" : String.format("Center: [lat = %10.6f, long = %10.6f]", newValue.getLatitude(), newValue.getLongitude()));
         });
         // add an observer to adjust the label
         map.zoomProperty().addListener((observable, oldValue, newValue) -> {
@@ -179,7 +187,7 @@ public class MapWindowController implements Observer {
 
     private void displayRouteIDs(HashMap<Route, ArrayList<Stop>> hashMap) {
         ObservableList<String> items = FXCollections.observableArrayList();
-        for (Route route: hashMap.keySet()) {
+        for (Route route : hashMap.keySet()) {
             items.add(route.getRouteID());
         }
         routeListView.setItems(items);
@@ -188,7 +196,7 @@ public class MapWindowController implements Observer {
     private void displayBusses(ArrayList<double[]> busLocations) {
         int count = 0;
         ObservableList<String> items = FXCollections.observableArrayList();
-        for (double[] busLocation: busLocations) {
+        for (double[] busLocation : busLocations) {
             items.add("Bus: " + count);
             count++;
         }
@@ -197,8 +205,9 @@ public class MapWindowController implements Observer {
 
     /**
      * Creates a CoordinateLine from the specified values
-     * @param route the route to get the default color from for the line
-     * @param stops the stops to plot on the CoordinateLine
+     *
+     * @param route                the route to get the default color from for the line
+     * @param stops                the stops to plot on the CoordinateLine
      * @param overrideDefaultColor will set the line to a random color if true
      * @return the generated CoordinateLine
      * @author Grant Fass
@@ -224,10 +233,11 @@ public class MapWindowController implements Observer {
 
     /**
      * plots a specified CoordinateLine on the map and changes the map view to contain the line
+     *
      * @param coordinateLine the CoordinateLine to plot
      * @author Grant Fass
      */
-    private void plotCoordinateLine (CoordinateLine coordinateLine) {
+    private void plotCoordinateLine(CoordinateLine coordinateLine) {
         List<Coordinate> coordinates = coordinateLine.getCoordinateStream().collect(Collectors.toList());
         map.addCoordinateLine(coordinateLine);
         try {
@@ -238,6 +248,7 @@ public class MapWindowController implements Observer {
 
     /**
      * removes the specified CoordinateLine from the map
+     *
      * @param coordinateLine the CoordinateLine to remove
      * @author Grant Fass
      */
@@ -258,13 +269,13 @@ public class MapWindowController implements Observer {
         if (!data.getRoutes().getRoutes().isEmpty() && !data.getStops().getStops().isEmpty() && !data.getStopTimes().getStop_times().isEmpty() && !data.getTrips().getTrips().isEmpty()) {
             updateRoutes(data);
             updateBusses(data);
-            //This is an example of how this method is called
-//            getClosestStopToClick(data.getStopsPerRoute());
+            updateStop(data);
         }
     }
 
     /**
      * updates the displayed routes
+     *
      * @param data the data to use to update the routes
      * @author Grant Fass
      */
@@ -282,7 +293,7 @@ public class MapWindowController implements Observer {
                 }
                 Route route = data.getRoutes().getRoute(newValue);
                 if (route != null) {
-                    lastCoordinateLine = getCoordinateLine(route, stopsPerRoute.get(route), false);
+                    lastCoordinateLine = getCoordinateLine(route, stopsPerRoute.get(route), useRandomRouteColorsToggle.isSelected());
                     plotCoordinateLine(lastCoordinateLine);
                 }
             }
@@ -291,6 +302,7 @@ public class MapWindowController implements Observer {
 
     /**
      * plots a marker on the map at the selected bus location
+     *
      * @param data the data class used to get the list of bus coordinates from
      * @author Grant Fass
      */
@@ -314,6 +326,7 @@ public class MapWindowController implements Observer {
 
     /**
      * creates and returns the absolute value of the input value
+     *
      * @param value the value to make positive
      * @return the absolute value of the input value
      * @author Grant Fass
@@ -324,6 +337,7 @@ public class MapWindowController implements Observer {
 
     /**
      * finds the percent difference between the two values
+     *
      * @param value1 the first value to use for percent difference
      * @param value2 the second value to use for percent difference
      * @return the percent difference between the two numbers
@@ -339,38 +353,41 @@ public class MapWindowController implements Observer {
      * calculates the closest stop to the location the user clicked on the map at by calculating
      * the percent difference of the latitudes and longitudes between the click location and all
      * stops.
+     *
      * @param stopsPerRoute the map containing all of the stops associated with all routes
      * @return the Stop that is closest to the click location
      * @author Grant Fass
      */
-    private Stop getClosestStopToClick(HashMap<Route, ArrayList<Stop>> stopsPerRoute) {
-        AtomicReference<Stop> overallClosestStop = new AtomicReference<>();
-        map.addEventHandler(MapViewEvent.MAP_CLICKED, event -> {
-            Coordinate coordinateOfClick = event.getCoordinate();
-            event.consume();
-            //loop through all stops and return the stop with the lowest percent difference between coordinates
-            double lowestDifference = 9999;
-            Stop closestStop = null;
-            for (Route route: stopsPerRoute.keySet()) {
-                for (Stop stop: stopsPerRoute.get(route)) {
-                    double difference = percentDifference(coordinateOfClick.getLatitude(), stop.getStopLatitude()) + percentDifference(coordinateOfClick.getLongitude(), stop.getStopLongitude());
-                    if (lowestDifference == 9999 || lowestDifference > difference) {
-                        lowestDifference = difference;
-                        closestStop = stop;
-                    }
+    private Stop getClosestStopToClick(HashMap<Route, ArrayList<Stop>> stopsPerRoute, Coordinate coordinateOfClick) {
+        double lowestDifference = 9999;
+        Stop closestStop = null;
+        for (Route route : stopsPerRoute.keySet()) {
+            for (Stop stop : stopsPerRoute.get(route)) {
+                double difference = percentDifference(coordinateOfClick.getLatitude(), stop.getStopLatitude()) + percentDifference(coordinateOfClick.getLongitude(), stop.getStopLongitude());
+                if (lowestDifference == 9999 || lowestDifference > difference) {
+                    lowestDifference = difference;
+                    closestStop = stop;
                 }
             }
-            overallClosestStop.set(closestStop);
-//            System.out.println(overallClosestStop.get() != null ? overallClosestStop.get() : "Null Stop");
-        });
-//        System.out.println(overallClosestStop.get() != null ? overallClosestStop.get() : "Null Stop");
-        return overallClosestStop.get();
+        }
+        return closestStop;
     }
 
     /**
-     * Updates the location of a stop.
+     * Will update stops if button to update stops is enabled
+     * If the user clicks on the map then the closest stop to the point will be automatically passed
+     * to the Update window to update values
+     *
+     * @param data the data class to use to find the closest stop
+     * @author Grant Fass,
      */
-    private void updateStopLocation() {
-
+    private void updateStop(Data data) {
+        final HashMap<Route, ArrayList<Stop>> stopsPerRoute = data.getStopsPerRoute();
+        map.addEventHandler(MapViewEvent.MAP_CLICKED, mapViewEvent -> {
+            if (enableStopUpdateToggle.isSelected()) {
+                Stop closestStop = getClosestStopToClick(stopsPerRoute, mapViewEvent.getCoordinate());
+                updateWindowController.setObjectToUpdate(closestStop);
+            }
+        });
     }
 }

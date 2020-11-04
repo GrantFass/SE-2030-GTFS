@@ -15,32 +15,43 @@ Everything in this file has been setup in code.
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ProgressIndicator?>
-<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="gui.MapWindowController" spacing="10"
-      maxHeight="Infinity" maxWidth="Infinity" minHeight="400" minWidth="300" prefHeight="400.0" prefWidth="600">
+<?import javafx.scene.control.ToggleButton?>
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="gui.MapWindowController" spacing="10"
+      maxHeight="Infinity" maxWidth="Infinity" minHeight="400" minWidth="300" prefHeight="400.0"
+      prefWidth="600">
     <padding>
         <Insets top="20" bottom="20" left="20" right="20"/>
     </padding>
-    <HBox spacing="10" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="50" minWidth="20" minHeight="20">
-        <TextArea fx:id="description" wrapText="true" editable="false" text="Short Description" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20"/>
-        <Button text="?" onAction="#displayHelp" alignment="CENTER" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="100" maxHeight="100" minWidth="20" minHeight="20"/>
+    <HBox spacing="10" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="50"
+          minWidth="20" minHeight="20">
+        <TextArea fx:id="description" wrapText="true" editable="false" text="Short Description"
+                  HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100"
+                  minWidth="20" minHeight="20"/>
+        <Button text="?" onAction="#displayHelp" alignment="CENTER" HBox.hgrow="ALWAYS"
+                VBox.vgrow="ALWAYS" maxWidth="100" maxHeight="100" minWidth="20" minHeight="20"/>
     </HBox>
     <HBox spacing="10" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
-        <VBox spacing="5" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="100" maxHeight="Infinity" minWidth="20" minHeight="20">
-            <Label text="Route Select" alignment="CENTER"/>
+        <VBox spacing="5" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="100"
+              maxHeight="Infinity" minWidth="20" minHeight="20">
+            <Label text="Route Select" alignment="CENTER" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"/>
             <ListView fx:id="routeListView" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"/>
         </VBox>
-        <MapView fx:id="map" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" mapType="OSM" animationDuration="10"/>
-        <VBox spacing="5" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="100" maxHeight="Infinity" minWidth="20" minHeight="20">
-            <Label text="Bus Select" alignment="CENTER"/>
+        <MapView fx:id="map" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" mapType="OSM"
+                 animationDuration="10"/>
+        <VBox spacing="5" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="100"
+              maxHeight="Infinity" minWidth="20" minHeight="20">
+            <Label text="Bus Select" alignment="CENTER" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"/>
             <ListView fx:id="busListView" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"/>
         </VBox>
     </HBox>
-
-    <HBox spacing="10" maxHeight="30" VBox.vgrow = "ALWAYS">
+    <HBox spacing="10" maxHeight="30" VBox.vgrow="ALWAYS">
         <padding>
             <Insets top="5" bottom="5" left="5" right="5"/>
         </padding>
         <Label fx:id="labelCenter"/>
         <Label fx:id="labelZoom"/>
+        <ToggleButton fx:id="useRandomRouteColorsToggle" text="Use Random Route Colors"/>
+        <ToggleButton fx:id="enableStopUpdateToggle" text="Enable Stop Update"/>
     </HBox>
 </VBox>
