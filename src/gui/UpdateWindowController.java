@@ -6,6 +6,10 @@
  */
 package gui;
 
+import data.Route;
+import data.Stop;
+import data.StopTime;
+import data.Trip;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -89,6 +93,42 @@ public class UpdateWindowController {
         this.mainWindowController = mainWindowController;
         this.mapWindowController = mapWindowController;
         this.searchWindowController = searchWindowController;
+    }
+
+    /**
+     * sets the current object to update in the GUI
+     * @param route the route object to update
+     * @author Grant Fass
+     */
+    public void setObjectToUpdate(Route route) {
+        System.out.println(route);
+    }
+
+    /**
+     * sets the current object to update in the GUI
+     * @param stop the stop object to update
+     * @author Grant Fass
+     */
+    public void setObjectToUpdate(Stop stop) {
+        System.out.println(stop);
+    }
+
+    /**
+     * sets the current object to update in the GUI
+     * @param stopTime the stopTime object to update
+     * @author Grant Fass
+     */
+    public void setObjectToUpdate(StopTime stopTime) {
+        System.out.println(stopTime);
+    }
+
+    /**
+     * sets the current object to update in the GUI
+     * @param trip the trip object to update
+     * @author Grant Fass
+     */
+    public void setObjectToUpdate(Trip trip) {
+        System.out.println(trip);
     }
 
     /**

@@ -8,6 +8,8 @@ import javafx.collections.ObservableList;
 
 import javafx.concurrent.Task;
 import javafx.scene.control.ListView;
+import javafx.scene.paint.Color;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -209,6 +211,66 @@ public class Data implements Subject {
 		} else {
 			Platform.runLater(() -> listView.setItems(items));
 		}
+	}
+
+	/**
+	 * returns all of the coordinates of busses
+	 * //TODO: Initialize this
+	 * @return an arraylist of bus location coordinate pairs with longitude first then latitude
+	 * @author Grant Fass,
+	 */
+	public ArrayList<double[]> getBusCoordinates() {
+		return new ArrayList<>();
+	}
+
+	/**
+	 * retrieves all of the stops that are associated with all routes
+	 * @return a HashMap containing all of the Stops associated with all Routes
+	 * @author Grant Fass
+	 */
+	public HashMap<Route, ArrayList<Stop>> getStopsPerRoute() {
+		//Create a list of all of the keys in StopTimes. Key Format = 'stop_id;trip_id'
+		String[] stopTimeKeys = stop_times.getStop_times().keySet().toArray(new String[0]);
+		//separate stopTimeKeys into stop_id values and trip_id values
+		ArrayList<String> stop_ids = new ArrayList<>();
+		ArrayList<String> trip_ids = new ArrayList<>();
+		for(String s:stopTimeKeys) {
+			stop_ids.add(s.substring(0, s.indexOf(';')));
+			trip_ids.add(s.substring(s.indexOf(';') + 1));
+		}
+		//convert stop_ids to Stops
+		ArrayList<Stop> allStops = new ArrayList<>();
+		for(String stop_id:stop_ids) {
+			allStops.add(stops.getStop(stop_id));
+		}
+		//convert trip_ids to Routes
+		ArrayList<Route> allRoutes = new ArrayList<>();
+		for(String trip_id:trip_ids) {
+			Trip trip = trips.getTrip(trip_id);
+			Route route = new Route("-1", "", "-1", "Null Route", "Null Route",
+					"", "", Color.web("black").toString(), "",
+					"", "", "");
+			if (trip != null) {
+				route = routes.getRoute(trip.getRouteID());
+			}
+			allRoutes.add(route);
+		}
+		//transfer data into HashMap
+		HashMap<Route, ArrayList<Stop>> stopsPerRoute = new HashMap<>();
+		for (int i = 0; i < allRoutes.size(); i++) {
+			//If the Route already exists in the map then add the stop to the list of stops
+			//Otherwise create a new list of stops and add the route and stop to the map
+			//Do not include the stop if it already exists for a route
+			if (stopsPerRoute.containsKey(allRoutes.get(i)) && !stopsPerRoute.get(allRoutes.get(i)).contains(allStops.get(i))) {
+				stopsPerRoute.get(allRoutes.get(i)).add(allStops.get(i));
+			} else if (allRoutes.get(i) != null) {
+				ArrayList<Stop> stopsInRoute = new ArrayList<>();
+				stopsInRoute.add(allStops.get(i));
+				stopsPerRoute.put(allRoutes.get(i), stopsInRoute);
+			}
+		}
+		//Return Map
+		return stopsPerRoute;
 	}
 
 	/**
