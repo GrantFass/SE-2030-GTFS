@@ -182,6 +182,18 @@ public class MapWindowController implements Observer {
     }
 
     /**
+     * plots a single coordinate as a marker onto the map
+     * @param latitude the latitude to place the marker at
+     * @param longitude the longitude to place the marker at
+     * @author Grant Fass
+     */
+    private void plotCoordinate(double latitude, double longitude) {
+        map.addMarker(Marker.createProvided(Marker.Provided.BLUE)
+                .setPosition(new Coordinate(latitude, longitude))
+                .setVisible(true));
+    }
+
+    /**
      * Plots a coordinate line onto the map
      * @param route the route that all of the stops are associated to (Used for route color)
      *              TODO: Fix This!
@@ -192,7 +204,7 @@ public class MapWindowController implements Observer {
         final boolean fillRoutes = false;
         final int routeWidth = 3;
         /*
-         * Task to generate the coordinate line that is created from all of the stops asociated
+         * Task to generate the coordinate line that is created from all of the stops associated
          * with a single route
          */
         Task<CoordinateLine> task = new Task<>() {
