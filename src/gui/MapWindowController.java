@@ -126,7 +126,7 @@ public class MapWindowController implements Observer {
      * @author Grant Fass
      */
     public void setDefaultValues() {
-        description.setText("Hold 'CTRL' then drag over the map to zoom.");
+        description.setText("Hold 'CTRL' then drag over the map to zoom.\nMap will not update unless all classes have been loaded");
         map.setAnimationDuration(100);
         // add listener for mapView initialization state
         map.initializedProperty().addListener((observable, oldValue, newValue) -> {
@@ -304,21 +304,21 @@ public class MapWindowController implements Observer {
      */
     @Override
     public void update(Data data) {
-        try {
-            if (data.getRoutes() != null && data.getStops() != null && data.getStopTimes() != null && data.getTrips()!= null) {
+//        try {
+            if (!data.getRoutes().getRoutes().isEmpty() && !data.getStops().getStops().isEmpty() && !data.getStopTimes().getStop_times().isEmpty() && !data.getTrips().getTrips().isEmpty()) {
                 if (Platform.isFxApplicationThread()) {
                     plotStops(getStopsPerRoute());
                 } else {
                     Platform.runLater(() -> plotStops(getStopsPerRoute()));
                 }
             }
-        } catch (ConcurrentModificationException e) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException interruptedException) {
-                interruptedException.printStackTrace();
-            }
-            update(data);
-        }
+//        } catch (ConcurrentModificationException e) {
+//            try {
+//                Thread.sleep(100);
+//            } catch (InterruptedException interruptedException) {
+//                interruptedException.printStackTrace();
+//            }
+//            update(data);
+//        }
     }
 }
