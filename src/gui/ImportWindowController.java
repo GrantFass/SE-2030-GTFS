@@ -67,7 +67,7 @@ public class ImportWindowController {
     private ProgressBar tripsProgressBar;
     //endregion
 
-    //region class reference properties
+    //region class references
     private Stage analysisWindowStage;
     private AnalysisWindowController analysisWindowController;
     private Stage dataWindowStage;
@@ -83,9 +83,7 @@ public class ImportWindowController {
     private SearchWindowController searchWindowController;
     private Stage updateWindowStage;
     private UpdateWindowController updateWindowController;
-    //endregion
 
-    //region setters for class reference properties
     /**
      * set the local values of all of the stages.
      *
@@ -439,6 +437,7 @@ public class ImportWindowController {
         }
     }
 
+    //region Checkbox Controls
     /**
      * update the disabled status of the route data based on CheckBox toggle
      * @author Grant Fass
@@ -484,4 +483,5 @@ public class ImportWindowController {
     private void toggleCheckBox(CheckBox checkBox, VBox vBox) {
         vBox.setDisable(!checkBox.isSelected());
     }
+    //endregion
 }

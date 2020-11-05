@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
  * @version Created on 10/25/2020 at 1:26 AM
  */
 public class ExportWindowController {
+    //region FXML properties
     @FXML
     private TextArea description;
     @FXML
@@ -62,6 +63,9 @@ public class ExportWindowController {
     private TextField tripTextField;
     @FXML
     private ProgressBar tripsProgressBar;
+    //endregion
+
+    //region class references
     private Stage analysisWindowStage;
     private AnalysisWindowController analysisWindowController;
     private Stage dataWindowStage;
@@ -131,6 +135,7 @@ public class ExportWindowController {
         this.searchWindowController = searchWindowController;
         this.updateWindowController = updateWindowController;
     }
+    //endregion
 
     /**
      * set the default values of the progress bars and descriptions

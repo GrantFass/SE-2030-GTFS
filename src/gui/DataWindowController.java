@@ -23,6 +23,7 @@ import java.util.ConcurrentModificationException;
  * @version Created on 10/12/2020 at 6:40 PM
  */
 public class DataWindowController implements Observer {
+    //region FXML properties
     @FXML
     private TextField lastUpdatedTextField;
     @FXML
@@ -37,6 +38,9 @@ public class DataWindowController implements Observer {
     private ListView stopsListView;
     @FXML
     private ListView tripsListView;
+    //endregion
+
+    //region class references
     private Stage analysisWindowStage;
     private AnalysisWindowController analysisWindowController;
     private Stage dataWindowStage;
@@ -106,6 +110,7 @@ public class DataWindowController implements Observer {
         this.searchWindowController = searchWindowController;
         this.updateWindowController = updateWindowController;
     }
+    //endregion
 
     /**
      * set the default values of the description

@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
  * @version Created on 10/25/2020 at 1:27 AM
  */
 public class MapWindowController implements Observer {
+    //region FXML properties
     @FXML
     private ToggleButton enableStopUpdateToggle;
     @FXML
@@ -49,6 +50,9 @@ public class MapWindowController implements Observer {
     private MapView map;
     @FXML
     private TextArea description;
+    //endregion
+
+    //region class references
     private Stage analysisWindowStage;
     private AnalysisWindowController analysisWindowController;
     private Stage dataWindowStage;
@@ -121,6 +125,7 @@ public class MapWindowController implements Observer {
         this.searchWindowController = searchWindowController;
         this.updateWindowController = updateWindowController;
     }
+    //endregion
 
     /**
      * set the default values of the description

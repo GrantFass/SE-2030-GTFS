@@ -9,8 +9,12 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class MainWindowController {
+	//region FXML properties
 	@FXML
 	private TextArea description;
+	//endregion
+
+	//region class references
 	private Data data = new Data();
 	private Stage analysisWindowStage;
 	private AnalysisWindowController analysisWindowController;
@@ -87,6 +91,7 @@ public class MainWindowController {
 		this.searchWindowController = searchWindowController;
 		this.updateWindowController = updateWindowController;
 	}
+	//endregion
 
 	/**
 	 * set the default values of the description

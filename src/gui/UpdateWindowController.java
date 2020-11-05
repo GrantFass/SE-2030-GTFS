@@ -23,8 +23,12 @@ import javafx.stage.Stage;
  * @version Created on 10/25/2020 at 2:14 AM
  */
 public class UpdateWindowController {
+    //region FXML references
     @FXML
     private TextArea description;
+    //endregion
+
+    //region class references
     private Stage analysisWindowStage;
     private AnalysisWindowController analysisWindowController;
     private Stage dataWindowStage;
@@ -94,6 +98,7 @@ public class UpdateWindowController {
         this.mapWindowController = mapWindowController;
         this.searchWindowController = searchWindowController;
     }
+    //endregion
 
     /**
      * sets the current object to update in the GUI

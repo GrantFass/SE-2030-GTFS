@@ -6,7 +6,6 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import javafx.concurrent.Task;
 import javafx.scene.control.ListView;
 import javafx.scene.paint.Color;
 
@@ -24,14 +23,16 @@ import java.util.zip.DataFormatException;
  * @created 06-Oct-2020 10:28:30 AM
  */
 public class Data implements Subject {
-	//Radius of the earth in miles
-	private final static double EARTH_RADIUS = 3959;
+	//region properties
+	private final static double EARTH_RADIUS_MILES = 3959;
 	private Routes routes;
 	private StopTimes stop_times;
 	private Stops stops;
 	private Trips trips;
 	private ArrayList<Observer> observerList;
+	//endregion
 
+	//region constructors
 	public Data() {
 		stops = new Stops();
 		stop_times = new StopTimes();
@@ -39,7 +40,9 @@ public class Data implements Subject {
 		trips = new Trips();
 		observerList = new ArrayList<>();
 	}
+	//endregion
 
+	//region internal class getters
 	public Routes getRoutes() {
 		return routes;
 	}
@@ -55,7 +58,78 @@ public class Data implements Subject {
 	public Trips getTrips() {
 		return trips;
 	}
+	//endregion
 
+	//region methods for loading files
+	/**
+	 * Method to parse Route data from a routes.txt file
+	 * @param file the routes.txt file to be parsed
+	 * @return true if a line was skipped while loading, false otherwise
+	 * @throws FileNotFoundException if the file was not found
+	 * @throws IOException for general File IO errors.
+	 * @throws InputMismatchException if there is an issue parsing the file
+	 * @throws DataFormatException if data will be overwritten
+	 * @author Grant Fass
+	 */
+	public boolean loadRoutes(File file) throws FileNotFoundException, IOException,
+			InputMismatchException, DataFormatException {
+		boolean wasLineSkipped = routes.loadRoutes(file);
+		Platform.runLater(this::notifyObservers);
+		return wasLineSkipped;
+	}
+	/**
+	 * Method to parse Stop data from a stops.txt file
+	 * @param file the routes.txt file to be parsed
+	 * @return true if a line was skipped while loading, false otherwise
+	 * @throws FileNotFoundException if the file was not found
+	 * @throws IOException for general File IO errors.
+	 * @throws InputMismatchException if there is an issue parsing the file
+	 * @throws DataFormatException if data will be overwritten
+	 * @author Grant Fass
+	 */
+	public boolean loadStops(File file) throws FileNotFoundException, IOException,
+			InputMismatchException, DataFormatException {
+		boolean wasLineSkipped = stops.loadStops(file);
+		Platform.runLater(this::notifyObservers);
+		return wasLineSkipped;
+	}
+
+	/**
+	 * Method to parse StopTimes data from a stop_times.txt file
+	 * @param file the routes.txt file to be parsed
+	 * @return true if a line was skipped while loading, false otherwise
+	 * @throws FileNotFoundException if the file was not found
+	 * @throws IOException for general File IO errors.
+	 * @throws InputMismatchException if there is an issue parsing the file
+	 * @throws DataFormatException if data will be overwritten
+	 * @author Grant Fass
+	 */
+	public boolean loadStopTimes(File file) throws FileNotFoundException, IOException,
+			InputMismatchException, DataFormatException {
+		boolean wasLineSkipped = stop_times.loadStopTimes(file);
+		Platform.runLater(this::notifyObservers);
+		return wasLineSkipped;
+	}
+
+	/**
+	 * Method to parse Trip data from a trips.txt file
+	 * @param file the routes.txt file to be parsed
+	 * @return true if a line was skipped while loading, false otherwise
+	 * @throws FileNotFoundException if the file was not found
+	 * @throws IOException for general File IO errors.
+	 * @throws InputMismatchException if there is an issue parsing the file
+	 * @throws DataFormatException if data will be overwritten
+	 * @author Grant Fass
+	 */
+	public boolean loadTrips(File file) throws FileNotFoundException, IOException,
+			InputMismatchException, DataFormatException {
+		boolean wasLineSkipped = trips.loadTrips(file);
+		Platform.runLater(this::notifyObservers);
+		return wasLineSkipped;
+	}
+	//endregion
+
+	//region methods for data GUI
 	/**
 	 * outputs all of the data for a class to the specified listView
 	 * @param dataType selects which data to output.
@@ -148,7 +222,9 @@ public class Data implements Subject {
 			Platform.runLater(() -> listView.setItems(items));
 		}
 	}
+	//endregion
 
+	//region methods for analysis GUI
 	/**
 	 * outputs all of the data for a class to the specified listView
 	 * @param analysisType the type of data to output
@@ -211,206 +287,6 @@ public class Data implements Subject {
 		} else {
 			Platform.runLater(() -> listView.setItems(items));
 		}
-	}
-
-	/**
-	 * returns all of the coordinates of busses
-	 * //TODO: Initialize this
-	 * @return an arraylist of bus location coordinate pairs with longitude first then latitude
-	 * @author Grant Fass,
-	 */
-	public ArrayList<double[]> getBusCoordinates() {
-		return new ArrayList<>();
-	}
-
-	/**
-	 * retrieves all of the stops that are associated with all routes
-	 * @return a HashMap containing all of the Stops associated with all Routes
-	 * @author Grant Fass
-	 */
-	public HashMap<Route, ArrayList<Stop>> getStopsPerRoute() {
-		//Create a list of all of the keys in StopTimes. Key Format = 'stop_id;trip_id'
-		String[] stopTimeKeys = stop_times.getStop_times().keySet().toArray(new String[0]);
-		//separate stopTimeKeys into stop_id values and trip_id values
-		ArrayList<String> stop_ids = new ArrayList<>();
-		ArrayList<String> trip_ids = new ArrayList<>();
-		for(String s:stopTimeKeys) {
-			stop_ids.add(s.substring(0, s.indexOf(';')));
-			trip_ids.add(s.substring(s.indexOf(';') + 1));
-		}
-		//convert stop_ids to Stops
-		ArrayList<Stop> allStops = new ArrayList<>();
-		for(String stop_id:stop_ids) {
-			allStops.add(stops.getStop(stop_id));
-		}
-		//convert trip_ids to Routes
-		ArrayList<Route> allRoutes = new ArrayList<>();
-		for(String trip_id:trip_ids) {
-			Trip trip = trips.getTrip(trip_id);
-			Route route = new Route("-1", "", "-1", "Null Route", "Null Route",
-					"", "", Color.web("black").toString(), "",
-					"", "", "");
-			if (trip != null) {
-				route = routes.getRoute(trip.getRouteID());
-			}
-			allRoutes.add(route);
-		}
-		//transfer data into HashMap
-		HashMap<Route, ArrayList<Stop>> stopsPerRoute = new HashMap<>();
-		for (int i = 0; i < allRoutes.size(); i++) {
-			//If the Route already exists in the map then add the stop to the list of stops
-			//Otherwise create a new list of stops and add the route and stop to the map
-			//Do not include the stop if it already exists for a route
-			if (stopsPerRoute.containsKey(allRoutes.get(i)) && !stopsPerRoute.get(allRoutes.get(i)).contains(allStops.get(i))) {
-				stopsPerRoute.get(allRoutes.get(i)).add(allStops.get(i));
-			} else if (allRoutes.get(i) != null) {
-				ArrayList<Stop> stopsInRoute = new ArrayList<>();
-				stopsInRoute.add(allStops.get(i));
-				stopsPerRoute.put(allRoutes.get(i), stopsInRoute);
-			}
-		}
-		//Return Map
-		return stopsPerRoute;
-	}
-
-	/**
-	 * Method to parse Route data from a routes.txt file
-	 * @param file the routes.txt file to be parsed
-	 * @return true if a line was skipped while loading, false otherwise
-	 * @throws FileNotFoundException if the file was not found
-	 * @throws IOException for general File IO errors.
-	 * @throws InputMismatchException if there is an issue parsing the file
-	 * @throws DataFormatException if data will be overwritten
-	 * @author Grant Fass
-	 */
-	public boolean loadRoutes(File file) throws FileNotFoundException, IOException,
-			InputMismatchException, DataFormatException {
-		boolean wasLineSkipped = routes.loadRoutes(file);
-		Platform.runLater(this::notifyObservers);
-		return wasLineSkipped;
-	}
-	/**
-	 * Method to parse Stop data from a stops.txt file
-	 * @param file the routes.txt file to be parsed
-	 * @return true if a line was skipped while loading, false otherwise
-	 * @throws FileNotFoundException if the file was not found
-	 * @throws IOException for general File IO errors.
-	 * @throws InputMismatchException if there is an issue parsing the file
-	 * @throws DataFormatException if data will be overwritten
-	 * @author Grant Fass
-	 */
-	public boolean loadStops(File file) throws FileNotFoundException, IOException,
-			InputMismatchException, DataFormatException {
-		boolean wasLineSkipped = stops.loadStops(file);
-		Platform.runLater(this::notifyObservers);
-		return wasLineSkipped;
-	}
-
-	/**
-	 * Method to parse StopTimes data from a stop_times.txt file
-	 * @param file the routes.txt file to be parsed
-	 * @return true if a line was skipped while loading, false otherwise
-	 * @throws FileNotFoundException if the file was not found
-	 * @throws IOException for general File IO errors.
-	 * @throws InputMismatchException if there is an issue parsing the file
-	 * @throws DataFormatException if data will be overwritten
-	 * @author Grant Fass
-	 */
-	public boolean loadStopTimes(File file) throws FileNotFoundException, IOException,
-			InputMismatchException, DataFormatException {
-		boolean wasLineSkipped = stop_times.loadStopTimes(file);
-		Platform.runLater(this::notifyObservers);
-		return wasLineSkipped;
-	}
-
-	/**
-	 * Method to parse Trip data from a trips.txt file
-	 * @param file the routes.txt file to be parsed
-	 * @return true if a line was skipped while loading, false otherwise
-	 * @throws FileNotFoundException if the file was not found
-	 * @throws IOException for general File IO errors.
-	 * @throws InputMismatchException if there is an issue parsing the file
-	 * @throws DataFormatException if data will be overwritten
-	 * @author Grant Fass
-	 */
-	public boolean loadTrips(File file) throws FileNotFoundException, IOException,
-			InputMismatchException, DataFormatException {
-		boolean wasLineSkipped = trips.loadTrips(file);
-		Platform.runLater(this::notifyObservers);
-		return wasLineSkipped;
-	}
-
-	/**
-	 * Method to output data as a single concatenated string
-	 * @author GrantFass,
-	 * @return string of data
-	 */
-	@Override
-	public String toString() {
-		return getStopTimes().toString() + getStops().toString()
-				+ getTrips().toString() + getRoutes().toString();
-	}
-
-	/**
-	 * Searches for every route_id associated with a Stop given stop_id
-	 * @param stop_id of Stop being searched
-	 * @return String of formatted route_ids associated with stop_id
-	 */
-	public String getRouteIDs_fromStopID(String stop_id){
-	    ArrayList<String> route_ids = searchStopForRoute_IDs(stop_id);
-	    return formatRoute_IDs(route_ids);
-	}
-
-	/**
-	 * Helper method for getRouteIDs_fromStopID() that gets all route_ids associated with a given stop_id
-	 * @author Ryan Becker
-	 * @param stop_id for a Stop used in searching for all route_ids that are paired with the given stop_id
-	 * @return ArrayList of every route_id that is associated with stop_id
-	 */
-	private ArrayList<String> searchStopForRoute_IDs(String stop_id){
-		ArrayList<String> trip_ids = stop_times.getTripIDs_fromStop_ID(stop_id);
-
-		ArrayList<String> all_route_ids = new ArrayList<>();
-
-		for(String trip_id : trip_ids){
-			ArrayList<String> route_ids = trips.getRouteIDs_fromTripIDs(trip_id);
-			all_route_ids.addAll(onlyAddNew(all_route_ids, route_ids));
-		}
-
-		return all_route_ids;
-	}
-
-	/**
-	 * Helper method for getRouteIDs_fromStopID() that formats a string similarly to a toString() method
-	 * to display every route_id associated with a stop_id
-	 * @param route_ids ArrayList of every route_id associated with stop_id
-	 * @return String formatting every route_id associated with stop_id on new lines
-	 */
-	private String formatRoute_IDs(ArrayList<String> route_ids){
-		StringBuilder sb = new StringBuilder();
-		for(int i = 0; i < route_ids.size(); ++i){
-		    sb.append((i+1) + ": " + route_ids.get(i) + "\n");
-        }
-
-		return sb.toString();
-	}
-
-	/**
-	 * Helper method for searchStopForRoute_IDs() that will help remove duplicate occurences of a route_id
-	 * @author Ryan Becker
-	 * @param allRouteIDs ArrayList of all current unique route_ids associated with stop_id
-	 * @param route_ids all newly read route_ids, which are only added to returned list if they do not
-	 *                  already occur within allRouteIDs
-	 * @return ArrayList of all route_ids currently not found in allRouteIDs
-	 */
-	private ArrayList<String> onlyAddNew(ArrayList<String> allRouteIDs, ArrayList<String> route_ids){
-		ArrayList<String> uniqueIDs = new ArrayList<>();
-		for(String route_id : route_ids){
-			if(!allRouteIDs.contains(route_id)){
-				uniqueIDs.add(route_id);
-			}
-		}
-		return uniqueIDs;
 	}
 
 	/**
@@ -495,11 +371,138 @@ public class Data implements Subject {
 		double d = Math.cos(Math.toRadians(toThisLat));
 		double e = (a + c * d * b);
 		double f = 2 * Math.atan2(Math.sqrt(e), Math.sqrt(1 - e));
-		double miles = (Math.round(EARTH_RADIUS * f));
+		double miles = (Math.round(EARTH_RADIUS_MILES * f));
 
 		return (int) miles;
 	}
+	//endregion
 
+	//region methods for map GUI
+	/**
+	 * returns all of the coordinates of busses
+	 * //TODO: Initialize this
+	 * @return an arraylist of bus location coordinate pairs with longitude first then latitude
+	 * @author Grant Fass,
+	 */
+	public ArrayList<double[]> getBusCoordinates() {
+		return new ArrayList<>();
+	}
+
+	/**
+	 * retrieves all of the stops that are associated with all routes
+	 * @return a HashMap containing all of the Stops associated with all Routes
+	 * @author Grant Fass
+	 */
+	public HashMap<Route, ArrayList<Stop>> getStopsPerRoute() {
+		//Create a list of all of the keys in StopTimes. Key Format = 'stop_id;trip_id'
+		String[] stopTimeKeys = stop_times.getStop_times().keySet().toArray(new String[0]);
+		//separate stopTimeKeys into stop_id values and trip_id values
+		ArrayList<String> stop_ids = new ArrayList<>();
+		ArrayList<String> trip_ids = new ArrayList<>();
+		for(String s:stopTimeKeys) {
+			stop_ids.add(s.substring(0, s.indexOf(';')));
+			trip_ids.add(s.substring(s.indexOf(';') + 1));
+		}
+		//convert stop_ids to Stops
+		ArrayList<Stop> allStops = new ArrayList<>();
+		for(String stop_id:stop_ids) {
+			allStops.add(stops.getStop(stop_id));
+		}
+		//convert trip_ids to Routes
+		ArrayList<Route> allRoutes = new ArrayList<>();
+		for(String trip_id:trip_ids) {
+			Trip trip = trips.getTrip(trip_id);
+			Route route = new Route("-1", "", "-1", "Null Route", "Null Route",
+					"", "", Color.web("black").toString(), "",
+					"", "", "");
+			if (trip != null) {
+				route = routes.getRoute(trip.getRouteID());
+			}
+			allRoutes.add(route);
+		}
+		//transfer data into HashMap
+		HashMap<Route, ArrayList<Stop>> stopsPerRoute = new HashMap<>();
+		for (int i = 0; i < allRoutes.size(); i++) {
+			//If the Route already exists in the map then add the stop to the list of stops
+			//Otherwise create a new list of stops and add the route and stop to the map
+			//Do not include the stop if it already exists for a route
+			if (stopsPerRoute.containsKey(allRoutes.get(i)) && !stopsPerRoute.get(allRoutes.get(i)).contains(allStops.get(i))) {
+				stopsPerRoute.get(allRoutes.get(i)).add(allStops.get(i));
+			} else if (allRoutes.get(i) != null) {
+				ArrayList<Stop> stopsInRoute = new ArrayList<>();
+				stopsInRoute.add(allStops.get(i));
+				stopsPerRoute.put(allRoutes.get(i), stopsInRoute);
+			}
+		}
+		//Return Map
+		return stopsPerRoute;
+	}
+	//endregion
+
+	//region search functions
+	/**
+	 * Searches for every route_id associated with a Stop given stop_id
+	 * @param stop_id of Stop being searched
+	 * @return String of formatted route_ids associated with stop_id
+	 */
+	public String getRouteIDs_fromStopID(String stop_id){
+	    ArrayList<String> route_ids = searchStopForRoute_IDs(stop_id);
+	    return formatRoute_IDs(route_ids);
+	}
+	/**
+	 * Helper method for getRouteIDs_fromStopID() that gets all route_ids associated with a given stop_id
+	 * @author Ryan Becker
+	 * @param stop_id for a Stop used in searching for all route_ids that are paired with the given stop_id
+	 * @return ArrayList of every route_id that is associated with stop_id
+	 */
+	private ArrayList<String> searchStopForRoute_IDs(String stop_id){
+		ArrayList<String> trip_ids = stop_times.getTripIDs_fromStop_ID(stop_id);
+
+		ArrayList<String> all_route_ids = new ArrayList<>();
+
+		for(String trip_id : trip_ids){
+			ArrayList<String> route_ids = trips.getRouteIDs_fromTripIDs(trip_id);
+			all_route_ids.addAll(onlyAddNew(all_route_ids, route_ids));
+		}
+
+		return all_route_ids;
+	}
+
+	/**
+	 * Helper method for getRouteIDs_fromStopID() that formats a string similarly to a toString() method
+	 * to display every route_id associated with a stop_id
+	 * @param route_ids ArrayList of every route_id associated with stop_id
+	 * @return String formatting every route_id associated with stop_id on new lines
+	 */
+	private String formatRoute_IDs(ArrayList<String> route_ids){
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0; i < route_ids.size(); ++i){
+		    sb.append((i+1) + ": " + route_ids.get(i) + "\n");
+        }
+
+		return sb.toString();
+	}
+
+	/**
+	 * Helper method for searchStopForRoute_IDs() that will help remove duplicate occurences of a route_id
+	 * @author Ryan Becker
+	 * @param allRouteIDs ArrayList of all current unique route_ids associated with stop_id
+	 * @param route_ids all newly read route_ids, which are only added to returned list if they do not
+	 *                  already occur within allRouteIDs
+	 * @return ArrayList of all route_ids currently not found in allRouteIDs
+	 */
+	private ArrayList<String> onlyAddNew(ArrayList<String> allRouteIDs, ArrayList<String> route_ids){
+		ArrayList<String> uniqueIDs = new ArrayList<>();
+		for(String route_id : route_ids){
+			if(!allRouteIDs.contains(route_id)){
+				uniqueIDs.add(route_id);
+			}
+		}
+		return uniqueIDs;
+	}
+	//endregion
+
+	//region Observer Pattern Methods
 	/**
 	 * add an observer to the list of observers to update
 	 * Based on a guide from GeeksForGeeks
@@ -511,7 +514,6 @@ public class Data implements Subject {
 	public void attach(Observer o) {
 		observerList.add(o);
 	}
-
 	/**
 	 * remove an observer from the list of observers to update
 	 * Based on a guide from GeeksForGeeks
@@ -537,4 +539,18 @@ public class Data implements Subject {
 			o.update(this);
 		}
 	}
+	//endregion
+
+	//region toString
+	/**
+	 * Method to output data as a single concatenated string
+	 * @author GrantFass,
+	 * @return string of data
+	 */
+	@Override
+	public String toString() {
+		return getStopTimes().toString() + getStops().toString()
+				+ getTrips().toString() + getRoutes().toString();
+	}
+	//endregion
 }//end Data

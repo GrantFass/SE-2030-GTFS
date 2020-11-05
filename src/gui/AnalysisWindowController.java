@@ -28,6 +28,7 @@ import java.util.HashMap;
  * @version Created on 10/25/2020 at 1:26 AM
  */
 public class AnalysisWindowController implements Observer {
+    //region FXML properties
     @FXML
     private TextField lastUpdatedTextField;
     @FXML
@@ -38,6 +39,9 @@ public class AnalysisWindowController implements Observer {
     private ListView speedListView;
     @FXML
     private ListView numberTripsListView;
+    //endregion
+
+    //region class references
     private Stage analysisWindowStage;
     private Stage dataWindowStage;
     private DataWindowController dataWindowController;
@@ -107,6 +111,7 @@ public class AnalysisWindowController implements Observer {
         this.searchWindowController = searchWindowController;
         this.updateWindowController = updateWindowController;
     }
+    //endregion
 
     /**
      * set the default values of the description
