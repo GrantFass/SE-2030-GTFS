@@ -28,6 +28,7 @@ import java.util.zip.DataFormatException;
  * @version Created on 10/25/2020 at 1:26 AM
  */
 public class ImportWindowController {
+    //region FXML Properties
     @FXML
     private TextArea description;
     @FXML
@@ -64,7 +65,9 @@ public class ImportWindowController {
     private TextField tripsTextField;
     @FXML
     private ProgressBar tripsProgressBar;
+    //endregion
 
+    //region class reference properties
     private Stage analysisWindowStage;
     private AnalysisWindowController analysisWindowController;
     private Stage dataWindowStage;
@@ -80,7 +83,9 @@ public class ImportWindowController {
     private SearchWindowController searchWindowController;
     private Stage updateWindowStage;
     private UpdateWindowController updateWindowController;
+    //endregion
 
+    //region setters for class reference properties
     /**
      * set the local values of all of the stages.
      *
@@ -136,16 +141,14 @@ public class ImportWindowController {
         this.searchWindowController = searchWindowController;
         this.updateWindowController = updateWindowController;
     }
+    //endregion
 
+    //region displayed help information
     /**
      * set the default values of the progress bars
      * @author Grant Fass
      */
     public void setDefaultValues() {
-        routesProgressBar.setVisible(false);
-        stopsProgressBar.setVisible(false);
-        stopTimesProgressBar.setVisible(false);
-        tripsProgressBar.setVisible(false);
         description.setText("This window is used to import files into the program. " +
                 "Use the checkboxes to select which file(s) to import. Use the 'browse' buttons to select " +
                 "the location of the given file to import. Use the 'Import' button to import the files.");
@@ -173,7 +176,9 @@ public class ImportWindowController {
                         " Note that this will take some time. After files are loaded the progress" +
                         " bars will turn green and alerts will be displayed to the Alerts Text Area.");
     }
+    //endregion
 
+    //region checks used for importing files
     /**
      * error if no file is loaded or file is null
      *
@@ -227,26 +232,9 @@ public class ImportWindowController {
                     " 'routes.txt'.");
         }
     }
+    //endregion
 
-    /**
-     * query the user to retrieve a GTFS file from the computer using a FileChooser
-     *
-     * @param description the description for the primary extension filter
-     * @param expected    the extension for the primary extension filter
-     * @return the selected GTFS file from the program
-     * @author Grant Fass
-     */
-    private File getGTFSFileLocationUsingFileChooser(String description, String expected) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter(description, expected.toLowerCase()),
-                new FileChooser.ExtensionFilter("TXT", "*.txt".toLowerCase()));
-        fileChooser.setTitle("Load GTFS File");
-        fileChooser.setInitialDirectory(new File("C:\\\\users\\\\" +
-                System.getProperty("user.name") + "\\\\Documents"));
-        return fileChooser.showOpenDialog(mainWindowStage);
-    }
-
+    //region getters for locations of files to import
     /**
      * opens a FileChooser with the specified extension filter and outputs the file path to the corresponding TextArea
      *
@@ -307,6 +295,25 @@ public class ImportWindowController {
         }
     }
 
+    /**
+     * query the user to retrieve a GTFS file from the computer using a FileChooser
+     *
+     * @param description the description for the primary extension filter
+     * @param expected    the extension for the primary extension filter
+     * @return the selected GTFS file from the program
+     * @author Grant Fass
+     */
+    private File getGTFSFileLocationUsingFileChooser(String description, String expected) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter(description, expected.toLowerCase()),
+                new FileChooser.ExtensionFilter("TXT", "*.txt".toLowerCase()));
+        fileChooser.setTitle("Load GTFS File");
+        fileChooser.setInitialDirectory(new File("C:\\\\users\\\\" +
+                System.getProperty("user.name") + "\\\\Documents"));
+        return fileChooser.showOpenDialog(mainWindowStage);
+    }
+    //endregion
 
     /**
      * Import selected files into the program
@@ -337,7 +344,7 @@ public class ImportWindowController {
             updateStatus(progressBar, ProgressBar.INDETERMINATE_PROGRESS, "-fx-accent: orange");
             if (checkBox.isSelected() && !textField.getText().isEmpty()) {
                 updateStatus(String.format("IN: Import of %s started at: %s::%s::%s\n", fileType, LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getSecond()));
-                importFile(new File(textField.getText()), progressBar);
+                importFile(new File(textField.getText()));
                 updateStatus(progressBar, 100, "-fx-accent: green");
             } else if (checkBox.isSelected()) {
                 updateStatus("SKIP: " + fileType + " - Empty File Location\n");
@@ -391,7 +398,7 @@ public class ImportWindowController {
      * @param file the file to import
      * @author Grant Fass
      */
-    private void importFile(File file, ProgressBar progressBar) {
+    private void importFile(File file) {
         try {
             checkNullFile(file);
             checkFileExtension(file.toString().substring(file.toString().indexOf('.')));

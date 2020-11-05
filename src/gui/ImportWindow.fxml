@@ -19,7 +19,8 @@ Everything in this file has been setup in code.
     </padding>
     <HBox spacing="10" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100"
           minWidth="20" minHeight="20">
-        <TextArea fx:id="description" wrapText="true" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+        <TextArea fx:id="description" wrapText="true" editable="false" HBox.hgrow="ALWAYS"
+                  VBox.vgrow="ALWAYS"
                   maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20"/>
         <Button text="?" onAction="#displayHelp" alignment="CENTER" HBox.hgrow="ALWAYS"
                 VBox.vgrow="ALWAYS" maxWidth="100" maxHeight="100" minWidth="20" minHeight="20"/>
@@ -47,7 +48,8 @@ Everything in this file has been setup in code.
                                 minWidth="20" minHeight="20"/>
                     </HBox>
                     <ProgressBar fx:id="routesProgressBar" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
-                                 maxWidth="Infinity" maxHeight="30" minWidth="20" minHeight="20"/>
+                                 maxWidth="Infinity" maxHeight="30" minWidth="20" minHeight="20"
+                                 visible="false"/>
                 </VBox>
             </HBox>
             <HBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100"
@@ -69,7 +71,8 @@ Everything in this file has been setup in code.
                                 minWidth="20" minHeight="20"/>
                     </HBox>
                     <ProgressBar fx:id="stopsProgressBar" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
-                                 maxWidth="Infinity" maxHeight="30" minWidth="20" minHeight="20"/>
+                                 maxWidth="Infinity" maxHeight="30" minWidth="20" minHeight="20"
+                                 visible="false"/>
                 </VBox>
             </HBox>
             <HBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100"
@@ -92,7 +95,7 @@ Everything in this file has been setup in code.
                     </HBox>
                     <ProgressBar fx:id="stopTimesProgressBar" HBox.hgrow="ALWAYS"
                                  VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="30"
-                                 minWidth="20" minHeight="20"/>
+                                 minWidth="20" minHeight="20" visible="false"/>
                 </VBox>
             </HBox>
             <HBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100"
@@ -114,16 +117,17 @@ Everything in this file has been setup in code.
                                 minWidth="20" minHeight="20"/>
                     </HBox>
                     <ProgressBar fx:id="tripsProgressBar" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
-                                 maxWidth="Infinity" maxHeight="30" minWidth="20" minHeight="20"/>
+                                 maxWidth="Infinity" maxHeight="30" minWidth="20" minHeight="20"
+                                 visible="false"/>
                 </VBox>
             </HBox>
             <Button onAction="#importFiles" text="Import" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
                     maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20"/>
         </VBox>
         <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="200" maxHeight="Infinity"
-              minWidth="20" minHeight="20" spacing="10">
+              minWidth="20" minHeight="20" spacing="5">
             <Label text="Alerts" alignment="CENTER" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
-                   maxWidth="Infinity" maxHeight="50" minWidth="20" minHeight="20"/>
+                   maxWidth="Infinity" maxHeight="30" minWidth="20" minHeight="20"/>
             <TextArea fx:id="alertTextArea" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
                       maxWidth="Infinity" maxHeight="Infinity" minWidth="20" minHeight="20"/>
         </VBox>

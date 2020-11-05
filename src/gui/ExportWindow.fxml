@@ -17,12 +17,12 @@ Everything in this file has been setup in code.
     <padding>
         <Insets top="20" bottom="20" left="20" right="20"/>
     </padding>
-    <HBox spacing="10" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="75"
-          minWidth="20" minHeight="20">
+    <HBox spacing="10" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" minWidth="20"
+          minHeight="20" maxHeight="80">
         <TextArea fx:id="description" wrapText="true" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
-                  maxWidth="Infinity" maxHeight="75" minWidth="20" minHeight="20"/>
+                  minWidth="20" maxWidth="Infinity" minHeight="20" maxHeight="80"/>
         <Button text="?" onAction="#displayHelp" alignment="CENTER" HBox.hgrow="ALWAYS"
-                VBox.vgrow="ALWAYS" maxWidth="100" maxHeight="75" minWidth="20" minHeight="20"/>
+                VBox.vgrow="ALWAYS" minWidth="20" maxWidth="100" minHeight="20" maxHeight="80"/>
     </HBox>
     <HBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="60" minWidth="20"
           minHeight="20" spacing="10">
@@ -117,9 +117,9 @@ Everything in this file has been setup in code.
                     maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20"/>
         </VBox>
         <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="200" maxHeight="Infinity"
-              minWidth="20" minHeight="20" spacing="10">
+              minWidth="20" minHeight="20" spacing="5">
             <Label text="Alerts" alignment="CENTER" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
-                   maxWidth="Infinity" maxHeight="50" minWidth="20" minHeight="20"/>
+                   maxWidth="Infinity" maxHeight="30" minWidth="20" minHeight="20"/>
             <TextArea fx:id="alertTextArea" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
                       maxWidth="Infinity" maxHeight="Infinity" minWidth="20" minHeight="20"/>
         </VBox>

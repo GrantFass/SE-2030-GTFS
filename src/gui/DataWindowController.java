@@ -30,8 +30,6 @@ public class DataWindowController implements Observer {
     @FXML
     private TextArea description;
     @FXML
-    private ToggleButton snapshotToggleButton;
-    @FXML
     private ToggleButton expandedToggleButton;
     @FXML
     private ListView routesListView;
@@ -39,11 +37,6 @@ public class DataWindowController implements Observer {
     private ListView stopsListView;
     @FXML
     private ListView tripsListView;
-    @FXML
-    private TextArea dataDisplayTextArea;
-    @FXML
-    private Label topLabel;
-    @FXML
     private Stage analysisWindowStage;
     private AnalysisWindowController analysisWindowController;
     private Stage dataWindowStage;
