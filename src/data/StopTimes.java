@@ -106,44 +106,40 @@ public class StopTimes {
 	}
 
 	/**
-	 * Method to parse StopTime data from a stop_times.txt file, resets database for every file
-	 * @author Joy Cross, Grant Fass
-	 * @param file the stop_times.txt file to be parsed
-	 * @return true if a line was skipped while loading, false otherwise
-	 * @throws FileNotFoundException if the file was not found
+	 * Method to parse data from a specified file
+	 *
+	 * @param file the GTFS file to be parsed
+	 * @return a message containing the results of loading the file
 	 * @throws IOException for general File IO errors.
-	 * @throws InputMismatchException if there is an issue parsing the file
-	 * @throws DataFormatException if data will be overwritten
+	 * @author Grant Fass
 	 */
-	public boolean loadStopTimes(File file) throws DataFormatException, IOException {
-		boolean emptyAtLoadStart = true;
-		if (!stop_times.isEmpty()) {
-			emptyAtLoadStart = false;
+	public String loadStopTimes(File file) throws IOException {
+		boolean wasLineSkipped = false;
+		boolean wasFileLoaded = true;
+		String failMessage = "";
+		boolean emptyPrior = stop_times.isEmpty();
+		if (!emptyPrior) {
 			stop_times.clear();
 			tripStartAndEnd.clear();
 		}
-		Scanner fileInput = new Scanner(file);
-		try {
-			headers = validateHeader(fileInput.nextLine());
-		} catch (IllegalArgumentException e) {
-			throw new IOException("File not read due to invalid headers format");
-		}
-		boolean wasLineSkipped = false;
-		while (fileInput.hasNextLine()) {
-			try {
-				StopTime stopTime = validateData(fileInput.nextLine(), headers);
-				addStopTime(stopTime);
-			} catch (IllegalArgumentException e) {
-				wasLineSkipped = true;
+		//writes the items of the file to the hash map
+		try (Scanner in = new Scanner(file)) {
+			//read the headers. If they are formatted wrong then immediately throw error and stop.
+			headers = validateHeader(in.nextLine());
+			//read body. will skip improperly formatted lines.
+			while (in.hasNextLine()) {
+				try {
+					addStopTime(validateData(in.nextLine(), headers));
+				} catch (IllegalArgumentException e) {
+					wasLineSkipped = true;
+				}
 			}
+		} catch (IllegalArgumentException e) {
+			wasFileLoaded = false;
+			failMessage = String.format("ERROR: StopTimes Not Imported\nFile Contains Invalid Header Format\n%s\n", e.getMessage());
 		}
-		if (!emptyAtLoadStart && !wasLineSkipped) {
-			throw new DataFormatException(file.getName());
-		} else if (!emptyAtLoadStart) {
-			throw new IOException("Either data in " + file.getName() + " was overwritten or " +
-					"there was a problem reading the file");
-		}
-		return wasLineSkipped;
+		String successMessage = String.format("✓: StopTimes Imported Successfully.\n\t%s\n\t%s\n", emptyPrior ? "New StopTimes Data Imported" : "StopTimes Data Overwritten", wasLineSkipped ? "Lines Skipped During Import Of StopTimes" : "All Lines Imported Successfully");
+		return String.format("IMPORT STOP_TIMES:\n%s", wasFileLoaded ? successMessage : failMessage);
 	}
 
 	/**
@@ -165,7 +161,7 @@ public class StopTimes {
 					" values for a StopTime object. Header was missing stop_id");
 		} else if (!header.contains("stop_sequence")) {
 			throw new IllegalArgumentException("Input header line must contain all expected" +
-					" values for a StopTime object. Header was missing trip_id");
+					" values for a StopTime object. Header was missing stop_sequence");
 		} else if (header.endsWith(",")) {
 			throw new IllegalArgumentException("Input header line cannot contain blank fields");
 		}

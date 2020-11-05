@@ -25,13 +25,12 @@ public class Stops {
 
 	/**
 	 * Adds a stop object to the hashmap, returns false if could not be added to hashmap
-	 * @author Joy Cross
-	 * @param stop_id, stop add stop using stop_id for key and stop object for data
 	 * @param stop stop to be added to stops
 	 * @return true if added correctly
+	 * @author Joy Cross, Grant Fass
 	 */
-	public boolean addStop(String stop_id, Stop stop){
-		Stop stopAdded = stops.put(stop_id, stop);
+	public boolean addStop( Stop stop){
+		Stop stopAdded = stops.put(stop.getStopID(), stop);
 		boolean added = false;
 		if(stopAdded != null){
 			added = true;
@@ -74,42 +73,39 @@ public class Stops {
 	}
 
 	/**
-	 * Method to parse Stop data from a stops.txt file
-	 * @param file the stops.txt file to be parsed
-	 * @return true if a line was skipped while loading, false otherwise
-	 * @throws FileNotFoundException if the file was not found
+	 * Method to parse data from a specified file
+	 *
+	 * @param file the GTFS file to be parsed
+	 * @return a message containing the results of loading the file
 	 * @throws IOException for general File IO errors.
-	 * @throws InputMismatchException if there is an issue parsing the file
-	 * @throws DataFormatException if data will be overwritten
-	 * @author Joy Cross
+	 * @author Grant Fass
 	 */
-	public boolean loadStops(File file) throws IOException, DataFormatException {
-		boolean emptyAtLoadStart = true;
-		if (!stops.isEmpty()) {
-			emptyAtLoadStart = false;
+	public String loadStops(File file) throws IOException {
+		boolean wasLineSkipped = false;
+		boolean wasFileLoaded = true;
+		String failMessage = "";
+		boolean emptyPrior = stops.isEmpty();
+		if (!emptyPrior) {
 			stops.clear();
 		}
-		Scanner sc = new Scanner(file);
-		try {
-			headers = validateHeader(sc.nextLine());
-		} catch (DataFormatException e) {
-			throw new IOException("File not read due to invalid headers format");
-		}
-		boolean lineSkipped = false;
-
-		while (sc.hasNextLine()) {
-			try {
-				Stop stop = validateData(sc.nextLine(), headers);
-				addStop(stop.getStopID(), stop);
-			} catch (DataFormatException e) {
-				lineSkipped = true;
+		//writes the items of the file to the hash map
+		try (Scanner in = new Scanner(file)) {
+			//read the headers. If they are formatted wrong then immediately throw error and stop.
+			headers = validateHeader(in.nextLine());
+			//read body. will skip improperly formatted lines.
+			while (in.hasNextLine()) {
+				try {
+					addStop(validateData(in.nextLine(), headers));
+				} catch (IllegalArgumentException e) {
+					wasLineSkipped = true;
+				}
 			}
+		} catch (IllegalArgumentException e) {
+			wasFileLoaded = false;
+			failMessage = String.format("ERROR: Stops Not Imported\nFile Contains Invalid Header Format\n%s\n", e.getMessage());
 		}
-
-		if(!emptyAtLoadStart){
-			throw new DataFormatException(file.getName());
-		}
-		return lineSkipped;
+		String successMessage = String.format("✓: Stops Imported Successfully.\n\t%s\n\t%s\n", emptyPrior ? "New Stops Data Imported" : "Stops Data Overwritten", wasLineSkipped ? "Lines Skipped During Import Of Stops" : "All Lines Imported Successfully");
+		return String.format("IMPORT STOPS:\n%s", wasFileLoaded ? successMessage : failMessage);
 	}
 
 	/**
@@ -139,47 +135,32 @@ public class Stops {
 	 * checks to confirm that the header is valid and matches an expected format
 	 * @param header the header text line to validate
 	 * @return a Headers object containing the ordering of the headers
-	 * @throws DataFormatException if the header does not match the expected format
-	 * @author Joy Cross
+	 * @throws IllegalArgumentException if the header does not match the expected format
+	 * @author Joy Cross, Grant Fass
 	 */
-	public Headers validateHeader(String header) throws DataFormatException {
+	public Headers validateHeader(String header) throws IllegalArgumentException {
 		header = header.toLowerCase();
 		if (header.isEmpty()) {
 			throw new IllegalArgumentException("Input header line cannot be empty");
 		} else if (!header.contains("stop_id")) {
 			throw new IllegalArgumentException("Input header line must contain all expected" +
-					" values for a StopTime object. Header was missing trip_id");
+					" values for a Stop object. Header was missing stop_id");
 		} else if (!(header.contains("stop_lat") || header.contains("stop_latitude"))) {
 			throw new IllegalArgumentException("Input header line must contain all expected" +
-					" values for a StopTime object. Header was missing stop_id");
+					" values for a Stop object. Header was missing latitude");
 		} else if (!(header.contains("stop_lon") || header.contains("stop_longitude"))) {
 			throw new IllegalArgumentException("Input header line must contain all expected" +
-					" values for a StopTime object. Header was missing trip_id");
+					" values for a Stop object. Header was missing longitude");
 		}
 		Headers headers = new Headers();
 		String[] headerDataArray = header.split(",");
 		final String possibleHeaders = Stop.getHeaderLine().toLowerCase();
 		for (int i = 0; i < headerDataArray.length; i++) {
-			String indivHeader = headerDataArray[i].trim();
-			/*
-			// checks if header is abbreviated to something else and normalizes it
-			switch (indivHeader) {
-				case "stop_desc":
-					indivHeader = "stop_description";
-					break;
-				case "stop_lat":
-					indivHeader = "stop_latitude";
-					break;
-				case "stop_lon":
-					indivHeader = "stop_longitude";
-					break;
-			}
-			*/
-
+			String individualHeader = headerDataArray[i].trim();
 			// check to make sure header isn't empty or not valid
-			if (!indivHeader.isEmpty() && possibleHeaders.contains(indivHeader)) {
-				headers.addHeader(new Header(indivHeader, i));
-			} else if (indivHeader.isEmpty()){
+			if (!individualHeader.isEmpty() && possibleHeaders.contains(individualHeader)) {
+				headers.addHeader(new Header(individualHeader, i));
+			} else if (individualHeader.isEmpty()){
 				throw new IllegalArgumentException("Input header line cannot contain blank fields");
 			} else {
 				throw new IllegalArgumentException("Header field contains unexpected field: " + headerDataArray[i]);
@@ -193,11 +174,10 @@ public class Stops {
 	 * @param data the line of data to parse
 	 * @param headers the headers values to use to parse the data
 	 * @return a Stop object constructed from the data
-	 * @throws DataFormatException if the data does not match the expected format
-	 * @throws IllegalArgumentException if there was an issue parsing a String enumerator to an double
+	 * @throws IllegalArgumentException if the data does not match the expected format
 	 * @author Joy Cross
 	 */
-	public Stop validateData(String data, Headers headers) throws DataFormatException, IllegalArgumentException {
+	public Stop validateData(String data, Headers headers) throws IllegalArgumentException {
 		String[] dataArray = data.split(",", -1);
 		if (dataArray.length != headers.length() || data.isEmpty()) {
 			throw new IllegalArgumentException("Data line does not contain the proper amount of data");

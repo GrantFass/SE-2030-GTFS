@@ -62,70 +62,35 @@ public class Data implements Subject {
 
 	//region methods for loading files
 	/**
-	 * Method to parse Route data from a routes.txt file
-	 * @param file the routes.txt file to be parsed
-	 * @return true if a line was skipped while loading, false otherwise
-	 * @throws FileNotFoundException if the file was not found
+	 * loads all of the files from the specified file locations.
+	 * only loads the file if the string location is not empty
+	 * @param routeFileLocation the file location in string format of routes.txt
+	 * @param stopFileLocation the file location in string format of stops.txt
+	 * @param stopTimeFileLocation the file location in string format of stop_times.txt
+	 * @param tripFileLocation the file location in string format of trips.txt
+	 * @return a message containing the import status of all files.
 	 * @throws IOException for general File IO errors.
-	 * @throws InputMismatchException if there is an issue parsing the file
-	 * @throws DataFormatException if data will be overwritten
 	 * @author Grant Fass
 	 */
-	public boolean loadRoutes(File file) throws FileNotFoundException, IOException,
-			InputMismatchException, DataFormatException {
-		boolean wasLineSkipped = routes.loadRoutes(file);
-		Platform.runLater(this::notifyObservers);
-		return wasLineSkipped;
-	}
-	/**
-	 * Method to parse Stop data from a stops.txt file
-	 * @param file the routes.txt file to be parsed
-	 * @return true if a line was skipped while loading, false otherwise
-	 * @throws FileNotFoundException if the file was not found
-	 * @throws IOException for general File IO errors.
-	 * @throws InputMismatchException if there is an issue parsing the file
-	 * @throws DataFormatException if data will be overwritten
-	 * @author Grant Fass
-	 */
-	public boolean loadStops(File file) throws FileNotFoundException, IOException,
-			InputMismatchException, DataFormatException {
-		boolean wasLineSkipped = stops.loadStops(file);
-		Platform.runLater(this::notifyObservers);
-		return wasLineSkipped;
-	}
-
-	/**
-	 * Method to parse StopTimes data from a stop_times.txt file
-	 * @param file the routes.txt file to be parsed
-	 * @return true if a line was skipped while loading, false otherwise
-	 * @throws FileNotFoundException if the file was not found
-	 * @throws IOException for general File IO errors.
-	 * @throws InputMismatchException if there is an issue parsing the file
-	 * @throws DataFormatException if data will be overwritten
-	 * @author Grant Fass
-	 */
-	public boolean loadStopTimes(File file) throws FileNotFoundException, IOException,
-			InputMismatchException, DataFormatException {
-		boolean wasLineSkipped = stop_times.loadStopTimes(file);
-		Platform.runLater(this::notifyObservers);
-		return wasLineSkipped;
-	}
-
-	/**
-	 * Method to parse Trip data from a trips.txt file
-	 * @param file the routes.txt file to be parsed
-	 * @return true if a line was skipped while loading, false otherwise
-	 * @throws FileNotFoundException if the file was not found
-	 * @throws IOException for general File IO errors.
-	 * @throws InputMismatchException if there is an issue parsing the file
-	 * @throws DataFormatException if data will be overwritten
-	 * @author Grant Fass
-	 */
-	public boolean loadTrips(File file) throws FileNotFoundException, IOException,
-			InputMismatchException, DataFormatException {
-		boolean wasLineSkipped = trips.loadTrips(file);
-		Platform.runLater(this::notifyObservers);
-		return wasLineSkipped;
+	public String loadFiles(String routeFileLocation, String stopFileLocation, String stopTimeFileLocation, String tripFileLocation) throws IOException{
+		String routesImportMessage = "SKIP ROUTES:\n\tFile Location Empty\n";
+		String stopsImportMessage = "SKIP STOPS:\n\tFile Location Empty\n";
+		String stopTimesImportMessage = "SKIP STOP_TIMES:\n\tFile Location Empty\n";
+		String tripsImportMessage = "SKIP TRIPS:\n\tFile Location Empty\n";
+		if (routeFileLocation != null && !routeFileLocation.isEmpty()) {
+			routesImportMessage = routes.loadRoutes(new File(routeFileLocation));
+		}
+		if (stopFileLocation != null && !stopFileLocation.isEmpty()) {
+			stopsImportMessage  = stops.loadStops(new File(stopFileLocation));
+		}
+		if (stopTimeFileLocation != null && !stopTimeFileLocation.isEmpty()) {
+			stopTimesImportMessage = stop_times.loadStopTimes(new File(stopTimeFileLocation));
+		}
+		if (tripFileLocation != null && !tripFileLocation.isEmpty()) {
+			tripsImportMessage = trips.loadTrips(new File(tripFileLocation));
+		}
+		notifyObservers();
+		return routesImportMessage + stopsImportMessage + stopTimesImportMessage + tripsImportMessage;
 	}
 	//endregion
 

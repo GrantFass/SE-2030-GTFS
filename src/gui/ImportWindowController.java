@@ -322,38 +322,93 @@ public class ImportWindowController {
     @FXML
     private void importFiles() {
         alertTextArea.clear();
+        String importMessage = "";
         updateStatus("Times Formatted in HH::MM::SS\n");
-        importFile(routesCheckBox, routesTextField, routesProgressBar, "Routes");
-        importFile(stopsCheckBox, stopsTextField, stopsProgressBar, "Stops");
-        importFile(stopTimesCheckBox, stopTimesTextField, stopTimesProgressBar, "Stop_Times");
-        importFile(tripsCheckBox, tripsTextField, tripsProgressBar, "Trips");
+        updateStatus(String.format("✓: INFO: Import started at: %s::%s::%s\n", LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getSecond()));
+        try {
+            importMessage = mainWindowController.getData().loadFiles(routesTextField.getText(), stopsTextField.getText(), stopTimesTextField.getText(), tripsTextField.getText());
+        } catch (IOException e) {
+            importMessage = e.getMessage() + "\n";
+        }
+        updateStatus(importMessage);
+//        importFile(routesCheckBox, routesTextField, routesProgressBar, "Routes");
+//        importFile(stopsCheckBox, stopsTextField, stopsProgressBar, "Stops");
+//        importFile(stopTimesCheckBox, stopTimesTextField, stopTimesProgressBar, "Stop_Times");
+//        importFile(tripsCheckBox, tripsTextField, tripsProgressBar, "Trips");
+        updateStatus(String.format("✓: INFO: Import completed at: %s::%s::%s\n", LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getSecond()));
     }
-
-    /**
-     * Import a file into the program
-     * @param checkBox the checkbox to check if the file is to be imported
-     * @param textField the textField to read the filename from
-     * @param progressBar the progressbar to update with loading status
-     * @param fileType the file type for alert output
-     * @author Grant Fass
-     */
-    private void importFile(CheckBox checkBox, TextField textField, ProgressBar progressBar, String fileType) {
-//        Thread thread = new Thread(() -> {
-            updateStatus(progressBar, ProgressBar.INDETERMINATE_PROGRESS, "-fx-accent: orange");
-            if (checkBox.isSelected() && !textField.getText().isEmpty()) {
-                updateStatus(String.format("IN: Import of %s started at: %s::%s::%s\n", fileType, LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getSecond()));
-                importFile(new File(textField.getText()));
-                updateStatus(progressBar, 100, "-fx-accent: green");
-            } else if (checkBox.isSelected()) {
-                updateStatus("SKIP: " + fileType + " - Empty File Location\n");
-                updateStatus(progressBar, 100, "-fx-accent: white");
-            } else {
-                updateStatus("SKIP: " + fileType + " - Not Selected\n");
-                updateStatus(progressBar, 100, "-fx-accent: red");
-            }
-//        });
-//        thread.start();
-    }
+//
+//    /**
+//     * Import a file into the program
+//     * @param checkBox the checkbox to check if the file is to be imported
+//     * @param textField the textField to read the filename from
+//     * @param progressBar the progressbar to update with loading status
+//     * @param fileType the file type for alert output
+//     * @author Grant Fass
+//     */
+//    private void importFile(CheckBox checkBox, TextField textField, ProgressBar progressBar, String fileType) {
+////        Thread thread = new Thread(() -> {
+//            updateStatus(progressBar, ProgressBar.INDETERMINATE_PROGRESS, "-fx-accent: orange");
+//            if (checkBox.isSelected() && !textField.getText().isEmpty()) {
+//                updateStatus(String.format("IN: Import of %s started at: %s::%s::%s\n", fileType, LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getSecond()));
+//                importFile(new File(textField.getText()));
+//                updateStatus(progressBar, 100, "-fx-accent: green");
+//            } else if (checkBox.isSelected()) {
+//                updateStatus("SKIP: " + fileType + " - Empty File Location\n");
+//                updateStatus(progressBar, 100, "-fx-accent: white");
+//            } else {
+//                updateStatus("SKIP: " + fileType + " - Not Selected\n");
+//                updateStatus(progressBar, 100, "-fx-accent: red");
+//            }
+////        });
+////        thread.start();
+//    }
+//
+//    /**
+//     * imports a single file into the program
+//     * @param file the file to import
+//     * @author Grant Fass
+//     */
+//    private void importFile(File file) {
+//        try {
+//            checkNullFile(file);
+//            checkFileExtension(file.toString().substring(file.toString().indexOf('.')));
+//            String prefix = checkFilePrefix(file.toString().substring(0,
+//                    file.toString().indexOf('.')));
+//            boolean wasLineSkipped = false;
+//            switch (prefix) {
+//                case "stop_times":
+//                    wasLineSkipped = mainWindowController.getData().loadStopTimes(file);
+//                    break;
+//                case "stops":
+//                    wasLineSkipped = mainWindowController.getData().loadStops(file);
+//                    break;
+//                case "routes":
+//                    wasLineSkipped = mainWindowController.getData().loadRoutes(file);
+//                    break;
+//                case "trips":
+//                    wasLineSkipped = mainWindowController.getData().loadTrips(file);
+//                    break;
+//            }
+//
+//            if (wasLineSkipped) {
+//                updateStatus("\t✓: WARN: one or more lines in " + prefix + " were incorrectly formatted and skipped\n");
+//            }
+//        } catch (IllegalArgumentException e) {
+//            updateStatus("\tERROR: IllegalArgumentException - " + e.getMessage() + "\n");
+//        } catch (InputMismatchException e) {
+//            updateStatus("\tERROR: InputMismatchException - " + e.getMessage() + "\n");
+//        } catch (FileNotFoundException e) {
+//            updateStatus("\tERROR: FileNotFoundException - " + e.getMessage() + "\n");
+//        } catch (IOException e) {
+//            updateStatus("\tERROR: IOException - " + e.getMessage() + "\n");
+//        } catch (DataFormatException e) {
+//            updateStatus(String.format("\tWARN: Data Overwritten - The data from the" +
+//                    " previous '%s' file was overwritten with the new data. The program" +
+//                    " may work unexpectedly if the new data from '%s' does not match" +
+//                    " the existing data in the remaining files.\n", e.getMessage(), e.getMessage()));
+//        }
+//    }
 
     /**
      * appends a message to the alert area
@@ -388,52 +443,6 @@ public class ImportWindowController {
                 progressBar.setProgress(value);
                 progressBar.setStyle(style);
             });
-        }
-    }
-
-    /**
-     * imports a single file into the program
-     * @param file the file to import
-     * @author Grant Fass
-     */
-    private void importFile(File file) {
-        try {
-            checkNullFile(file);
-            checkFileExtension(file.toString().substring(file.toString().indexOf('.')));
-            String prefix = checkFilePrefix(file.toString().substring(0,
-                    file.toString().indexOf('.')));
-            boolean wasLineSkipped = false;
-            switch (prefix) {
-                case "stop_times":
-                    wasLineSkipped = mainWindowController.getData().loadStopTimes(file);
-                    break;
-                case "stops":
-                    wasLineSkipped = mainWindowController.getData().loadStops(file);
-                    break;
-                case "routes":
-                    wasLineSkipped = mainWindowController.getData().loadRoutes(file);
-                    break;
-                case "trips":
-                    wasLineSkipped = mainWindowController.getData().loadTrips(file);
-                    break;
-            }
-            updateStatus(String.format("✓: INFO: Import of %s completed at: %s::%s::%s\n", prefix, LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getSecond()));
-            if (wasLineSkipped) {
-                updateStatus("\t✓: WARN: one or more lines in " + prefix + " were incorrectly formatted and skipped\n");
-            }
-        } catch (IllegalArgumentException e) {
-            updateStatus("\tERROR: IllegalArgumentException - " + e.getMessage() + "\n");
-        } catch (InputMismatchException e) {
-            updateStatus("\tERROR: InputMismatchException - " + e.getMessage() + "\n");
-        } catch (FileNotFoundException e) {
-            updateStatus("\tERROR: FileNotFoundException - " + e.getMessage() + "\n");
-        } catch (IOException e) {
-            updateStatus("\tERROR: IOException - " + e.getMessage() + "\n");
-        } catch (DataFormatException e) {
-            updateStatus(String.format("\tWARN: Data Overwritten - The data from the" +
-                    " previous '%s' file was overwritten with the new data. The program" +
-                    " may work unexpectedly if the new data from '%s' does not match" +
-                    " the existing data in the remaining files.\n", e.getMessage(), e.getMessage()));
         }
     }
 

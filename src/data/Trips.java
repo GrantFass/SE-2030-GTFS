@@ -69,58 +69,39 @@ public class Trips {
     }
 
     /**
-     * Method to parse Trip data from a trips.txt file
+     * Method to parse data from a specified file
      *
-     * @param file the trips.txt file to be parsed
-     * @return true if a line was skipped while loading, false otherwise
-     * @throws FileNotFoundException  if the file was not found
-     * @throws IOException            for general File IO errors.
-     * @throws InputMismatchException if there is an issue parsing the file
-     * @throws DataFormatException    if data will be overwritten
-     * @author Simon Erickson
+     * @param file the GTFS file to be parsed
+     * @return a message containing the results of loading the file
+     * @throws IOException for general File IO errors.
+     * @author Simon Erickson, Grant Fass
      */
-    public boolean loadTrips(File file) throws FileNotFoundException,
-            InputMismatchException, DataFormatException {
-
-        //checks to see if trips was empty
+    public String loadTrips(File file) throws IOException {
+        boolean wasLineSkipped = false;
+        boolean wasFileLoaded = true;
+        String failMessage = "";
         boolean emptyPrior = trips.isEmpty();
-
-        //empties List if list was not empty
         if (!emptyPrior) {
             trips.clear();
         }
-
-        //sets initial skip value to false
-        boolean wasLineSkipped = false;
-
         //writes the items of the file to the hash map
         try (Scanner in = new Scanner(file)) {
-
-            //Header object
-            try {
-                headers = validateHeader(in.nextLine());
-            } catch (IllegalArgumentException e) {
-                throw new IOException("File not read due to invalid headers format");
-            }
-
-            //read body
-            int i = 0;
+            //read the headers. If they are formatted wrong then immediately throw error and stop.
+            headers = validateHeader(in.nextLine());
+            //read body. will skip improperly formatted lines.
             while (in.hasNextLine()) {
                 try {
-                    Trip trip = validateData(in.nextLine(), headers);
-                    addTrip(trip);
+                    addTrip(validateData(in.nextLine(), headers));
                 } catch (IllegalArgumentException e) {
                     wasLineSkipped = true;
                 }
             }
-
-            if (!emptyPrior) {
-                throw new DataFormatException(file.getName());
-            }
-        } catch (DataFormatException | IOException dfe) {
-            throw new DataFormatException(dfe.getMessage());
+        } catch (IllegalArgumentException e) {
+            wasFileLoaded = false;
+            failMessage = String.format("ERROR: Trips Not Imported\nFile Contains Invalid Header Format\n%s\n", e.getMessage());
         }
-        return wasLineSkipped;
+        String successMessage = String.format("✓: Trips Imported Successfully.\n\t%s\n\t%s\n", emptyPrior ? "New Trips Data Imported" : "Trip Data Overwritten", wasLineSkipped ? "Lines Skipped During Import Of Trips" : "All Lines Imported Successfully");
+        return String.format("IMPORT TRIPS:\n%s", wasFileLoaded ? successMessage : failMessage);
     }
 
     /**
