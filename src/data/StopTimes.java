@@ -85,65 +85,56 @@ public class StopTimes {
 	/**
 	 * export the stop times to a specified output directory
 	 * @param file the directory to save the file to
-	 * @return true
-	 * @throws IOException if an issue was encountered saving the file
+	 * @return true if the file was exported
 	 * @author Grant Fass, Joy Cross
 	 */
-	public boolean exportStopTimes(File file) throws IOException {
-		File outFile = new File(file, "stop_times.txt");
-		if (!outFile.exists()) {
-			outFile.createNewFile();
+	public boolean exportStopTimes(File file) {
+		try (PrintWriter out = new PrintWriter((new BufferedOutputStream(new FileOutputStream(new File(file, "stop_times.txt")))))) {
+			out.append(createHeaderLine(headers));
+			for (String key: stop_times.keySet()) {
+				out.append(stop_times.get(key).getDataLine(headers));
+			}
+		} catch (IOException e) {
+			return false;
 		}
-		FileWriter out = new FileWriter(outFile.getAbsoluteFile());
-		StringBuilder outputString = new StringBuilder();
-		outputString.append(createHeaderLine(headers));
-		for (String key: stop_times.keySet()) {
-			outputString.append(stop_times.get(key).getDataLine(headers));
-		}
-		out.append(outputString);
-		out.close();
 		return true;
 	}
 
 	/**
-	 * Method to parse StopTime data from a stop_times.txt file, resets database for every file
-	 * @author Joy Cross, Grant Fass
-	 * @param file the stop_times.txt file to be parsed
-	 * @return true if a line was skipped while loading, false otherwise
-	 * @throws FileNotFoundException if the file was not found
+	 * Method to parse data from a specified file
+	 *
+	 * @param file the GTFS file to be parsed
+	 * @return a message containing the results of loading the file
 	 * @throws IOException for general File IO errors.
-	 * @throws InputMismatchException if there is an issue parsing the file
-	 * @throws DataFormatException if data will be overwritten
+	 * @author Grant Fass
 	 */
-	public boolean loadStopTimes(File file) throws DataFormatException, IOException {
-		boolean emptyAtLoadStart = true;
-		if (!stop_times.isEmpty()) {
-			emptyAtLoadStart = false;
+	public String loadStopTimes(File file) throws IOException {
+		boolean wasLineSkipped = false;
+		boolean wasFileLoaded = true;
+		String failMessage = "";
+		boolean emptyPrior = stop_times.isEmpty();
+		if (!emptyPrior) {
 			stop_times.clear();
 			tripStartAndEnd.clear();
 		}
-		Scanner fileInput = new Scanner(file);
-		try {
-			headers = validateHeader(fileInput.nextLine());
-		} catch (IllegalArgumentException e) {
-			throw new IOException("File not read due to invalid headers format");
-		}
-		boolean wasLineSkipped = false;
-		while (fileInput.hasNextLine()) {
-			try {
-				StopTime stopTime = validateData(fileInput.nextLine(), headers);
-				addStopTime(stopTime);
-			} catch (IllegalArgumentException e) {
-				wasLineSkipped = true;
+		//writes the items of the file to the hash map
+		try (Scanner in = new Scanner(file)) {
+			//read the headers. If they are formatted wrong then immediately throw error and stop.
+			headers = validateHeader(in.nextLine());
+			//read body. will skip improperly formatted lines.
+			while (in.hasNextLine()) {
+				try {
+					addStopTime(validateData(in.nextLine(), headers));
+				} catch (IllegalArgumentException e) {
+					wasLineSkipped = true;
+				}
 			}
+		} catch (IllegalArgumentException e) {
+			wasFileLoaded = false;
+			failMessage = String.format("  ERROR: StopTimes Not Imported\n  File Contains Invalid Header Format\n  %s\n", e.getMessage());
 		}
-		if (!emptyAtLoadStart && !wasLineSkipped) {
-			throw new DataFormatException(file.getName());
-		} else if (!emptyAtLoadStart) {
-			throw new IOException("Either data in " + file.getName() + " was overwritten or " +
-					"there was a problem reading the file");
-		}
-		return wasLineSkipped;
+		String successMessage = String.format("  ✓: StopTimes Imported Successfully.\n  %s\n  %s\n", emptyPrior ? "New StopTimes Data Imported" : "StopTimes Data Overwritten", wasLineSkipped ? "Lines Skipped During Import Of StopTimes" : "All Lines Imported Successfully");
+		return String.format("IMPORT STOP_TIMES:\n%s", wasFileLoaded ? successMessage : failMessage);
 	}
 
 	/**
@@ -165,12 +156,13 @@ public class StopTimes {
 					" values for a StopTime object. Header was missing stop_id");
 		} else if (!header.contains("stop_sequence")) {
 			throw new IllegalArgumentException("Input header line must contain all expected" +
-					" values for a StopTime object. Header was missing trip_id");
+					" values for a StopTime object. Header was missing stop_sequence");
 		} else if (header.endsWith(",")) {
 			throw new IllegalArgumentException("Input header line cannot contain blank fields");
 		}
 		Headers headers = new Headers();
-		String[] headerDataArray = header.split(",");
+		String regex = ",(?=(?:[^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)";
+		String[] headerDataArray = header.split(regex, -1);
 		final String possibleHeaders = "trip_id,stop_id,stop_sequence,arrival_time,departure_time," +
 				"stop_headsign,continuous_drop_off,continuous_pickup,drop_off_type," +
 				"pickup_type,timepoint,shape_distance";
@@ -195,7 +187,8 @@ public class StopTimes {
 	 * @author Grant Fass
 	 */
 	public StopTime validateData(String data, Headers headers) throws IllegalArgumentException {
-		String[] dataArray = data.split(",");
+		String regex = ",(?=(?:[^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)";
+		String[] dataArray = data.split(regex, -1);
 		if (dataArray.length != headers.length() || data.isEmpty()) {
 			throw new IllegalArgumentException("Data line does not contain the proper amount of data");
 		}
@@ -273,14 +266,12 @@ public class StopTimes {
 	 * @param stopTime a StopTime object that holds the information for the HashMap
 	 */
 	private void addTripStartAndEnd(StopTime stopTime) {
-		//HashMap<trip_id, first_time--first_stop_id--last_time--last_stop_id>
 		String valueAtTrip = tripStartAndEnd.get(stopTime.getTripID());
-		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 		long newArrive = stopTime.getArrivalTime().getTime();
 		long newDepart = stopTime.getDepartureTime().getTime();
 		String stop_id = stopTime.getStopID();
 		try {
-			String[] tripValue = valueAtTrip.split("--");
+			String[] tripValue = valueAtTrip.split("--", -1);
 			long currentFirstArrive = Long.parseLong(tripValue[0]);
 			long currentLastDepart = Long.parseLong(tripValue[2]);
 			String first_stop_id = tripValue[1];
@@ -297,7 +288,7 @@ public class StopTimes {
 			tripStartAndEnd.put(stopTime.getTripID(),
 					currentFirstArrive + "--" + first_stop_id + "--"
 							+ currentLastDepart + "--" + last_stop_id);
-		}catch (NullPointerException e){
+		} catch (NullPointerException e){
 			tripStartAndEnd.put(stopTime.getTripID(),
 					newArrive + "--" + stopTime.getStopID() + "--"
 							+ newDepart + "--" + stopTime.getStopID());

@@ -1,10 +1,7 @@
 package data;
 
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 import java.util.zip.DataFormatException;
 
@@ -87,78 +84,55 @@ public class Routes {
 	/**
 	 * export the routes to a specified output directory
 	 * @param file the directory to save the file to
-	 * @return true
-	 * @throws IOException if an issue was encountered saving the file
+	 * @return true if the file was exported
 	 * @author Grant Fass, Joy Cross
 	 */
-	public boolean exportRoutes(File file) throws IOException {
-		File routeFile = new File(file, "routes.txt");
-		FileWriter writer = new FileWriter(routeFile.getAbsoluteFile());
-
-		writer.append(createHeaderLine(headers));
-		for(String key : routes.keySet()){
-			writer.append(routes.get(key).getDataLine(headers));
+	public boolean exportRoutes(File file) {
+		try (PrintWriter out = new PrintWriter((new BufferedOutputStream(new FileOutputStream(new File(file, "routes.txt")))))) {
+			out.append(createHeaderLine(headers));
+			for (String key: routes.keySet()) {
+				out.append(routes.get(key).getDataLine(headers));
+			}
+		} catch (IOException e) {
+			return false;
 		}
-		writer.close();
 		return true;
 	}
 
 	/**
-	 * Method to parse Route data from a routes.txt file
-	 * @author Grant Fass, Ryan Becker
-	 * @param file the routes.txt file to be parsed
-	 * @return true if a line was skipped while loading, false otherwise
-	 * @throws FileNotFoundException if the file was not found
+	 * Method to parse data from a specified file
+	 *
+	 * @param file the GTFS file to be parsed
+	 * @return a message containing the results of loading the file
 	 * @throws IOException for general File IO errors.
-	 * @throws InputMismatchException if there is an issue parsing the file
-	 * @throws DataFormatException if data will be overwritten
+	 * @author Grant Fass
 	 */
-	public boolean loadRoutes(File file) throws FileNotFoundException, IOException,
-            InputMismatchException, DataFormatException {
-	    boolean lineSkipped;
-
-	    Scanner read_header = new Scanner(file);
-	    String full_header = read_header.nextLine();
-
-	    // Throws IllegalArgumentException if header is not valid
-        try {
-            headers = validateHeader(full_header);
-        } catch (IllegalArgumentException invalidHeader){
-            throw new IOException(invalidHeader.getMessage());
-        }
-        lineSkipped = false;
-
-        boolean emptyPrior = routes.isEmpty();
-        if (!emptyPrior){
-            routes.clear();
-        }
-
-        Scanner read_data = new Scanner(file);
-        read_data.useDelimiter(",");
-        read_data.nextLine(); //consumes header line to start at data to be parsed
-
-        while (read_data.hasNextLine()) {
-
-            String full_data = read_data.nextLine();
-
-            try{
-                Route newRoute = validateData(full_data, headers);
-                addRoute(newRoute);
-            } catch (IllegalArgumentException invalidData){
-                lineSkipped = true;
-            }
-        }
-
-        read_header.close();
-        read_data.close();
-
-        if(!emptyPrior && !lineSkipped){
-            throw new DataFormatException(file.getName());
-        } else if(!emptyPrior){
-        	throw new IOException("Either data in " + file.getName() + " was overwritten, or there was a problem" +
-					"reading the file");
+	public String loadRoutes(File file) throws IOException {
+		boolean wasLineSkipped = false;
+		boolean wasFileLoaded = true;
+		String failMessage = "";
+		boolean emptyPrior = routes.isEmpty();
+		if (!emptyPrior) {
+			routes.clear();
 		}
-		return lineSkipped;
+		//writes the items of the file to the hash map
+		try (Scanner in = new Scanner(file)) {
+			//read the headers. If they are formatted wrong then immediately throw error and stop.
+			headers = validateHeader(in.nextLine());
+			//read body. will skip improperly formatted lines.
+			while (in.hasNextLine()) {
+				try {
+					addRoute(validateData(in.nextLine(), headers));
+				} catch (IllegalArgumentException e) {
+					wasLineSkipped = true;
+				}
+			}
+		} catch (IllegalArgumentException e) {
+			wasFileLoaded = false;
+			failMessage = String.format("  ERROR: Routes Not Imported\n  File Contains Invalid Header Format\n  %s\n", e.getMessage());
+		}
+		String successMessage = String.format("  ✓: Routes Imported Successfully.\n  %s\n  %s\n", emptyPrior ? "New Routes Data Imported" : "Routes Data Overwritten", wasLineSkipped ? "Lines Skipped During Import Of Routes" : "All Lines Imported Successfully");
+		return String.format("IMPORT ROUTES:\n%s", wasFileLoaded ? successMessage : failMessage);
 	}
 
 	/**
@@ -172,48 +146,38 @@ public class Routes {
 
 	/**
 	 * Confirms the header of the loaded routes.txt file is valid
-	 * @author Ryan Becker
 	 * @param header String of read-in header from file
 	 * @return Headers object containing the header fields in an ordered fashion
 	 * @throws IllegalArgumentException if the header is invalid
+	 * @author Ryan Becker, Grant Fass
 	 */
 	public Headers validateHeader(String header) throws IllegalArgumentException{
 		header = header.toLowerCase().replace(" ", "");
 
 		if(header.isEmpty()){
-			throw new IllegalArgumentException("Invalid Header found in routes.txt: Empty Header\n" +
-					"File will not be loaded");
+			throw new IllegalArgumentException("Invalid Header found in routes.txt: Empty Header");
 		}
 		if(!header.contains("route_id")){
-			throw new IllegalArgumentException("Invalid Header found in routes.txt: Missing route_id\n" +
-					"File will not be loaded");
+			throw new IllegalArgumentException("Invalid Header found in routes.txt: Missing route_id");
 		}
-		//route_color is needed, but also says it defaults to white per the GTFS guideline
-		/*if(!header.contains("route_color")){
-			throw new IllegalArgumentException("Invalid Header found in routes.txt: Missing route_color\n" +
-					"File will not be loaded");
-		}*/
 		if(header.endsWith(",")){
-			throw new IllegalArgumentException("Invalid Header found in routes.txt: Header ends with ','\n" +
-					"File will not be loaded");
+			throw new IllegalArgumentException("Invalid Header found in routes.txt: Header ends with ','");
 		}
 
 		Headers headers = new Headers();
-        String[] header_list = header.split(",");
+		String regex = ",(?=(?:[^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)";
+        String[] header_list = header.split(regex, -1);
         final String POSSIBLE_HEADERS = Route.getHeaderLine();
 
         for(int i = 0; i < header_list.length; i++){
         	if(!header_list[i].isEmpty() && POSSIBLE_HEADERS.contains(header_list[i])){
 				headers.addHeader(new Header(header_list[i], i));
 			} else if(header_list[i].isEmpty()){
-        		throw new IllegalArgumentException("Invalid Header found in routes.txt: Empty header field:\n" +
-						"File will not be loaded");
+        		throw new IllegalArgumentException("Invalid Header found in routes.txt: Empty header field:");
 			} else {
-				throw new IllegalArgumentException(("Invalid Header found in routes.txt: Unexpected header field:\n" +
-						"File will not be loaded"));
+				throw new IllegalArgumentException("Invalid Header found in routes.txt: Unexpected header field:");
 			}
         }
-
         return headers;
 	}
 
@@ -226,7 +190,8 @@ public class Routes {
      */
 	public Route validateData(String full_data, Headers headers) throws IllegalFormatException {
         //splits while ignoring commas within description
-        String[] split_data = full_data.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+		String regex = ",(?=(?:[^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)";
+        String[] split_data = full_data.split(regex, -1);
 
         if(split_data.length != headers.length()){
             throw new IllegalArgumentException("Invalid quantity of data fields within line of data");

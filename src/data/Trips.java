@@ -69,82 +69,58 @@ public class Trips {
     }
 
     /**
-     * Method to parse Trip data from a trips.txt file
+     * Method to parse data from a specified file
      *
-     * @param file the trips.txt file to be parsed
-     * @return true if a line was skipped while loading, false otherwise
-     * @throws FileNotFoundException  if the file was not found
-     * @throws IOException            for general File IO errors.
-     * @throws InputMismatchException if there is an issue parsing the file
-     * @throws DataFormatException    if data will be overwritten
-     * @author Simon Erickson
+     * @param file the GTFS file to be parsed
+     * @return a message containing the results of loading the file
+     * @throws IOException for general File IO errors.
+     * @author Simon Erickson, Grant Fass
      */
-    public boolean loadTrips(File file) throws FileNotFoundException,
-            InputMismatchException, DataFormatException {
-
-        //checks to see if trips was empty
+    public String loadTrips(File file) throws IOException {
+        boolean wasLineSkipped = false;
+        boolean wasFileLoaded = true;
+        String failMessage = "";
         boolean emptyPrior = trips.isEmpty();
-
-        //empties List if list was not empty
         if (!emptyPrior) {
             trips.clear();
         }
-
-        //sets initial skip value to false
-        boolean wasLineSkipped = false;
-
         //writes the items of the file to the hash map
         try (Scanner in = new Scanner(file)) {
-
-            //Header object
-            try {
-                headers = validateHeader(in.nextLine());
-            } catch (IllegalArgumentException e) {
-                throw new IOException("File not read due to invalid headers format");
-            }
-
-            //read body
-            int i = 0;
+            //read the headers. If they are formatted wrong then immediately throw error and stop.
+            headers = validateHeader(in.nextLine());
+            //read body. will skip improperly formatted lines.
             while (in.hasNextLine()) {
                 try {
-                    Trip trip = validateData(in.nextLine(), headers);
-                    addTrip(trip);
+                    addTrip(validateData(in.nextLine(), headers));
                 } catch (IllegalArgumentException e) {
                     wasLineSkipped = true;
                 }
             }
-
-            if (!emptyPrior) {
-                throw new DataFormatException(file.getName());
-            }
-        } catch (DataFormatException | IOException dfe) {
-            throw new DataFormatException(dfe.getMessage());
+        } catch (IllegalArgumentException e) {
+            wasFileLoaded = false;
+            failMessage = String.format("  ERROR: Trips Not Imported\n  File Contains Invalid Header Format\n  %s\n", e.getMessage());
         }
-        return wasLineSkipped;
+        String successMessage = String.format("  ✓: Trips Imported Successfully.\n  %s\n  %s\n", emptyPrior ? "New Trips Data Imported" : "Trip Data Overwritten", wasLineSkipped ? "Lines Skipped During Import Of Trips" : "All Lines Imported Successfully");
+        return String.format("IMPORT TRIPS:\n%s", wasFileLoaded ? successMessage : failMessage);
     }
 
     /**
      * Method to write Trip data to a trips.txt file
      *
      * @param file the trips.txt file desired location
-     * @return true if file was written successfully, false otherwise
-     * @throws IOException if something went wrong
-     * @author Simon Erickson, Joy Cross
+     * @return true if the file was exported
+     * @author Simon Erickson, Joy Cross, Grant Fass
      */
-    public boolean exportTrips(File file) throws IOException {
-
-        //writes the items of the file to the hash map
-        try (PrintWriter write = new PrintWriter(new BufferedOutputStream(new FileOutputStream(new File(file, "trips.txt"))))) {
-
-            //write header: route_id,service_id,trip_id,trip_headsign,direction_id,block_id,shape_id
-            write.append(createHeaderLine(headers));
-
-            //write body
-            for (String key : trips.keySet()) {
-                write.append(trips.get(key).getDataLine(headers));
+    public boolean exportTrips(File file) {
+        try (PrintWriter out = new PrintWriter((new BufferedOutputStream(new FileOutputStream(new File(file, "trips.txt")))))) {
+            out.append(createHeaderLine(headers));
+            for (String key: trips.keySet()) {
+                out.append(trips.get(key).getDataLine(headers));
             }
-            return true;
+        } catch (IOException e) {
+            return false;
         }
+        return true;
     }
 
     /**
@@ -210,7 +186,8 @@ public class Trips {
             throw new IllegalArgumentException("Input header line cannot contain blank fields");
         }
         Headers headers = new Headers();
-        String[] headerDataArray = header.split(",");
+        String regex = ",(?=(?:[^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)";
+        String[] headerDataArray = header.split(regex, -1);
         final String possibleHeaders = "route_id,service_id,trip_id,trip_headsign,direction_id," +
                 "block_id,shape_id";
         for (int i = 0; i < headerDataArray.length; i++) {
@@ -238,7 +215,8 @@ public class Trips {
      * @author Simon Erickson
      */
     public Trip validateData(String data, Headers headers) throws IllegalArgumentException {
-        String[] dataArray = data.split(",");
+        String regex = ",(?=(?:[^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)";
+        String[] dataArray = data.split(regex, -1);
         if (dataArray.length != headers.length()) {
             throw new IllegalArgumentException("Data line does not contain the " +
                     "proper amount of data");

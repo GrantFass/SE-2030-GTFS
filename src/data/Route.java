@@ -30,42 +30,6 @@ public class Route {
 	private ContinuousDropOffEnum continuous_drop_off;
 
 	/**
-	 * @deprecated
-	 * Constructor of Route object
-	 * @author Ryan Becker
-	 * @param route_id ID of route
-	 * @param agency_id ID of agency
-	 * @param route_short_name short name of route
-	 * @param route_long_name long name of route
-	 * @param route_desc String of important information of route
-	 * @param route_type Identifier for type of transport
-	 * @param route_url URL of website of route
-	 * @param route_color Color of route path
-	 * @param route_text_color Color of route text
-	 * @param route_sort_order Integer indicating order to be sorted and displayed (lower is higher priority)
-	 * @param continuous_pickup Status of availability for pickups on route
-	 * @param continuous_drop_off Status of availability for drop-offs on route
-	 */
-	public Route(String route_id, String agency_id, String route_short_name, String route_long_name, String route_desc,
-				 RouteTypeEnum route_type, URL route_url, Color route_color, Color route_text_color,
-				 int route_sort_order, ContinuousPickupEnum continuous_pickup,
-				 ContinuousDropOffEnum continuous_drop_off){
-
-		this.route_id = route_id;
-		this.agency_id = agency_id;
-		this.route_short_name = route_short_name;
-		this.route_long_name = route_long_name;
-		this.route_desc = route_desc;
-		this.route_type = route_type;
-		this.route_url = route_url;
-		this.route_color = route_color;
-		this.route_text_color = route_text_color;
-		this.route_sort_order = route_sort_order;
-		this.continuous_pickup = continuous_pickup;
-		this.continuous_drop_off = continuous_drop_off;
-	}
-
-	/**
 	 * Overloaded constructor of Route object, where all parameters are passed initially as Strings
 	 * @author Ryan Becker
 	 * @param route_id ID of route

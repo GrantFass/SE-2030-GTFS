@@ -23,14 +23,13 @@ import java.util.ConcurrentModificationException;
  * @version Created on 10/12/2020 at 6:40 PM
  */
 public class DataWindowController implements Observer {
+    //region FXML properties
     @FXML
     private TextField lastUpdatedTextField;
     @FXML
     private ListView stopTimesListView;
     @FXML
     private TextArea description;
-    @FXML
-    private ToggleButton snapshotToggleButton;
     @FXML
     private ToggleButton expandedToggleButton;
     @FXML
@@ -39,11 +38,9 @@ public class DataWindowController implements Observer {
     private ListView stopsListView;
     @FXML
     private ListView tripsListView;
-    @FXML
-    private TextArea dataDisplayTextArea;
-    @FXML
-    private Label topLabel;
-    @FXML
+    //endregion
+
+    //region class references
     private Stage analysisWindowStage;
     private AnalysisWindowController analysisWindowController;
     private Stage dataWindowStage;
@@ -113,7 +110,9 @@ public class DataWindowController implements Observer {
         this.searchWindowController = searchWindowController;
         this.updateWindowController = updateWindowController;
     }
+    //endregion
 
+    //region displayed help information
     /**
      * set the default values of the description
      * @author Grant Fass
@@ -135,7 +134,7 @@ public class DataWindowController implements Observer {
     @FXML
     private void displayHelp() {
         MainWindowController.displayAlert(Alert.AlertType.INFORMATION, "General Transit Feed Specification Tool Information",
-                "Import Window Help", "This window displays all of the data stored in\n" +
+                "Data Window Help", "This window displays all of the data stored in\n" +
                         "the four data classes: 'routes.txt', 'stops.txt', 'stop_times.txt', and 'trips.txt'.\n" +
                         "The information that is displayed in this window is always up to date since it\n" +
                         "automatically updates whenever any information in the data classes is changed.\n" +
@@ -144,6 +143,7 @@ public class DataWindowController implements Observer {
                         "in a single line format.\n'View Expanded Data' displays all information for each entry " +
                         "in the dta classes.");
     }
+    //endregion
 
     /**
      * method to run when one of the toggle buttons is pressed
@@ -188,21 +188,8 @@ public class DataWindowController implements Observer {
      */
     @Override
     public void update(Data data) {
-        //TODO: undo multithread, only thread first command to set progress bar / text field at start.
-//        Thread thread = new Thread(() -> {
-//            try {
-                updateStatus(lastUpdatedTextField, "UPDATE IN PROGRESS");
-                updateData(data);
-//            } catch (ConcurrentModificationException e) {
-//                try {
-//                    Thread.sleep(100);
-//                } catch (InterruptedException interruptedException) {
-//                    interruptedException.printStackTrace();
-//                }
-//                update(data);
-//            }
-//        });
-//        thread.start();
+        updateStatus(lastUpdatedTextField, "UPDATE IN PROGRESS");
+        updateData(data);
     }
 
     /**

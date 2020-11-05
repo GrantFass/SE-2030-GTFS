@@ -13,7 +13,9 @@ import javafx.scene.paint.Color;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.zip.DataFormatException;
@@ -24,14 +26,16 @@ import java.util.zip.DataFormatException;
  * @created 06-Oct-2020 10:28:30 AM
  */
 public class Data implements Subject {
-	//Radius of the earth in miles
-	private final static double EARTH_RADIUS = 3959;
+	//region properties
+	private final static double EARTH_RADIUS_MILES = 3959;
 	private Routes routes;
 	private StopTimes stop_times;
 	private Stops stops;
 	private Trips trips;
 	private ArrayList<Observer> observerList;
+	//endregion
 
+	//region constructors
 	public Data() {
 		stops = new Stops();
 		stop_times = new StopTimes();
@@ -39,7 +43,9 @@ public class Data implements Subject {
 		trips = new Trips();
 		observerList = new ArrayList<>();
 	}
+	//endregion
 
+	//region internal class getters
 	public Routes getRoutes() {
 		return routes;
 	}
@@ -55,7 +61,160 @@ public class Data implements Subject {
 	public Trips getTrips() {
 		return trips;
 	}
+	//endregion
 
+	//region methods for exporting files
+	/**
+	 * exports all files to the specified directory
+	 * @param directory the directory to export the files to
+	 * @param routesCheck represents if routes will be exported
+	 * @param stopsCheck represents if stops will be exported
+	 * @param stopTimesCheck represents if stopTimes will be exported
+	 * @param tripsCheck represents if trips will be exported
+	 * @return a message containing the status of the File export
+	 * @author Grant Fass
+	 */
+	public String exportFiles(String directory, boolean routesCheck, boolean stopsCheck, boolean stopTimesCheck, boolean tripsCheck) {
+		Callable<String> exportRoutes = () -> {
+			String message;
+			if (!directory.isEmpty() && routesCheck) {
+				message = routes.exportRoutes(new File(directory)) ?
+						String.format("✓: Routes Exported Successfully\n  Time: %02d:%02d:%02d\n",
+								LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(),
+								LocalDateTime.now().getSecond()) : "Routes Export Failed\n";
+			} else if (directory.isEmpty()) {
+				message = "Routes Export Failed\n  Empty Directory\n";
+			} else {
+				message = "Routes Export Skipped\n  Routes Not Selected\n";
+			}
+			return "EXPORT ROUTES:\n  " + message;
+		};
+		Callable<String> exportStops = () -> {
+			String message;
+			if (!directory.isEmpty() && stopsCheck) {
+				message = routes.exportRoutes(new File(directory)) ?
+						String.format("✓: Stops Exported Successfully\n  Time: %02d:%02d:%02d\n",
+								LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(),
+								LocalDateTime.now().getSecond()) : "Stops Export Failed\n";
+			} else if (directory.isEmpty()) {
+				message = "Stops Export Failed\n  Empty Directory\n";
+			} else {
+				message = "Stops Export Skipped\n  Stops Not Selected\n";
+			}
+			return "EXPORT STOPS:\n  " + message;
+		};
+		Callable<String> exportStopTimes = () -> {
+			String message;
+			if (!directory.isEmpty() && stopTimesCheck) {
+				message = routes.exportRoutes(new File(directory)) ?
+						String.format("✓: StopTimes Exported Successfully\n  Time: %02d:%02d:%02d\n",
+								LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(),
+								LocalDateTime.now().getSecond()) : "StopTimes Export Failed\n";
+			} else if (directory.isEmpty()) {
+				message = "StopTimes Export Failed\n  Empty Directory\n";
+			} else {
+				message = "StopTimes Export Skipped\n  StopTimes Not Selected\n";
+			}
+			return "EXPORT STOP_TIMES:\n  " + message;
+		};
+		Callable<String> exportTrips = () -> {
+			String message;
+			if (!directory.isEmpty() && tripsCheck) {
+				message = routes.exportRoutes(new File(directory)) ?
+						String.format("✓: Trips Exported Successfully\n  Time: %02d:%02d:%02d\n",
+								LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(),
+								LocalDateTime.now().getSecond()) : "Trips Export Failed\n";
+			} else if (directory.isEmpty()) {
+				message = "Trips Export Failed\n  Empty Directory\n";
+			} else {
+				message = "Trips Export Skipped\n  Trips Not Selected\n";
+			}
+			return "EXPORT TRIPS:\n  " + message;
+		};
+		ExecutorService executorService = Executors.newFixedThreadPool(4);
+		Future<String> routesExportMessage = executorService.submit(exportRoutes);
+		Future<String> stopsExportMessage = executorService.submit(exportStops);
+		Future<String> stopTimesExportMessage = executorService.submit(exportStopTimes);
+		Future<String> tripsExportMessage = executorService.submit(exportTrips);
+		String completionTime = String.format("COMPLETE: %02d:%02d:%02d\n", LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getSecond());
+		String message = "Something Went Wrong During Export";
+		try {
+			message = routesExportMessage.get() + stopsExportMessage.get() + stopTimesExportMessage.get() + tripsExportMessage.get() + completionTime;
+		} catch (InterruptedException | ExecutionException e) {
+			message += "\n" + e.getMessage();
+		}
+		return message;
+	}
+	//endregion
+
+	//region methods for loading files
+	/**
+	 * loads all of the files from the specified file locations.
+	 * only loads the file if the string location is not empty
+	 * @param routeFileLocation the file location in string format of routes.txt
+	 * @param stopFileLocation the file location in string format of stops.txt
+	 * @param stopTimeFileLocation the file location in string format of stop_times.txt
+	 * @param tripFileLocation the file location in string format of trips.txt
+	 * @return a message containing the import status of all files.
+	 * @throws IOException for general File IO errors.
+	 * @author Grant Fass
+	 */
+	public String loadFiles(String routeFileLocation, String stopFileLocation, String stopTimeFileLocation, String tripFileLocation) throws IOException{
+		Callable<String> importRoutes = () -> {
+			String routesImportMessage = "SKIP ROUTES:\n  File Location Empty\n";
+			if (routeFileLocation != null && !routeFileLocation.isEmpty()) {
+				routesImportMessage = routes.loadRoutes(new File(routeFileLocation));
+			}
+			return routesImportMessage;
+		};
+		Callable<String> importStops = () -> {
+			String stopsImportMessage = "SKIP STOPS:\n  File Location Empty\n";
+			if (stopFileLocation != null && !stopFileLocation.isEmpty()) {
+				stopsImportMessage  = stops.loadStops(new File(stopFileLocation));
+			}
+			return stopsImportMessage;
+		};
+		Callable<String> importStopTimes = () -> {
+			String stopTimesImportMessage = "SKIP STOP_TIMES:\n  File Location Empty\n";
+			if (stopTimeFileLocation != null && !stopTimeFileLocation.isEmpty()) {
+				stopTimesImportMessage = stop_times.loadStopTimes(new File(stopTimeFileLocation));
+			}
+			return stopTimesImportMessage;
+		};
+		Callable<String> importTrips = () -> {
+			String tripsImportMessage = "SKIP TRIPS:\n  File Location Empty\n";
+			if (tripFileLocation != null && !tripFileLocation.isEmpty()) {
+				tripsImportMessage = trips.loadTrips(new File(tripFileLocation));
+			}
+			return tripsImportMessage;
+		};
+		ExecutorService executorService = Executors.newFixedThreadPool(4);
+		Future<String> routesImportMessage = executorService.submit(importRoutes);
+		Future<String> stopsImportMessage = executorService.submit(importStops);
+		Future<String> stopTimesImportMessage = executorService.submit(importStopTimes);
+		Future<String> tripsImportMessage = executorService.submit(importTrips);
+		//wait to notify observers until all tasks are done
+		while (!routesImportMessage.isDone() || !stopsImportMessage.isDone() || !stopTimesImportMessage.isDone() || !tripsImportMessage.isDone()) {
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		//notify observers and return message
+		notifyObservers();
+		String completionTime = String.format("COMPLETE: %02d:%02d:%02d\n", LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getSecond());
+		String message = "Something Went Wrong During Import";
+		try {
+			message = routesImportMessage.get() + stopsImportMessage.get() + stopTimesImportMessage.get() + tripsImportMessage.get() + completionTime;
+		} catch (InterruptedException | ExecutionException e) {
+			message += "\n" + e.getMessage();
+		}
+		return message;
+	}
+	//endregion
+
+	//region methods for data GUI
 	/**
 	 * outputs all of the data for a class to the specified listView
 	 * @param dataType selects which data to output.
@@ -148,7 +307,9 @@ public class Data implements Subject {
 			Platform.runLater(() -> listView.setItems(items));
 		}
 	}
+	//endregion
 
+	//region methods for analysis GUI
 	/**
 	 * outputs all of the data for a class to the specified listView
 	 * @param analysisType the type of data to output
@@ -214,6 +375,95 @@ public class Data implements Subject {
 	}
 
 	/**
+	 * Method that creates a HashMap with all trips with there lengths.
+	 * @author Simon Erickson
+	 * @return tripAndDistance The HashMap with all trips with there lengths.
+	 */
+	private HashMap<String, Integer> tripDistances(){
+		HashMap<String, Integer> returnHashMap = new HashMap();
+		if(!(stop_times == null | stops == null)){
+			//HashMap<trip_id, first_time--first_stop_id--last_time--last_stop_id>
+			HashMap<String, String> tripStartAndEnd = stop_times.getTripStartAndEnd();
+
+			//HashMap<trip_id, distance in miles>
+			HashMap<String, Integer> tripAndDistance = new HashMap<>();
+
+			tripStartAndEnd.forEach((k,v)->{
+				String[] value = v.split("--");
+				tripAndDistance.put(k, tripDistance(stops.getStop(value[1]), stops.getStop(value[3])));
+			});
+			returnHashMap = tripAndDistance;
+		}
+
+		return returnHashMap;
+	}
+
+	/**
+	 * Method that calculates the average speed based on the start and end times of a trip
+	 *
+	 * @author Simon Erickson, Grant Fass
+	 * @return tripAndSpeed The HashMap with all trips with there average speeds.
+	 */
+	private HashMap<String, String> tripSpeeds(){
+		HashMap<String, String> returnHashMap = new HashMap();
+		if(!(stop_times == null | stops == null)){
+			//HashMap<trip_id, first_time--first_stop_id--last_time--last_stop_id>
+			HashMap<String, String> tripStartAndEnd = stop_times.getTripStartAndEnd();
+
+			//HashMap<trip_id, speed in miles per hour>
+			HashMap<String, String> tripAndSpeed = new HashMap<>();
+
+			tripStartAndEnd.forEach((k,v)->{
+				String[] value = v.split("--", -1);
+				long time = Long.parseLong(value[2]) - Long.parseLong(value[0]);
+
+				int miles = tripDistance(stops.getStop(value[1]), stops.getStop(value[3]));
+
+				final double timeConstant = 3600000.0;
+				double hours = time/timeConstant;
+				tripAndSpeed.put(k, String.format("%.2f mph", miles/hours));
+
+			});
+			returnHashMap = tripAndSpeed;
+		}
+
+		return returnHashMap;
+	}
+
+	/**
+	 * Method to find the distance between two stops
+	 * @author Simon Erickson
+	 * @param  fromThisStop the first stop
+	 * @param  toThisStop the second stop
+	 * @return The distance between two stops in miles
+	 */
+	private int tripDistance(Stop fromThisStop, Stop toThisStop) {
+		if(fromThisStop == null || toThisStop == null) {
+			return -1;
+		}
+		double fromThisLat = fromThisStop.getStopLatitude();
+		double toThisLat = toThisStop.getStopLatitude();
+		double fromThisLng = fromThisStop.getStopLongitude();
+		double toThisLng = toThisStop.getStopLongitude();
+
+		double distanceLat = Math.toRadians(fromThisLat - toThisLat);
+		double distanceLng = Math.toRadians(fromThisLng - toThisLng);
+
+		//Haversine formula
+		double a = Math.pow(Math.sin(distanceLat / 2),2);
+		double b = Math.pow(Math.sin(distanceLng / 2),2);
+		double c = Math.cos(Math.toRadians(fromThisLat));
+		double d = Math.cos(Math.toRadians(toThisLat));
+		double e = (a + c * d * b);
+		double f = 2 * Math.atan2(Math.sqrt(e), Math.sqrt(1 - e));
+		double miles = (Math.round(EARTH_RADIUS_MILES * f));
+
+		return (int) miles;
+	}
+	//endregion
+
+	//region methods for map GUI
+	/**
 	 * returns all of the coordinates of busses
 	 * //TODO: Initialize this
 	 * @return an arraylist of bus location coordinate pairs with longitude first then latitude
@@ -272,85 +522,9 @@ public class Data implements Subject {
 		//Return Map
 		return stopsPerRoute;
 	}
+	//endregion
 
-	/**
-	 * Method to parse Route data from a routes.txt file
-	 * @param file the routes.txt file to be parsed
-	 * @return true if a line was skipped while loading, false otherwise
-	 * @throws FileNotFoundException if the file was not found
-	 * @throws IOException for general File IO errors.
-	 * @throws InputMismatchException if there is an issue parsing the file
-	 * @throws DataFormatException if data will be overwritten
-	 * @author Grant Fass
-	 */
-	public boolean loadRoutes(File file) throws FileNotFoundException, IOException,
-			InputMismatchException, DataFormatException {
-		boolean wasLineSkipped = routes.loadRoutes(file);
-		Platform.runLater(this::notifyObservers);
-		return wasLineSkipped;
-	}
-	/**
-	 * Method to parse Stop data from a stops.txt file
-	 * @param file the routes.txt file to be parsed
-	 * @return true if a line was skipped while loading, false otherwise
-	 * @throws FileNotFoundException if the file was not found
-	 * @throws IOException for general File IO errors.
-	 * @throws InputMismatchException if there is an issue parsing the file
-	 * @throws DataFormatException if data will be overwritten
-	 * @author Grant Fass
-	 */
-	public boolean loadStops(File file) throws FileNotFoundException, IOException,
-			InputMismatchException, DataFormatException {
-		boolean wasLineSkipped = stops.loadStops(file);
-		Platform.runLater(this::notifyObservers);
-		return wasLineSkipped;
-	}
-
-	/**
-	 * Method to parse StopTimes data from a stop_times.txt file
-	 * @param file the routes.txt file to be parsed
-	 * @return true if a line was skipped while loading, false otherwise
-	 * @throws FileNotFoundException if the file was not found
-	 * @throws IOException for general File IO errors.
-	 * @throws InputMismatchException if there is an issue parsing the file
-	 * @throws DataFormatException if data will be overwritten
-	 * @author Grant Fass
-	 */
-	public boolean loadStopTimes(File file) throws FileNotFoundException, IOException,
-			InputMismatchException, DataFormatException {
-		boolean wasLineSkipped = stop_times.loadStopTimes(file);
-		Platform.runLater(this::notifyObservers);
-		return wasLineSkipped;
-	}
-
-	/**
-	 * Method to parse Trip data from a trips.txt file
-	 * @param file the routes.txt file to be parsed
-	 * @return true if a line was skipped while loading, false otherwise
-	 * @throws FileNotFoundException if the file was not found
-	 * @throws IOException for general File IO errors.
-	 * @throws InputMismatchException if there is an issue parsing the file
-	 * @throws DataFormatException if data will be overwritten
-	 * @author Grant Fass
-	 */
-	public boolean loadTrips(File file) throws FileNotFoundException, IOException,
-			InputMismatchException, DataFormatException {
-		boolean wasLineSkipped = trips.loadTrips(file);
-		Platform.runLater(this::notifyObservers);
-		return wasLineSkipped;
-	}
-
-	/**
-	 * Method to output data as a single concatenated string
-	 * @author GrantFass,
-	 * @return string of data
-	 */
-	@Override
-	public String toString() {
-		return getStopTimes().toString() + getStops().toString()
-				+ getTrips().toString() + getRoutes().toString();
-	}
-
+	//region search functions
 	/**
 	 * Searches for every route_id associated with a Stop given stop_id
 	 * @param stop_id of Stop being searched
@@ -360,7 +534,6 @@ public class Data implements Subject {
 	    ArrayList<String> route_ids = searchStopForRoute_IDs(stop_id);
 	    return formatRoute_IDs(route_ids);
 	}
-
 	/**
 	 * Helper method for getRouteIDs_fromStopID() that gets all route_ids associated with a given stop_id
 	 * @author Ryan Becker
@@ -412,94 +585,9 @@ public class Data implements Subject {
 		}
 		return uniqueIDs;
 	}
+	//endregion
 
-	/**
-	 * Method that creates a HashMap with all trips with there lengths.
-	 * @author Simon Erickson
-	 * @return tripAndDistance The HashMap with all trips with there lengths.
-	 */
-	private HashMap<String, Integer> tripDistances(){
-		HashMap<String, Integer> returnHashMap = new HashMap();
-		if(!(stop_times == null | stops == null)){
-			//HashMap<trip_id, first_time--first_stop_id--last_time--last_stop_id>
-			HashMap<String, String> tripStartAndEnd = stop_times.getTripStartAndEnd();
-
-			//HashMap<trip_id, distance in miles>
-			HashMap<String, Integer> tripAndDistance = new HashMap<>();
-
-			tripStartAndEnd.forEach((k,v)->{
-				String[] value = v.split("--");
-				tripAndDistance.put(k, tripDistance(stops.getStop(value[1]), stops.getStop(value[3])));
-			});
-			returnHashMap = tripAndDistance;
-		}
-
-		return returnHashMap;
-	}
-
-	/**
-	 * Method that calculates the average speed based on the start and end times of a trip
-	 *
-	 * @author Simon Erickson, Grant Fass
-	 * @return tripAndSpeed The HashMap with all trips with there average speeds.
-	 */
-	private HashMap<String, String> tripSpeeds(){
-		HashMap<String, String> returnHashMap = new HashMap();
-		if(!(stop_times == null | stops == null)){
-			//HashMap<trip_id, first_time--first_stop_id--last_time--last_stop_id>
-			HashMap<String, String> tripStartAndEnd = stop_times.getTripStartAndEnd();
-
-			//HashMap<trip_id, speed in miles per hour>
-			HashMap<String, String> tripAndSpeed = new HashMap<>();
-
-			tripStartAndEnd.forEach((k,v)->{
-				String[] value = v.split("--");
-				long time = Long.parseLong(value[2]) - Long.parseLong(value[1]);
-
-				int miles = tripDistance(stops.getStop(value[1]), stops.getStop(value[3]));
-
-				final double timeConstant = 3600000.0;
-				double hours = time/timeConstant;
-				tripAndSpeed.put(k, String.format("%.2f mph", miles/hours));
-
-			});
-			returnHashMap = tripAndSpeed;
-		}
-
-		return returnHashMap;
-	}
-
-	/**
-	 * Method to find the distance between two stops
-	 * @author Simon Erickson
-	 * @param  fromThisStop the first stop
-	 * @param  toThisStop the second stop
-	 * @return The distance between two stops in miles
-	 */
-	private int tripDistance(Stop fromThisStop, Stop toThisStop) {
-		if(fromThisStop == null || toThisStop == null) {
-			return -1;
-		}
-		double fromThisLat = fromThisStop.getStopLatitude();
-		double toThisLat = toThisStop.getStopLatitude();
-		double fromThisLng = fromThisStop.getStopLongitude();
-		double toThisLng = toThisStop.getStopLongitude();
-
-		double distanceLat = Math.toRadians(fromThisLat - toThisLat);
-		double distanceLng = Math.toRadians(fromThisLng - toThisLng);
-
-		//Haversine formula
-		double a = Math.pow(Math.sin(distanceLat / 2),2);
-		double b = Math.pow(Math.sin(distanceLng / 2),2);
-		double c = Math.cos(Math.toRadians(fromThisLat));
-		double d = Math.cos(Math.toRadians(toThisLat));
-		double e = (a + c * d * b);
-		double f = 2 * Math.atan2(Math.sqrt(e), Math.sqrt(1 - e));
-		double miles = (Math.round(EARTH_RADIUS * f));
-
-		return (int) miles;
-	}
-
+	//region Observer Pattern Methods
 	/**
 	 * add an observer to the list of observers to update
 	 * Based on a guide from GeeksForGeeks
@@ -511,7 +599,6 @@ public class Data implements Subject {
 	public void attach(Observer o) {
 		observerList.add(o);
 	}
-
 	/**
 	 * remove an observer from the list of observers to update
 	 * Based on a guide from GeeksForGeeks
@@ -537,4 +624,18 @@ public class Data implements Subject {
 			o.update(this);
 		}
 	}
+	//endregion
+
+	//region toString
+	/**
+	 * Method to output data as a single concatenated string
+	 * @author GrantFass,
+	 * @return string of data
+	 */
+	@Override
+	public String toString() {
+		return getStopTimes().toString() + getStops().toString()
+				+ getTrips().toString() + getRoutes().toString();
+	}
+	//endregion
 }//end Data

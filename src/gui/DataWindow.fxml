@@ -9,65 +9,56 @@ Everything in this file has been setup in code.
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <VBox maxHeight="Infinity" maxWidth="Infinity" minHeight="400" minWidth="300" prefHeight="400.0"
-      prefWidth="600" spacing="10"
+      prefWidth="600" spacing="5"
       xmlns="http://javafx.com/javafx/8.0.171" fx:controller="gui.DataWindowController"
       xmlns:fx="http://javafx.com/fxml">
     <padding>
         <Insets top="20" bottom="20" left="20" right="20"/>
     </padding>
-    <HBox spacing="10" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100"
-          minWidth="20" minHeight="20">
-        <TextArea fx:id="description" wrapText="true" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100"
-                  minWidth="20" minHeight="60"/>
+    <HBox spacing="5" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="80"
+          minWidth="40" minHeight="20">
+        <TextArea fx:id="description" wrapText="true" editable="false" HBox.hgrow="ALWAYS"
+                  VBox.vgrow="ALWAYS" maxWidth="Infinity"
+                  minWidth="20" minHeight="20" maxHeight="80"/>
         <Button text="?" onAction="#displayHelp" alignment="CENTER" HBox.hgrow="ALWAYS"
-                VBox.vgrow="ALWAYS" maxWidth="100" maxHeight="100" minWidth="20" minHeight="20"/>
+                VBox.vgrow="ALWAYS" maxWidth="100" minWidth="20" minHeight="20" maxHeight="80"/>
     </HBox>
-    <HBox minHeight="30" prefHeight="30" maxHeight="30"/>
     <HBox minHeight="30" prefHeight="30" maxHeight="30" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
         <TextField text="Last Updated: " editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
                    maxWidth="Infinity" maxHeight="30" fx:id="lastUpdatedTextField"/>
     </HBox>
-    <HBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="50" minWidth="20"
-          minHeight="30" spacing="10">
-        <fx:define>
-            <ToggleGroup fx:id="group"/>
-        </fx:define>
-        <ToggleButton onAction="#buttonToggled" selected="true" toggleGroup="$group" fx:id="snapshotToggleButton"
-                      text="View Snapshot" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
-                      maxWidth="Infinity" maxHeight="Infinity" minWidth="75" minHeight="20"/>
-        <ToggleButton onAction="#buttonToggled" toggleGroup="$group" fx:id="expandedToggleButton"
-                      text="View Expanded Data" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
-                      maxWidth="Infinity" maxHeight="Infinity" minWidth="75" minHeight="20"/>
-    </HBox>
+    <ToggleButton fx:id="expandedToggleButton" text="View Expanded Data" HBox.hgrow="ALWAYS"
+                         VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="50" minWidth="100"
+                         minHeight="20" onAction="#buttonToggled"/>
     <HBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"
-          spacing="10">
+          spacing="5">
         <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"
-              spacing="10">
+              spacing="5">
             <Label alignment="CENTER" text="Routes" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
-                   maxWidth="Infinity" maxHeight="50" minWidth="20" minHeight="20"/>
+                   maxWidth="Infinity" maxHeight="30" minWidth="20" minHeight="20"/>
             <ListView fx:id="routesListView" HBox.hgrow="ALWAYS"
                       VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" minWidth="75"
                       minHeight="20"/>
         </VBox>
         <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"
-              spacing="10">
+              spacing="5">
             <Label alignment="CENTER" text="Stops" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
-                   maxWidth="Infinity" maxHeight="50" minWidth="20" minHeight="20"/>
+                   maxWidth="Infinity" maxHeight="30" minWidth="20" minHeight="20"/>
             <ListView fx:id="stopsListView" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
                       maxWidth="Infinity" maxHeight="Infinity" minWidth="75" minHeight="20"/>
         </VBox>
         <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"
-              spacing="10">
+              spacing="5">
             <Label alignment="CENTER" text="StopTimes" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
-                   maxWidth="Infinity" maxHeight="50" minWidth="20" minHeight="20"/>
+                   maxWidth="Infinity" maxHeight="30" minWidth="20" minHeight="20"/>
             <ListView fx:id="stopTimesListView" HBox.hgrow="ALWAYS"
                       VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" minWidth="75"
                       minHeight="20"/>
         </VBox>
         <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"
-              spacing="10">
+              spacing="5">
             <Label alignment="CENTER" text="Trips" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
-                   maxWidth="Infinity" maxHeight="50" minWidth="20" minHeight="20"/>
+                   maxWidth="Infinity" maxHeight="30" minWidth="20" minHeight="20"/>
             <ListView fx:id="tripsListView" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
                       maxWidth="Infinity" maxHeight="Infinity" minWidth="75" minHeight="20"/>
         </VBox>

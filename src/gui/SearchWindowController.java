@@ -25,6 +25,7 @@ import java.util.List;
  * @version Created on 10/25/2020 at 1:24 AM
  */
 public class SearchWindowController {
+    //region FXML properties
     @FXML
     private TextArea description;
     @FXML
@@ -35,6 +36,9 @@ public class SearchWindowController {
     private ComboBox outputType;
     @FXML
     private TextField input;
+    //endregion
+
+    //region class references
     private Stage analysisWindowStage;
     private AnalysisWindowController analysisWindowController;
     private Stage dataWindowStage;
@@ -104,6 +108,7 @@ public class SearchWindowController {
         this.mapWindowController = mapWindowController;
         this.updateWindowController = updateWindowController;
     }
+    //endregion
 
     /**
      * set the default values of the description

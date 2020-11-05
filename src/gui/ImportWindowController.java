@@ -6,20 +6,18 @@
  */
 package gui;
 
-import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.InputMismatchException;
-import java.util.zip.DataFormatException;
 
 /**
  * ImportWindowController Purpose: Controller for the Input Window
@@ -28,6 +26,7 @@ import java.util.zip.DataFormatException;
  * @version Created on 10/25/2020 at 1:26 AM
  */
 public class ImportWindowController {
+    //region FXML Properties
     @FXML
     private TextArea description;
     @FXML
@@ -45,26 +44,20 @@ public class ImportWindowController {
     @FXML
     private TextField routesTextField;
     @FXML
-    private ProgressBar routesProgressBar;
-    @FXML
     private CheckBox stopsCheckBox;
     @FXML
     private TextField stopsTextField;
-    @FXML
-    private ProgressBar stopsProgressBar;
     @FXML
     private CheckBox stopTimesCheckBox;
     @FXML
     private TextField stopTimesTextField;
     @FXML
-    private ProgressBar stopTimesProgressBar;
-    @FXML
     private CheckBox tripsCheckBox;
     @FXML
     private TextField tripsTextField;
-    @FXML
-    private ProgressBar tripsProgressBar;
+    //endregion
 
+    //region class references
     private Stage analysisWindowStage;
     private AnalysisWindowController analysisWindowController;
     private Stage dataWindowStage;
@@ -136,16 +129,14 @@ public class ImportWindowController {
         this.searchWindowController = searchWindowController;
         this.updateWindowController = updateWindowController;
     }
+    //endregion
 
+    //region displayed help information
     /**
-     * set the default values of the progress bars
+     * set the default values of the displayed information
      * @author Grant Fass
      */
     public void setDefaultValues() {
-        routesProgressBar.setVisible(false);
-        stopsProgressBar.setVisible(false);
-        stopTimesProgressBar.setVisible(false);
-        tripsProgressBar.setVisible(false);
         description.setText("This window is used to import files into the program. " +
                 "Use the checkboxes to select which file(s) to import. Use the 'browse' buttons to select " +
                 "the location of the given file to import. Use the 'Import' button to import the files.");
@@ -173,58 +164,62 @@ public class ImportWindowController {
                         " Note that this will take some time. After files are loaded the progress" +
                         " bars will turn green and alerts will be displayed to the Alerts Text Area.");
     }
+    //endregion
 
+    //region getters for locations of files to import
     /**
-     * error if no file is loaded or file is null
+     * opens a FileChooser with the specified extension filter and outputs the file path to the corresponding TextArea
      *
-     * @param file the file to check
-     * @throws FileNotFoundException null file
      * @author Grant Fass
      */
-    private void checkNullFile(File file) throws FileNotFoundException {
-        if (file == null) {
-            throw new FileNotFoundException("File was not found at specified address");
-        }
+    @FXML
+    private void browseRoutes() {
+        browse(routesTextField, "ROUTES", "routes.txt");
     }
 
     /**
-     * method to check the extension of a file and make sure it matches one of the valid formats
+     * opens a FileChooser with the specified extension filter and outputs the file path to the corresponding TextArea
      *
-     * @param extension the extension to check
-     * @throws IllegalArgumentException if extension is not one of the listed ones.
      * @author Grant Fass
      */
-    private void checkFileExtension(String extension) throws IllegalArgumentException {
-        if (!extension.toLowerCase().equals(".txt")) {
-            throw new IllegalArgumentException("The file of type "
-                    + extension + " is not supported." +
-                    "Supported file types are '.txt'.");
-        }
+    @FXML
+    private void browseStops() {
+        browse(stopsTextField, "STOPS", "stops.txt");
     }
 
     /**
-     * method to check the name of a file and make sure it matches the expected format
-     * so that the file can be passed on to the correct class for parsing.
+     * opens a FileChooser with the specified extension filter and outputs the file path to the corresponding TextArea
      *
-     * @param prefix the name of the file
-     * @return a simplified name of the file to be used for comparing
-     * @throws InputMismatchException if the file does not match the expected name
      * @author Grant Fass
      */
-    private String checkFilePrefix(String prefix) throws InputMismatchException {
-        if (prefix.toLowerCase().contains("stop_times")) {
-            return "stop_times";
-        } else if (prefix.toLowerCase().contains("stops")) {
-            return "stops";
-        } else if (prefix.toLowerCase().contains("trips")) {
-            return "trips";
-        } else if (prefix.toLowerCase().contains("routes")) {
-            return "routes";
-        } else {
-            throw new InputMismatchException("The file with name %s is not " +
-                    "supported. Please make sure that your file matches the expected naming" +
-                    "convention of 'stops.txt', 'stop_times.txt', 'trips.txt', &" +
-                    " 'routes.txt'.");
+    @FXML
+    private void browseStopTimes() {
+        browse(stopTimesTextField, "STOP_TIMES", "stop_times.txt");
+    }
+
+    /**
+     * opens a FileChooser with the specified extension filter and outputs the file path to the corresponding TextArea
+     *
+     * @author Grant Fass
+     */
+    @FXML
+    private void browseTrips() {
+        browse(tripsTextField, "TRIPS", "trips.txt");
+    }
+
+    /**
+     * opens a FileChooser to browse to the file location and set initial load values
+     * @param textField the TextField to display the file location to
+     * @param description the description to use for the extension for the FileChooser
+     * @param extension the extension to use for the FileChooser
+     * @author Grant Fass
+     */
+    private void browse(TextField textField, String description, String extension) {
+        try {
+            File file = getGTFSFileLocationUsingFileChooser(description, extension);
+            textField.setText(file.toString());
+        } catch (NullPointerException ignored) {
+
         }
     }
 
@@ -246,192 +241,71 @@ public class ImportWindowController {
                 System.getProperty("user.name") + "\\\\Documents"));
         return fileChooser.showOpenDialog(mainWindowStage);
     }
+    //endregion
 
-    /**
-     * opens a FileChooser with the specified extension filter and outputs the file path to the corresponding TextArea
-     *
-     * @author Grant Fass
-     */
-    @FXML
-    private void browseRoutes() {
-        browse(routesTextField, "ROUTES", "routes.txt", routesProgressBar);
-    }
-
-    /**
-     * opens a FileChooser with the specified extension filter and outputs the file path to the corresponding TextArea
-     *
-     * @author Grant Fass
-     */
-    @FXML
-    private void browseStops() {
-        browse(stopsTextField, "STOPS", "stops.txt", stopsProgressBar);
-    }
-
-    /**
-     * opens a FileChooser with the specified extension filter and outputs the file path to the corresponding TextArea
-     *
-     * @author Grant Fass
-     */
-    @FXML
-    private void browseStopTimes() {
-        browse(stopTimesTextField, "STOP_TIMES", "stop_times.txt", stopTimesProgressBar);
-    }
-
-    /**
-     * opens a FileChooser with the specified extension filter and outputs the file path to the corresponding TextArea
-     *
-     * @author Grant Fass
-     */
-    @FXML
-    private void browseTrips() {
-        browse(tripsTextField, "TRIPS", "trips.txt", tripsProgressBar);
-    }
-
-    /**
-     * opens a FileChooser to browse to the file location and set initial load values
-     * @param textField the TextField to display the file location to
-     * @param description the description to use for the extension for the FileChooser
-     * @param extension the extension to use for the FileChooser
-     * @param progressBar the progress bar to set initial values for
-     * @author Grant Fass
-     */
-    private void browse(TextField textField, String description, String extension, ProgressBar progressBar) {
-        try {
-            File file = getGTFSFileLocationUsingFileChooser(description, extension);
-            textField.setText(file.toString());
-            progressBar.setProgress(0);
-            progressBar.setStyle("-fx-accent: blanchedalmond");
-            progressBar.setVisible(true);
-        } catch (NullPointerException ignored) {
-
-        }
-    }
-
-
+    //region Methods For Importing Files
     /**
      * Import selected files into the program
      * Will not import file if corresponding checkbox is not selected
      * Outputs success results to Alerts TextArea
+     * Displays an alert to user to notify them that import started
      * @author Grant Fass
      */
     @FXML
     private void importFiles() {
+        MainWindowController.displayAlert(Alert.AlertType.INFORMATION, "IMPORT START", null, "STARTING IMPORT");
         alertTextArea.clear();
-        updateStatus("Times Formatted in HH::MM::SS\n");
-        importFile(routesCheckBox, routesTextField, routesProgressBar, "Routes");
-        importFile(stopsCheckBox, stopsTextField, stopsProgressBar, "Stops");
-        importFile(stopTimesCheckBox, stopTimesTextField, stopTimesProgressBar, "Stop_Times");
-        importFile(tripsCheckBox, tripsTextField, tripsProgressBar, "Trips");
+        alertTextArea.appendText("Times Formatted in HH:MM:SS\n");
+        alertTextArea.appendText(String.format("START: %02d:%02d:%02d\n", LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getSecond()));
+        alertTextArea.appendText(runImportFiles());
     }
 
     /**
-     * Import a file into the program
-     * @param checkBox the checkbox to check if the file is to be imported
-     * @param textField the textField to read the filename from
-     * @param progressBar the progressbar to update with loading status
-     * @param fileType the file type for alert output
+     * all of the commands to import files are here
+     * @return the import message
      * @author Grant Fass
      */
-    private void importFile(CheckBox checkBox, TextField textField, ProgressBar progressBar, String fileType) {
-//        Thread thread = new Thread(() -> {
-            updateStatus(progressBar, ProgressBar.INDETERMINATE_PROGRESS, "-fx-accent: orange");
-            if (checkBox.isSelected() && !textField.getText().isEmpty()) {
-                updateStatus(String.format("IN: Import of %s started at: %s::%s::%s\n", fileType, LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getSecond()));
-                importFile(new File(textField.getText()), progressBar);
-                updateStatus(progressBar, 100, "-fx-accent: green");
-            } else if (checkBox.isSelected()) {
-                updateStatus("SKIP: " + fileType + " - Empty File Location\n");
-                updateStatus(progressBar, 100, "-fx-accent: white");
-            } else {
-                updateStatus("SKIP: " + fileType + " - Not Selected\n");
-                updateStatus(progressBar, 100, "-fx-accent: red");
-            }
-//        });
-//        thread.start();
-    }
-
-    /**
-     * appends a message to the alert area
-     * format changes depending on if a task is running
-     * based on https://stackoverflow.com/questions/36638617/javafx-textarea-update-immediately
-     * @param message the message to post
-     * @author Grant Fass
-     */
-    private void updateStatus(String message) {
-        if (Platform.isFxApplicationThread()) {
-            alertTextArea.appendText(message);
-        } else {
-            Platform.runLater(() -> alertTextArea.appendText(message));
-        }
-    }
-
-    /**
-     * updates a progress bar with the specified value
-     * format changes depending on if a task is running
-     * based on https://stackoverflow.com/questions/36638617/javafx-textarea-update-immediately
-     * @param progressBar the progress bar to update
-     * @param value the value to update the progress bar to
-     * @param style the -fx-accent style to apply to the progress bar
-     * @author Grant Fass
-     */
-    private void updateStatus(ProgressBar progressBar, double value, String style) {
-        if (Platform.isFxApplicationThread()) {
-            progressBar.setProgress(value);
-            progressBar.setStyle(style);
-        } else {
-            Platform.runLater(() -> {
-                progressBar.setProgress(value);
-                progressBar.setStyle(style);
-            });
-        }
-    }
-
-    /**
-     * imports a single file into the program
-     * @param file the file to import
-     * @author Grant Fass
-     */
-    private void importFile(File file, ProgressBar progressBar) {
+    private String runImportFiles() {
+        String importMessage;
         try {
-            checkNullFile(file);
-            checkFileExtension(file.toString().substring(file.toString().indexOf('.')));
-            String prefix = checkFilePrefix(file.toString().substring(0,
-                    file.toString().indexOf('.')));
-            boolean wasLineSkipped = false;
-            switch (prefix) {
-                case "stop_times":
-                    wasLineSkipped = mainWindowController.getData().loadStopTimes(file);
-                    break;
-                case "stops":
-                    wasLineSkipped = mainWindowController.getData().loadStops(file);
-                    break;
-                case "routes":
-                    wasLineSkipped = mainWindowController.getData().loadRoutes(file);
-                    break;
-                case "trips":
-                    wasLineSkipped = mainWindowController.getData().loadTrips(file);
-                    break;
-            }
-            updateStatus(String.format("✓: INFO: Import of %s completed at: %s::%s::%s\n", prefix, LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getSecond()));
-            if (wasLineSkipped) {
-                updateStatus("\t✓: WARN: one or more lines in " + prefix + " were incorrectly formatted and skipped\n");
-            }
-        } catch (IllegalArgumentException e) {
-            updateStatus("\tERROR: IllegalArgumentException - " + e.getMessage() + "\n");
-        } catch (InputMismatchException e) {
-            updateStatus("\tERROR: InputMismatchException - " + e.getMessage() + "\n");
-        } catch (FileNotFoundException e) {
-            updateStatus("\tERROR: FileNotFoundException - " + e.getMessage() + "\n");
+            importMessage = mainWindowController.getData().loadFiles(
+                    importFile(routesTextField, routesCheckBox),
+                    importFile(stopsTextField, stopsCheckBox),
+                    importFile(stopTimesTextField, stopTimesCheckBox),
+                    importFile(tripsTextField, tripsCheckBox));
         } catch (IOException e) {
-            updateStatus("\tERROR: IOException - " + e.getMessage() + "\n");
-        } catch (DataFormatException e) {
-            updateStatus(String.format("\tWARN: Data Overwritten - The data from the" +
-                    " previous '%s' file was overwritten with the new data. The program" +
-                    " may work unexpectedly if the new data from '%s' does not match" +
-                    " the existing data in the remaining files.\n", e.getMessage(), e.getMessage()));
+            importMessage = e.getMessage() + "\n";
         }
+        return importMessage;
     }
 
+    /**
+     * method to prepare the file location from a given text field depending on checkbox status
+     * @param textField the textfield to get the file location from
+     * @param checkBox the checkbox to use the status of
+     * @return the prepared file location
+     * @author Grant Fass
+     */
+    private String importFile(TextField textField, CheckBox checkBox) {
+        return checkBox.isSelected() ? checkFileName(textField.getText()) : "";
+    }
+
+    /**
+     * Method to check that an appropriate file was selected
+     * @param fileLocation the file location to check
+     * @return the name of the appropriate file or empty string if it was not appropriate
+     * @author Grant Fass
+     */
+    private String checkFileName(String fileLocation) {
+        String tempLocation = fileLocation.toLowerCase();
+        if (tempLocation.contains("routes.txt") || tempLocation.contains("stops.txt") || tempLocation.contains("stop_times.txt") || tempLocation.contains("trips.txt")) {
+            return fileLocation;
+        }
+        return "";
+    }
+    //endregion
+
+    //region Checkbox Controls
     /**
      * update the disabled status of the route data based on CheckBox toggle
      * @author Grant Fass
@@ -477,4 +351,5 @@ public class ImportWindowController {
     private void toggleCheckBox(CheckBox checkBox, VBox vBox) {
         vBox.setDisable(!checkBox.isSelected());
     }
+    //endregion
 }

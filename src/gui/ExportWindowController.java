@@ -6,15 +6,16 @@
  */
 package gui;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.IOException;
 import java.time.LocalDateTime;
 
 /**
@@ -24,6 +25,7 @@ import java.time.LocalDateTime;
  * @version Created on 10/25/2020 at 1:26 AM
  */
 public class ExportWindowController {
+    //region FXML properties
     @FXML
     private TextArea description;
     @FXML
@@ -37,15 +39,11 @@ public class ExportWindowController {
     @FXML
     private TextField routeTextField;
     @FXML
-    private ProgressBar routesProgressBar;
-    @FXML
     private CheckBox stopsCheckBox;
     @FXML
     private VBox stopVBox;
     @FXML
     private TextField stopTextField;
-    @FXML
-    private ProgressBar stopsProgressBar;
     @FXML
     private CheckBox stopTimesCheckBox;
     @FXML
@@ -53,15 +51,14 @@ public class ExportWindowController {
     @FXML
     private TextField stopTimeTextField;
     @FXML
-    private ProgressBar stopTimesProgressBar;
-    @FXML
     private CheckBox tripsCheckBox;
     @FXML
     private VBox tripVBox;
     @FXML
     private TextField tripTextField;
-    @FXML
-    private ProgressBar tripsProgressBar;
+    //endregion
+
+    //region class references
     private Stage analysisWindowStage;
     private AnalysisWindowController analysisWindowController;
     private Stage dataWindowStage;
@@ -131,16 +128,14 @@ public class ExportWindowController {
         this.searchWindowController = searchWindowController;
         this.updateWindowController = updateWindowController;
     }
+    //endregion
 
+    //region displayed help information
     /**
-     * set the default values of the progress bars and descriptions
+     * set the default values of the descriptions
      * @author Grant Fass
      */
     public void setDefaultValues() {
-        routesProgressBar.setVisible(false);
-        stopsProgressBar.setVisible(false);
-        stopTimesProgressBar.setVisible(false);
-        tripsProgressBar.setVisible(false);
         description.setText("This window is used to export files to a given directory. " +
                 "Use the 'browse' button to select the folder to save the exported file(s) to. Use the " +
                 "checkboxes to select which file(s) you would like to export. Use the 'Export' button to " +
@@ -156,7 +151,7 @@ public class ExportWindowController {
     @FXML
     private void displayHelp() {
         MainWindowController.displayAlert(Alert.AlertType.INFORMATION, "General Transit Feed Specification Tool Information",
-                "Import Window Help", "This window is used to export the files in the correct format." +
+                "Export Window Help", "This window is used to export the files in the correct format." +
                         "\nHow to use:" +
                         "\n1. Click on the 'browse' button to open a Directory Chooser." +
                         "\n2. Use the Directory Chooser to navigate to the location you would like" +
@@ -170,11 +165,26 @@ public class ExportWindowController {
                         " next to the checkbox. Any errors will be displayed to the 'Alert' Text" +
                         " Area.");
     }
+    //endregion
+
+    //region methods for file export
+    /**
+     * Exports all selected files to the specified directory
+     * @author Grant Fass
+     */
+    @FXML
+    private void exportFiles() {
+        MainWindowController.displayAlert(Alert.AlertType.INFORMATION, "EXPORT START", null, "STARTING EXPORT");
+        alertTextArea.clear();
+        alertTextArea.appendText("Times Formatted in HH:MM:SS\n");
+        alertTextArea.appendText(String.format("START: %02d:%02d:%02d\n", LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getSecond()));
+        alertTextArea.appendText(mainWindowController.getData().exportFiles(directoryTextField.getText(), routesCheckBox.isSelected(), stopsCheckBox.isSelected(), stopTimesCheckBox.isSelected(), tripsCheckBox.isSelected()));
+    }
 
     /**
      * Method to query the user to retrieve a GTFS file from the computer using a FileChooser
-     * @author Grant Fass
      * @return The selected GTFS file from the program
+     * @author Grant Fass
      */
     private File getExportDirectory() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
@@ -182,112 +192,6 @@ public class ExportWindowController {
         directoryChooser.setInitialDirectory(new File("C:\\\\users\\\\" +
                 System.getProperty("user.name") + "\\\\Documents"));
         return directoryChooser.showDialog(mainWindowStage);
-    }
-
-    @FXML
-    private void exportFiles() {
-        alertTextArea.clear();
-        updateStatus("Times Formatted in HH::MM::SS\n");
-        if (!directoryTextField.getText().isEmpty()) {
-            exportFile(routesCheckBox, routesProgressBar, "Routes");
-            exportFile(stopsCheckBox, stopsProgressBar, "Stops");
-            exportFile(stopTimesCheckBox, stopTimesProgressBar, "StopTimes");
-            exportFile(tripsCheckBox, tripsProgressBar, "Trips");
-        }
-        else updateStatus("SKIPPING ALL: No Directory Selected!");
-    }
-
-    private void exportFile(CheckBox checkBox, ProgressBar progressBar, String fileType) {
-        Thread thread = new Thread(() -> {
-            updateStatus(progressBar, ProgressBar.INDETERMINATE_PROGRESS, "-fx-accent: orange");
-            if (checkBox.isSelected()) {
-                updateStatus(String.format("OUT: Export of %s started at: %s::%s::%s\n", fileType, LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getSecond()));
-                exportFile(new File(directoryTextField.getText()), fileType.toLowerCase());
-                updateStatus(progressBar, 100, "-fx-accent: green");
-                updateStatus(String.format("✓: Export of %s completed at: %s::%s::%s\n", fileType, LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getSecond()));
-            } else {
-                updateStatus("SKIP: " + fileType + " - Not Selected\n");
-                updateStatus(progressBar, 100, "-fx-accent: white");
-            }
-        });
-        thread.start();
-    }
-
-    /**
-     * appends a message to the alert area
-     * format changes depending on if a task is running
-     * based on https://stackoverflow.com/questions/36638617/javafx-textarea-update-immediately
-     * @param message the message to post
-     * @author Grant Fass
-     */
-    private void updateStatus(String message) {
-        if (Platform.isFxApplicationThread()) {
-            alertTextArea.appendText(message);
-        } else {
-            Platform.runLater(() -> alertTextArea.appendText(message));
-        }
-    }
-
-    /**
-     * updates a progress bar with the specified value
-     * format changes depending on if a task is running
-     * based on https://stackoverflow.com/questions/36638617/javafx-textarea-update-immediately
-     * @param progressBar the progress bar to update
-     * @param value the value to update the progress bar to
-     * @param style the -fx-accent style to apply to the progress bar
-     * @author Grant Fass
-     */
-    private void updateStatus(ProgressBar progressBar, double value, String style) {
-        if (Platform.isFxApplicationThread()) {
-            progressBar.setProgress(value);
-            progressBar.setStyle(style);
-        } else {
-            Platform.runLater(() -> {
-                progressBar.setProgress(value);
-                progressBar.setStyle(style);
-            });
-        }
-    }
-
-    /**
-     * sets a message to the specified textField
-     * format changes depending on if a task is running
-     * based on https://stackoverflow.com/questions/36638617/javafx-textarea-update-immediately
-     * @param textField the text field to update
-     * @param message the message to post
-     * @author Grant Fass
-     */
-    private void updateStatus(TextField textField, String message) {
-        if (Platform.isFxApplicationThread()) {
-            textField.setText(message);
-        } else {
-            Platform.runLater(() -> textField.setText(message));
-        }
-    }
-
-    private void exportFile(File file, String fileType) {
-        try {
-            switch (fileType) {
-                case "routes":
-                    mainWindowController.getData().getRoutes().exportRoutes(file);
-                    updateStatus(routeTextField, file.toString() + "//routes.txt");
-                    break;
-                case "stops":
-                    mainWindowController.getData().getStops().exportStops(file);
-                    updateStatus(stopTextField, file.toString() + "//stops.txt");
-                    break;
-                case "stoptimes":
-                    mainWindowController.getData().getStopTimes().exportStopTimes(file);
-                    updateStatus(stopTimeTextField, file.toString() + "//stop_times.txt");
-                    break;
-                case "trips":
-                    mainWindowController.getData().getTrips().exportTrips(file);
-                    updateStatus(tripTextField, file.toString() + "//trips.txt");
-                    break;
-            }
-        } catch (IOException e) {
-            updateStatus("\tERROR: IOException - " + e.getMessage() + "\n");
-        }
     }
 
     /**
@@ -299,27 +203,14 @@ public class ExportWindowController {
     private void browseDirectory() {
         try {
             File file = getExportDirectory();
-            updateStatus(directoryTextField, file.toString());
-            initializeProgressBar(routesProgressBar);
-            initializeProgressBar(stopsProgressBar);
-            initializeProgressBar(stopTimesProgressBar);
-            initializeProgressBar(tripsProgressBar);
+            directoryTextField.setText(file.toString());
         } catch (NullPointerException ignored) {
 
         }
     }
+    //endregion
 
-    /**
-     * initializes the default values of a single progress bar
-     * @param progressBar the progress bar to intialize
-     * @author Grant Fass
-     */
-    private void initializeProgressBar(ProgressBar progressBar) {
-        progressBar.setProgress(0);
-        progressBar.setStyle("-fx-accent: blanchedalmond");
-        progressBar.setVisible(true);
-    }
-
+    //region check box controls
     /**
      * update the disabled status of the route data based on CheckBox toggle
      * @author Grant Fass
@@ -365,4 +256,5 @@ public class ExportWindowController {
     private void toggleCheckBox(CheckBox checkBox, VBox vBox) {
         vBox.setDisable(!checkBox.isSelected());
     }
+    //endregion
 }
