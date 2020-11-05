@@ -148,7 +148,8 @@ public class Stops {
 					" values for a Stop object. Header was missing longitude");
 		}
 		Headers headers = new Headers();
-		String[] headerDataArray = header.split(",");
+		String regex = ",(?=(?:[^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)";
+		String[] headerDataArray = header.split(regex, -1);
 		final String possibleHeaders = Stop.getHeaderLine().toLowerCase();
 		for (int i = 0; i < headerDataArray.length; i++) {
 			String individualHeader = headerDataArray[i].trim();
@@ -173,7 +174,8 @@ public class Stops {
 	 * @author Joy Cross
 	 */
 	public Stop validateData(String data, Headers headers) throws IllegalArgumentException {
-		String[] dataArray = data.split(",", -1);
+		String regex = ",(?=(?:[^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)";
+		String[] dataArray = data.split(regex, -1);
 		if (dataArray.length != headers.length() || data.isEmpty()) {
 			throw new IllegalArgumentException("Data line does not contain the proper amount of data");
 		}

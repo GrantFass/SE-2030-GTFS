@@ -165,7 +165,8 @@ public class Routes {
 		}
 
 		Headers headers = new Headers();
-        String[] header_list = header.split(",");
+		String regex = ",(?=(?:[^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)";
+        String[] header_list = header.split(regex, -1);
         final String POSSIBLE_HEADERS = Route.getHeaderLine();
 
         for(int i = 0; i < header_list.length; i++){
@@ -189,7 +190,8 @@ public class Routes {
      */
 	public Route validateData(String full_data, Headers headers) throws IllegalFormatException {
         //splits while ignoring commas within description
-        String[] split_data = full_data.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+		String regex = ",(?=(?:[^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)";
+        String[] split_data = full_data.split(regex, -1);
 
         if(split_data.length != headers.length()){
             throw new IllegalArgumentException("Invalid quantity of data fields within line of data");

@@ -186,7 +186,8 @@ public class Trips {
             throw new IllegalArgumentException("Input header line cannot contain blank fields");
         }
         Headers headers = new Headers();
-        String[] headerDataArray = header.split(",");
+        String regex = ",(?=(?:[^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)";
+        String[] headerDataArray = header.split(regex, -1);
         final String possibleHeaders = "route_id,service_id,trip_id,trip_headsign,direction_id," +
                 "block_id,shape_id";
         for (int i = 0; i < headerDataArray.length; i++) {
@@ -214,7 +215,8 @@ public class Trips {
      * @author Simon Erickson
      */
     public Trip validateData(String data, Headers headers) throws IllegalArgumentException {
-        String[] dataArray = data.split(",", -1);
+        String regex = ",(?=(?:[^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)";
+        String[] dataArray = data.split(regex, -1);
         if (dataArray.length != headers.length()) {
             throw new IllegalArgumentException("Data line does not contain the " +
                     "proper amount of data");

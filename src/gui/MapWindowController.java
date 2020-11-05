@@ -216,6 +216,9 @@ public class MapWindowController implements Observer {
      * @author Grant Fass
      */
     private CoordinateLine getCoordinateLine(Route route, ArrayList<Stop> stops, boolean overrideDefaultColor) {
+        if (stops == null) {
+            return null;
+        }
         final double red = Math.random();
         final double green = Math.random();
         final double blue = Math.random();
@@ -223,7 +226,9 @@ public class MapWindowController implements Observer {
         final Color color = new Color(red, green, blue, alpha);
         ArrayList<Coordinate> coordinates = new ArrayList<>();
         for (Stop stop : stops) {
-            coordinates.add(new Coordinate(stop.getStopLatitude(), stop.getStopLongitude()));
+            if (stop != null) {
+                coordinates.add(new Coordinate(stop.getStopLatitude(), stop.getStopLongitude()));
+            }
         }
         CoordinateLine coordinateLine = new CoordinateLine(coordinates).setVisible(true);
         if (overrideDefaultColor) {
@@ -280,7 +285,9 @@ public class MapWindowController implements Observer {
                 Route route = data.getRoutes().getRoute(newValue);
                 if (route != null) {
                     lastCoordinateLine = getCoordinateLine(route, stopsPerRoute.get(route), useRandomRouteColorsToggle.isSelected());
-                    plotCoordinateLine(lastCoordinateLine);
+                    if (lastCoordinateLine != null) {
+                        plotCoordinateLine(lastCoordinateLine);
+                    }
                 }
             }
         });

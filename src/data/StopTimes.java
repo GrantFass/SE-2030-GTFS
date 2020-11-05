@@ -161,7 +161,8 @@ public class StopTimes {
 			throw new IllegalArgumentException("Input header line cannot contain blank fields");
 		}
 		Headers headers = new Headers();
-		String[] headerDataArray = header.split(",");
+		String regex = ",(?=(?:[^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)";
+		String[] headerDataArray = header.split(regex, -1);
 		final String possibleHeaders = "trip_id,stop_id,stop_sequence,arrival_time,departure_time," +
 				"stop_headsign,continuous_drop_off,continuous_pickup,drop_off_type," +
 				"pickup_type,timepoint,shape_distance";
@@ -186,7 +187,8 @@ public class StopTimes {
 	 * @author Grant Fass
 	 */
 	public StopTime validateData(String data, Headers headers) throws IllegalArgumentException {
-		String[] dataArray = data.split(",", -1);
+		String regex = ",(?=(?:[^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)";
+		String[] dataArray = data.split(regex, -1);
 		if (dataArray.length != headers.length() || data.isEmpty()) {
 			throw new IllegalArgumentException("Data line does not contain the proper amount of data");
 		}
