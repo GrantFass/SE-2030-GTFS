@@ -129,7 +129,7 @@ public class Routes {
 			}
 		} catch (IllegalArgumentException e) {
 			wasFileLoaded = false;
-			failMessage = String.format("ERROR: Routes Not Imported\nFile Contains Invalid Header Format\n%s\n", e.getMessage());
+			failMessage = String.format("  ERROR: Routes Not Imported\n  File Contains Invalid Header Format\n  %s\n", e.getMessage());
 		}
 		String successMessage = String.format("  ✓: Routes Imported Successfully.\n  %s\n  %s\n", emptyPrior ? "New Routes Data Imported" : "Routes Data Overwritten", wasLineSkipped ? "Lines Skipped During Import Of Routes" : "All Lines Imported Successfully");
 		return String.format("IMPORT ROUTES:\n%s", wasFileLoaded ? successMessage : failMessage);

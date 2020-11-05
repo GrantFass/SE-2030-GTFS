@@ -93,6 +93,7 @@ public class MainWindowController {
 	}
 	//endregion
 
+	//region displayed help information
 	/**
 	 * set the default values of the description
 	 * @author Grant Fass
@@ -123,22 +124,7 @@ public class MainWindowController {
 						"\n'About' will open an alert with information about the program" +
 						"\n'Exit' will safely shut down the program");
 	}
-
-	/**
-	 * display information to the user about the programs creators
-	 * @author Grant Fass
-	 */
-	@FXML
-	private void displayAbout() {
-		displayAlert(Alert.AlertType.INFORMATION, "General Transit Feed Specification Tool Information: About",
-				null, "This program is designed to allow users to import, manipulate, and export" +
-						" GTFS files that are consistent with the specifications from the Google Transit GTFS" +
-						" Reference pages. Files are expected to be named as 'stops.txt', 'stop_times.txt'," +
-						" 'routes.txt', or 'trips.txt'.\nThis program was developed by Group G of the" +
-						" Software Engineering Tools And Practices class (SE 2030 - 021) at the Milwaukee School" +
-						" Of Engineering (MSOE) in the Fall term of 2020.\n" +
-						"Members: Grant Fass, Joy Cross, Simon Erickson, & Ryan Becker.");
-	}
+	//endregion
 
 	/**
 	 * returns a copy of the data object
@@ -167,6 +153,7 @@ public class MainWindowController {
 		alert.showAndWait();
 	}
 
+	//region methods for toggling stage visibility
 	/**
 	 * method to toggle the visibility of a given stage
 	 * @param stage the stage to toggle the visibility of
@@ -257,6 +244,24 @@ public class MainWindowController {
 		//open the update window two stages down from the main window
 		toggleStage(updateWindowStage, 0, 2 * mainWindowStage.getHeight());
 	}
+	//endregion
+
+	//region menu commands that do not trigger stages
+	/**
+	 * display information to the user about the programs creators
+	 * @author Grant Fass
+	 */
+	@FXML
+	private void displayAbout() {
+		displayAlert(Alert.AlertType.INFORMATION, "General Transit Feed Specification Tool Information: About",
+				null, "This program is designed to allow users to import, manipulate, and export" +
+						" GTFS files that are consistent with the specifications from the Google Transit GTFS" +
+						" Reference pages. Files are expected to be named as 'stops.txt', 'stop_times.txt'," +
+						" 'routes.txt', or 'trips.txt'.\nThis program was developed by Group G of the" +
+						" Software Engineering Tools And Practices class (SE 2030 - 021) at the Milwaukee School" +
+						" Of Engineering (MSOE) in the Fall term of 2020.\n" +
+						"Members: Grant Fass, Joy Cross, Simon Erickson, & Ryan Becker.");
+	}
 
 	/**
 	 * Method to safely close and exit the program.
@@ -266,4 +271,5 @@ public class MainWindowController {
 	public void close() {
 		System.exit(0);
 	}
+	//endregion
 }

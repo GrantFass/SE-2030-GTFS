@@ -127,6 +127,7 @@ public class MapWindowController implements Observer {
     }
     //endregion
 
+    //region displayed help information
     /**
      * set the default values of the description
      * set up the map view and initialize it
@@ -189,23 +190,20 @@ public class MapWindowController implements Observer {
         MainWindowController.displayAlert(Alert.AlertType.INFORMATION, "General Transit Feed Specification Tool Information",
                 "Import Window Help", "Not Implemented Yet");
     }
+    //endregion
 
+    //region methods for plotting routes
+    /**
+     * method to display all routeIDs to the associated List View
+     * @param hashMap the mapping to get all routeIDs from
+     * @author Grant Fass
+     */
     private void displayRouteIDs(HashMap<Route, ArrayList<Stop>> hashMap) {
         ObservableList<String> items = FXCollections.observableArrayList();
         for (Route route : hashMap.keySet()) {
             items.add(route.getRouteID());
         }
         routeListView.setItems(items);
-    }
-
-    private void displayBusses(ArrayList<double[]> busLocations) {
-        int count = 0;
-        ObservableList<String> items = FXCollections.observableArrayList();
-        for (double[] busLocation : busLocations) {
-            items.add("Bus: " + count);
-            count++;
-        }
-        busListView.setItems(items);
     }
 
     /**
@@ -262,23 +260,6 @@ public class MapWindowController implements Observer {
     }
 
     /**
-     * update the observers when the data is changed
-     * Based on a guide from GeeksForGeeks
-     * found here: https://www.geeksforgeeks.org/observer-pattern-set-2-implementation/
-     *
-     * @param data the data object that was changed
-     * @author Grant Fass
-     */
-    @Override
-    public void update(Data data) {
-        if (!data.getRoutes().getRoutes().isEmpty() && !data.getStops().getStops().isEmpty() && !data.getStopTimes().getStop_times().isEmpty() && !data.getTrips().getTrips().isEmpty()) {
-            updateRoutes(data);
-            updateBusses(data);
-            updateStop(data);
-        }
-    }
-
-    /**
      * updates the displayed routes
      *
      * @param data the data to use to update the routes
@@ -304,6 +285,23 @@ public class MapWindowController implements Observer {
             }
         });
     }
+    //endregion
+
+    //region methods for plotting busses
+    /**
+     * method to display all busses to the associated List View
+     * @param busLocations the mapping of all bus locations
+     * @author Grant Fass
+     */
+    private void displayBusses(ArrayList<double[]> busLocations) {
+        int count = 0;
+        ObservableList<String> items = FXCollections.observableArrayList();
+        for (double[] busLocation : busLocations) {
+            items.add("Bus: " + count);
+            count++;
+        }
+        busListView.setItems(items);
+    }
 
     /**
      * plots a marker on the map at the selected bus location
@@ -328,7 +326,9 @@ public class MapWindowController implements Observer {
             }
         });
     }
+    //endregion
 
+    //region methods for plotting stops
     /**
      * creates and returns the absolute value of the input value
      *
@@ -395,4 +395,28 @@ public class MapWindowController implements Observer {
             }
         });
     }
+    //endregion
+
+    //region observer pattern update
+    /**
+     * update the observers when the data is changed
+     * Based on a guide from GeeksForGeeks
+     * found here: https://www.geeksforgeeks.org/observer-pattern-set-2-implementation/
+     *
+     * @param data the data object that was changed
+     * @author Grant Fass
+     */
+    @Override
+    public void update(Data data) {
+        if (!data.getRoutes().getRoutes().isEmpty() && !data.getStops().getStops().isEmpty() && !data.getStopTimes().getStop_times().isEmpty() && !data.getTrips().getTrips().isEmpty()) {
+            updateRoutes(data);
+            updateBusses(data);
+            updateStop(data);
+        } else {
+            //clear information
+            displayBusses(new ArrayList<>());
+            displayRouteIDs(new HashMap<>());
+        }
+    }
+    //endregion
 }

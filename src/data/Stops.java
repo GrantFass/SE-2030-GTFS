@@ -102,7 +102,7 @@ public class Stops {
 			}
 		} catch (IllegalArgumentException e) {
 			wasFileLoaded = false;
-			failMessage = String.format("ERROR: Stops Not Imported\nFile Contains Invalid Header Format\n%s\n", e.getMessage());
+			failMessage = String.format("  ERROR: Stops Not Imported\n  File Contains Invalid Header Format\n  %s\n", e.getMessage());
 		}
 		String successMessage = String.format("  ✓: Stops Imported Successfully.\n  %s\n  %s\n", emptyPrior ? "New Stops Data Imported" : "Stops Data Overwritten", wasLineSkipped ? "Lines Skipped During Import Of Stops" : "All Lines Imported Successfully");
 		return String.format("IMPORT STOPS:\n%s", wasFileLoaded ? successMessage : failMessage);

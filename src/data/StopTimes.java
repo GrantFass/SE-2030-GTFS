@@ -131,7 +131,7 @@ public class StopTimes {
 			}
 		} catch (IllegalArgumentException e) {
 			wasFileLoaded = false;
-			failMessage = String.format("ERROR: StopTimes Not Imported\nFile Contains Invalid Header Format\n%s\n", e.getMessage());
+			failMessage = String.format("  ERROR: StopTimes Not Imported\n  File Contains Invalid Header Format\n  %s\n", e.getMessage());
 		}
 		String successMessage = String.format("  ✓: StopTimes Imported Successfully.\n  %s\n  %s\n", emptyPrior ? "New StopTimes Data Imported" : "StopTimes Data Overwritten", wasLineSkipped ? "Lines Skipped During Import Of StopTimes" : "All Lines Imported Successfully");
 		return String.format("IMPORT STOP_TIMES:\n%s", wasFileLoaded ? successMessage : failMessage);

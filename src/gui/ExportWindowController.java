@@ -6,15 +6,16 @@
  */
 package gui;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.IOException;
 import java.time.LocalDateTime;
 
 /**
@@ -150,7 +151,7 @@ public class ExportWindowController {
     @FXML
     private void displayHelp() {
         MainWindowController.displayAlert(Alert.AlertType.INFORMATION, "General Transit Feed Specification Tool Information",
-                "Import Window Help", "This window is used to export the files in the correct format." +
+                "Export Window Help", "This window is used to export the files in the correct format." +
                         "\nHow to use:" +
                         "\n1. Click on the 'browse' button to open a Directory Chooser." +
                         "\n2. Use the Directory Chooser to navigate to the location you would like" +

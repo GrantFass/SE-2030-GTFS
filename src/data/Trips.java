@@ -98,7 +98,7 @@ public class Trips {
             }
         } catch (IllegalArgumentException e) {
             wasFileLoaded = false;
-            failMessage = String.format("ERROR: Trips Not Imported\nFile Contains Invalid Header Format\n%s\n", e.getMessage());
+            failMessage = String.format("  ERROR: Trips Not Imported\n  File Contains Invalid Header Format\n  %s\n", e.getMessage());
         }
         String successMessage = String.format("  ✓: Trips Imported Successfully.\n  %s\n  %s\n", emptyPrior ? "New Trips Data Imported" : "Trip Data Overwritten", wasLineSkipped ? "Lines Skipped During Import Of Trips" : "All Lines Imported Successfully");
         return String.format("IMPORT TRIPS:\n%s", wasFileLoaded ? successMessage : failMessage);

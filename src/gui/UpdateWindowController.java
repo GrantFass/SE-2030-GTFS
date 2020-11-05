@@ -100,6 +100,29 @@ public class UpdateWindowController {
     }
     //endregion
 
+    //region displayed help information
+    /**
+     * set the default values of the description
+     * @author Grant Fass
+     */
+    public void setDefaultValues() {
+        description.setText("");
+    }
+
+    /**
+     * display help values to the program
+     * Activates when help menu button is clicked
+     *
+     * @author Grant Fass
+     */
+    @FXML
+    private void displayHelp() {
+        MainWindowController.displayAlert(Alert.AlertType.INFORMATION, "General Transit Feed Specification Tool Information",
+                "Update Window Help", "Not Implemented Yet");
+    }
+    //endregion
+
+    //region methods for setting currently targeted object
     /**
      * sets the current object to update in the GUI
      * @param route the route object to update
@@ -135,24 +158,5 @@ public class UpdateWindowController {
     public void setObjectToUpdate(Trip trip) {
         System.out.println(trip);
     }
-
-    /**
-     * set the default values of the description
-     * @author Grant Fass
-     */
-    public void setDefaultValues() {
-        description.setText("");
-    }
-
-    /**
-     * display help values to the program
-     * Activates when help menu button is clicked
-     *
-     * @author Grant Fass
-     */
-    @FXML
-    private void displayHelp() {
-        MainWindowController.displayAlert(Alert.AlertType.INFORMATION, "General Transit Feed Specification Tool Information",
-                "Import Window Help", "Not Implemented Yet");
-    }
+    //endregion
 }
