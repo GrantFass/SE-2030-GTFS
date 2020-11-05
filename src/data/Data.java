@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -90,7 +91,8 @@ public class Data implements Subject {
 			tripsImportMessage = trips.loadTrips(new File(tripFileLocation));
 		}
 		notifyObservers();
-		return routesImportMessage + stopsImportMessage + stopTimesImportMessage + tripsImportMessage;
+		String completionTime = String.format("COMPLETE: %02d:%02d.%02d\n", LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getSecond());
+		return routesImportMessage + stopsImportMessage + stopTimesImportMessage + tripsImportMessage + completionTime;
 	}
 	//endregion
 

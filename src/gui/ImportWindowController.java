@@ -176,62 +176,6 @@ public class ImportWindowController {
     }
     //endregion
 
-    //region checks used for importing files
-    /**
-     * error if no file is loaded or file is null
-     *
-     * @param file the file to check
-     * @throws FileNotFoundException null file
-     * @author Grant Fass
-     */
-    private void checkNullFile(File file) throws FileNotFoundException {
-        if (file == null) {
-            throw new FileNotFoundException("File was not found at specified address");
-        }
-    }
-
-    /**
-     * method to check the extension of a file and make sure it matches one of the valid formats
-     *
-     * @param extension the extension to check
-     * @throws IllegalArgumentException if extension is not one of the listed ones.
-     * @author Grant Fass
-     */
-    private void checkFileExtension(String extension) throws IllegalArgumentException {
-        if (!extension.toLowerCase().equals(".txt")) {
-            throw new IllegalArgumentException("The file of type "
-                    + extension + " is not supported." +
-                    "Supported file types are '.txt'.");
-        }
-    }
-
-    /**
-     * method to check the name of a file and make sure it matches the expected format
-     * so that the file can be passed on to the correct class for parsing.
-     *
-     * @param prefix the name of the file
-     * @return a simplified name of the file to be used for comparing
-     * @throws InputMismatchException if the file does not match the expected name
-     * @author Grant Fass
-     */
-    private String checkFilePrefix(String prefix) throws InputMismatchException {
-        if (prefix.toLowerCase().contains("stop_times")) {
-            return "stop_times";
-        } else if (prefix.toLowerCase().contains("stops")) {
-            return "stops";
-        } else if (prefix.toLowerCase().contains("trips")) {
-            return "trips";
-        } else if (prefix.toLowerCase().contains("routes")) {
-            return "routes";
-        } else {
-            throw new InputMismatchException("The file with name %s is not " +
-                    "supported. Please make sure that your file matches the expected naming" +
-                    "convention of 'stops.txt', 'stop_times.txt', 'trips.txt', &" +
-                    " 'routes.txt'.");
-        }
-    }
-    //endregion
-
     //region getters for locations of files to import
     /**
      * opens a FileChooser with the specified extension filter and outputs the file path to the corresponding TextArea
@@ -313,6 +257,7 @@ public class ImportWindowController {
     }
     //endregion
 
+    //region Methods For Importing Files
     /**
      * Import selected files into the program
      * Will not import file if corresponding checkbox is not selected
@@ -323,23 +268,18 @@ public class ImportWindowController {
     private void importFiles() {
         alertTextArea.clear();
         String importMessage = "";
-        updateStatus("Times Formatted in HH::MM::SS\n");
-        updateStatus(String.format("✓: INFO: Import started at: %s::%s::%s\n", LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getSecond()));
+        alertTextArea.appendText("Times Formatted in HH:MM.SS\n");
+        alertTextArea.appendText(String.format("START: %02d:%02d.%02d\n", LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getSecond()));
         try {
             importMessage = mainWindowController.getData().loadFiles(
                     importFile(routesTextField, routesCheckBox),
-                    importFile(stopsTextField, stopsCheckBox), 
+                    importFile(stopsTextField, stopsCheckBox),
                     importFile(stopTimesTextField, stopTimesCheckBox),
                     importFile(tripsTextField, tripsCheckBox));
         } catch (IOException e) {
             importMessage = e.getMessage() + "\n";
         }
-        updateStatus(importMessage);
-//        importFile(routesCheckBox, routesTextField, routesProgressBar, "Routes");
-//        importFile(stopsCheckBox, stopsTextField, stopsProgressBar, "Stops");
-//        importFile(stopTimesCheckBox, stopTimesTextField, stopTimesProgressBar, "Stop_Times");
-//        importFile(tripsCheckBox, tripsTextField, tripsProgressBar, "Trips");
-        updateStatus(String.format("✓: INFO: Import completed at: %s::%s::%s\n", LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getSecond()));
+        alertTextArea.appendText(importMessage);
     }
 
     /**
@@ -350,117 +290,23 @@ public class ImportWindowController {
      * @author Grant Fass
      */
     private String importFile(TextField textField, CheckBox checkBox) {
-        return checkBox.isSelected() ? textField.getText() : "";
-    }
-
-//
-//    /**
-//     * Import a file into the program
-//     * @param checkBox the checkbox to check if the file is to be imported
-//     * @param textField the textField to read the filename from
-//     * @param progressBar the progressbar to update with loading status
-//     * @param fileType the file type for alert output
-//     * @author Grant Fass
-//     */
-//    private void importFile(CheckBox checkBox, TextField textField, ProgressBar progressBar, String fileType) {
-////        Thread thread = new Thread(() -> {
-//            updateStatus(progressBar, ProgressBar.INDETERMINATE_PROGRESS, "-fx-accent: orange");
-//            if (checkBox.isSelected() && !textField.getText().isEmpty()) {
-//                updateStatus(String.format("IN: Import of %s started at: %s::%s::%s\n", fileType, LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getSecond()));
-//                importFile(new File(textField.getText()));
-//                updateStatus(progressBar, 100, "-fx-accent: green");
-//            } else if (checkBox.isSelected()) {
-//                updateStatus("SKIP: " + fileType + " - Empty File Location\n");
-//                updateStatus(progressBar, 100, "-fx-accent: white");
-//            } else {
-//                updateStatus("SKIP: " + fileType + " - Not Selected\n");
-//                updateStatus(progressBar, 100, "-fx-accent: red");
-//            }
-////        });
-////        thread.start();
-//    }
-//
-//    /**
-//     * imports a single file into the program
-//     * @param file the file to import
-//     * @author Grant Fass
-//     */
-//    private void importFile(File file) {
-//        try {
-//            checkNullFile(file);
-//            checkFileExtension(file.toString().substring(file.toString().indexOf('.')));
-//            String prefix = checkFilePrefix(file.toString().substring(0,
-//                    file.toString().indexOf('.')));
-//            boolean wasLineSkipped = false;
-//            switch (prefix) {
-//                case "stop_times":
-//                    wasLineSkipped = mainWindowController.getData().loadStopTimes(file);
-//                    break;
-//                case "stops":
-//                    wasLineSkipped = mainWindowController.getData().loadStops(file);
-//                    break;
-//                case "routes":
-//                    wasLineSkipped = mainWindowController.getData().loadRoutes(file);
-//                    break;
-//                case "trips":
-//                    wasLineSkipped = mainWindowController.getData().loadTrips(file);
-//                    break;
-//            }
-//
-//            if (wasLineSkipped) {
-//                updateStatus("\t✓: WARN: one or more lines in " + prefix + " were incorrectly formatted and skipped\n");
-//            }
-//        } catch (IllegalArgumentException e) {
-//            updateStatus("\tERROR: IllegalArgumentException - " + e.getMessage() + "\n");
-//        } catch (InputMismatchException e) {
-//            updateStatus("\tERROR: InputMismatchException - " + e.getMessage() + "\n");
-//        } catch (FileNotFoundException e) {
-//            updateStatus("\tERROR: FileNotFoundException - " + e.getMessage() + "\n");
-//        } catch (IOException e) {
-//            updateStatus("\tERROR: IOException - " + e.getMessage() + "\n");
-//        } catch (DataFormatException e) {
-//            updateStatus(String.format("\tWARN: Data Overwritten - The data from the" +
-//                    " previous '%s' file was overwritten with the new data. The program" +
-//                    " may work unexpectedly if the new data from '%s' does not match" +
-//                    " the existing data in the remaining files.\n", e.getMessage(), e.getMessage()));
-//        }
-//    }
-
-    /**
-     * appends a message to the alert area
-     * format changes depending on if a task is running
-     * based on https://stackoverflow.com/questions/36638617/javafx-textarea-update-immediately
-     * @param message the message to post
-     * @author Grant Fass
-     */
-    private void updateStatus(String message) {
-        if (Platform.isFxApplicationThread()) {
-            alertTextArea.appendText(message);
-        } else {
-            Platform.runLater(() -> alertTextArea.appendText(message));
-        }
+        return checkBox.isSelected() ? checkFileName(textField.getText()) : "";
     }
 
     /**
-     * updates a progress bar with the specified value
-     * format changes depending on if a task is running
-     * based on https://stackoverflow.com/questions/36638617/javafx-textarea-update-immediately
-     * @param progressBar the progress bar to update
-     * @param value the value to update the progress bar to
-     * @param style the -fx-accent style to apply to the progress bar
+     * Method to check that an appropriate file was selected
+     * @param fileLocation the file location to check
+     * @return the name of the appropriate file or empty string if it was not appropriate
      * @author Grant Fass
      */
-    private void updateStatus(ProgressBar progressBar, double value, String style) {
-        if (Platform.isFxApplicationThread()) {
-            progressBar.setProgress(value);
-            progressBar.setStyle(style);
-        } else {
-            Platform.runLater(() -> {
-                progressBar.setProgress(value);
-                progressBar.setStyle(style);
-            });
+    private String checkFileName(String fileLocation) {
+        String tempLocation = fileLocation.toLowerCase();
+        if (tempLocation.contains("routes.txt") || tempLocation.contains("stops.txt") || tempLocation.contains("stop_times.txt") || tempLocation.contains("trips.txt")) {
+            return fileLocation;
         }
+        return "";
     }
+    //endregion
 
     //region Checkbox Controls
     /**
