@@ -6,6 +6,7 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import javafx.concurrent.Task;
 import javafx.scene.control.ListView;
 import javafx.scene.paint.Color;
 
@@ -14,6 +15,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.zip.DataFormatException;
@@ -61,6 +63,90 @@ public class Data implements Subject {
 	}
 	//endregion
 
+	//region methods for exporting files
+	/**
+	 * exports all files to the specified directory
+	 * @param directory the directory to export the files to
+	 * @param routesCheck represents if routes will be exported
+	 * @param stopsCheck represents if stops will be exported
+	 * @param stopTimesCheck represents if stopTimes will be exported
+	 * @param tripsCheck represents if trips will be exported
+	 * @return a message containing the status of the File export
+	 * @author Grant Fass
+	 */
+	public String exportFiles(String directory, boolean routesCheck, boolean stopsCheck, boolean stopTimesCheck, boolean tripsCheck) {
+		Callable<String> exportRoutes = () -> {
+			String message;
+			if (!directory.isEmpty() && routesCheck) {
+				message = routes.exportRoutes(new File(directory)) ?
+						String.format("✓: Routes Exported Successfully\n  Time: %02d:%02d:%02d\n",
+								LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(),
+								LocalDateTime.now().getSecond()) : "Routes Export Failed\n";
+			} else if (directory.isEmpty()) {
+				message = "Routes Export Failed\n  Empty Directory\n";
+			} else {
+				message = "Routes Export Skipped\n  Routes Not Selected\n";
+			}
+			return "EXPORT ROUTES:\n  " + message;
+		};
+		Callable<String> exportStops = () -> {
+			String message;
+			if (!directory.isEmpty() && stopsCheck) {
+				message = routes.exportRoutes(new File(directory)) ?
+						String.format("✓: Stops Exported Successfully\n  Time: %02d:%02d:%02d\n",
+								LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(),
+								LocalDateTime.now().getSecond()) : "Stops Export Failed\n";
+			} else if (directory.isEmpty()) {
+				message = "Stops Export Failed\n  Empty Directory\n";
+			} else {
+				message = "Stops Export Skipped\n  Stops Not Selected\n";
+			}
+			return "EXPORT STOPS:\n  " + message;
+		};
+		Callable<String> exportStopTimes = () -> {
+			String message;
+			if (!directory.isEmpty() && stopTimesCheck) {
+				message = routes.exportRoutes(new File(directory)) ?
+						String.format("✓: StopTimes Exported Successfully\n  Time: %02d:%02d:%02d\n",
+								LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(),
+								LocalDateTime.now().getSecond()) : "StopTimes Export Failed\n";
+			} else if (directory.isEmpty()) {
+				message = "StopTimes Export Failed\n  Empty Directory\n";
+			} else {
+				message = "StopTimes Export Skipped\n  StopTimes Not Selected\n";
+			}
+			return "EXPORT STOP_TIMES:\n  " + message;
+		};
+		Callable<String> exportTrips = () -> {
+			String message;
+			if (!directory.isEmpty() && tripsCheck) {
+				message = routes.exportRoutes(new File(directory)) ?
+						String.format("✓: Trips Exported Successfully\n  Time: %02d:%02d:%02d\n",
+								LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(),
+								LocalDateTime.now().getSecond()) : "Trips Export Failed\n";
+			} else if (directory.isEmpty()) {
+				message = "Trips Export Failed\n  Empty Directory\n";
+			} else {
+				message = "Trips Export Skipped\n  Trips Not Selected\n";
+			}
+			return "EXPORT TRIPS:\n  " + message;
+		};
+		ExecutorService executorService = Executors.newFixedThreadPool(4);
+		Future<String> routesExportMessage = executorService.submit(exportRoutes);
+		Future<String> stopsExportMessage = executorService.submit(exportStops);
+		Future<String> stopTimesExportMessage = executorService.submit(exportStopTimes);
+		Future<String> tripsExportMessage = executorService.submit(exportTrips);
+		String completionTime = String.format("COMPLETE: %02d:%02d:%02d\n", LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getSecond());
+		String message = "Something Went Wrong During Export";
+		try {
+			message = routesExportMessage.get() + stopsExportMessage.get() + stopTimesExportMessage.get() + tripsExportMessage.get() + completionTime;
+		} catch (InterruptedException | ExecutionException e) {
+			message += "\n" + e.getMessage();
+		}
+		return message;
+	}
+	//endregion
+
 	//region methods for loading files
 	/**
 	 * loads all of the files from the specified file locations.
@@ -74,25 +160,57 @@ public class Data implements Subject {
 	 * @author Grant Fass
 	 */
 	public String loadFiles(String routeFileLocation, String stopFileLocation, String stopTimeFileLocation, String tripFileLocation) throws IOException{
-		String routesImportMessage = "SKIP ROUTES:\n\tFile Location Empty\n";
-		String stopsImportMessage = "SKIP STOPS:\n\tFile Location Empty\n";
-		String stopTimesImportMessage = "SKIP STOP_TIMES:\n\tFile Location Empty\n";
-		String tripsImportMessage = "SKIP TRIPS:\n\tFile Location Empty\n";
-		if (routeFileLocation != null && !routeFileLocation.isEmpty()) {
-			routesImportMessage = routes.loadRoutes(new File(routeFileLocation));
+		Callable<String> importRoutes = () -> {
+			String routesImportMessage = "SKIP ROUTES:\n  File Location Empty\n";
+			if (routeFileLocation != null && !routeFileLocation.isEmpty()) {
+				routesImportMessage = routes.loadRoutes(new File(routeFileLocation));
+			}
+			return routesImportMessage;
+		};
+		Callable<String> importStops = () -> {
+			String stopsImportMessage = "SKIP STOPS:\n  File Location Empty\n";
+			if (stopFileLocation != null && !stopFileLocation.isEmpty()) {
+				stopsImportMessage  = stops.loadStops(new File(stopFileLocation));
+			}
+			return stopsImportMessage;
+		};
+		Callable<String> importStopTimes = () -> {
+			String stopTimesImportMessage = "SKIP STOP_TIMES:\n  File Location Empty\n";
+			if (stopTimeFileLocation != null && !stopTimeFileLocation.isEmpty()) {
+				stopTimesImportMessage = stop_times.loadStopTimes(new File(stopTimeFileLocation));
+			}
+			return stopTimesImportMessage;
+		};
+		Callable<String> importTrips = () -> {
+			String tripsImportMessage = "SKIP TRIPS:\n  File Location Empty\n";
+			if (tripFileLocation != null && !tripFileLocation.isEmpty()) {
+				tripsImportMessage = trips.loadTrips(new File(tripFileLocation));
+			}
+			return tripsImportMessage;
+		};
+		ExecutorService executorService = Executors.newFixedThreadPool(4);
+		Future<String> routesImportMessage = executorService.submit(importRoutes);
+		Future<String> stopsImportMessage = executorService.submit(importStops);
+		Future<String> stopTimesImportMessage = executorService.submit(importStopTimes);
+		Future<String> tripsImportMessage = executorService.submit(importTrips);
+		//wait to notify observers until all tasks are done
+		while (!routesImportMessage.isDone() || !stopsImportMessage.isDone() || !stopTimesImportMessage.isDone() || !tripsImportMessage.isDone()) {
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
-		if (stopFileLocation != null && !stopFileLocation.isEmpty()) {
-			stopsImportMessage  = stops.loadStops(new File(stopFileLocation));
-		}
-		if (stopTimeFileLocation != null && !stopTimeFileLocation.isEmpty()) {
-			stopTimesImportMessage = stop_times.loadStopTimes(new File(stopTimeFileLocation));
-		}
-		if (tripFileLocation != null && !tripFileLocation.isEmpty()) {
-			tripsImportMessage = trips.loadTrips(new File(tripFileLocation));
-		}
+		//notify observers and return message
 		notifyObservers();
-		String completionTime = String.format("COMPLETE: %02d:%02d.%02d\n", LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getSecond());
-		return routesImportMessage + stopsImportMessage + stopTimesImportMessage + tripsImportMessage + completionTime;
+		String completionTime = String.format("COMPLETE: %02d:%02d:%02d\n", LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getSecond());
+		String message = "Something Went Wrong During Import";
+		try {
+			message = routesImportMessage.get() + stopsImportMessage.get() + stopTimesImportMessage.get() + tripsImportMessage.get() + completionTime;
+		} catch (InterruptedException | ExecutionException e) {
+			message += "\n" + e.getMessage();
+		}
+		return message;
 	}
 	//endregion
 

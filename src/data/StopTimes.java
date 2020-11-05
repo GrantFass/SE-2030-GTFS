@@ -85,23 +85,18 @@ public class StopTimes {
 	/**
 	 * export the stop times to a specified output directory
 	 * @param file the directory to save the file to
-	 * @return true
-	 * @throws IOException if an issue was encountered saving the file
+	 * @return true if the file was exported
 	 * @author Grant Fass, Joy Cross
 	 */
-	public boolean exportStopTimes(File file) throws IOException {
-		File outFile = new File(file, "stop_times.txt");
-		if (!outFile.exists()) {
-			outFile.createNewFile();
+	public boolean exportStopTimes(File file) {
+		try (PrintWriter out = new PrintWriter((new BufferedOutputStream(new FileOutputStream(new File(file, "stop_times.txt")))))) {
+			out.append(createHeaderLine(headers));
+			for (String key: stop_times.keySet()) {
+				out.append(stop_times.get(key).getDataLine(headers));
+			}
+		} catch (IOException e) {
+			return false;
 		}
-		FileWriter out = new FileWriter(outFile.getAbsoluteFile());
-		StringBuilder outputString = new StringBuilder();
-		outputString.append(createHeaderLine(headers));
-		for (String key: stop_times.keySet()) {
-			outputString.append(stop_times.get(key).getDataLine(headers));
-		}
-		out.append(outputString);
-		out.close();
 		return true;
 	}
 
@@ -138,7 +133,7 @@ public class StopTimes {
 			wasFileLoaded = false;
 			failMessage = String.format("ERROR: StopTimes Not Imported\nFile Contains Invalid Header Format\n%s\n", e.getMessage());
 		}
-		String successMessage = String.format("✓: StopTimes Imported Successfully.\n\t%s\n\t%s\n", emptyPrior ? "New StopTimes Data Imported" : "StopTimes Data Overwritten", wasLineSkipped ? "Lines Skipped During Import Of StopTimes" : "All Lines Imported Successfully");
+		String successMessage = String.format("  ✓: StopTimes Imported Successfully.\n  %s\n  %s\n", emptyPrior ? "New StopTimes Data Imported" : "StopTimes Data Overwritten", wasLineSkipped ? "Lines Skipped During Import Of StopTimes" : "All Lines Imported Successfully");
 		return String.format("IMPORT STOP_TIMES:\n%s", wasFileLoaded ? successMessage : failMessage);
 	}
 

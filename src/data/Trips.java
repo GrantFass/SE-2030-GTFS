@@ -100,7 +100,7 @@ public class Trips {
             wasFileLoaded = false;
             failMessage = String.format("ERROR: Trips Not Imported\nFile Contains Invalid Header Format\n%s\n", e.getMessage());
         }
-        String successMessage = String.format("✓: Trips Imported Successfully.\n\t%s\n\t%s\n", emptyPrior ? "New Trips Data Imported" : "Trip Data Overwritten", wasLineSkipped ? "Lines Skipped During Import Of Trips" : "All Lines Imported Successfully");
+        String successMessage = String.format("  ✓: Trips Imported Successfully.\n  %s\n  %s\n", emptyPrior ? "New Trips Data Imported" : "Trip Data Overwritten", wasLineSkipped ? "Lines Skipped During Import Of Trips" : "All Lines Imported Successfully");
         return String.format("IMPORT TRIPS:\n%s", wasFileLoaded ? successMessage : failMessage);
     }
 
@@ -108,24 +108,19 @@ public class Trips {
      * Method to write Trip data to a trips.txt file
      *
      * @param file the trips.txt file desired location
-     * @return true if file was written successfully, false otherwise
-     * @throws IOException if something went wrong
-     * @author Simon Erickson, Joy Cross
+     * @return true if the file was exported
+     * @author Simon Erickson, Joy Cross, Grant Fass
      */
-    public boolean exportTrips(File file) throws IOException {
-
-        //writes the items of the file to the hash map
-        try (PrintWriter write = new PrintWriter(new BufferedOutputStream(new FileOutputStream(new File(file, "trips.txt"))))) {
-
-            //write header: route_id,service_id,trip_id,trip_headsign,direction_id,block_id,shape_id
-            write.append(createHeaderLine(headers));
-
-            //write body
-            for (String key : trips.keySet()) {
-                write.append(trips.get(key).getDataLine(headers));
+    public boolean exportTrips(File file) {
+        try (PrintWriter out = new PrintWriter((new BufferedOutputStream(new FileOutputStream(new File(file, "trips.txt")))))) {
+            out.append(createHeaderLine(headers));
+            for (String key: trips.keySet()) {
+                out.append(trips.get(key).getDataLine(headers));
             }
-            return true;
+        } catch (IOException e) {
+            return false;
         }
+        return true;
     }
 
     /**

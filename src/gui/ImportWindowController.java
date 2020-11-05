@@ -19,6 +19,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.InputMismatchException;
+import java.util.concurrent.*;
 import java.util.zip.DataFormatException;
 
 /**
@@ -46,25 +47,17 @@ public class ImportWindowController {
     @FXML
     private TextField routesTextField;
     @FXML
-    private ProgressBar routesProgressBar;
-    @FXML
     private CheckBox stopsCheckBox;
     @FXML
     private TextField stopsTextField;
-    @FXML
-    private ProgressBar stopsProgressBar;
     @FXML
     private CheckBox stopTimesCheckBox;
     @FXML
     private TextField stopTimesTextField;
     @FXML
-    private ProgressBar stopTimesProgressBar;
-    @FXML
     private CheckBox tripsCheckBox;
     @FXML
     private TextField tripsTextField;
-    @FXML
-    private ProgressBar tripsProgressBar;
     //endregion
 
     //region class references
@@ -143,7 +136,7 @@ public class ImportWindowController {
 
     //region displayed help information
     /**
-     * set the default values of the progress bars
+     * set the default values of the displayed information
      * @author Grant Fass
      */
     public void setDefaultValues() {
@@ -184,7 +177,7 @@ public class ImportWindowController {
      */
     @FXML
     private void browseRoutes() {
-        browse(routesTextField, "ROUTES", "routes.txt", routesProgressBar);
+        browse(routesTextField, "ROUTES", "routes.txt");
     }
 
     /**
@@ -194,7 +187,7 @@ public class ImportWindowController {
      */
     @FXML
     private void browseStops() {
-        browse(stopsTextField, "STOPS", "stops.txt", stopsProgressBar);
+        browse(stopsTextField, "STOPS", "stops.txt");
     }
 
     /**
@@ -204,7 +197,7 @@ public class ImportWindowController {
      */
     @FXML
     private void browseStopTimes() {
-        browse(stopTimesTextField, "STOP_TIMES", "stop_times.txt", stopTimesProgressBar);
+        browse(stopTimesTextField, "STOP_TIMES", "stop_times.txt");
     }
 
     /**
@@ -214,7 +207,7 @@ public class ImportWindowController {
      */
     @FXML
     private void browseTrips() {
-        browse(tripsTextField, "TRIPS", "trips.txt", tripsProgressBar);
+        browse(tripsTextField, "TRIPS", "trips.txt");
     }
 
     /**
@@ -222,16 +215,12 @@ public class ImportWindowController {
      * @param textField the TextField to display the file location to
      * @param description the description to use for the extension for the FileChooser
      * @param extension the extension to use for the FileChooser
-     * @param progressBar the progress bar to set initial values for
      * @author Grant Fass
      */
-    private void browse(TextField textField, String description, String extension, ProgressBar progressBar) {
+    private void browse(TextField textField, String description, String extension) {
         try {
             File file = getGTFSFileLocationUsingFileChooser(description, extension);
             textField.setText(file.toString());
-            progressBar.setProgress(0);
-            progressBar.setStyle("-fx-accent: blanchedalmond");
-            progressBar.setVisible(true);
         } catch (NullPointerException ignored) {
 
         }
@@ -262,14 +251,25 @@ public class ImportWindowController {
      * Import selected files into the program
      * Will not import file if corresponding checkbox is not selected
      * Outputs success results to Alerts TextArea
+     * Displays an alert to user to notify them that import started
      * @author Grant Fass
      */
     @FXML
     private void importFiles() {
+        MainWindowController.displayAlert(Alert.AlertType.INFORMATION, "IMPORT START", null, "STARTING IMPORT");
         alertTextArea.clear();
-        String importMessage = "";
-        alertTextArea.appendText("Times Formatted in HH:MM.SS\n");
-        alertTextArea.appendText(String.format("START: %02d:%02d.%02d\n", LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getSecond()));
+        alertTextArea.appendText("Times Formatted in HH:MM:SS\n");
+        alertTextArea.appendText(String.format("START: %02d:%02d:%02d\n", LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getSecond()));
+        alertTextArea.appendText(runImportFiles());
+    }
+
+    /**
+     * all of the commands to import files are here
+     * @return the import message
+     * @author Grant Fass
+     */
+    private String runImportFiles() {
+        String importMessage;
         try {
             importMessage = mainWindowController.getData().loadFiles(
                     importFile(routesTextField, routesCheckBox),
@@ -279,7 +279,7 @@ public class ImportWindowController {
         } catch (IOException e) {
             importMessage = e.getMessage() + "\n";
         }
-        alertTextArea.appendText(importMessage);
+        return importMessage;
     }
 
     /**

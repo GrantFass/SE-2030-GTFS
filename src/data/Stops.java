@@ -104,30 +104,25 @@ public class Stops {
 			wasFileLoaded = false;
 			failMessage = String.format("ERROR: Stops Not Imported\nFile Contains Invalid Header Format\n%s\n", e.getMessage());
 		}
-		String successMessage = String.format("✓: Stops Imported Successfully.\n\t%s\n\t%s\n", emptyPrior ? "New Stops Data Imported" : "Stops Data Overwritten", wasLineSkipped ? "Lines Skipped During Import Of Stops" : "All Lines Imported Successfully");
+		String successMessage = String.format("  ✓: Stops Imported Successfully.\n  %s\n  %s\n", emptyPrior ? "New Stops Data Imported" : "Stops Data Overwritten", wasLineSkipped ? "Lines Skipped During Import Of Stops" : "All Lines Imported Successfully");
 		return String.format("IMPORT STOPS:\n%s", wasFileLoaded ? successMessage : failMessage);
 	}
 
 	/**
 	 * export the stops to a specified output directory
 	 * @param file the directory to save the file to
-	 * @return true
-	 * @throws IOException if an issue was encountered saving the file
-	 * @author Joy Cross
+	 * @return true if the file was exported
+	 * @author Grant Fass, Joy Cross
 	 */
-	public boolean exportStops(File file) throws IOException {
-		File outFile = new File(file, "stops.txt");
-		if (!outFile.exists()) {
-			outFile.createNewFile();
+	public boolean exportStops(File file) {
+		try (PrintWriter out = new PrintWriter((new BufferedOutputStream(new FileOutputStream(new File(file, "stops.txt")))))) {
+			out.append(createHeaderLine(headers));
+			for (String key: stops.keySet()) {
+				out.append(stops.get(key).getDataLine(headers));
+			}
+		} catch (IOException e) {
+			return false;
 		}
-		FileWriter out = new FileWriter(outFile.getAbsoluteFile());
-		StringBuilder outputString = new StringBuilder();
-		outputString.append(createHeaderLine(headers));
-		for (String key: stops.keySet()) {
-			outputString.append(stops.get(key).getDataLine(headers));
-		}
-		out.append(outputString);
-		out.close();
 		return true;
 	}
 

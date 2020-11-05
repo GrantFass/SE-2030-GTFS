@@ -1,10 +1,7 @@
 package data;
 
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 import java.util.zip.DataFormatException;
 
@@ -87,19 +84,18 @@ public class Routes {
 	/**
 	 * export the routes to a specified output directory
 	 * @param file the directory to save the file to
-	 * @return true
-	 * @throws IOException if an issue was encountered saving the file
+	 * @return true if the file was exported
 	 * @author Grant Fass, Joy Cross
 	 */
-	public boolean exportRoutes(File file) throws IOException {
-		File routeFile = new File(file, "routes.txt");
-		FileWriter writer = new FileWriter(routeFile.getAbsoluteFile());
-
-		writer.append(createHeaderLine(headers));
-		for(String key : routes.keySet()){
-			writer.append(routes.get(key).getDataLine(headers));
+	public boolean exportRoutes(File file) {
+		try (PrintWriter out = new PrintWriter((new BufferedOutputStream(new FileOutputStream(new File(file, "routes.txt")))))) {
+			out.append(createHeaderLine(headers));
+			for (String key: routes.keySet()) {
+				out.append(routes.get(key).getDataLine(headers));
+			}
+		} catch (IOException e) {
+			return false;
 		}
-		writer.close();
 		return true;
 	}
 
@@ -135,7 +131,7 @@ public class Routes {
 			wasFileLoaded = false;
 			failMessage = String.format("ERROR: Routes Not Imported\nFile Contains Invalid Header Format\n%s\n", e.getMessage());
 		}
-		String successMessage = String.format("✓: Routes Imported Successfully.\n\t%s\n\t%s\n", emptyPrior ? "New Routes Data Imported" : "Routes Data Overwritten", wasLineSkipped ? "Lines Skipped During Import Of Routes" : "All Lines Imported Successfully");
+		String successMessage = String.format("  ✓: Routes Imported Successfully.\n  %s\n  %s\n", emptyPrior ? "New Routes Data Imported" : "Routes Data Overwritten", wasLineSkipped ? "Lines Skipped During Import Of Routes" : "All Lines Imported Successfully");
 		return String.format("IMPORT ROUTES:\n%s", wasFileLoaded ? successMessage : failMessage);
 	}
 
