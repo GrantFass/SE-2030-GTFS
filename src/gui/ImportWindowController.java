@@ -326,7 +326,11 @@ public class ImportWindowController {
         updateStatus("Times Formatted in HH::MM::SS\n");
         updateStatus(String.format("✓: INFO: Import started at: %s::%s::%s\n", LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getSecond()));
         try {
-            importMessage = mainWindowController.getData().loadFiles(routesTextField.getText(), stopsTextField.getText(), stopTimesTextField.getText(), tripsTextField.getText());
+            importMessage = mainWindowController.getData().loadFiles(
+                    importFile(routesTextField, routesCheckBox),
+                    importFile(stopsTextField, stopsCheckBox), 
+                    importFile(stopTimesTextField, stopTimesCheckBox),
+                    importFile(tripsTextField, tripsCheckBox));
         } catch (IOException e) {
             importMessage = e.getMessage() + "\n";
         }
@@ -337,6 +341,18 @@ public class ImportWindowController {
 //        importFile(tripsCheckBox, tripsTextField, tripsProgressBar, "Trips");
         updateStatus(String.format("✓: INFO: Import completed at: %s::%s::%s\n", LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getSecond()));
     }
+
+    /**
+     * method to prepare the file location from a given text field depending on checkbox status
+     * @param textField the textfield to get the file location from
+     * @param checkBox the checkbox to use the status of
+     * @return the prepared file location
+     * @author Grant Fass
+     */
+    private String importFile(TextField textField, CheckBox checkBox) {
+        return checkBox.isSelected() ? textField.getText() : "";
+    }
+
 //
 //    /**
 //     * Import a file into the program
