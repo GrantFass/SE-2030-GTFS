@@ -214,7 +214,7 @@ public class Trips {
      * @author Simon Erickson
      */
     public Trip validateData(String data, Headers headers) throws IllegalArgumentException {
-        String[] dataArray = data.split(",");
+        String[] dataArray = data.split(",", -1);
         if (dataArray.length != headers.length()) {
             throw new IllegalArgumentException("Data line does not contain the " +
                     "proper amount of data");

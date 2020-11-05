@@ -186,7 +186,7 @@ public class StopTimes {
 	 * @author Grant Fass
 	 */
 	public StopTime validateData(String data, Headers headers) throws IllegalArgumentException {
-		String[] dataArray = data.split(",");
+		String[] dataArray = data.split(",", -1);
 		if (dataArray.length != headers.length() || data.isEmpty()) {
 			throw new IllegalArgumentException("Data line does not contain the proper amount of data");
 		}
@@ -264,14 +264,12 @@ public class StopTimes {
 	 * @param stopTime a StopTime object that holds the information for the HashMap
 	 */
 	private void addTripStartAndEnd(StopTime stopTime) {
-		//HashMap<trip_id, first_time--first_stop_id--last_time--last_stop_id>
 		String valueAtTrip = tripStartAndEnd.get(stopTime.getTripID());
-		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 		long newArrive = stopTime.getArrivalTime().getTime();
 		long newDepart = stopTime.getDepartureTime().getTime();
 		String stop_id = stopTime.getStopID();
 		try {
-			String[] tripValue = valueAtTrip.split("--");
+			String[] tripValue = valueAtTrip.split("--", -1);
 			long currentFirstArrive = Long.parseLong(tripValue[0]);
 			long currentLastDepart = Long.parseLong(tripValue[2]);
 			String first_stop_id = tripValue[1];
@@ -288,7 +286,7 @@ public class StopTimes {
 			tripStartAndEnd.put(stopTime.getTripID(),
 					currentFirstArrive + "--" + first_stop_id + "--"
 							+ currentLastDepart + "--" + last_stop_id);
-		}catch (NullPointerException e){
+		} catch (NullPointerException e){
 			tripStartAndEnd.put(stopTime.getTripID(),
 					newArrive + "--" + stopTime.getStopID() + "--"
 							+ newDepart + "--" + stopTime.getStopID());

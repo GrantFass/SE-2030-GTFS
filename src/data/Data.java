@@ -414,8 +414,8 @@ public class Data implements Subject {
 			HashMap<String, String> tripAndSpeed = new HashMap<>();
 
 			tripStartAndEnd.forEach((k,v)->{
-				String[] value = v.split("--");
-				long time = Long.parseLong(value[2]) - Long.parseLong(value[1]);
+				String[] value = v.split("--", -1);
+				long time = Long.parseLong(value[2]) - Long.parseLong(value[0]);
 
 				int miles = tripDistance(stops.getStop(value[1]), stops.getStop(value[3]));
 
