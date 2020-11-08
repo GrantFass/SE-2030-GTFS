@@ -156,7 +156,12 @@ public class SearchWindowController {
                     }
                     break;
                 case "stop_id":
-                    if (inputType.getValue().equals("stop_id")) {
+                    //TODO ignore route_id upper/lower case?
+                    if(inputType.getValue().equals("route_id") && mainWindowController.getData().getRoutes().getRoute((input.getText())) != null){
+                        output.appendText(mainWindowController.getData().getStopIDs_fromRouteID(input.getText()).isEmpty() ? "No Results Found" : mainWindowController.getData().getStopIDs_fromRouteID(input.getText()));
+                    } else if (inputType.getValue().equals("route_id")){
+                        output.setText("No Routes were found to be associated with the given route_id");
+                    } else if (inputType.getValue().equals("stop_id")) {
                         output.setText(mainWindowController.getData().getStops().getStop(input.getText()) ==  null ? "No Results Found" : mainWindowController.getData().getStops().getStop(input.getText()).toString());
                     } else {
                         output.setText("Search type is not implemented yet");

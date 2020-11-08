@@ -323,15 +323,32 @@ public class StopTimes {
 			if(stop_time.getStopID().equals(stop_id)){
 				trip_ids.add(stop_time.getTripID());
 			}
-
-
-
 		}
-
 		return trip_ids;
 	}
 
 	//End feature five
+
+	//Start feature 6
+
+	/**
+	 * Gets every stop_id that is associated with a trip_id
+	 * @param trip_id related to searched route_id
+	 * @return ArrayList of all stop_ids related to trip_id
+	 */
+	public ArrayList<String> getStopIDs_fromTripID(String trip_id){
+		ArrayList<String> stop_ids = new ArrayList<>();
+		for(StopTime stopTime : stop_times.values()){
+			if(stopTime.getTripID().equals(trip_id)){
+				stop_ids.add(stopTime.getStopID());
+			}
+		}
+		return stop_ids;
+	}
+
+
+	//End feature 6
+
 
 
 	/**
