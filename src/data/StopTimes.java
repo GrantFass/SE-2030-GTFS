@@ -3,6 +3,9 @@ package data;
 import java.io.*;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.zip.DataFormatException;
 
@@ -349,6 +352,48 @@ public class StopTimes {
 
 	//End feature 6
 
+    //Start feature 7
+
+    public ArrayList<String> getFutureTripIDs_fromAllTripIDs(ArrayList<String> all_trip_ids){
+	    ArrayList<String> future_trip_ids = new ArrayList<>();
+
+	    for(String trip_id : all_trip_ids){
+			if(inFuture(trip_id)){
+				future_trip_ids.add(trip_id);
+			}
+		}
+		return future_trip_ids;
+    }
+
+    private boolean inFuture(String trip_id){
+		//When creating a LocalDateTime of time in file, date is set to 1/1/1970
+		//These are used to change currentTime to default date, so that only time is compared
+		/*final int FILE_YEAR = 1970;
+		final int FILE_MONTH = 1;
+		final int FILE_DAY = 1;
+		final LocalDate DEFAULT_DATE = LocalDate.of(FILE_YEAR, FILE_MONTH, FILE_DAY)*/
+		//LocalDate localDate = LocalDate.now();
+
+
+		boolean inFuture = false;
+		for(StopTime stopTime : stop_times.values()){
+			if(stopTime.getTripID().equalsIgnoreCase(trip_id)){
+				LocalDateTime currentTime = java.time.LocalDateTime.now();
+
+				LocalTime fileTime = LocalTime.from(stopTime.getDepartureTime().toLocalDateTime());
+				LocalDateTime fileDateTime = LocalDateTime.of(LocalDate.now(), fileTime);
+
+				//System.out.println(currentTime + " : " + fileDateTime);
+				if(currentTime.isAfter(fileDateTime)){
+					inFuture = true;
+					break;
+				}
+			}
+		}
+		return inFuture;
+	}
+
+    //End feature 7
 
 
 	/**

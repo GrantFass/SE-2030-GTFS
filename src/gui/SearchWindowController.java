@@ -192,7 +192,11 @@ public class SearchWindowController {
                             sb.append(j + ": " + list.get(i) + "\n");
                         }
                         output.appendText(sb.toString());
-                    } else if (inputType.getValue().equals("trip_id")) {
+                    } //TODO
+                    else if (inputType.getValue().equals("route_id") && mainWindowController.getData().getRoutes().getRoute((input.getText())) != null){
+                        output.appendText(mainWindowController.getData().getFutureTripIDs_fromRouteID(input.getText()).isEmpty() ? "No Results Found" : mainWindowController.getData().getFutureTripIDs_fromRouteID(input.getText()));
+                    }
+                    else if (inputType.getValue().equals("trip_id")) {
                         output.setText(mainWindowController.getData().getTrips().getTrip(input.getText()) ==  null ? "No Results Found" : mainWindowController.getData().getTrips().getTrip(input.getText()).toString());
                     } else{
                         output.setText("Input type not yet implemented");

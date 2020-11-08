@@ -585,7 +585,27 @@ public class Data implements Subject {
 
 		return all_stop_ids;
 	}
-	//end feature 6
+	//End feature 6
+
+	//Start feature 7
+	public String getFutureTripIDs_fromRouteID(String route_id){
+		ArrayList<String> all_trip_ids = trips.getTripIDs_fromRouteID(route_id);
+
+		ArrayList<String> future_trip_ids = stop_times.getFutureTripIDs_fromAllTripIDs(all_trip_ids);
+
+
+		return formatIDs(future_trip_ids);
+	}
+
+//	private ArrayList<String> searchFutureTripIDs(ArrayList<String> all_trip_ids){
+//		stop_times.getFutureTripIDs_fromAllTripIDs(all_trip_ids);
+//		return null;
+//	}
+
+
+
+	//End feature 7
+
 
 	//Start feature 5/6 helpers
 	/**
