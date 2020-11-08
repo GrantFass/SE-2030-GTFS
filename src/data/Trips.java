@@ -285,4 +285,24 @@ public class Trips {
 
     //End feature five
 
+    //Start feature six
+
+    /**
+     * Gets every trip_id that is paired with a given route_id
+     * @author Ryan Becker
+     * @param route_id to be searched for, and find associated trip_ids
+     * @return ArrayList of all trip_ids related to route_id
+     */
+    public ArrayList<String> getTripIDs_fromRouteID(String route_id){
+        ArrayList<String> trip_ids = new ArrayList<>();
+        for(Trip trip : trips.values()){
+            if(trip.getRouteID().equalsIgnoreCase(route_id)){
+                trip_ids.add(trip.getTripID());
+            }
+        }
+        return trip_ids;
+    }
+
+    //End feature six
+
 }//end Trips

@@ -578,7 +578,7 @@ public class Data implements Subject {
 	 */
 	public String getRouteIDs_fromStopID(String stop_id){
 	    ArrayList<String> route_ids = searchStopForRoute_IDs(stop_id);
-	    return formatRoute_IDs(route_ids);
+	    return formatIDs(route_ids);
 	}
 	/**
 	 * Helper method for getRouteIDs_fromStopID() that gets all route_ids associated with a given stop_id
@@ -599,38 +599,97 @@ public class Data implements Subject {
 		return all_route_ids;
 	}
 
+
+
+
+	//Start feature 6
+
 	/**
-	 * Helper method for getRouteIDs_fromStopID() that formats a string similarly to a toString() method
-	 * to display every route_id associated with a stop_id
-	 * @param route_ids ArrayList of every route_id associated with stop_id
-	 * @return String formatting every route_id associated with stop_id on new lines
+	 * Searches for every stop_id associated with a Route, given the route_id
+	 * @author Ryan Becker
+	 * @param route_id of Route being searched
+	 * @return String of formatted stop_ids associated with route_id
 	 */
-	private String formatRoute_IDs(ArrayList<String> route_ids){
+	public String getStopIDs_fromRouteID(String route_id){
+		ArrayList<String> stop_ids = searchRouteForStop_IDS(route_id);
+		return formatIDs(stop_ids);
+	}
+
+	/**
+	 * Helper method for getStopIDs_fromRouteID() that gets all stop_ids associated with a given route_id
+	 * @author Ryan Becker
+	 * @param route_id for a Route used in searching for all stop_ids that are paired with the given route_id
+	 * @return ArrayList of every stop_id that is associated wtih route_id
+	 */
+	private ArrayList<String> searchRouteForStop_IDS(String route_id){
+		ArrayList<String> trip_ids = trips.getTripIDs_fromRouteID(route_id);
+
+		ArrayList<String> all_stop_ids = new ArrayList<>();
+
+		for(String trip_id : trip_ids){
+			ArrayList<String> stop_ids = stop_times.getStopIDs_fromTripID(trip_id);
+			all_stop_ids.addAll(onlyAddNew(all_stop_ids, stop_ids));
+		}
+
+		return all_stop_ids;
+	}
+	//End feature 6
+
+	//Start feature 7
+
+    /**
+     * Gets all trip_ids with a time occurring in the future
+     * @author Ryan Becker
+     * @param route_id to be searched and find related trip_ids
+     * @return ArrayList of all future trip_ids associated with route_id
+     */
+	public String getFutureTripIDs_fromRouteID(String route_id){
+		ArrayList<String> all_trip_ids = trips.getTripIDs_fromRouteID(route_id);
+		ArrayList<String> future_trip_ids = stop_times.getFutureTripIDs_fromAllTripIDs(all_trip_ids);
+
+		return formatIDs(future_trip_ids);
+	}
+
+	//End feature 7
+
+
+	//Start feature 5/6/7 helpers
+	/**
+	 * Helper method that formats a string of all stop_ids, route_ids, or trip_ids (in future) depending on search type
+	 * to display every found associated with a searched id
+	 * @param ids ArrayList of every found id associated with searched id
+	 * @return String formatting every found id associated with searched on new lines
+	 */
+	private String formatIDs(ArrayList<String> ids){
 		StringBuilder sb = new StringBuilder();
-		for(int i = 0; i < route_ids.size(); ++i){
-		    sb.append((i+1) + ": " + route_ids.get(i) + "\n");
-        }
+		for(int i = 0; i < ids.size(); ++i){
+			sb.append((i+1) + ": " + ids.get(i) + "\n");
+		}
 
 		return sb.toString();
 	}
 
+
 	/**
-	 * Helper method for searchStopForRoute_IDs() that will help remove duplicate occurences of a route_id
+	 * Helper method that will help remove duplicate occurrences of an id
 	 * @author Ryan Becker
-	 * @param allRouteIDs ArrayList of all current unique route_ids associated with stop_id
-	 * @param route_ids all newly read route_ids, which are only added to returned list if they do not
-	 *                  already occur within allRouteIDs
-	 * @return ArrayList of all route_ids currently not found in allRouteIDs
+	 * @param allIDs ArrayList of all current unique ids associated with stop_id
+	 * @param ids all newly read ids, which are only added to returned list if they do not
+	 *                  already occur within allIDs
+	 * @return ArrayList of all ids currently not found in allIDs
 	 */
-	private ArrayList<String> onlyAddNew(ArrayList<String> allRouteIDs, ArrayList<String> route_ids){
+	private ArrayList<String> onlyAddNew(ArrayList<String> allIDs, ArrayList<String> ids){
 		ArrayList<String> uniqueIDs = new ArrayList<>();
-		for(String route_id : route_ids){
-			if(!allRouteIDs.contains(route_id)){
-				uniqueIDs.add(route_id);
+		for(String id : ids){
+			if(!allIDs.contains(id)){
+				uniqueIDs.add(id);
 			}
 		}
 		return uniqueIDs;
 	}
+	//End features 5/6/7 helpers
+
+
 	//endregion
 
 	//region Observer Pattern Methods
