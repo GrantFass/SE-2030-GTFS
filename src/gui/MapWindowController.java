@@ -11,6 +11,7 @@ import com.sothawo.mapjfx.event.MapViewEvent;
 import data.Data;
 import data.Route;
 import data.Stop;
+import data.StopTime;
 import interfaces.Observer;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -19,9 +20,13 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.awt.event.MouseEvent;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -419,11 +424,61 @@ public class MapWindowController implements Observer {
             updateRoutes(data);
             updateBusses(data);
             updateStop(data);
+            changeStopTimes(data);
+            changeStopLocation (data);
         } else {
             //clear information
             displayBusses(new ArrayList<>());
             displayRouteIDs(new HashMap<>());
         }
     }
+    //endregion
+
+    //region method for feature 14
+
+    /**
+     * Gets the closest stop from a click and changes the times from the user and sets it back to
+     * the original if it was formatted incorrectly.
+     *
+     * @param data the data object that was changed
+     * @author Simon Erickson
+     */
+    private void changeStopTimes(Data data) {
+        final HashMap<Route, ArrayList<Stop>> stopsPerRoute = data.getStopsPerRoute();
+        map.addEventHandler(MapViewEvent.MAP_CLICKED, mapViewEvent -> {
+            Stop closestStop = getClosestStopToClick(stopsPerRoute, mapViewEvent.getCoordinate());
+            TextInputDialog td = new TextInputDialog("Ex: 09:07:00");
+            td.setHeaderText("New arrival/departure time for " + closestStop.getStopName() +".");
+            td.showAndWait();
+            data.getStopTimes().changeStopTime_fromStop_ID(closestStop.getStopID(),
+                    td.getEditor().getText());
+        });
+    }
+
+    //endregion
+
+    //region method for feature 13
+
+    /**
+     * Gets the closest stop from a click and changes the times from the user and sets it back to
+     * the original if it was formatted incorrectly.
+     * Click and drag on a stop on a route to change the stop location
+     * Note: This should apply the change to all trips using the stop
+     *
+     * @param data the data object that was changed
+     * @author Simon Erickson
+     */
+    //TODO: I need to talk about this method with the group (it is not done yet).
+    private void changeStopLocation (Data data) {
+        final HashMap<Route, ArrayList<Stop>> stopsPerRoute = data.getStopsPerRoute();
+        map.addEventHandler(MapViewEvent.MAP_CLICKED, mapViewEvent -> {
+            Stop closestOGStop = getClosestStopToClick(stopsPerRoute, mapViewEvent.getCoordinate());
+            Stop closestNewStop = getClosestStopToClick(stopsPerRoute, mapViewEvent.getCoordinate());
+            data.getStops().changeLocationFromStop_ID(closestOGStop.getStopID(),
+                    closestNewStop.getStopLatitude()+"",
+                    closestNewStop.getStopLongitude()+"");
+        });
+    }
+
     //endregion
 }
