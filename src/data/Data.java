@@ -6,19 +6,18 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import javafx.concurrent.Task;
 import javafx.scene.control.ListView;
 import javafx.scene.paint.Color;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.zip.DataFormatException;
 
 /**
  * @author Simon Erickson, Grant Fass,
@@ -463,15 +462,61 @@ public class Data implements Subject {
 	//endregion
 
 	//region methods for map GUI
+
+
+    //START FEATURE 10
 	/**
-	 * returns all of the coordinates of busses
+	 * returns all of the coordinates of buses
 	 * //TODO: Initialize this
 	 * @return an arraylist of bus location coordinate pairs with longitude first then latitude
 	 * @author Grant Fass,
 	 */
 	public ArrayList<double[]> getBusCoordinates() {
-		return new ArrayList<>();
+	    ArrayList<double[]> coordinatePairs = new ArrayList<>();
+	    //Used for initial comparison
+	    final LocalDateTime INITIAL_TIME = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+	    LocalDateTime oldTime = INITIAL_TIME;
+	    double[] coordinatePair = null;
+        String oldID = null;
+	    for (StopTime stopTime : stop_times.getStop_times().values()) {
+            coordinatePair = getCoordinatePair(stopTime, oldTime, oldID, coordinatePair);
+            if (coordinatePair != null) {
+                coordinatePairs.add(coordinatePair);
+            }
+            oldTime = LocalDateTime.of(LocalDate.now(), LocalTime.from(stopTime.getDepartureTime().toLocalDateTime()));
+            oldID = stopTime.getStopID();
+        }
+
+
+        /*for(double[] pair : coordinatePairs){
+            System.out.println(Arrays.toString(pair));
+        }*/
+
+		return coordinatePairs;
 	}
+
+	private double[] getCoordinatePair(StopTime stopTime, LocalDateTime oldTime, String oldID, double[] coordinatePair){
+	    if(!stopTime.getTripID().equalsIgnoreCase(oldID) || coordinatePair == null){
+            LocalDateTime currentTime = LocalDateTime.now();
+
+            LocalDateTime newTime = LocalDateTime.of(LocalDate.now(), LocalTime.from(stopTime.getDepartureTime().toLocalDateTime()));
+
+            System.out.println(currentTime.isAfter(oldTime) && currentTime.isBefore(newTime));
+            if(currentTime.isAfter(oldTime) && currentTime.isBefore(newTime)){
+
+                Stop stop = stops.getStop(stopTime.getStopID());
+                double latitude = stop.getStopLatitude();
+                double longitude = stop.getStopLongitude();
+
+                return new double[]{latitude, longitude};
+            }
+        }
+
+	    return null;
+    }
+
+
+	//END FEATURE 10
 
 	/**
 	 * retrieves all of the stops that are associated with all routes
@@ -527,6 +572,7 @@ public class Data implements Subject {
 	//region search functions
 	/**
 	 * Searches for every route_id associated with a Stop given stop_id
+     * @author Ryan Becker
 	 * @param stop_id of Stop being searched
 	 * @return String of formatted route_ids associated with stop_id
 	 */
