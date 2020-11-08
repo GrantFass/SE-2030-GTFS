@@ -479,6 +479,11 @@ public class Data implements Subject {
 	    double[] coordinatePair = null;
         String oldID = null;
 	    for (StopTime stopTime : stop_times.getStop_times().values()) {
+
+	    	if(!stopTime.getStopID().equalsIgnoreCase(oldID)){
+	    		oldTime = INITIAL_TIME;
+			}
+
             coordinatePair = getCoordinatePair(stopTime, oldTime, oldID, coordinatePair);
             if (coordinatePair != null) {
                 coordinatePairs.add(coordinatePair);
@@ -496,12 +501,16 @@ public class Data implements Subject {
 	}
 
 	private double[] getCoordinatePair(StopTime stopTime, LocalDateTime oldTime, String oldID, double[] coordinatePair){
+
+
+
 	    if(!stopTime.getTripID().equalsIgnoreCase(oldID) || coordinatePair == null){
             LocalDateTime currentTime = LocalDateTime.now();
 
             LocalDateTime newTime = LocalDateTime.of(LocalDate.now(), LocalTime.from(stopTime.getDepartureTime().toLocalDateTime()));
 
-            System.out.println(currentTime.isAfter(oldTime) && currentTime.isBefore(newTime));
+//            System.out.println(currentTime.isAfter(oldTime) && currentTime.isBefore(newTime));
+//			System.out.println(oldID + "       " + stopTime.getStopID());
             if(currentTime.isAfter(oldTime) && currentTime.isBefore(newTime)){
 
                 Stop stop = stops.getStop(stopTime.getStopID());
