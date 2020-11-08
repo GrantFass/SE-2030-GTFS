@@ -354,6 +354,12 @@ public class StopTimes {
 
     //Start feature 7
 
+    /**
+     * Gets all trip_ids that are occurring in the future
+     * @author Ryan Becker
+     * @param all_trip_ids ArrayList of all trip_ids related to initial route_id
+     * @return ArrayList of only trip_ids that have a time in the future associated with it
+     */
     public ArrayList<String> getFutureTripIDs_fromAllTripIDs(ArrayList<String> all_trip_ids){
 	    ArrayList<String> future_trip_ids = new ArrayList<>();
 
@@ -365,16 +371,13 @@ public class StopTimes {
 		return future_trip_ids;
     }
 
+    /**
+     * Checks if a given trip_id has a time in the future
+     * @author Ryan Becker
+     * @param trip_id being checked
+     * @return boolean indicating future status: True if in the future, false otherwise
+     */
     private boolean inFuture(String trip_id){
-		//When creating a LocalDateTime of time in file, date is set to 1/1/1970
-		//These are used to change currentTime to default date, so that only time is compared
-		/*final int FILE_YEAR = 1970;
-		final int FILE_MONTH = 1;
-		final int FILE_DAY = 1;
-		final LocalDate DEFAULT_DATE = LocalDate.of(FILE_YEAR, FILE_MONTH, FILE_DAY)*/
-		//LocalDate localDate = LocalDate.now();
-
-
 		boolean inFuture = false;
 		for(StopTime stopTime : stop_times.values()){
 			if(stopTime.getTripID().equalsIgnoreCase(trip_id)){
@@ -383,8 +386,7 @@ public class StopTimes {
 				LocalTime fileTime = LocalTime.from(stopTime.getDepartureTime().toLocalDateTime());
 				LocalDateTime fileDateTime = LocalDateTime.of(LocalDate.now(), fileTime);
 
-				//System.out.println(currentTime + " : " + fileDateTime);
-				if(currentTime.isAfter(fileDateTime)){
+				if(currentTime.isBefore(fileDateTime)){
 					inFuture = true;
 					break;
 				}

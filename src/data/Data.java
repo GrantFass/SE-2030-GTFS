@@ -588,29 +588,27 @@ public class Data implements Subject {
 	//End feature 6
 
 	//Start feature 7
+
+    /**
+     * Gets all trip_ids with a time occurring in the future
+     * @author Ryan Becker
+     * @param route_id to be searched and find related trip_ids
+     * @return ArrayList of all future trip_ids associated with route_id
+     */
 	public String getFutureTripIDs_fromRouteID(String route_id){
 		ArrayList<String> all_trip_ids = trips.getTripIDs_fromRouteID(route_id);
-
 		ArrayList<String> future_trip_ids = stop_times.getFutureTripIDs_fromAllTripIDs(all_trip_ids);
-
 
 		return formatIDs(future_trip_ids);
 	}
 
-//	private ArrayList<String> searchFutureTripIDs(ArrayList<String> all_trip_ids){
-//		stop_times.getFutureTripIDs_fromAllTripIDs(all_trip_ids);
-//		return null;
-//	}
-
-
-
 	//End feature 7
 
 
-	//Start feature 5/6 helpers
+	//Start feature 5/6/7 helpers
 	/**
-	 * Helper method that formats a string of all stop_ids, or route_ids depending on search
-	 * to display every (stop/route)_id associated with a (route/stop)_id
+	 * Helper method that formats a string of all stop_ids, route_ids, or trip_ids (in future) depending on search type
+	 * to display every found associated with a searched id
 	 * @param ids ArrayList of every found id associated with searched id
 	 * @return String formatting every found id associated with searched on new lines
 	 */
@@ -625,7 +623,7 @@ public class Data implements Subject {
 
 
 	/**
-	 * Helper method that will help remove duplicate occurences of an id
+	 * Helper method that will help remove duplicate occurrences of an id
 	 * @author Ryan Becker
 	 * @param allIDs ArrayList of all current unique ids associated with stop_id
 	 * @param ids all newly read ids, which are only added to returned list if they do not
@@ -641,7 +639,7 @@ public class Data implements Subject {
 		}
 		return uniqueIDs;
 	}
-	//End features 5/6 helpers
+	//End features 5/6/7 helpers
 
 
 	//endregion
