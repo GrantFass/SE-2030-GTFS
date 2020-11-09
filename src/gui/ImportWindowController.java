@@ -276,7 +276,23 @@ public class ImportWindowController {
         } catch (IOException e) {
             importMessage = e.getMessage() + "\n";
         }
+        reset();
         return importMessage;
+    }
+
+    /**
+     * resets all of the text fields and checkboxes to their default states
+     * @author Grant Fass
+     */
+    private void reset() {
+        routesCheckBox.setSelected(false);
+        stopsCheckBox.setSelected(false);
+        stopTimesCheckBox.setSelected(false);
+        tripsCheckBox.setSelected(false);
+        routesTextField.setText("");
+        stopsTextField.setText("");
+        stopTimesTextField.setText("");
+        tripsTextField.setText("");
     }
 
     /**
