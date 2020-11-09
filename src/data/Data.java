@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -469,79 +470,84 @@ public class Data implements Subject {
 	 * returns all of the coordinates of buses
 	 * //TODO: Initialize this
 	 * @return an arraylist of bus location coordinate pairs with longitude first then latitude
-	 * @author Grant Fass,
+	 * @author Grant Fass, Ryan Becker
 	 */
 	public ArrayList<double[]> getBusCoordinates() {
+
 	    ArrayList<double[]> coordinatePairs = new ArrayList<>();
 	    //Used for initial comparison
 	    final LocalDateTime INITIAL_TIME = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
-	    LocalDateTime oldTime = INITIAL_TIME;
-	    double[] coordinatePair = null;
-        String oldID = null;
-        //System.err.println(stop_times.getStop_times().values().size());
+		double[] coordinatePair;
 
-        int count = 0;
+		HashMap<String, LocalDateTime> testMap = new HashMap<>();
 
-        ArrayList<String> usedTripIDs = new ArrayList<>();
+		HashMap<String, double[]> testCoordinates = new HashMap<>();
 
 	    for (StopTime stopTime : stop_times.getStop_times().values()) {
-            System.err.println(oldID + " : " + stopTime.getTripID());
 
+            String newTripID = stopTime.getTripID();
+            Stop stop = stops.getStop(stopTime.getStopID());
+			if(!testMap.containsKey(newTripID)){
+				LocalDateTime dateTime = createTime(stopTime.getDepartureTime());
+				coordinatePair = getCoordinatePair(stop, INITIAL_TIME, dateTime);
+				if(coordinatePair != null){
+					testMap.put(newTripID, dateTime);
+					testCoordinates.put(newTripID, coordinatePair);
+				}
 
-	    	if(!usedTripIDs.contains(oldID)){
-                //System.err.println(oldID + " : " + stopTime.getTripID());
-                coordinatePair = getCoordinatePair(stopTime, oldTime, oldID);
-                System.err.println(Arrays.toString(coordinatePair));
-                if (coordinatePair != null) {
-                    coordinatePairs.add(coordinatePair);
-                    usedTripIDs.add(stopTime.getTripID());
-                }
-
-
-                //coordinatePair = null;
-            }
-            oldTime = LocalDateTime.of(LocalDate.now(), LocalTime.from(stopTime.getDepartureTime().toLocalDateTime()));
-            oldID = stopTime.getTripID();
-
-            if(usedTripIDs.contains(oldID)){
-                oldTime = INITIAL_TIME;
-            }
-
+			} else {
+				LocalDateTime oldDateTime = testMap.get(newTripID);
+				LocalDateTime dateTime = createTime(stopTime.getDepartureTime());
+				if(dateTime.isBefore(oldDateTime)){
+					coordinatePair = getCoordinatePair(stop, dateTime, oldDateTime);
+					if(coordinatePair != null){
+						testMap.replace(newTripID, dateTime);
+						testCoordinates.replace(newTripID, coordinatePair);
+					}
+				}
+			}
 
         }
-
-
-        System.err.println(coordinatePairs.size());
+		coordinatePairs.addAll(testCoordinates.values());
 		return coordinatePairs;
 	}
 
-	private double[] getCoordinatePair(StopTime stopTime, LocalDateTime oldTime, String oldID){
+	/**
+	 * Creates LocalTimeObject from TimeStamp retrieved from Stop_Time departure time
+	 * @author Ryan Becker
+	 * @param timestamp TimeStamp retrieved from Stop_Time departure time
+	 * @return LocalDateTime object of current date, coupled with the time listed in timestamp
+	 */
+	private LocalDateTime createTime(Timestamp timestamp){
+		return LocalDateTime.of(LocalDate.now(), LocalTime.from(timestamp.toLocalDateTime()));
+	}
 
-        //System.err.println(!stopTime.getTripID().equalsIgnoreCase(oldID));
-	    if(!stopTime.getTripID().equalsIgnoreCase(oldID)){
-            LocalDateTime currentTime = LocalDateTime.now();
+	/**
+	 * Retrieves latitude and longitude for estimated stop that bus is at
+	 * @author Ryan Becker
+	 * @param stop Object used to retrieve the longitude and latitude from
+	 * @param earlierTime lower end threshold that currentTime is compared to
+	 * @param laterTime higher end threshold that currentTime is compared to
+	 * @return double list where first double is latitude, and second double is longitude
+	 */
+	private double[] getCoordinatePair(Stop stop, LocalDateTime earlierTime, LocalDateTime laterTime){
 
-            //TEMP
-            currentTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(9, 0));
-            //TEMP
+        LocalDateTime currentTime = LocalDateTime.now();
 
-            LocalDateTime newTime = LocalDateTime.of(LocalDate.now(), LocalTime.from(stopTime.getDepartureTime().toLocalDateTime()));
-            System.out.println(currentTime.toString() + " : " + oldTime.toString());
-            System.out.println(currentTime.isAfter(oldTime) && currentTime.isBefore(newTime));
-//			System.out.println(oldID + "       " + stopTime.getStopID());
-            if(currentTime.isAfter(oldTime) && currentTime.isBefore(newTime)){
+        //TESTING PURPOSE
+		//currentTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(9, 0));
+		//TESTING PURPOSE
 
-                Stop stop = stops.getStop(stopTime.getStopID());
-                double latitude = stop.getStopLatitude();
-                double longitude = stop.getStopLongitude();
+        if(currentTime.isAfter(earlierTime) && currentTime.isBefore(laterTime)){
+        	double latitude = stop.getStopLatitude();
+        	double longitude = stop.getStopLongitude();
 
-                return new double[]{latitude, longitude};
-            }
-        }
+        	return new double[] {latitude, longitude};
+		}
+
 
 	    return null;
     }
-
 
 	//END FEATURE 10
 
