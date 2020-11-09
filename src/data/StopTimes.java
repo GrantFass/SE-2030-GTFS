@@ -3,6 +3,9 @@ package data;
 import java.io.*;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.zip.DataFormatException;
 
@@ -323,15 +326,76 @@ public class StopTimes {
 			if(stop_time.getStopID().equals(stop_id)){
 				trip_ids.add(stop_time.getTripID());
 			}
-
-
-
 		}
-
 		return trip_ids;
 	}
 
 	//End feature five
+
+	//Start feature 6
+
+	/**
+	 * Gets every stop_id that is associated with a trip_id
+	 * @param trip_id related to searched route_id
+	 * @return ArrayList of all stop_ids related to trip_id
+	 */
+	public ArrayList<String> getStopIDs_fromTripID(String trip_id){
+		ArrayList<String> stop_ids = new ArrayList<>();
+		for(StopTime stopTime : stop_times.values()){
+			if(stopTime.getTripID().equals(trip_id)){
+				stop_ids.add(stopTime.getStopID());
+			}
+		}
+		return stop_ids;
+	}
+
+
+	//End feature 6
+
+    //Start feature 7
+
+    /**
+     * Gets all trip_ids that are occurring in the future
+     * @author Ryan Becker
+     * @param all_trip_ids ArrayList of all trip_ids related to initial route_id
+     * @return ArrayList of only trip_ids that have a time in the future associated with it
+     */
+    public ArrayList<String> getFutureTripIDs_fromAllTripIDs(ArrayList<String> all_trip_ids){
+	    ArrayList<String> future_trip_ids = new ArrayList<>();
+
+	    for(String trip_id : all_trip_ids){
+			if(inFuture(trip_id)){
+				future_trip_ids.add(trip_id);
+			}
+		}
+		return future_trip_ids;
+    }
+
+    /**
+     * Checks if a given trip_id has a time in the future
+     * @author Ryan Becker
+     * @param trip_id being checked
+     * @return boolean indicating future status: True if in the future, false otherwise
+     */
+    private boolean inFuture(String trip_id){
+		boolean inFuture = false;
+		for(StopTime stopTime : stop_times.values()){
+			if(stopTime.getTripID().equalsIgnoreCase(trip_id)){
+				LocalDateTime currentTime = java.time.LocalDateTime.now();
+
+				LocalTime fileTime = LocalTime.from(stopTime.getDepartureTime().toLocalDateTime());
+				LocalDateTime fileDateTime = LocalDateTime.of(LocalDate.now(), fileTime);
+
+				if(currentTime.isBefore(fileDateTime)){
+					inFuture = true;
+					break;
+				}
+			}
+		}
+		return inFuture;
+	}
+
+    //End feature 7
 
 
 	/**
@@ -379,5 +443,39 @@ public class StopTimes {
 
 		return toReturn;
 	}
+
+	//start feature 14
+
+	/**
+	 * Gets a stop_time from a stop_id and changes its departure/arrival time
+	 * @author Simon Erickson
+	 * @param stop_id for the stop_time
+	 * @param departAndArrivalTime new departure/arrival time
+	 * @return boolean representation of success
+	 */
+	public boolean changeStopTime_fromStop_ID(String stop_id,String departAndArrivalTime){
+		HashMap<String, StopTime> og_stop_time = stop_times;
+		try{
+			for(StopTime stop_time : stop_times.values()){
+				if(stop_time.getStopID().equals(stop_id)){
+					stop_time = new StopTime(departAndArrivalTime,
+							stop_time.getContinuousDropOff()+"",
+							stop_time.getContinuousPickup()+"", departAndArrivalTime,
+							stop_time.getDropOffType()+"",
+							stop_time.getPickupType()+"",
+							stop_time.getShapeDistTraveled()+"",
+							stop_time.getStopHeadsign()+"", stop_id+"",
+							stop_time.getStopSequence()+"",
+							stop_time.getTimepoint()+"", stop_time.getTripID()+"");
+				}
+			}
+			return true;
+		}catch (IllegalArgumentException e){
+			stop_times = og_stop_time;
+			return false;
+		}
+	}
+
+	//end feature 14
 
 }//end StopTimes
