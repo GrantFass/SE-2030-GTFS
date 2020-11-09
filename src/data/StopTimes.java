@@ -444,4 +444,38 @@ public class StopTimes {
 		return toReturn;
 	}
 
+	//start feature 14
+
+	/**
+	 * Gets a stop_time from a stop_id and changes its departure/arrival time
+	 * @author Simon Erickson
+	 * @param stop_id for the stop_time
+	 * @param departAndArrivalTime new departure/arrival time
+	 * @return boolean representation of success
+	 */
+	public boolean changeStopTime_fromStop_ID(String stop_id,String departAndArrivalTime){
+		HashMap<String, StopTime> og_stop_time = stop_times;
+		try{
+			for(StopTime stop_time : stop_times.values()){
+				if(stop_time.getStopID().equals(stop_id)){
+					stop_time = new StopTime(departAndArrivalTime,
+							stop_time.getContinuousDropOff()+"",
+							stop_time.getContinuousPickup()+"", departAndArrivalTime,
+							stop_time.getDropOffType()+"",
+							stop_time.getPickupType()+"",
+							stop_time.getShapeDistTraveled()+"",
+							stop_time.getStopHeadsign()+"", stop_id+"",
+							stop_time.getStopSequence()+"",
+							stop_time.getTimepoint()+"", stop_time.getTripID()+"");
+				}
+			}
+			return true;
+		}catch (IllegalArgumentException e){
+			stop_times = og_stop_time;
+			return false;
+		}
+	}
+
+	//end feature 14
+
 }//end StopTimes

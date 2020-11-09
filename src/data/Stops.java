@@ -253,8 +253,41 @@ public class Stops {
 		return sb.toString();
 	}
 
+	//start feature 13
 
+	/**
+	 * Gets a stop from a stop_id and changes its longitude and latitude
+	 * @author Simon Erickson
+	 * @param stop_id for the stop_time
+	 * @param longitude the longitude
+	 * @param latitude the latitude
+	 * @return boolean representation of success
+	 */
+	public boolean changeLocationFromStop_ID(String stop_id, String longitude, String latitude){
+		HashMap<String, Stop> og_stops = stops;
+		try{
+			for(Stop stop : stops.values()){
+				if(stop.getStopID().equals(stop_id)){
+					stop = new Stop(stop.getLevelID()+"",
+							stop.getLocationType()+"",
+							stop.getParentStation()+"",
+							stop.getPlatformCode()+"",
+							stop.getStopCode()+"",
+							stop.getStopDescription()+"",
+							stop_id,latitude, longitude, stop.getStopName()+"",
+							stop.getStopTimezone()+"",
+							stop.getStopURL()+"",
+							stop.getWheelchairBoarding()+"");
+				}
+			}
+			return true;
+		}catch (IllegalArgumentException e){
+			stops = og_stops;
+			return false;
+		}
+	}
 
+	//end feature 13
 
 
 }//end Stops
