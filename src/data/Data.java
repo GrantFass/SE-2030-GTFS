@@ -478,38 +478,56 @@ public class Data implements Subject {
 	    LocalDateTime oldTime = INITIAL_TIME;
 	    double[] coordinatePair = null;
         String oldID = null;
+        //System.err.println(stop_times.getStop_times().values().size());
+
+        int count = 0;
+
+        ArrayList<String> usedTripIDs = new ArrayList<>();
+
 	    for (StopTime stopTime : stop_times.getStop_times().values()) {
+            System.err.println(oldID + " : " + stopTime.getTripID());
 
-	    	if(!stopTime.getStopID().equalsIgnoreCase(oldID)){
-	    		oldTime = INITIAL_TIME;
-			}
 
-            coordinatePair = getCoordinatePair(stopTime, oldTime, oldID, coordinatePair);
-            if (coordinatePair != null) {
-                coordinatePairs.add(coordinatePair);
+	    	if(!usedTripIDs.contains(oldID)){
+                //System.err.println(oldID + " : " + stopTime.getTripID());
+                coordinatePair = getCoordinatePair(stopTime, oldTime, oldID);
+                System.err.println(Arrays.toString(coordinatePair));
+                if (coordinatePair != null) {
+                    coordinatePairs.add(coordinatePair);
+                    usedTripIDs.add(stopTime.getTripID());
+                }
+
+
+                //coordinatePair = null;
             }
             oldTime = LocalDateTime.of(LocalDate.now(), LocalTime.from(stopTime.getDepartureTime().toLocalDateTime()));
-            oldID = stopTime.getStopID();
+            oldID = stopTime.getTripID();
+
+            if(usedTripIDs.contains(oldID)){
+                oldTime = INITIAL_TIME;
+            }
+
+
         }
 
 
-        /*for(double[] pair : coordinatePairs){
-            System.out.println(Arrays.toString(pair));
-        }*/
-
+        System.err.println(coordinatePairs.size());
 		return coordinatePairs;
 	}
 
-	private double[] getCoordinatePair(StopTime stopTime, LocalDateTime oldTime, String oldID, double[] coordinatePair){
+	private double[] getCoordinatePair(StopTime stopTime, LocalDateTime oldTime, String oldID){
 
-
-
-	    if(!stopTime.getTripID().equalsIgnoreCase(oldID) || coordinatePair == null){
+        //System.err.println(!stopTime.getTripID().equalsIgnoreCase(oldID));
+	    if(!stopTime.getTripID().equalsIgnoreCase(oldID)){
             LocalDateTime currentTime = LocalDateTime.now();
 
-            LocalDateTime newTime = LocalDateTime.of(LocalDate.now(), LocalTime.from(stopTime.getDepartureTime().toLocalDateTime()));
+            //TEMP
+            currentTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(9, 0));
+            //TEMP
 
-//            System.out.println(currentTime.isAfter(oldTime) && currentTime.isBefore(newTime));
+            LocalDateTime newTime = LocalDateTime.of(LocalDate.now(), LocalTime.from(stopTime.getDepartureTime().toLocalDateTime()));
+            System.out.println(currentTime.toString() + " : " + oldTime.toString());
+            System.out.println(currentTime.isAfter(oldTime) && currentTime.isBefore(newTime));
 //			System.out.println(oldID + "       " + stopTime.getStopID());
             if(currentTime.isAfter(oldTime) && currentTime.isBefore(newTime)){
 
