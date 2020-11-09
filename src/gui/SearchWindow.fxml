@@ -23,7 +23,8 @@ Everything in this file has been setup in code.
     </padding>
     <HBox spacing="10" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100"
           minWidth="20" minHeight="20">
-        <TextArea fx:id="description" wrapText="true" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+        <TextArea fx:id="description" wrapText="true" editable="false" HBox.hgrow="ALWAYS"
+                  VBox.vgrow="ALWAYS"
                   maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20"/>
         <Button text="?" onAction="#displayHelp" alignment="CENTER" HBox.hgrow="ALWAYS"
                 VBox.vgrow="ALWAYS" maxWidth="100" maxHeight="100" minWidth="20" minHeight="20"/>
