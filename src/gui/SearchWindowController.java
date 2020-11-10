@@ -25,7 +25,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 
 import java.util.List;
 
@@ -38,6 +37,8 @@ import java.util.List;
 public class SearchWindowController {
     //region FXML properties
     @FXML
+    private TextField input;
+    @FXML
     private TextArea description;
     @FXML
     private TextArea output;
@@ -45,82 +46,24 @@ public class SearchWindowController {
     private ComboBox inputType;
     @FXML
     private ComboBox outputType;
-    @FXML
-    private TextField input;
     //endregion
 
     //region class references
-    private Stage analysisWindowStage;
-    private AnalysisWindowController analysisWindowController;
-    private Stage dataWindowStage;
-    private DataWindowController dataWindowController;
-    private Stage exportWindowStage;
-    private ExportWindowController exportWindowController;
-    private Stage importWindowStage;
-    private ImportWindowController importWindowController;
-    private Stage mainWindowStage;
     private MainWindowController mainWindowController;
-    private Stage mapWindowStage;
-    private MapWindowController mapWindowController;
-    private Stage searchWindowStage;
-    private Stage updateWindowStage;
-    private UpdateWindowController updateWindowController;
-
-    /**
-     * set the local values of all of the stages.
-     * @param analysisWindowStage the stage for the AnalysisWindow
-     * @param dataWindowStage the stage for the DataWindow
-     * @param exportWindowStage the stage for the ExportWindow
-     * @param importWindowStage the stage for the ImportWindow
-     * @param mainWindowStage the stage for the MainWindow
-     * @param mapWindowStage the stage for the MapWindow
-     * @param searchWindowStage the stage for the SearchWindow
-     * @param updateWindowStage the stage for the UpdateWindow
-     * @author Grant Fass
-     */
-    public void setStages(Stage analysisWindowStage, Stage dataWindowStage,
-                          Stage exportWindowStage, Stage importWindowStage,
-                          Stage mainWindowStage, Stage mapWindowStage,
-                          Stage searchWindowStage, Stage updateWindowStage) {
-        this.analysisWindowStage = analysisWindowStage;
-        this.dataWindowStage = dataWindowStage;
-        this.exportWindowStage = exportWindowStage;
-        this.importWindowStage = importWindowStage;
-        this.mainWindowStage = mainWindowStage;
-        this.mapWindowStage = mapWindowStage;
-        this.searchWindowStage = searchWindowStage;
-        this.updateWindowStage = updateWindowStage;
-    }
 
     /**
      * Sets the values of the controller associated with the respective files
      * Makes sure the same instance of the controller is used everywhere
-     * @param analysisWindowController reference to the AnalysisWindowController in use
-     * @param dataWindowController reference to the DataWindowController in use
-     * @param exportWindowController reference to the ExportWindowController in use
-     * @param importWindowController reference to the ImportWindowController in use
-     * @param mainWindowController reference to the MainWindowController in use
-     * @param mapWindowController reference to the MapWindowController in use
-     * @param updateWindowController reference to the UpdateWindowController in use
+     *
+     * @param mainWindowController     reference to the MainWindowController in use
      * @author Grant Fass
      */
-    public void setControllers(AnalysisWindowController analysisWindowController,
-                               DataWindowController dataWindowController,
-                               ExportWindowController exportWindowController,
-                               ImportWindowController importWindowController,
-                               MainWindowController mainWindowController,
-                               MapWindowController mapWindowController,
-                               UpdateWindowController updateWindowController) {
-        this.analysisWindowController = analysisWindowController;
-        this.dataWindowController = dataWindowController;
-        this.exportWindowController = exportWindowController;
-        this.importWindowController = importWindowController;
+    public void setControllers(MainWindowController mainWindowController) {
         this.mainWindowController = mainWindowController;
-        this.mapWindowController = mapWindowController;
-        this.updateWindowController = updateWindowController;
     }
     //endregion
 
+    //region displayed help information
     /**
      * set the default values of the description
      * @author Grant Fass
@@ -149,7 +92,9 @@ public class SearchWindowController {
                         "\n4. Click on the 'Search' Button. The results of the search will be displayed in the 'Output' Text Area." +
                         "\nNote: StopTimes must be entered as 'stop_id, trip_id'");
     }
+    //endregion
 
+    //region methods for searching
     @FXML
     private void search() {
         if (!inputType.getValue().equals("")) {
@@ -167,7 +112,6 @@ public class SearchWindowController {
                     }
                     break;
                 case "stop_id":
-                    //TODO ignore route_id upper/lower case?
                     if(inputType.getValue().equals("route_id") && mainWindowController.getData().getRoutes().getRoute((input.getText())) != null){
                         output.appendText(mainWindowController.getData().getStopIDs_fromRouteID(input.getText()).isEmpty() ? "No Results Found" : mainWindowController.getData().getStopIDs_fromRouteID(input.getText()));
                     } else if (inputType.getValue().equals("route_id")){
@@ -200,10 +144,10 @@ public class SearchWindowController {
                         sb.append("***Note:Trips closest to the current time are displayed first***\n");
                         for(int i = 0; i < list.size(); i++){
                             int j = i + 1;
-                            sb.append(j + ": " + list.get(i) + "\n");
+                            sb.append(j).append(": ").append(list.get(i)).append("\n");
                         }
                         output.appendText(sb.toString());
-                    } //TODO
+                    }
                     else if (inputType.getValue().equals("route_id") && mainWindowController.getData().getRoutes().getRoute((input.getText())) != null){
                         output.appendText(mainWindowController.getData().getFutureTripIDs_fromRouteID(input.getText()).isEmpty() ? "No Results Found" : mainWindowController.getData().getFutureTripIDs_fromRouteID(input.getText()));
                     }
@@ -218,4 +162,5 @@ public class SearchWindowController {
             output.setText("Input field is empty!");
         }
     }
+    //endregion
 }
