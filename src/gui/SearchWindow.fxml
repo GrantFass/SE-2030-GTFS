@@ -1,19 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-Please do not attempt to modify this file using scenebuilder.
-Everything in this file has been setup in code.
-
-@author Grant Fass
+ * Authors: Becker, Ryan; Cross, Joy; Erickson, Simon; Fass, Grant;
+ * Class: SE 2030 - 021
+ * Team: G
+ * Affiliation: Milwaukee School Of Engineering (MSOE)
+ * Program Name: General Transit Feed Specification Tool
+ * Copyright (C): GNU GPLv3; 9 November 2020
+ *
+ * This file is a part of the General Transit Feed Specification Tool
+ * written by Team G of class SE 2030 - 021 at MSOE.
+ *
+ * This is a free software: it can be redistributed and/or modified
+ * as expressed in the GNU GPLv3 written by the Free Software Foundation.
+ *
+ * This software is distributed in hopes that it is useful but does
+ * not include any warranties, not even implied warranties. There is more
+ * information about this in the GNU GPLv3.
+ *
+ * To view the license go to <gnu.org/licenses/gpl-3.0.en.html>
 -->
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+
+<!--@author Grant Fass-->
+<?import javafx.collections.FXCollections?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-<?import javafx.geometry.Insets?>
-<?import javafx.collections.FXCollections?>
+<?import java.lang.*?>
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="gui.SearchWindowController"
       maxHeight="Infinity" maxWidth="Infinity" minHeight="400" minWidth="300" prefHeight="400.0"
@@ -23,7 +36,8 @@ Everything in this file has been setup in code.
     </padding>
     <HBox spacing="10" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100"
           minWidth="20" minHeight="20">
-        <TextArea fx:id="description" wrapText="true" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+        <TextArea fx:id="description" wrapText="true" editable="false" HBox.hgrow="ALWAYS"
+                  VBox.vgrow="ALWAYS"
                   maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20"/>
         <Button text="?" onAction="#displayHelp" alignment="CENTER" HBox.hgrow="ALWAYS"
                 VBox.vgrow="ALWAYS" maxWidth="100" maxHeight="100" minWidth="20" minHeight="20"/>
@@ -79,7 +93,7 @@ Everything in this file has been setup in code.
             <Label text="Output" alignment="CENTER" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
                    maxWidth="Infinity" maxHeight="Infinity"/>
             <TextArea fx:id="output" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
-                      maxWidth="Infinity" maxHeight="Infinity"/>
+                      maxWidth="Infinity" maxHeight="Infinity" wrapText="true"/>
         </VBox>
     </HBox>
 </VBox>

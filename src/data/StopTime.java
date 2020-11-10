@@ -1,3 +1,23 @@
+/*
+ * Authors: Becker, Ryan; Cross, Joy; Erickson, Simon; Fass, Grant;
+ * Class: SE 2030 - 021
+ * Team: G
+ * Affiliation: Milwaukee School Of Engineering (MSOE)
+ * Program Name: General Transit Feed Specification Tool
+ * Copyright (C): GNU GPLv3; 9 November 2020
+ *
+ * This file is a part of the General Transit Feed Specification Tool
+ * written by Team G of class SE 2030 - 021 at MSOE.
+ *
+ * This is a free software: it can be redistributed and/or modified
+ * as expressed in the GNU GPLv3 written by the Free Software Foundation.
+ *
+ * This software is distributed in hopes that it is useful but does
+ * not include any warranties, not even implied warranties. There is more
+ * information about this in the GNU GPLv3.
+ *
+ * To view the license go to <gnu.org/licenses/gpl-3.0.en.html>
+ */
 package data;
 
 import enumerators.*;
@@ -13,7 +33,7 @@ import java.util.Objects;
  * @version 1.0
  */
 public class StopTime {
-
+	//region properties
 	private Timestamp arrival_time;
 	private ContinuousDropOffEnum continuous_drop_off;
 	private ContinuousPickupEnum continuous_pickup;
@@ -26,7 +46,9 @@ public class StopTime {
 	private int stop_sequence;
 	private TimepointEnum timepoint;
 	private String trip_id;
+	//endregion
 
+	//region constructors
 	/**
 	 * StopTime Constructor
 	 * @author Joy Cross, Grant Fass
@@ -92,7 +114,9 @@ public class StopTime {
 					" correctly. Skipping!");
 		}
 	}
+	//endregion
 
+	//region getters
 	/**
 	 * @author Joy Cross
 	 */
@@ -177,123 +201,6 @@ public class StopTime {
 		return trip_id;
 	}
 
-//	/**
-//	 * @author Joy Cross
-//	 */
-//	public void setArrivalTime(Timestamp arrival_time){
-//		this.arrival_time = arrival_time;
-//	}
-//
-//	/**
-//	 * @author Joy Cross
-//	 */
-//	public void setContinuousDropOff(ContinuousDropOffEnum continuous_drop_off){
-//		this.continuous_drop_off = continuous_drop_off;
-//	}
-//
-//	/**
-//	 * @author Joy Cross
-//	 */
-//	public void setContinuousPickup(ContinuousPickupEnum continuous_pickup){
-//		this.continuous_pickup = continuous_pickup;
-//	}
-//
-//	/**
-//	 * @author Joy Cross
-//	 */
-//	public void setDepartureTime(Timestamp departure_time){
-//		this.departure_time = departure_time;
-//	}
-//
-//	/**
-//	 * @author Joy Cross
-//	 */
-//	public void setDropOffType(DropOffTypeEnum drop_off_type){
-//		this.drop_off_type = drop_off_type;
-//	}
-//
-//	/**
-//	 * @author Joy Cross
-//	 */
-//	public void setPickupType(PickupTypeEnum pickup_type){
-//		this.pickup_type = pickup_type;
-//	}
-//
-//	/**
-//	 * @author Joy Cross
-//	 */
-//	public void setShapeDistTraveled(float shape_dist_traveled){
-//		this.shape_dist_traveled = shape_dist_traveled;
-//	}
-//
-//	/**
-//	 * @author Joy Cross
-//	 */
-//	public void setStopHeadsign(String stop_headsign){
-//		this.stop_headsign = stop_headsign;
-//	}
-//
-//	/**
-//	 * @author Joy Cross
-//	 */
-//	public void setStopID(String stop_id){
-//		this.stop_id = stop_id;
-//	}
-//
-//	/**
-//	 * @author Joy Cross
-//	 */
-//	public void setStopSequence(int stop_sequence){
-//		this.stop_sequence = stop_sequence;
-//	}
-//
-//	/**
-//	 * @author Joy Cross
-//	 */
-//	public void setTimepoint(TimepointEnum timepoint){
-//		this.timepoint = timepoint;
-//	}
-//
-//	/**
-//	 * @author Joy Cross
-//	 */
-//	public void setTripID(String trip_id){
-//		this.trip_id = trip_id;
-//	}
-
-	/**
-	 * Method to output data as a single concatenated string for StopTime
-	 * @author Joy Cross, Grant Fass
-	 * @return string of data
-	 */
-	@Override
-	public String toString() {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-		return String.format("Trip ID: %s | Stop ID: %s \n\t" +
-				"Arrival Time: %s\n\t" +
-				"Departure Time: %s\n\t" +
-				"Continuous Drop Off: %s\n\t" +
-				"Continuous Pickup: %s\n\t" +
-				"Drop Off Type: %s\n\t" +
-				"Pickup Type: %s\n\t" +
-				"Shape Distance Traveled: %s\n\t" +
-				"Stop Headsign: %s\n\t" +
-				"Stop Sequence: %s\n\t" +
-				"Timepoint: %s\n", trip_id, stop_id, dateFormat.format(arrival_time),
-				dateFormat.format(departure_time), continuous_drop_off, continuous_pickup,
-				drop_off_type.toString(), pickup_type.toString(), shape_dist_traveled,
-				stop_headsign, stop_sequence, timepoint);
-	}
-
-	/**
-	 * output simplified data as a single concatenated string
-	 * @return string of data
-	 * @author Grant Fass
-	 */
-	public String toSimpleString() {
-		return String.format("Trip ID: %s | Stop ID: %s | Stop Sequence: %s\n", trip_id, stop_id, stop_sequence);
-	}
-
 	/**
 	 * gets the file headers
 	 * used for exporting stop times
@@ -360,7 +267,130 @@ public class StopTime {
 		sb.append('\n');
 		return sb.toString();
 	}
+	//endregion
 
+	//region setters
+	/**
+	 * @author Joy Cross
+	 */
+	public void setArrivalTime(Timestamp arrival_time){
+		this.arrival_time = arrival_time;
+	}
+
+	/**
+	 * @author Joy Cross
+	 */
+	public void setContinuousDropOff(ContinuousDropOffEnum continuous_drop_off){
+		this.continuous_drop_off = continuous_drop_off;
+	}
+
+	/**
+	 * @author Joy Cross
+	 */
+	public void setContinuousPickup(ContinuousPickupEnum continuous_pickup){
+		this.continuous_pickup = continuous_pickup;
+	}
+
+	/**
+	 * @author Joy Cross
+	 */
+	public void setDepartureTime(Timestamp departure_time){
+		this.departure_time = departure_time;
+	}
+
+	/**
+	 * @author Joy Cross
+	 */
+	public void setDropOffType(DropOffTypeEnum drop_off_type){
+		this.drop_off_type = drop_off_type;
+	}
+
+	/**
+	 * @author Joy Cross
+	 */
+	public void setPickupType(PickupTypeEnum pickup_type){
+		this.pickup_type = pickup_type;
+	}
+
+	/**
+	 * @author Joy Cross
+	 */
+	public void setShapeDistTraveled(float shape_dist_traveled){
+		this.shape_dist_traveled = shape_dist_traveled;
+	}
+
+	/**
+	 * @author Joy Cross
+	 */
+	public void setStopHeadsign(String stop_headsign){
+		this.stop_headsign = stop_headsign;
+	}
+
+	/**
+	 * @author Joy Cross
+	 */
+	public void setStopID(String stop_id){
+		this.stop_id = stop_id;
+	}
+
+	/**
+	 * @author Joy Cross
+	 */
+	public void setStopSequence(int stop_sequence){
+		this.stop_sequence = stop_sequence;
+	}
+
+	/**
+	 * @author Joy Cross
+	 */
+	public void setTimepoint(TimepointEnum timepoint){
+		this.timepoint = timepoint;
+	}
+
+	/**
+	 * @author Joy Cross
+	 */
+	public void setTripID(String trip_id){
+		this.trip_id = trip_id;
+	}
+	//endregion
+
+	//region string outputs
+	/**
+	 * Method to output data as a single concatenated string for StopTime
+	 * @author Joy Cross, Grant Fass
+	 * @return string of data
+	 */
+	@Override
+	public String toString() {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+		return String.format("Trip ID: %s | Stop ID: %s \n\t" +
+				"Arrival Time: %s\n\t" +
+				"Departure Time: %s\n\t" +
+				"Continuous Drop Off: %s\n\t" +
+				"Continuous Pickup: %s\n\t" +
+				"Drop Off Type: %s\n\t" +
+				"Pickup Type: %s\n\t" +
+				"Shape Distance Traveled: %s\n\t" +
+				"Stop Headsign: %s\n\t" +
+				"Stop Sequence: %s\n\t" +
+				"Timepoint: %s\n", trip_id, stop_id, dateFormat.format(arrival_time),
+				dateFormat.format(departure_time), continuous_drop_off, continuous_pickup,
+				drop_off_type.toString(), pickup_type.toString(), shape_dist_traveled,
+				stop_headsign, stop_sequence, timepoint);
+	}
+
+	/**
+	 * output simplified data as a single concatenated string
+	 * @return string of data
+	 * @author Grant Fass
+	 */
+	public String toSimpleString() {
+		return String.format("Trip ID: %s | Stop ID: %s | Stop Sequence: %s\n", trip_id, stop_id, stop_sequence);
+	}
+	//endregion
+
+	//region equals overrides
 	/**
 	 * equals method override
 	 * @param o the object to compare to the current object
@@ -395,4 +425,5 @@ public class StopTime {
 	public int hashCode() {
 		return Objects.hash(arrival_time, continuous_drop_off, continuous_pickup, departure_time, drop_off_type, pickup_type, shape_dist_traveled, stop_headsign, stop_id, stop_sequence, timepoint, trip_id);
 	}
+	//endregion
 }//end StopTime

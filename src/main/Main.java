@@ -1,3 +1,23 @@
+/*
+ * Authors: Becker, Ryan; Cross, Joy; Erickson, Simon; Fass, Grant;
+ * Class: SE 2030 - 021
+ * Team: G
+ * Affiliation: Milwaukee School Of Engineering (MSOE)
+ * Program Name: General Transit Feed Specification Tool
+ * Copyright (C): GNU GPLv3; 9 November 2020
+ *
+ * This file is a part of the General Transit Feed Specification Tool
+ * written by Team G of class SE 2030 - 021 at MSOE.
+ *
+ * This is a free software: it can be redistributed and/or modified
+ * as expressed in the GNU GPLv3 written by the Free Software Foundation.
+ *
+ * This software is distributed in hopes that it is useful but does
+ * not include any warranties, not even implied warranties. There is more
+ * information about this in the GNU GPLv3.
+ *
+ * To view the license go to <gnu.org/licenses/gpl-3.0.en.html>
+ */
 package main;
 
 import gui.*;
@@ -16,7 +36,7 @@ public class Main extends Application {
      */
     @Override
     public void start(Stage mainWindowStage) throws Exception{
-        //Create the stages for the individual windows
+        //region Create the stages for the individual windows
         Stage analysisWindowStage = new Stage();
         Stage dataWindowStage = new Stage();
         Stage exportWindowStage = new Stage();
@@ -24,8 +44,9 @@ public class Main extends Application {
         Stage mapWindowStage = new Stage();
         Stage searchWindowStage = new Stage();
         Stage updateWindowStage = new Stage();
+        //endregion
 
-        //Create the loaders for the individual windows
+        //region Create the loaders for the individual windows
         FXMLLoader analysisWindowLoader = new FXMLLoader(getClass().getResource("../gui/AnalysisWindow.fxml"));
         FXMLLoader dataWindowLoader = new FXMLLoader(getClass().getResource("../gui/DataWindow.fxml"));
         FXMLLoader exportWindowLoader = new FXMLLoader(getClass().getResource("../gui/ExportWindow.fxml"));
@@ -34,8 +55,9 @@ public class Main extends Application {
         FXMLLoader mapWindowLoader = new FXMLLoader(getClass().getResource("../gui/MapWindow.fxml"));
         FXMLLoader searchWindowLoader = new FXMLLoader(getClass().getResource("../gui/SearchWindow.fxml"));
         FXMLLoader updateWindowLoader = new FXMLLoader(getClass().getResource("../gui/UpdateWindow.fxml"));
+        //endregion
 
-        //Load the loaders
+        //region Load the loaders
         analysisWindowLoader.load();
         dataWindowLoader.load();
         exportWindowLoader.load();
@@ -44,8 +66,9 @@ public class Main extends Application {
         mapWindowLoader.load();
         searchWindowLoader.load();
         updateWindowLoader.load();
+        //endregion
 
-        //Set the controllers
+        //region Set the controllers
         AnalysisWindowController analysisWindowController = analysisWindowLoader.getController();
         DataWindowController dataWindowController = dataWindowLoader.getController();
         ExportWindowController exportWindowController = exportWindowLoader.getController();
@@ -54,8 +77,9 @@ public class Main extends Application {
         MapWindowController mapWindowController = mapWindowLoader.getController();
         SearchWindowController searchWindowController = searchWindowLoader.getController();
         UpdateWindowController updateWindowController = updateWindowLoader.getController();
+        //endregion
 
-        //create Scenes
+        //region create Scenes
         Scene analysisWindowScene = new Scene(analysisWindowLoader.getRoot());
         Scene dataWindowScene = new Scene(dataWindowLoader.getRoot());
         Scene exportWindowScene = new Scene(exportWindowLoader.getRoot());
@@ -64,8 +88,9 @@ public class Main extends Application {
         Scene mapWindowScene = new Scene(mapWindowLoader.getRoot());
         Scene searchWindowScene = new Scene(searchWindowLoader.getRoot());
         Scene updateWindowScene = new Scene(updateWindowLoader.getRoot());
+        //endregion
 
-        //set Stylesheets
+        //region set Stylesheets
         String stylesheetLocation = "/gui/stylesheet.css";
         analysisWindowScene.getStylesheets().add(stylesheetLocation);
         dataWindowScene.getStylesheets().add(stylesheetLocation);
@@ -75,8 +100,9 @@ public class Main extends Application {
         mapWindowScene.getStylesheets().add(stylesheetLocation);
         searchWindowScene.getStylesheets().add(stylesheetLocation);
         updateWindowScene.getStylesheets().add(stylesheetLocation);
+        //endregion
 
-        //set Scenes
+        //region set Scenes
         analysisWindowStage.setScene(analysisWindowScene);
         dataWindowStage.setScene(dataWindowScene);
         exportWindowStage.setScene(exportWindowScene);
@@ -85,8 +111,9 @@ public class Main extends Application {
         mapWindowStage.setScene(mapWindowScene);
         searchWindowStage.setScene(searchWindowScene);
         updateWindowStage.setScene(updateWindowScene);
+        //endregion
 
-        //set Titles
+        //region set Titles
         analysisWindowStage.setTitle("General Transit Feed Specification Tool: Analysis");
         dataWindowStage.setTitle("General Transit Feed Specification Tool: Data");
         exportWindowStage.setTitle("General Transit Feed Specification Tool: Export");
@@ -95,28 +122,24 @@ public class Main extends Application {
         mapWindowStage.setTitle("General Transit Feed Specification Tool: Map");
         searchWindowStage.setTitle("General Transit Feed Specification Tool: Search");
         updateWindowStage.setTitle("General Transit Feed Specification Tool: Update");
+        //endregion
 
-        //set Stage Associations
-        analysisWindowController.setStages(analysisWindowStage, dataWindowStage, exportWindowStage, importWindowStage, mainWindowStage, mapWindowStage, searchWindowStage, updateWindowStage);
-        dataWindowController.setStages(analysisWindowStage, dataWindowStage, exportWindowStage, importWindowStage, mainWindowStage, mapWindowStage, searchWindowStage, updateWindowStage);
-        exportWindowController.setStages(analysisWindowStage, dataWindowStage, exportWindowStage, importWindowStage, mainWindowStage, mapWindowStage, searchWindowStage, updateWindowStage);
-        importWindowController.setStages(analysisWindowStage, dataWindowStage, exportWindowStage, importWindowStage, mainWindowStage, mapWindowStage, searchWindowStage, updateWindowStage);
+        //region set Stage Associations
+        exportWindowController.setStages(mainWindowStage);
+        importWindowController.setStages(mainWindowStage);
         mainWindowController.setStages(analysisWindowStage, dataWindowStage, exportWindowStage, importWindowStage, mainWindowStage, mapWindowStage, searchWindowStage, updateWindowStage);
-        mapWindowController.setStages(analysisWindowStage, dataWindowStage, exportWindowStage, importWindowStage, mainWindowStage, mapWindowStage, searchWindowStage, updateWindowStage);
-        searchWindowController.setStages(analysisWindowStage, dataWindowStage, exportWindowStage, importWindowStage, mainWindowStage, mapWindowStage, searchWindowStage, updateWindowStage);
-        updateWindowController.setStages(analysisWindowStage, dataWindowStage, exportWindowStage, importWindowStage, mainWindowStage, mapWindowStage, searchWindowStage, updateWindowStage);
+        //endregion
 
-        //set Controller Associations
-        analysisWindowController.setControllers(dataWindowController, exportWindowController, importWindowController, mainWindowController, mapWindowController, searchWindowController, updateWindowController);
-        dataWindowController.setControllers(analysisWindowController, exportWindowController, importWindowController, mainWindowController, mapWindowController, searchWindowController, updateWindowController);
-        exportWindowController.setControllers(analysisWindowController, dataWindowController, importWindowController, mainWindowController, mapWindowController, searchWindowController, updateWindowController);
-        importWindowController.setControllers(analysisWindowController, dataWindowController, exportWindowController, mainWindowController, mapWindowController, searchWindowController, updateWindowController);
-        mainWindowController.setControllers(analysisWindowController, dataWindowController, exportWindowController, importWindowController, mapWindowController, searchWindowController, updateWindowController);
-        mapWindowController.setControllers(analysisWindowController, dataWindowController, exportWindowController, importWindowController, mainWindowController, searchWindowController, updateWindowController);
-        searchWindowController.setControllers(analysisWindowController, dataWindowController, exportWindowController, importWindowController, mainWindowController, mapWindowController, updateWindowController);
-        updateWindowController.setControllers(analysisWindowController, dataWindowController, exportWindowController, importWindowController, mainWindowController, mapWindowController, searchWindowController);
+        //region set Controller Associations
+        dataWindowController.setControllers(mainWindowController);
+        exportWindowController.setControllers(mainWindowController);
+        importWindowController.setControllers(mainWindowController);
+        mapWindowController.setControllers(updateWindowController);
+        searchWindowController.setControllers(mainWindowController);
+        updateWindowController.setControllers(mainWindowController);
+        //endregion
 
-        //set default visibility
+        //region set default visibility
         analysisWindowStage.hide();
         dataWindowStage.hide();
         exportWindowStage.hide();
@@ -125,8 +148,9 @@ public class Main extends Application {
         mapWindowStage.hide();
         searchWindowStage.hide();
         updateWindowStage.hide();
+        //endregion
 
-        //set default values
+        //region set default values
         analysisWindowController.setDefaultValues();
         dataWindowController.setDefaultValues();
         exportWindowController.setDefaultValues();
@@ -135,17 +159,18 @@ public class Main extends Application {
         mapWindowController.setDefaultValues();
         searchWindowController.setDefaultValues();
         updateWindowController.setDefaultValues();
+        //endregion
 
-        //set up observers
+        //region Observer Setup
         mainWindowController.getData().attach(dataWindowController);
         mainWindowController.getData().attach(analysisWindowController);
+        mainWindowController.getData().attach(mapWindowController);
+        //endregion
 
-        //Set the default location of the main stage
+        //region Set the default location of the main stage
         mainWindowStage.setX(0);
         mainWindowStage.setY(0);
-
-        //functions
-        //dataWindowStage.setOnCloseRequest(event -> mainWindowController.viewDataDisplayButton.setText("Show Data Display"));
+        //endregion
     }
 
 

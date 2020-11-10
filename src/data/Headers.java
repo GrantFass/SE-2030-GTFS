@@ -1,8 +1,22 @@
 /*
- * GTFS Transit Program
- * File Header Contains Class Headers
- * Name: Grant
- * Created 10/13/2020
+ * Authors: Becker, Ryan; Cross, Joy; Erickson, Simon; Fass, Grant;
+ * Class: SE 2030 - 021
+ * Team: G
+ * Affiliation: Milwaukee School Of Engineering (MSOE)
+ * Program Name: General Transit Feed Specification Tool
+ * Copyright (C): GNU GPLv3; 9 November 2020
+ *
+ * This file is a part of the General Transit Feed Specification Tool
+ * written by Team G of class SE 2030 - 021 at MSOE.
+ *
+ * This is a free software: it can be redistributed and/or modified
+ * as expressed in the GNU GPLv3 written by the Free Software Foundation.
+ *
+ * This software is distributed in hopes that it is useful but does
+ * not include any warranties, not even implied warranties. There is more
+ * information about this in the GNU GPLv3.
+ *
+ * To view the license go to <gnu.org/licenses/gpl-3.0.en.html>
  */
 package data;
 
@@ -16,8 +30,11 @@ import java.util.Objects;
  * @version Created on 10/13/2020 at 11:06 AM
  */
 public class Headers {
-    private ArrayList<Header> headers;
+    //region parameters
+    private final ArrayList<Header> headers;
+    //endregion
 
+    //region constructors
     /**
      * Constructor for the header class used to initialize variables
      * @author Grant Fass
@@ -25,7 +42,9 @@ public class Headers {
     public Headers() {
         headers = new ArrayList<>();
     }
+    //endregion
 
+    //region setters
     /**
      * Add a new header to the list of header objects
      * @param header the header to add
@@ -35,7 +54,9 @@ public class Headers {
     public boolean addHeader(Header header) {
         return headers.add(header);
     }
+    //endregion
 
+    //region getters
     /**
      * returns the headerName associated with the header at the specified index
      * @param headerIndex the index of the header to find
@@ -71,7 +92,9 @@ public class Headers {
     public int length(){
         return headers.size();
     }
+    //endregion
 
+    //region overrides
     /**
      * check if the two objects are equal
      * @param o the object to compare to this object
@@ -102,4 +125,23 @@ public class Headers {
     public int hashCode() {
         return Objects.hash(headers);
     }
+
+    /**
+     * returns the headers as a single line object
+     * @return the headers as a single line object
+     * @author Grant Fass, Joy Cross
+     */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        int i;
+        for(i = 0; i < length()-1; i++){
+            sb.append(getHeaderName(i)).append(",");
+        }
+        sb.append(getHeaderName(i)).append("\n");
+
+        return sb.toString();
+    }
+
+    //endregion
 }

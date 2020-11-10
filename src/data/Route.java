@@ -1,17 +1,32 @@
+/*
+ * Authors: Becker, Ryan; Cross, Joy; Erickson, Simon; Fass, Grant;
+ * Class: SE 2030 - 021
+ * Team: G
+ * Affiliation: Milwaukee School Of Engineering (MSOE)
+ * Program Name: General Transit Feed Specification Tool
+ * Copyright (C): GNU GPLv3; 9 November 2020
+ *
+ * This file is a part of the General Transit Feed Specification Tool
+ * written by Team G of class SE 2030 - 021 at MSOE.
+ *
+ * This is a free software: it can be redistributed and/or modified
+ * as expressed in the GNU GPLv3 written by the Free Software Foundation.
+ *
+ * This software is distributed in hopes that it is useful but does
+ * not include any warranties, not even implied warranties. There is more
+ * information about this in the GNU GPLv3.
+ *
+ * To view the license go to <gnu.org/licenses/gpl-3.0.en.html>
+ */
 package data;
 
-
-import com.sun.xml.internal.ws.commons.xmlutil.Converter;
 import enumerators.ContinuousDropOffEnum;
 import enumerators.ContinuousPickupEnum;
 import enumerators.RouteTypeEnum;
 import javafx.scene.paint.Color;
 
-import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.ParseException;
-
 
 /**
  * Class for a Route object, which is the path that a Driver will take to various destinations
@@ -20,7 +35,7 @@ import java.text.ParseException;
  * @created 06-Oct-2020 10:28:37 AM
  */
 public class Route {
-
+	//region properties
 	private String route_id;
 	private String agency_id;
 	private String route_short_name;
@@ -33,45 +48,12 @@ public class Route {
 	private int route_sort_order;
 	private ContinuousPickupEnum continuous_pickup;
 	private ContinuousDropOffEnum continuous_drop_off;
+	//endregion
 
+	//region constructors
 	/**
-	 * @deprecated
-	 * Constructor of Route object
-	 * @author Ryan Becker
-	 * @param route_id ID of route
-	 * @param agency_id ID of agency
-	 * @param route_short_name short name of route
-	 * @param route_long_name long name of route
-	 * @param route_desc String of important information of route
-	 * @param route_type Identifier for type of transport
-	 * @param route_url URL of website of route
-	 * @param route_color Color of route path
-	 * @param route_text_color Color of route text
-	 * @param route_sort_order Integer indicating order to be sorted and displayed (lower is higher priority)
-	 * @param continuous_pickup Status of availability for pickups on route
-	 * @param continuous_drop_off Status of availability for drop-offs on route
-	 */
-	public Route(String route_id, String agency_id, String route_short_name, String route_long_name, String route_desc,
-				 RouteTypeEnum route_type, URL route_url, Color route_color, Color route_text_color,
-				 int route_sort_order, ContinuousPickupEnum continuous_pickup,
-				 ContinuousDropOffEnum continuous_drop_off){
-
-		this.route_id = route_id;
-		this.agency_id = agency_id;
-		this.route_short_name = route_short_name;
-		this.route_long_name = route_long_name;
-		this.route_desc = route_desc;
-		this.route_type = route_type;
-		this.route_url = route_url;
-		this.route_color = route_color;
-		this.route_text_color = route_text_color;
-		this.route_sort_order = route_sort_order;
-		this.continuous_pickup = continuous_pickup;
-		this.continuous_drop_off = continuous_drop_off;
-	}
-
-	/**
-	 * Overloaded constructor of Route object, where all parameters are passed initially as Strings
+	 * constructor of Route object, where all parameters are passed initially as Strings
+	 * Creates a new Route object
 	 * @author Ryan Becker
 	 * @param route_id ID of route
 	 * @param agency_id ID of agency
@@ -135,8 +117,9 @@ public class Route {
 			throw new IllegalArgumentException("Data line within routes.txt not formatted correctly.\nSkipping line");
 		}
 	}
+	//endregion
 
-	//Getters
+	//region Getters
 	/**
 	 * returns route_id
 	 * @author Ryan Becker
@@ -240,6 +223,7 @@ public class Route {
 	public ContinuousPickupEnum getContinuousPickup() {
 		return continuous_pickup;
 	}
+
 	/**
 	 * return continuous_drop_off
 	 * @author Ryan Becker
@@ -248,7 +232,6 @@ public class Route {
 	public ContinuousDropOffEnum getContinuousDropOff() {
 		return continuous_drop_off;
 	}
-
 
 	/**
 	 * returns header line to be used for exporting routes.txt
@@ -325,10 +308,9 @@ public class Route {
 		sb.append('\n');
 		return sb.toString();
 	}
+	//endregion
 
-
-	//Setters
-
+	//region Setters
 	/**
 	 * sets route_id
 	 * @author Ryan Becker
@@ -436,7 +418,9 @@ public class Route {
 	public void setContinuousDropOff(ContinuousDropOffEnum continuous_drop_off) {
 		this.continuous_drop_off = continuous_drop_off;
 	}
+	//endregion
 
+	//region string outputs
 	/**
 	 * Method to output data as a single concatenated string
 	 * @author GrantFass, Ryan Becker
@@ -465,4 +449,5 @@ public class Route {
 	public String toSimpleString() {
 		return String.format("Route ID: %s | Route Color: %s\n", route_id, route_color);
 	}
+	//endregion
 }//end Route

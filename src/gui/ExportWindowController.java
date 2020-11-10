@@ -1,19 +1,35 @@
 /*
- * gui
- * File Header Contains Class ExportWindowController
- * Name: Grant
- * Created 10/25/2020
+ * Authors: Becker, Ryan; Cross, Joy; Erickson, Simon; Fass, Grant;
+ * Class: SE 2030 - 021
+ * Team: G
+ * Affiliation: Milwaukee School Of Engineering (MSOE)
+ * Program Name: General Transit Feed Specification Tool
+ * Copyright (C): GNU GPLv3; 9 November 2020
+ *
+ * This file is a part of the General Transit Feed Specification Tool
+ * written by Team G of class SE 2030 - 021 at MSOE.
+ *
+ * This is a free software: it can be redistributed and/or modified
+ * as expressed in the GNU GPLv3 written by the Free Software Foundation.
+ *
+ * This software is distributed in hopes that it is useful but does
+ * not include any warranties, not even implied warranties. There is more
+ * information about this in the GNU GPLv3.
+ *
+ * To view the license go to <gnu.org/licenses/gpl-3.0.en.html>
  */
 package gui;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.IOException;
 import java.time.LocalDateTime;
 
 /**
@@ -23,6 +39,7 @@ import java.time.LocalDateTime;
  * @version Created on 10/25/2020 at 1:26 AM
  */
 public class ExportWindowController {
+    //region FXML properties
     @FXML
     private TextArea description;
     @FXML
@@ -34,112 +51,49 @@ public class ExportWindowController {
     @FXML
     private VBox routeVBox;
     @FXML
-    private TextField routeTextField;
-    @FXML
-    private ProgressBar routesProgressBar;
-    @FXML
     private CheckBox stopsCheckBox;
     @FXML
     private VBox stopVBox;
-    @FXML
-    private TextField stopTextField;
-    @FXML
-    private ProgressBar stopsProgressBar;
     @FXML
     private CheckBox stopTimesCheckBox;
     @FXML
     private VBox stopTimeVBox;
     @FXML
-    private TextField stopTimeTextField;
-    @FXML
-    private ProgressBar stopTimesProgressBar;
-    @FXML
     private CheckBox tripsCheckBox;
     @FXML
     private VBox tripVBox;
-    @FXML
-    private TextField tripTextField;
-    @FXML
-    private ProgressBar tripsProgressBar;
-    private Stage analysisWindowStage;
-    private AnalysisWindowController analysisWindowController;
-    private Stage dataWindowStage;
-    private DataWindowController dataWindowController;
-    private Stage exportWindowStage;
-    private Stage importWindowStage;
-    private ImportWindowController importWindowController;
+    //endregion
+
+    //region class references
     private Stage mainWindowStage;
     private MainWindowController mainWindowController;
-    private Stage mapWindowStage;
-    private MapWindowController mapWindowController;
-    private Stage searchWindowStage;
-    private SearchWindowController searchWindowController;
-    private Stage updateWindowStage;
-    private UpdateWindowController updateWindowController;
 
     /**
      * set the local values of all of the stages.
-     * @param analysisWindowStage the stage for the AnalysisWindow
-     * @param dataWindowStage the stage for the DataWindow
-     * @param exportWindowStage the stage for the ExportWindow
-     * @param importWindowStage the stage for the ImportWindow
      * @param mainWindowStage the stage for the MainWindow
-     * @param mapWindowStage the stage for the MapWindow
-     * @param searchWindowStage the stage for the SearchWindow
-     * @param updateWindowStage the stage for the UpdateWindow
      * @author Grant Fass
      */
-    public void setStages(Stage analysisWindowStage, Stage dataWindowStage,
-                          Stage exportWindowStage, Stage importWindowStage,
-                          Stage mainWindowStage, Stage mapWindowStage,
-                          Stage searchWindowStage, Stage updateWindowStage) {
-        this.analysisWindowStage = analysisWindowStage;
-        this.dataWindowStage = dataWindowStage;
-        this.exportWindowStage = exportWindowStage;
-        this.importWindowStage = importWindowStage;
+    public void setStages(Stage mainWindowStage) {
         this.mainWindowStage = mainWindowStage;
-        this.mapWindowStage = mapWindowStage;
-        this.searchWindowStage = searchWindowStage;
-        this.updateWindowStage = updateWindowStage;
     }
 
     /**
      * Sets the values of the controller associated with the respective files
      * Makes sure the same instance of the controller is used everywhere
-     * @param analysisWindowController reference to the AnalysisWindowController in use
-     * @param dataWindowController reference to the DataWindowController in use
-     * @param importWindowController reference to the ImportWindowController in use
      * @param mainWindowController reference to the MainWindowController in use
-     * @param mapWindowController reference to the MapWindowController in use
-     * @param searchWindowController reference to the SearchWindowController in use
-     * @param updateWindowController reference to the UpdateWindowController in use
      * @author Grant Fass
      */
-    public void setControllers(AnalysisWindowController analysisWindowController,
-                               DataWindowController dataWindowController,
-                               ImportWindowController importWindowController,
-                               MainWindowController mainWindowController,
-                               MapWindowController mapWindowController,
-                               SearchWindowController searchWindowController,
-                               UpdateWindowController updateWindowController) {
-        this.analysisWindowController = analysisWindowController;
-        this.dataWindowController = dataWindowController;
-        this.importWindowController = importWindowController;
+    public void setControllers(MainWindowController mainWindowController) {
         this.mainWindowController = mainWindowController;
-        this.mapWindowController = mapWindowController;
-        this.searchWindowController = searchWindowController;
-        this.updateWindowController = updateWindowController;
     }
+    //endregion
 
+    //region displayed help information
     /**
-     * set the default values of the progress bars and descriptions
+     * set the default values of the descriptions
      * @author Grant Fass
      */
     public void setDefaultValues() {
-        routesProgressBar.setVisible(false);
-        stopsProgressBar.setVisible(false);
-        stopTimesProgressBar.setVisible(false);
-        tripsProgressBar.setVisible(false);
         description.setText("This window is used to export files to a given directory. " +
                 "Use the 'browse' button to select the folder to save the exported file(s) to. Use the " +
                 "checkboxes to select which file(s) you would like to export. Use the 'Export' button to " +
@@ -155,7 +109,7 @@ public class ExportWindowController {
     @FXML
     private void displayHelp() {
         MainWindowController.displayAlert(Alert.AlertType.INFORMATION, "General Transit Feed Specification Tool Information",
-                "Import Window Help", "This window is used to export the files in the correct format." +
+                "Export Window Help", "This window is used to export the files in the correct format." +
                         "\nHow to use:" +
                         "\n1. Click on the 'browse' button to open a Directory Chooser." +
                         "\n2. Use the Directory Chooser to navigate to the location you would like" +
@@ -169,11 +123,26 @@ public class ExportWindowController {
                         " next to the checkbox. Any errors will be displayed to the 'Alert' Text" +
                         " Area.");
     }
+    //endregion
+
+    //region methods for file export
+    /**
+     * Exports all selected files to the specified directory
+     * @author Grant Fass
+     */
+    @FXML
+    private void exportFiles() {
+        MainWindowController.displayAlert(Alert.AlertType.INFORMATION, "EXPORT START", null, "STARTING EXPORT");
+        alertTextArea.clear();
+        alertTextArea.appendText("Times Formatted in HH:MM:SS\n");
+        alertTextArea.appendText(String.format("START: %02d:%02d:%02d\n", LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getSecond()));
+        alertTextArea.appendText(mainWindowController.getData().exportFiles(directoryTextField.getText(), routesCheckBox.isSelected(), stopsCheckBox.isSelected(), stopTimesCheckBox.isSelected(), tripsCheckBox.isSelected()));
+    }
 
     /**
      * Method to query the user to retrieve a GTFS file from the computer using a FileChooser
-     * @author Grant Fass
      * @return The selected GTFS file from the program
+     * @author Grant Fass
      */
     private File getExportDirectory() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
@@ -181,57 +150,6 @@ public class ExportWindowController {
         directoryChooser.setInitialDirectory(new File("C:\\\\users\\\\" +
                 System.getProperty("user.name") + "\\\\Documents"));
         return directoryChooser.showDialog(mainWindowStage);
-    }
-
-    @FXML
-    private void exportFiles() {
-        alertTextArea.clear();
-        alertTextArea.appendText(LocalDateTime.now().toString() + "\n");
-        if (!directoryTextField.getText().isEmpty()) {
-            exportFile(routesCheckBox, routesProgressBar, "Routes");
-            exportFile(stopsCheckBox, stopsProgressBar, "Stops");
-            exportFile(stopTimesCheckBox, stopTimesProgressBar, "StopTimes");
-            exportFile(tripsCheckBox, tripsProgressBar, "Trips");
-        }
-        else alertTextArea.setText("SKIPPING ALL: No Directory Selected!");
-    }
-
-    private void exportFile(CheckBox checkBox, ProgressBar progressBar, String fileType) {
-        progressBar.setProgress(ProgressBar.INDETERMINATE_PROGRESS);
-        if (checkBox.isSelected()) {
-            alertTextArea.appendText("OUT: " + fileType + "\n");
-            exportFile(new File(directoryTextField.getText()), fileType.toLowerCase());
-            progressBar.setStyle("-fx-accent: green");
-        } else {
-            alertTextArea.appendText("SKIP: " + fileType + " - Not Selected\n");
-            progressBar.setStyle("-fx-accent: red");
-        }
-        progressBar.setProgress(100);
-    }
-
-    private void exportFile(File file, String fileType) {
-        try {
-            switch (fileType) {
-                case "routes":
-                    mainWindowController.getData().getRoutes().exportRoutes(file);
-                    routeTextField.setText(file.toString() + "//routes.txt");
-                    break;
-                case "stops":
-                    mainWindowController.getData().getStops().exportStops(file);
-                    stopTextField.setText(file.toString() + "//stops.txt");
-                    break;
-                case "stoptimes":
-                    mainWindowController.getData().getStopTimes().exportStopTimes(file);
-                    stopTimeTextField.setText(file.toString() + "//stop_times.txt");
-                    break;
-                case "trips":
-                    mainWindowController.getData().getTrips().exportTrips(file);
-                    tripTextField.setText(file.toString() + "//trips.txt");
-                    break;
-            }
-        } catch (IOException e) {
-            alertTextArea.appendText("\tERROR: IOException - " + e.getMessage() + "\n");
-        }
     }
 
     /**
@@ -244,26 +162,13 @@ public class ExportWindowController {
         try {
             File file = getExportDirectory();
             directoryTextField.setText(file.toString());
-            initializeProgressBar(routesProgressBar);
-            initializeProgressBar(stopsProgressBar);
-            initializeProgressBar(stopTimesProgressBar);
-            initializeProgressBar(tripsProgressBar);
         } catch (NullPointerException ignored) {
 
         }
     }
+    //endregion
 
-    /**
-     * initializes the default values of a single progress bar
-     * @param progressBar the progress bar to intialize
-     * @author Grant Fass
-     */
-    private void initializeProgressBar(ProgressBar progressBar) {
-        progressBar.setProgress(0);
-        progressBar.setStyle("-fx-accent: blanchedalmond");
-        progressBar.setVisible(true);
-    }
-
+    //region check box controls
     /**
      * update the disabled status of the route data based on CheckBox toggle
      * @author Grant Fass
@@ -309,4 +214,5 @@ public class ExportWindowController {
     private void toggleCheckBox(CheckBox checkBox, VBox vBox) {
         vBox.setDisable(!checkBox.isSelected());
     }
+    //endregion
 }

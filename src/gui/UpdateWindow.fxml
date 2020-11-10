@@ -1,26 +1,101 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-Please do not attempt to modify this file using scenebuilder.
-Everything in this file has been setup in code.
-
-@author Grant Fass
+ * Authors: Becker, Ryan; Cross, Joy; Erickson, Simon; Fass, Grant;
+ * Class: SE 2030 - 021
+ * Team: G
+ * Affiliation: Milwaukee School Of Engineering (MSOE)
+ * Program Name: General Transit Feed Specification Tool
+ * Copyright (C): GNU GPLv3; 9 November 2020
+ *
+ * This file is a part of the General Transit Feed Specification Tool
+ * written by Team G of class SE 2030 - 021 at MSOE.
+ *
+ * This is a free software: it can be redistributed and/or modified
+ * as expressed in the GNU GPLv3 written by the Free Software Foundation.
+ *
+ * This software is distributed in hopes that it is useful but does
+ * not include any warranties, not even implied warranties. There is more
+ * information about this in the GNU GPLv3.
+ *
+ * To view the license go to <gnu.org/licenses/gpl-3.0.en.html>
 -->
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<!--@author Grant Fass-->
+
+<?import javafx.collections.FXCollections?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-<?import javafx.geometry.Insets?>
-<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="gui.UpdateWindowController"
-            maxHeight="Infinity" maxWidth="Infinity" minHeight="400" minWidth="300" prefHeight="400.0" prefWidth="600">
+<?import java.lang.String?>
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="gui.UpdateWindowController"
+      maxHeight="Infinity" maxWidth="Infinity" minHeight="400" minWidth="300" prefHeight="400.0"
+      prefWidth="600" spacing="10">
     <padding>
         <Insets top="20" bottom="20" left="20" right="20"/>
     </padding>
-    <HBox spacing="10" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20">
-        <TextArea fx:id="description" wrapText="true" editable="false" text="Short Description" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20"/>
-        <Button text="?" onAction="#displayHelp" alignment="CENTER" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="100" maxHeight="100" minWidth="20" minHeight="20"/>
+    <HBox spacing="10" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="100"
+          minWidth="20" minHeight="20">
+        <TextArea fx:id="description" wrapText="true" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+                  maxWidth="Infinity" maxHeight="100" minWidth="20" minHeight="20"/>
+        <Button text="?" onAction="#displayHelp" alignment="CENTER" HBox.hgrow="ALWAYS"
+                VBox.vgrow="ALWAYS" maxWidth="100" maxHeight="100" minWidth="20" minHeight="20"/>
     </HBox>
-    <TextArea editable="false" text="Not Implemented Yet"/>
+    <HBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"
+          spacing="10">
+        <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"
+              spacing="10">
+            <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"
+                  spacing="10">
+                <Label text="Pick Type" alignment="CENTER" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+                       maxWidth="Infinity" maxHeight="Infinity"/>
+                <ComboBox fx:id="pickType" value="Select Type" HBox.hgrow="ALWAYS"
+                          VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" onAction="#setAttributes">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="route_id"/>
+                            <String fx:value="stop_id"/>
+                            <String fx:value="stopTime"/>
+                            <String fx:value="trip_id"/>
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+            </VBox>
+            <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"
+                  spacing="10">
+                <TextField fx:id="inputPickType" disable="true" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+                           maxWidth="Infinity" maxHeight="Infinity"/>
+            </VBox>
+            <HBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"
+                  spacing="10">
+                <Button onAction="#addID" text="Add ID" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+                        maxWidth="Infinity" maxHeight="Infinity"/>
+                <Button onAction="#clear" text="Clear List" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+                        maxWidth="Infinity" maxHeight="Infinity"/>
+            </HBox>
+            <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"
+                  spacing="10">
+                <Label text="Update Attribute" alignment="CENTER" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+                       maxWidth="Infinity" maxHeight="Infinity"/>
+                <ComboBox fx:id="attributes" value="Select Attribute" HBox.hgrow="ALWAYS"
+                          onAction="#unDisableAttribute" VBox.vgrow="ALWAYS" maxWidth="Infinity"
+                          maxHeight="Infinity" disable="true">
+                </ComboBox>
+            </VBox>
+            <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"
+                  spacing="10">
+                <TextField fx:id="inputAttribute" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity"
+                           disable="true" maxHeight="Infinity"/>
+            </VBox>
+            <Button onAction="#update" text="Update" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+                    fx:id="updateButton" maxWidth="Infinity" maxHeight="Infinity" disable="true"/>
+        </VBox>
+        <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity"
+              spacing="10">
+            <Label text="Output" alignment="CENTER" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+                   maxWidth="Infinity" maxHeight="Infinity"/>
+            <TextArea fx:id="output" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+                      maxWidth="Infinity" maxHeight="Infinity" wrapText="true"/>
+        </VBox>
+    </HBox>
 </VBox>
