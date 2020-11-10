@@ -30,7 +30,10 @@ import javafx.scene.paint.Color;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.Function;
@@ -479,15 +482,93 @@ public class Data implements Subject {
 	//endregion
 
 	//region methods for map GUI
+
+
+    //START FEATURE 10
 	/**
-	 * returns all of the coordinates of busses
+	 * returns all of the coordinates of buses
 	 * //TODO: Initialize this
 	 * @return an arraylist of bus location coordinate pairs with longitude first then latitude
-	 * @author Grant Fass,
+	 * @author Grant Fass, Ryan Becker
 	 */
 	public ArrayList<double[]> getBusCoordinates() {
-		return new ArrayList<>();
+
+	    ArrayList<double[]> coordinatePairs = new ArrayList<>();
+	    //Used for initial comparison
+	    final LocalDateTime INITIAL_TIME = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+		double[] coordinatePair;
+
+		HashMap<String, LocalDateTime> testMap = new HashMap<>();
+
+		HashMap<String, double[]> testCoordinates = new HashMap<>();
+
+	    for (StopTime stopTime : stop_times.getStop_times().values()) {
+
+            String newTripID = stopTime.getTripID();
+            Stop stop = stops.getStop(stopTime.getStopID());
+			if(!testMap.containsKey(newTripID)){
+				LocalDateTime dateTime = createTime(stopTime.getDepartureTime());
+				coordinatePair = getCoordinatePair(stop, INITIAL_TIME, dateTime);
+				if(coordinatePair != null){
+					testMap.put(newTripID, dateTime);
+					testCoordinates.put(newTripID, coordinatePair);
+				}
+
+			} else {
+				LocalDateTime oldDateTime = testMap.get(newTripID);
+				LocalDateTime dateTime = createTime(stopTime.getDepartureTime());
+				if(dateTime.isBefore(oldDateTime)){
+					coordinatePair = getCoordinatePair(stop, dateTime, oldDateTime);
+					if(coordinatePair != null){
+						testMap.replace(newTripID, dateTime);
+						testCoordinates.replace(newTripID, coordinatePair);
+					}
+				}
+			}
+
+        }
+		coordinatePairs.addAll(testCoordinates.values());
+		return coordinatePairs;
 	}
+
+	/**
+	 * Creates LocalTimeObject from TimeStamp retrieved from Stop_Time departure time
+	 * @author Ryan Becker
+	 * @param timestamp TimeStamp retrieved from Stop_Time departure time
+	 * @return LocalDateTime object of current date, coupled with the time listed in timestamp
+	 */
+	private LocalDateTime createTime(Timestamp timestamp){
+		return LocalDateTime.of(LocalDate.now(), LocalTime.from(timestamp.toLocalDateTime()));
+	}
+
+	/**
+	 * Retrieves latitude and longitude for estimated stop that bus is at
+	 * @author Ryan Becker
+	 * @param stop Object used to retrieve the longitude and latitude from
+	 * @param earlierTime lower end threshold that currentTime is compared to
+	 * @param laterTime higher end threshold that currentTime is compared to
+	 * @return double list where first double is latitude, and second double is longitude
+	 */
+	private double[] getCoordinatePair(Stop stop, LocalDateTime earlierTime, LocalDateTime laterTime){
+
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        //TESTING PURPOSE
+		//currentTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(9, 0));
+		//TESTING PURPOSE
+
+        if(currentTime.isAfter(earlierTime) && currentTime.isBefore(laterTime)){
+        	double latitude = stop.getStopLatitude();
+        	double longitude = stop.getStopLongitude();
+
+        	return new double[] {latitude, longitude};
+		}
+
+
+	    return null;
+    }
+
+	//END FEATURE 10
 
 	/**
 	 * retrieves all of the stops that are associated with all routes
@@ -542,8 +623,8 @@ public class Data implements Subject {
 
 	//region search functions
 	/**
-	 * Searches for every route_id associated with a Stop, given the stop_id
-	 * @author Ryan Becker
+	 * Searches for every route_id associated with a Stop given stop_id
+     * @author Ryan Becker
 	 * @param stop_id of Stop being searched
 	 * @return String of formatted route_ids associated with stop_id
 	 */
