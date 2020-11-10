@@ -277,10 +277,12 @@ public class MainWindowController {
 				null, "This program is designed to allow users to import, manipulate, and export" +
 						" GTFS files that are consistent with the specifications from the Google Transit GTFS" +
 						" Reference pages. Files are expected to be named as 'stops.txt', 'stop_times.txt'," +
-						" 'routes.txt', or 'trips.txt'.\nThis program was developed by Group G of the" +
+						" 'routes.txt', or 'trips.txt'.\nThis program was developed by Team G of the" +
 						" Software Engineering Tools And Practices class (SE 2030 - 021) at the Milwaukee School" +
 						" Of Engineering (MSOE) in the Fall term of 2020.\n" +
-						"Members: Grant Fass, Joy Cross, Simon Erickson, & Ryan Becker.");
+						"Members: Grant Fass, Joy Cross, Simon Erickson, & Ryan Becker.\n" +
+						"This program is free software licensed under the GNU GPLv3 and does not come with any " +
+						"warranties.");
 	}
 
 	/**
