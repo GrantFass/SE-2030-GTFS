@@ -234,568 +234,7 @@ public class Data implements Subject {
 	}
 	//endregion
 
-	//region methods for data GUI
-	/**
-	 * outputs all of the data for a class to the specified listView
-	 * @param dataType selects which data to output.
-	 *             0 = Routes
-	 *             1 = Stops
-	 *             2 = StopTimes
-	 *             3 = Trips
-	 * @param stringType selects which string format to output in.
-	 *                   0 = One Line Simple String
-	 *                   1 = Full Expanded Data
-	 * @param listView the list view to add the entries to
-	 * @author Grant Fass
-	 */
-	public void displayData(int dataType, int stringType, ListView listView) {
-		int count = 0;
-		Iterator mapIterator;
-		ObservableList<String> items = FXCollections.observableArrayList();
-		switch (dataType) {
-			case 0:
-				mapIterator = routes.getRoutes().entrySet().iterator();
-				if (stringType == 1) {
-					while (mapIterator.hasNext()) {
-						Map.Entry mapElement = (Map.Entry) mapIterator.next();
-						items.add(routes.getRoute(mapElement.getKey().toString()).toString() + "\n");
-						count++;
-					}
-				} else {
-					while (mapIterator.hasNext()) {
-						Map.Entry mapElement = (Map.Entry) mapIterator.next();
-						items.add(routes.getRoute(mapElement.getKey().toString()).toSimpleString() + "\n");
-						count++;
-					}
-				}
-				break;
-			case 1:
-				mapIterator = stops.getStops().entrySet().iterator();
-				if (stringType == 1) {
-					while (mapIterator.hasNext()) {
-						Map.Entry mapElement = (Map.Entry) mapIterator.next();
-						items.add(stops.getStop(mapElement.getKey().toString()).toString() + "\n");
-						count++;
-					}
-				} else {
-					while (mapIterator.hasNext()) {
-						Map.Entry mapElement = (Map.Entry) mapIterator.next();
-						items.add(stops.getStop(mapElement.getKey().toString()).toSimpleString() + "\n");
-						count++;
-					}
-				}
-				break;
-			case 2:
-				mapIterator = stop_times.getStop_times().entrySet().iterator();
-				if (stringType == 1) {
-					while (mapIterator.hasNext()) {
-						Map.Entry mapElement = (Map.Entry) mapIterator.next();
-						items.add(stop_times.getStop_times().get(mapElement.getKey()).toString() + "\n");
-						count++;
-					}
-				} else {
-					while (mapIterator.hasNext()) {
-						Map.Entry mapElement = (Map.Entry) mapIterator.next();
-						items.add(stop_times.getStop_times().get(mapElement.getKey()).toSimpleString() + "\n");
-						count++;
-					}
-				}
-				break;
-			case 3:
-				mapIterator = trips.getTrips().entrySet().iterator();
-				if (stringType == 1) {
-					while (mapIterator.hasNext()) {
-						Map.Entry mapElement = (Map.Entry) mapIterator.next();
-						items.add(trips.getTrip(mapElement.getKey().toString()).toString() + "\n");
-						count++;
-					}
-				} else {
-					while (mapIterator.hasNext()) {
-						Map.Entry mapElement = (Map.Entry) mapIterator.next();
-						items.add(trips.getTrip(mapElement.getKey().toString()).toSimpleString() + "\n");
-						count++;
-					}
-				}
-				break;
-		}
-		if (items.isEmpty()) {
-			items.add("No Data Yet");
-		}
-		if(Platform.isFxApplicationThread()) {
-			listView.setItems(items);
-		} else {
-			Platform.runLater(() -> listView.setItems(items));
-		}
-	}
-	//endregion
-
-	//region methods for analysis GUI
-	/**
-	 * outputs all of the data for a class to the specified listView
-	 * @param analysisType the type of data to output
-	 *                     0 = Trip Distance
-	 *                     1 = Trip Speed
-	 *                     2 = Trips Per Stop
-	 * @param listView the listview to output the data to
-	 * @author Grant Fass
-	 */
-	public void displayAnalysis(int analysisType, ListView listView) {
-		int count = 0;
-		Iterator mapIterator;
-		ObservableList<String> items = FXCollections.observableArrayList();
-		switch (analysisType) {
-			case 0:
-				mapIterator = tripDistances().entrySet().iterator();
-				while (mapIterator.hasNext()) {
-					Map.Entry mapElement = (Map.Entry) mapIterator.next();
-					items.add(String.format("Trip ID: %s | %s miles\n", mapElement.getKey().toString(), mapElement.getValue().toString()));
-					count++;
-				}
-				break;
-			case 1:
-				mapIterator = tripSpeeds().entrySet().iterator();
-				while (mapIterator.hasNext()) {
-					Map.Entry mapElement = (Map.Entry) mapIterator.next();
-					items.add(String.format("%s | %s\n", mapElement.getKey().toString(), mapElement.getValue().toString()));
-					count++;
-				}
-				break;
-			case 2:
-				Object[] keys = stop_times.getStop_times().keySet().toArray();
-
-				// separate stop_id from trip_id
-				for(int i = 0; i < keys.length; i++){
-					String value = keys[i].toString();
-					keys[i] = value.substring(0, value.indexOf(';'));
-				}
-
-				// count distinct stops which returns number of how much a stop is used by trips
-				int[] i = {0};
-				Arrays.stream(keys).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
-						.entrySet()
-						.forEach(object -> {
-							String stop_id = object.toString().substring(0, object.toString().indexOf('='));
-							int tripCount = Integer.parseInt(object.toString().substring(object.toString().indexOf('=') + 1));
-								items.add(String.format("%s Trips contain Stop ID: %s\n", tripCount, stop_id));
-							i[0] = i[0] + 1;
-							if (stops.getStop(stop_id) != null) {
-								stops.getStop(stop_id).setTripsPerStop(tripCount);
-							}
-						});
-				break;
-		}
-		if (items.isEmpty()) {
-			items.add("No Data Yet");
-		}
-		if (Platform.isFxApplicationThread()) {
-			listView.setItems(items);
-		} else {
-			Platform.runLater(() -> listView.setItems(items));
-		}
-	}
-
-	/**
-	 * Method that creates a HashMap with all trips with there lengths.
-	 * @author Simon Erickson
-	 * @return tripAndDistance The HashMap with all trips with there lengths.
-	 */
-	private HashMap<String, Integer> tripDistances(){
-		HashMap<String, Integer> returnHashMap = new HashMap();
-		if(!(stop_times == null | stops == null)){
-			//HashMap<trip_id, first_time--first_stop_id--last_time--last_stop_id>
-			HashMap<String, String> tripStartAndEnd = stop_times.getTripStartAndEnd();
-
-			//HashMap<trip_id, distance in miles>
-			HashMap<String, Integer> tripAndDistance = new HashMap<>();
-
-			tripStartAndEnd.forEach((k,v)->{
-				String[] value = v.split("--");
-				tripAndDistance.put(k, tripDistance(stops.getStop(value[1]), stops.getStop(value[3])));
-			});
-			returnHashMap = tripAndDistance;
-		}
-
-		return returnHashMap;
-	}
-
-	/**
-	 * Method that calculates the average speed based on the start and end times of a trip
-	 *
-	 * @author Simon Erickson, Grant Fass
-	 * @return tripAndSpeed The HashMap with all trips with there average speeds.
-	 */
-	private HashMap<String, String> tripSpeeds(){
-		HashMap<String, String> returnHashMap = new HashMap();
-		if(!(stop_times == null | stops == null)){
-			//HashMap<trip_id, first_time--first_stop_id--last_time--last_stop_id>
-			HashMap<String, String> tripStartAndEnd = stop_times.getTripStartAndEnd();
-
-			//HashMap<trip_id, speed in miles per hour>
-			HashMap<String, String> tripAndSpeed = new HashMap<>();
-
-			tripStartAndEnd.forEach((k,v)->{
-				String[] value = v.split("--", -1);
-				long time = Long.parseLong(value[2]) - Long.parseLong(value[0]);
-
-				int miles = tripDistance(stops.getStop(value[1]), stops.getStop(value[3]));
-
-				final double timeConstant = 3600000.0;
-				double hours = time/timeConstant;
-				tripAndSpeed.put(k, String.format("%.2f mph", miles/hours));
-
-			});
-			returnHashMap = tripAndSpeed;
-		}
-
-		return returnHashMap;
-	}
-
-	/**
-	 * Method to find the distance between two stops
-	 * @author Simon Erickson
-	 * @param  fromThisStop the first stop
-	 * @param  toThisStop the second stop
-	 * @return The distance between two stops in miles
-	 */
-	private int tripDistance(Stop fromThisStop, Stop toThisStop) {
-		if(fromThisStop == null || toThisStop == null) {
-			return -1;
-		}
-		double fromThisLat = fromThisStop.getStopLatitude();
-		double toThisLat = toThisStop.getStopLatitude();
-		double fromThisLng = fromThisStop.getStopLongitude();
-		double toThisLng = toThisStop.getStopLongitude();
-
-		double distanceLat = Math.toRadians(fromThisLat - toThisLat);
-		double distanceLng = Math.toRadians(fromThisLng - toThisLng);
-
-		//Haversine formula
-		double a = Math.pow(Math.sin(distanceLat / 2),2);
-		double b = Math.pow(Math.sin(distanceLng / 2),2);
-		double c = Math.cos(Math.toRadians(fromThisLat));
-		double d = Math.cos(Math.toRadians(toThisLat));
-		double e = (a + c * d * b);
-		double f = 2 * Math.atan2(Math.sqrt(e), Math.sqrt(1 - e));
-		double miles = (Math.round(EARTH_RADIUS_MILES * f));
-
-		return (int) miles;
-	}
-	//endregion
-
-	//region methods for map GUI
-
-
-    //START FEATURE 10
-	/**
-	 * returns all of the coordinates of buses
-	 * //TODO: Initialize this
-	 * @return an arraylist of bus location coordinate pairs with longitude first then latitude
-	 * @author Grant Fass, Ryan Becker
-	 */
-	public ArrayList<double[]> getBusCoordinates() {
-
-	    ArrayList<double[]> coordinatePairs = new ArrayList<>();
-	    //Used for initial comparison
-	    final LocalDateTime INITIAL_TIME = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
-		double[] coordinatePair;
-
-		HashMap<String, LocalDateTime> testMap = new HashMap<>();
-
-		HashMap<String, double[]> testCoordinates = new HashMap<>();
-
-	    for (StopTime stopTime : stop_times.getStop_times().values()) {
-
-            String newTripID = stopTime.getTripID();
-            Stop stop = stops.getStop(stopTime.getStopID());
-			if(!testMap.containsKey(newTripID)){
-				LocalDateTime dateTime = createTime(stopTime.getDepartureTime());
-				coordinatePair = getCoordinatePair(stop, INITIAL_TIME, dateTime);
-				if(coordinatePair != null){
-					testMap.put(newTripID, dateTime);
-					testCoordinates.put(newTripID, coordinatePair);
-				}
-
-			} else {
-				LocalDateTime oldDateTime = testMap.get(newTripID);
-				LocalDateTime dateTime = createTime(stopTime.getDepartureTime());
-				if(dateTime.isBefore(oldDateTime)){
-					coordinatePair = getCoordinatePair(stop, dateTime, oldDateTime);
-					if(coordinatePair != null){
-						testMap.replace(newTripID, dateTime);
-						testCoordinates.replace(newTripID, coordinatePair);
-					}
-				}
-			}
-
-        }
-		coordinatePairs.addAll(testCoordinates.values());
-		return coordinatePairs;
-	}
-
-	/**
-	 * Creates LocalTimeObject from TimeStamp retrieved from Stop_Time departure time
-	 * @author Ryan Becker
-	 * @param timestamp TimeStamp retrieved from Stop_Time departure time
-	 * @return LocalDateTime object of current date, coupled with the time listed in timestamp
-	 */
-	private LocalDateTime createTime(Timestamp timestamp){
-		return LocalDateTime.of(LocalDate.now(), LocalTime.from(timestamp.toLocalDateTime()));
-	}
-
-	/**
-	 * Retrieves latitude and longitude for estimated stop that bus is at
-	 * @author Ryan Becker
-	 * @param stop Object used to retrieve the longitude and latitude from
-	 * @param earlierTime lower end threshold that currentTime is compared to
-	 * @param laterTime higher end threshold that currentTime is compared to
-	 * @return double list where first double is latitude, and second double is longitude
-	 */
-	private double[] getCoordinatePair(Stop stop, LocalDateTime earlierTime, LocalDateTime laterTime){
-
-        LocalDateTime currentTime = LocalDateTime.now();
-
-        //TESTING PURPOSE
-		//currentTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(9, 0));
-		//TESTING PURPOSE
-
-        if(currentTime.isAfter(earlierTime) && currentTime.isBefore(laterTime)){
-        	double latitude = stop.getStopLatitude();
-        	double longitude = stop.getStopLongitude();
-
-        	return new double[] {latitude, longitude};
-		}
-
-
-	    return null;
-    }
-
-	//END FEATURE 10
-
-	/**
-	 * retrieves all of the stops that are associated with all routes
-	 * @return a HashMap containing all of the Stops associated with all Routes
-	 * @author Grant Fass
-	 */
-	public HashMap<Route, ArrayList<Stop>> getStopsPerRoute() {
-		//Create a list of all of the keys in StopTimes. Key Format = 'stop_id;trip_id'
-		String[] stopTimeKeys = stop_times.getStop_times().keySet().toArray(new String[0]);
-		//separate stopTimeKeys into stop_id values and trip_id values
-		ArrayList<String> stop_ids = new ArrayList<>();
-		ArrayList<String> trip_ids = new ArrayList<>();
-		for(String s:stopTimeKeys) {
-			stop_ids.add(s.substring(0, s.indexOf(';')));
-			trip_ids.add(s.substring(s.indexOf(';') + 1));
-		}
-		//convert stop_ids to Stops
-		ArrayList<Stop> allStops = new ArrayList<>();
-		for(String stop_id:stop_ids) {
-			allStops.add(stops.getStop(stop_id));
-		}
-		//convert trip_ids to Routes
-		ArrayList<Route> allRoutes = new ArrayList<>();
-		for(String trip_id:trip_ids) {
-			Trip trip = trips.getTrip(trip_id);
-			Route route = new Route("-1", "", "-1", "Null Route", "Null Route",
-					"", "", Color.web("black").toString(), "",
-					"", "", "");
-			if (trip != null) {
-				route = routes.getRoute(trip.getRouteID());
-			}
-			allRoutes.add(route);
-		}
-		//transfer data into HashMap
-		HashMap<Route, ArrayList<Stop>> stopsPerRoute = new HashMap<>();
-		for (int i = 0; i < allRoutes.size(); i++) {
-			//If the Route already exists in the map then add the stop to the list of stops
-			//Otherwise create a new list of stops and add the route and stop to the map
-			//Do not include the stop if it already exists for a route
-			if (stopsPerRoute.containsKey(allRoutes.get(i)) && !stopsPerRoute.get(allRoutes.get(i)).contains(allStops.get(i))) {
-				stopsPerRoute.get(allRoutes.get(i)).add(allStops.get(i));
-			} else if (allRoutes.get(i) != null) {
-				ArrayList<Stop> stopsInRoute = new ArrayList<>();
-				stopsInRoute.add(allStops.get(i));
-				stopsPerRoute.put(allRoutes.get(i), stopsInRoute);
-			}
-		}
-		//Return Map
-		return stopsPerRoute;
-	}
-	//endregion
-
-	//region search functions
-	/**
-	 * Searches for every route_id associated with a Stop given stop_id
-     * @author Ryan Becker
-	 * @param stop_id of Stop being searched
-	 * @return String of formatted route_ids associated with stop_id
-	 */
-	public String getRouteIDs_fromStopID(String stop_id){
-	    ArrayList<String> route_ids = searchStopForRoute_IDs(stop_id);
-	    return formatIDs(route_ids);
-	}
-	/**
-	 * Helper method for getRouteIDs_fromStopID() that gets all route_ids associated with a given stop_id
-	 * @author Ryan Becker
-	 * @param stop_id for a Stop used in searching for all route_ids that are paired with the given stop_id
-	 * @return ArrayList of every route_id that is associated with stop_id
-	 */
-	private ArrayList<String> searchStopForRoute_IDs(String stop_id){
-		ArrayList<String> trip_ids = stop_times.getTripIDs_fromStop_ID(stop_id);
-
-		ArrayList<String> all_route_ids = new ArrayList<>();
-
-		for(String trip_id : trip_ids){
-			ArrayList<String> route_ids = trips.getRouteIDs_fromTripIDs(trip_id);
-			all_route_ids.addAll(onlyAddNew(all_route_ids, route_ids));
-		}
-
-		return all_route_ids;
-	}
-
-
-
-
-	//Start feature 6
-
-	/**
-	 * Searches for every stop_id associated with a Route, given the route_id
-	 * @author Ryan Becker
-	 * @param route_id of Route being searched
-	 * @return String of formatted stop_ids associated with route_id
-	 */
-	public String getStopIDs_fromRouteID(String route_id){
-		ArrayList<String> stop_ids = searchRouteForStop_IDS(route_id);
-		return formatIDs(stop_ids);
-	}
-
-	/**
-	 * Helper method for getStopIDs_fromRouteID() that gets all stop_ids associated with a given route_id
-	 * @author Ryan Becker
-	 * @param route_id for a Route used in searching for all stop_ids that are paired with the given route_id
-	 * @return ArrayList of every stop_id that is associated wtih route_id
-	 */
-	private ArrayList<String> searchRouteForStop_IDS(String route_id){
-		ArrayList<String> trip_ids = trips.getTripIDs_fromRouteID(route_id);
-
-		ArrayList<String> all_stop_ids = new ArrayList<>();
-
-		for(String trip_id : trip_ids){
-			ArrayList<String> stop_ids = stop_times.getStopIDs_fromTripID(trip_id);
-			all_stop_ids.addAll(onlyAddNew(all_stop_ids, stop_ids));
-		}
-
-		return all_stop_ids;
-	}
-	//End feature 6
-
-	//Start feature 7
-
-    /**
-     * Gets all trip_ids with a time occurring in the future
-     * @author Ryan Becker
-     * @param route_id to be searched and find related trip_ids
-     * @return ArrayList of all future trip_ids associated with route_id
-     */
-	public String getFutureTripIDs_fromRouteID(String route_id){
-		ArrayList<String> all_trip_ids = trips.getTripIDs_fromRouteID(route_id);
-		ArrayList<String> future_trip_ids = stop_times.getFutureTripIDs_fromAllTripIDs(all_trip_ids);
-
-		return formatIDs(future_trip_ids);
-	}
-
-	//End feature 7
-
-
-	//Start feature 5/6/7 helpers
-	/**
-	 * Helper method that formats a string of all stop_ids, route_ids, or trip_ids (in future) depending on search type
-	 * to display every found associated with a searched id
-	 * @param ids ArrayList of every found id associated with searched id
-	 * @return String formatting every found id associated with searched on new lines
-	 */
-	private String formatIDs(ArrayList<String> ids){
-		StringBuilder sb = new StringBuilder();
-		for(int i = 0; i < ids.size(); ++i){
-			sb.append((i+1) + ": " + ids.get(i) + "\n");
-		}
-
-		return sb.toString();
-	}
-
-
-	/**
-	 * Helper method that will help remove duplicate occurrences of an id
-	 * @author Ryan Becker
-	 * @param allIDs ArrayList of all current unique ids associated with stop_id
-	 * @param ids all newly read ids, which are only added to returned list if they do not
-	 *                  already occur within allIDs
-	 * @return ArrayList of all ids currently not found in allIDs
-	 */
-	private ArrayList<String> onlyAddNew(ArrayList<String> allIDs, ArrayList<String> ids){
-		ArrayList<String> uniqueIDs = new ArrayList<>();
-		for(String id : ids){
-			if(!allIDs.contains(id)){
-				uniqueIDs.add(id);
-			}
-		}
-		return uniqueIDs;
-	}
-	//End features 5/6/7 helpers
-
-
-	//endregion
-
-	//region Observer Pattern Methods
-	/**
-	 * add an observer to the list of observers to update
-	 * Based on a guide from GeeksForGeeks
-	 * found here: https://www.geeksforgeeks.org/observer-pattern-set-2-implementation/
-	 * @param o the observer to add
-	 * @author Grant Fass
-	 */
-	@Override
-	public void attach(Observer o) {
-		observerList.add(o);
-	}
-	/**
-	 * remove an observer from the list of observers to update
-	 * Based on a guide from GeeksForGeeks
-	 * found here: https://www.geeksforgeeks.org/observer-pattern-set-2-implementation/
-	 * @param o the observer to remove
-	 * @author Grant Fass
-	 */
-	@Override
-	public void detach(Observer o) {
-		observerList.remove(observerList.indexOf(o));
-	}
-
-	/**
-	 * notify all observers that information was changed
-	 * Based on a guide from GeeksForGeeks
-	 * found here: https://www.geeksforgeeks.org/observer-pattern-set-2-implementation/
-	 * @author Grant Fass
-	 */
-	@Override
-	public void notifyObservers() {
-		for (Iterator<Observer> observerIterator = observerList.iterator(); observerIterator.hasNext();) {
-			Observer o = observerIterator.next();
-			o.update(this);
-		}
-	}
-	//endregion
-
-	//region toString
-	/**
-	 * Method to output data as a single concatenated string
-	 * @author GrantFass,
-	 * @return string of data
-	 */
-	@Override
-	public String toString() {
-		return getStopTimes().toString() + getStops().toString()
-				+ getTrips().toString() + getRoutes().toString();
-	}
-
+	//region methods for updating files
 	/**
 	 * Updates attribute in specific class based on selection
 	 * @param type stop_id, trip_id, stopTime, route_id
@@ -1185,6 +624,582 @@ public class Data implements Subject {
 		notifyObservers();
 		return success;
 	}
+	//endregion
 
+	//region methods for clearing files
+
+	/**
+	 * clears all of the stored data in all classes
+	 * @author Grant Fass
+	 */
+	public void clearAllData() {
+		stop_times.clearStopTimes();
+		stops.clearStops();
+		routes.clearRoutes();
+		trips.clearTrips();
+		notifyObservers();
+	}
+	//endregion
+
+	//region methods for data GUI
+	/**
+	 * outputs all of the data for a class to the specified listView
+	 * @param dataType selects which data to output.
+	 *             0 = Routes
+	 *             1 = Stops
+	 *             2 = StopTimes
+	 *             3 = Trips
+	 * @param stringType selects which string format to output in.
+	 *                   0 = One Line Simple String
+	 *                   1 = Full Expanded Data
+	 * @param listView the list view to add the entries to
+	 * @author Grant Fass
+	 */
+	public void displayData(int dataType, int stringType, ListView listView) {
+		int count = 0;
+		Iterator mapIterator;
+		ObservableList<String> items = FXCollections.observableArrayList();
+		switch (dataType) {
+			case 0:
+				mapIterator = routes.getRoutes().entrySet().iterator();
+				if (stringType == 1) {
+					while (mapIterator.hasNext()) {
+						Map.Entry mapElement = (Map.Entry) mapIterator.next();
+						items.add(routes.getRoute(mapElement.getKey().toString()).toString() + "\n");
+						count++;
+					}
+				} else {
+					while (mapIterator.hasNext()) {
+						Map.Entry mapElement = (Map.Entry) mapIterator.next();
+						items.add(routes.getRoute(mapElement.getKey().toString()).toSimpleString() + "\n");
+						count++;
+					}
+				}
+				break;
+			case 1:
+				mapIterator = stops.getStops().entrySet().iterator();
+				if (stringType == 1) {
+					while (mapIterator.hasNext()) {
+						Map.Entry mapElement = (Map.Entry) mapIterator.next();
+						items.add(stops.getStop(mapElement.getKey().toString()).toString() + "\n");
+						count++;
+					}
+				} else {
+					while (mapIterator.hasNext()) {
+						Map.Entry mapElement = (Map.Entry) mapIterator.next();
+						items.add(stops.getStop(mapElement.getKey().toString()).toSimpleString() + "\n");
+						count++;
+					}
+				}
+				break;
+			case 2:
+				mapIterator = stop_times.getStop_times().entrySet().iterator();
+				if (stringType == 1) {
+					while (mapIterator.hasNext()) {
+						Map.Entry mapElement = (Map.Entry) mapIterator.next();
+						items.add(stop_times.getStop_times().get(mapElement.getKey()).toString() + "\n");
+						count++;
+					}
+				} else {
+					while (mapIterator.hasNext()) {
+						Map.Entry mapElement = (Map.Entry) mapIterator.next();
+						items.add(stop_times.getStop_times().get(mapElement.getKey()).toSimpleString() + "\n");
+						count++;
+					}
+				}
+				break;
+			case 3:
+				mapIterator = trips.getTrips().entrySet().iterator();
+				if (stringType == 1) {
+					while (mapIterator.hasNext()) {
+						Map.Entry mapElement = (Map.Entry) mapIterator.next();
+						items.add(trips.getTrip(mapElement.getKey().toString()).toString() + "\n");
+						count++;
+					}
+				} else {
+					while (mapIterator.hasNext()) {
+						Map.Entry mapElement = (Map.Entry) mapIterator.next();
+						items.add(trips.getTrip(mapElement.getKey().toString()).toSimpleString() + "\n");
+						count++;
+					}
+				}
+				break;
+		}
+		if (items.isEmpty()) {
+			items.add("No Data Yet");
+		}
+		if(Platform.isFxApplicationThread()) {
+			listView.setItems(items);
+		} else {
+			Platform.runLater(() -> listView.setItems(items));
+		}
+	}
+	//endregion
+
+	//region methods for analysis GUI
+	/**
+	 * outputs all of the data for a class to the specified listView
+	 * @param analysisType the type of data to output
+	 *                     0 = Trip Distance
+	 *                     1 = Trip Speed
+	 *                     2 = Trips Per Stop
+	 * @param listView the listview to output the data to
+	 * @author Grant Fass
+	 */
+	public void displayAnalysis(int analysisType, ListView listView) {
+		int count = 0;
+		Iterator mapIterator;
+		ObservableList<String> items = FXCollections.observableArrayList();
+		switch (analysisType) {
+			case 0:
+				mapIterator = tripDistances().entrySet().iterator();
+				while (mapIterator.hasNext()) {
+					Map.Entry mapElement = (Map.Entry) mapIterator.next();
+					items.add(String.format("Trip ID: %s | %s miles\n", mapElement.getKey().toString(), mapElement.getValue().toString()));
+					count++;
+				}
+				break;
+			case 1:
+				mapIterator = tripSpeeds().entrySet().iterator();
+				while (mapIterator.hasNext()) {
+					Map.Entry mapElement = (Map.Entry) mapIterator.next();
+					items.add(String.format("%s | %s\n", mapElement.getKey().toString(), mapElement.getValue().toString()));
+					count++;
+				}
+				break;
+			case 2:
+				Object[] keys = stop_times.getStop_times().keySet().toArray();
+
+				// separate stop_id from trip_id
+				for(int i = 0; i < keys.length; i++){
+					String value = keys[i].toString();
+					keys[i] = value.substring(0, value.indexOf(';'));
+				}
+
+				// count distinct stops which returns number of how much a stop is used by trips
+				int[] i = {0};
+				Arrays.stream(keys).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+						.entrySet()
+						.forEach(object -> {
+							String stop_id = object.toString().substring(0, object.toString().indexOf('='));
+							int tripCount = Integer.parseInt(object.toString().substring(object.toString().indexOf('=') + 1));
+								items.add(String.format("%s Trips contain Stop ID: %s\n", tripCount, stop_id));
+							i[0] = i[0] + 1;
+							if (stops.getStop(stop_id) != null) {
+								stops.getStop(stop_id).setTripsPerStop(tripCount);
+							}
+						});
+				break;
+		}
+		if (items.isEmpty()) {
+			items.add("No Data Yet");
+		}
+		if (Platform.isFxApplicationThread()) {
+			listView.setItems(items);
+		} else {
+			Platform.runLater(() -> listView.setItems(items));
+		}
+	}
+
+	/**
+	 * Method that creates a HashMap with all trips with there lengths.
+	 * @author Simon Erickson
+	 * @return tripAndDistance The HashMap with all trips with there lengths.
+	 */
+	private HashMap<String, Integer> tripDistances(){
+		HashMap<String, Integer> returnHashMap = new HashMap();
+		if(!(stop_times == null | stops == null)){
+			//HashMap<trip_id, first_time--first_stop_id--last_time--last_stop_id>
+			HashMap<String, String> tripStartAndEnd = stop_times.getTripStartAndEnd();
+
+			//HashMap<trip_id, distance in miles>
+			HashMap<String, Integer> tripAndDistance = new HashMap<>();
+
+			tripStartAndEnd.forEach((k,v)->{
+				String[] value = v.split("--");
+				tripAndDistance.put(k, tripDistance(stops.getStop(value[1]), stops.getStop(value[3])));
+			});
+			returnHashMap = tripAndDistance;
+		}
+
+		return returnHashMap;
+	}
+
+	/**
+	 * Method that calculates the average speed based on the start and end times of a trip
+	 *
+	 * @author Simon Erickson, Grant Fass
+	 * @return tripAndSpeed The HashMap with all trips with there average speeds.
+	 */
+	private HashMap<String, String> tripSpeeds(){
+		HashMap<String, String> returnHashMap = new HashMap();
+		if(!(stop_times == null | stops == null)){
+			//HashMap<trip_id, first_time--first_stop_id--last_time--last_stop_id>
+			HashMap<String, String> tripStartAndEnd = stop_times.getTripStartAndEnd();
+
+			//HashMap<trip_id, speed in miles per hour>
+			HashMap<String, String> tripAndSpeed = new HashMap<>();
+
+			tripStartAndEnd.forEach((k,v)->{
+				String[] value = v.split("--", -1);
+				long time = Long.parseLong(value[2]) - Long.parseLong(value[0]);
+
+				int miles = tripDistance(stops.getStop(value[1]), stops.getStop(value[3]));
+
+				final double timeConstant = 3600000.0;
+				double hours = time/timeConstant;
+				tripAndSpeed.put(k, String.format("%.2f mph", miles/hours));
+
+			});
+			returnHashMap = tripAndSpeed;
+		}
+
+		return returnHashMap;
+	}
+
+	/**
+	 * Method to find the distance between two stops
+	 * @author Simon Erickson
+	 * @param  fromThisStop the first stop
+	 * @param  toThisStop the second stop
+	 * @return The distance between two stops in miles
+	 */
+	private int tripDistance(Stop fromThisStop, Stop toThisStop) {
+		if(fromThisStop == null || toThisStop == null) {
+			return -1;
+		}
+		double fromThisLat = fromThisStop.getStopLatitude();
+		double toThisLat = toThisStop.getStopLatitude();
+		double fromThisLng = fromThisStop.getStopLongitude();
+		double toThisLng = toThisStop.getStopLongitude();
+
+		double distanceLat = Math.toRadians(fromThisLat - toThisLat);
+		double distanceLng = Math.toRadians(fromThisLng - toThisLng);
+
+		//Haversine formula
+		double a = Math.pow(Math.sin(distanceLat / 2),2);
+		double b = Math.pow(Math.sin(distanceLng / 2),2);
+		double c = Math.cos(Math.toRadians(fromThisLat));
+		double d = Math.cos(Math.toRadians(toThisLat));
+		double e = (a + c * d * b);
+		double f = 2 * Math.atan2(Math.sqrt(e), Math.sqrt(1 - e));
+		double miles = (Math.round(EARTH_RADIUS_MILES * f));
+
+		return (int) miles;
+	}
+	//endregion
+
+	//region methods for map GUI
+
+
+    //START FEATURE 10
+	/**
+	 * returns all of the coordinates of buses
+	 * //TODO: Initialize this
+	 * @return an arraylist of bus location coordinate pairs with longitude first then latitude
+	 * @author Grant Fass, Ryan Becker
+	 */
+	public ArrayList<double[]> getBusCoordinates() {
+
+	    ArrayList<double[]> coordinatePairs = new ArrayList<>();
+	    //Used for initial comparison
+	    final LocalDateTime INITIAL_TIME = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+		double[] coordinatePair;
+
+		HashMap<String, LocalDateTime> testMap = new HashMap<>();
+
+		HashMap<String, double[]> testCoordinates = new HashMap<>();
+
+	    for (StopTime stopTime : stop_times.getStop_times().values()) {
+
+            String newTripID = stopTime.getTripID();
+            Stop stop = stops.getStop(stopTime.getStopID());
+			if(!testMap.containsKey(newTripID)){
+				LocalDateTime dateTime = createTime(stopTime.getDepartureTime());
+				coordinatePair = getCoordinatePair(stop, INITIAL_TIME, dateTime);
+				if(coordinatePair != null){
+					testMap.put(newTripID, dateTime);
+					testCoordinates.put(newTripID, coordinatePair);
+				}
+
+			} else {
+				LocalDateTime oldDateTime = testMap.get(newTripID);
+				LocalDateTime dateTime = createTime(stopTime.getDepartureTime());
+				if(dateTime.isBefore(oldDateTime)){
+					coordinatePair = getCoordinatePair(stop, dateTime, oldDateTime);
+					if(coordinatePair != null){
+						testMap.replace(newTripID, dateTime);
+						testCoordinates.replace(newTripID, coordinatePair);
+					}
+				}
+			}
+
+        }
+		coordinatePairs.addAll(testCoordinates.values());
+		return coordinatePairs;
+	}
+
+	/**
+	 * Creates LocalTimeObject from TimeStamp retrieved from Stop_Time departure time
+	 * @author Ryan Becker
+	 * @param timestamp TimeStamp retrieved from Stop_Time departure time
+	 * @return LocalDateTime object of current date, coupled with the time listed in timestamp
+	 */
+	private LocalDateTime createTime(Timestamp timestamp){
+		return LocalDateTime.of(LocalDate.now(), LocalTime.from(timestamp.toLocalDateTime()));
+	}
+
+	/**
+	 * Retrieves latitude and longitude for estimated stop that bus is at
+	 * @author Ryan Becker
+	 * @param stop Object used to retrieve the longitude and latitude from
+	 * @param earlierTime lower end threshold that currentTime is compared to
+	 * @param laterTime higher end threshold that currentTime is compared to
+	 * @return double list where first double is latitude, and second double is longitude
+	 */
+	private double[] getCoordinatePair(Stop stop, LocalDateTime earlierTime, LocalDateTime laterTime){
+		if (stop != null) {
+			LocalDateTime currentTime = LocalDateTime.now();
+
+			//TESTING PURPOSE
+			//currentTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(9, 0));
+			//TESTING PURPOSE
+
+			if(currentTime.isAfter(earlierTime) && currentTime.isBefore(laterTime)){
+				double latitude = stop.getStopLatitude();
+				double longitude = stop.getStopLongitude();
+
+				return new double[] {latitude, longitude};
+			}
+		}
+	    return null;
+    }
+
+	//END FEATURE 10
+
+	/**
+	 * retrieves all of the stops that are associated with all routes
+	 * @return a HashMap containing all of the Stops associated with all Routes
+	 * @author Grant Fass
+	 */
+	public HashMap<Route, ArrayList<Stop>> getStopsPerRoute() {
+		//Create a list of all of the keys in StopTimes. Key Format = 'stop_id;trip_id'
+		String[] stopTimeKeys = stop_times.getStop_times().keySet().toArray(new String[0]);
+		//separate stopTimeKeys into stop_id values and trip_id values
+		ArrayList<String> stop_ids = new ArrayList<>();
+		ArrayList<String> trip_ids = new ArrayList<>();
+		for(String s:stopTimeKeys) {
+			stop_ids.add(s.substring(0, s.indexOf(';')));
+			trip_ids.add(s.substring(s.indexOf(';') + 1));
+		}
+		//convert stop_ids to Stops
+		ArrayList<Stop> allStops = new ArrayList<>();
+		for(String stop_id:stop_ids) {
+			allStops.add(stops.getStop(stop_id));
+		}
+		//convert trip_ids to Routes
+		ArrayList<Route> allRoutes = new ArrayList<>();
+		for(String trip_id:trip_ids) {
+			Trip trip = trips.getTrip(trip_id);
+			Route route = new Route("-1", "", "-1", "Null Route", "Null Route",
+					"", "", Color.web("black").toString(), "",
+					"", "", "");
+			if (trip != null) {
+				route = routes.getRoute(trip.getRouteID());
+			}
+			allRoutes.add(route);
+		}
+		//transfer data into HashMap
+		HashMap<Route, ArrayList<Stop>> stopsPerRoute = new HashMap<>();
+		for (int i = 0; i < allRoutes.size(); i++) {
+			//If the Route already exists in the map then add the stop to the list of stops
+			//Otherwise create a new list of stops and add the route and stop to the map
+			//Do not include the stop if it already exists for a route
+			if (stopsPerRoute.containsKey(allRoutes.get(i)) && !stopsPerRoute.get(allRoutes.get(i)).contains(allStops.get(i))) {
+				stopsPerRoute.get(allRoutes.get(i)).add(allStops.get(i));
+			} else if (allRoutes.get(i) != null) {
+				ArrayList<Stop> stopsInRoute = new ArrayList<>();
+				stopsInRoute.add(allStops.get(i));
+				stopsPerRoute.put(allRoutes.get(i), stopsInRoute);
+			}
+		}
+		//Return Map
+		return stopsPerRoute;
+	}
+	//endregion
+
+	//region search functions
+	/**
+	 * Searches for every route_id associated with a Stop given stop_id
+     * @author Ryan Becker
+	 * @param stop_id of Stop being searched
+	 * @return String of formatted route_ids associated with stop_id
+	 */
+	public String getRouteIDs_fromStopID(String stop_id){
+	    ArrayList<String> route_ids = searchStopForRoute_IDs(stop_id);
+	    return formatIDs(route_ids);
+	}
+	/**
+	 * Helper method for getRouteIDs_fromStopID() that gets all route_ids associated with a given stop_id
+	 * @author Ryan Becker
+	 * @param stop_id for a Stop used in searching for all route_ids that are paired with the given stop_id
+	 * @return ArrayList of every route_id that is associated with stop_id
+	 */
+	private ArrayList<String> searchStopForRoute_IDs(String stop_id){
+		ArrayList<String> trip_ids = stop_times.getTripIDs_fromStop_ID(stop_id);
+
+		ArrayList<String> all_route_ids = new ArrayList<>();
+
+		for(String trip_id : trip_ids){
+			ArrayList<String> route_ids = trips.getRouteIDs_fromTripIDs(trip_id);
+			all_route_ids.addAll(onlyAddNew(all_route_ids, route_ids));
+		}
+
+		return all_route_ids;
+	}
+
+
+
+
+	//Start feature 6
+
+	/**
+	 * Searches for every stop_id associated with a Route, given the route_id
+	 * @author Ryan Becker
+	 * @param route_id of Route being searched
+	 * @return String of formatted stop_ids associated with route_id
+	 */
+	public String getStopIDs_fromRouteID(String route_id){
+		ArrayList<String> stop_ids = searchRouteForStop_IDS(route_id);
+		return formatIDs(stop_ids);
+	}
+
+	/**
+	 * Helper method for getStopIDs_fromRouteID() that gets all stop_ids associated with a given route_id
+	 * @author Ryan Becker
+	 * @param route_id for a Route used in searching for all stop_ids that are paired with the given route_id
+	 * @return ArrayList of every stop_id that is associated wtih route_id
+	 */
+	private ArrayList<String> searchRouteForStop_IDS(String route_id){
+		ArrayList<String> trip_ids = trips.getTripIDs_fromRouteID(route_id);
+
+		ArrayList<String> all_stop_ids = new ArrayList<>();
+
+		for(String trip_id : trip_ids){
+			ArrayList<String> stop_ids = stop_times.getStopIDs_fromTripID(trip_id);
+			all_stop_ids.addAll(onlyAddNew(all_stop_ids, stop_ids));
+		}
+
+		return all_stop_ids;
+	}
+	//End feature 6
+
+	//Start feature 7
+
+    /**
+     * Gets all trip_ids with a time occurring in the future
+     * @author Ryan Becker
+     * @param route_id to be searched and find related trip_ids
+     * @return ArrayList of all future trip_ids associated with route_id
+     */
+	public String getFutureTripIDs_fromRouteID(String route_id){
+		ArrayList<String> all_trip_ids = trips.getTripIDs_fromRouteID(route_id);
+		ArrayList<String> future_trip_ids = stop_times.getFutureTripIDs_fromAllTripIDs(all_trip_ids);
+
+		return formatIDs(future_trip_ids);
+	}
+
+	//End feature 7
+
+
+	//Start feature 5/6/7 helpers
+	/**
+	 * Helper method that formats a string of all stop_ids, route_ids, or trip_ids (in future) depending on search type
+	 * to display every found associated with a searched id
+	 * @param ids ArrayList of every found id associated with searched id
+	 * @return String formatting every found id associated with searched on new lines
+	 */
+	private String formatIDs(ArrayList<String> ids){
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0; i < ids.size(); ++i){
+			sb.append((i+1) + ": " + ids.get(i) + "\n");
+		}
+
+		return sb.toString();
+	}
+
+
+	/**
+	 * Helper method that will help remove duplicate occurrences of an id
+	 * @author Ryan Becker
+	 * @param allIDs ArrayList of all current unique ids associated with stop_id
+	 * @param ids all newly read ids, which are only added to returned list if they do not
+	 *                  already occur within allIDs
+	 * @return ArrayList of all ids currently not found in allIDs
+	 */
+	private ArrayList<String> onlyAddNew(ArrayList<String> allIDs, ArrayList<String> ids){
+		ArrayList<String> uniqueIDs = new ArrayList<>();
+		for(String id : ids){
+			if(!allIDs.contains(id)){
+				uniqueIDs.add(id);
+			}
+		}
+		return uniqueIDs;
+	}
+	//End features 5/6/7 helpers
+
+
+	//endregion
+
+	//region Observer Pattern Methods
+	/**
+	 * add an observer to the list of observers to update
+	 * Based on a guide from GeeksForGeeks
+	 * found here: https://www.geeksforgeeks.org/observer-pattern-set-2-implementation/
+	 * @param o the observer to add
+	 * @author Grant Fass
+	 */
+	@Override
+	public void attach(Observer o) {
+		observerList.add(o);
+	}
+	/**
+	 * remove an observer from the list of observers to update
+	 * Based on a guide from GeeksForGeeks
+	 * found here: https://www.geeksforgeeks.org/observer-pattern-set-2-implementation/
+	 * @param o the observer to remove
+	 * @author Grant Fass
+	 */
+	@Override
+	public void detach(Observer o) {
+		observerList.remove(observerList.indexOf(o));
+	}
+
+	/**
+	 * notify all observers that information was changed
+	 * Based on a guide from GeeksForGeeks
+	 * found here: https://www.geeksforgeeks.org/observer-pattern-set-2-implementation/
+	 * @author Grant Fass
+	 */
+	@Override
+	public void notifyObservers() {
+		for (Iterator<Observer> observerIterator = observerList.iterator(); observerIterator.hasNext();) {
+			Observer o = observerIterator.next();
+			o.update(this);
+		}
+	}
+	//endregion
+
+	//region toString
+	/**
+	 * Method to output data as a single concatenated string
+	 * @author GrantFass,
+	 * @return string of data
+	 */
+	@Override
+	public String toString() {
+		return getStopTimes().toString() + getStops().toString()
+				+ getTrips().toString() + getRoutes().toString();
+	}
 	//endregion
 }//end Data

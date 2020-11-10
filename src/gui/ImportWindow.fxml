@@ -137,6 +137,8 @@
                    maxWidth="Infinity" maxHeight="30" minWidth="20" minHeight="20"/>
             <TextArea fx:id="alertTextArea" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
                       maxWidth="Infinity" maxHeight="Infinity" minWidth="20" minHeight="20"/>
+            <Button onAction="#clearFiles" text="Clear All Data" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+                    maxWidth="Infinity" maxHeight="20" minWidth="20" minHeight="20"/>
         </VBox>
     </HBox>
 </VBox>

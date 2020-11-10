@@ -166,6 +166,16 @@ public class Routes {
 	}
 
 	/**
+	 * clears the routes data
+	 * @return true
+	 * @author Grant Fass
+	 */
+	public boolean clearRoutes() {
+		routes.clear();
+		return true;
+	}
+
+	/**
 	 * get the hashmap value
 	 * @return the hashmap value
 	 * @author Grant Fass

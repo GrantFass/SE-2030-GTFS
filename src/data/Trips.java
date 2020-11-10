@@ -48,6 +48,16 @@ public class Trips {
     }
 
     /**
+     * clears all trip data
+     * @return true
+     * @author Grant Fass
+     */
+    public boolean clearTrips() {
+        trips.clear();
+        return true;
+    }
+
+    /**
      * adds trip parameter to trips hash map with the trip_id of trip as the key,
      * and trip as the value.
      *
