@@ -84,7 +84,7 @@ public class SearchWindowController {
     @FXML
     private void displayHelp() {
         MainWindowController.displayAlert(Alert.AlertType.INFORMATION, "General Transit Feed Specification Tool Information",
-                "Import Window Help", "This window is used to search for information" +
+                "Search Window Help", "This window is used to search for information" +
                         "\nHow To Use:" +
                         "\n1. Click on the 'Output Type' dropdown and select the data type you are searching for" +
                         "\n2. Click on the 'Input Type' dropdown and select the data type that you are going to use as input to search" +

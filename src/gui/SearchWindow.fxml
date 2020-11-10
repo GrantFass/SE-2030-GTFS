@@ -93,7 +93,7 @@
             <Label text="Output" alignment="CENTER" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
                    maxWidth="Infinity" maxHeight="Infinity"/>
             <TextArea fx:id="output" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
-                      maxWidth="Infinity" maxHeight="Infinity"/>
+                      maxWidth="Infinity" maxHeight="Infinity" wrapText="true"/>
         </VBox>
     </HBox>
 </VBox>

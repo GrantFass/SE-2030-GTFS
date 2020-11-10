@@ -94,7 +94,7 @@ public class UpdateWindowController {
     @FXML
     private void displayHelp() {
         MainWindowController.displayAlert(Alert.AlertType.INFORMATION, "General Transit Feed Specification Tool Information",
-                "Import Window Help", "This window is used to update information" +
+                "Update Window Help", "This window is used to update information" +
                         "\nHow To Use:" +
                         "\n1. Click on the 'Pick Type' dropdown and select the data type you are updating for" +
                         "\n2. Click on the 'Pick Type' Text Field and enter the id to search and update" +
