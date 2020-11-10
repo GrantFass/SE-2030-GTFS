@@ -112,7 +112,7 @@ public class Data implements Subject {
 		Callable<String> exportStops = () -> {
 			String message;
 			if (!directory.isEmpty() && stopsCheck) {
-				message = routes.exportRoutes(new File(directory)) ?
+				message = stops.exportStops(new File(directory)) ?
 						String.format("✓: Stops Exported Successfully\n  Time: %02d:%02d:%02d\n",
 								LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(),
 								LocalDateTime.now().getSecond()) : "Stops Export Failed\n";
@@ -126,7 +126,7 @@ public class Data implements Subject {
 		Callable<String> exportStopTimes = () -> {
 			String message;
 			if (!directory.isEmpty() && stopTimesCheck) {
-				message = routes.exportRoutes(new File(directory)) ?
+				message = stop_times.exportStopTimes(new File(directory)) ?
 						String.format("✓: StopTimes Exported Successfully\n  Time: %02d:%02d:%02d\n",
 								LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(),
 								LocalDateTime.now().getSecond()) : "StopTimes Export Failed\n";
@@ -140,7 +140,7 @@ public class Data implements Subject {
 		Callable<String> exportTrips = () -> {
 			String message;
 			if (!directory.isEmpty() && tripsCheck) {
-				message = routes.exportRoutes(new File(directory)) ?
+				message = trips.exportTrips(new File(directory)) ?
 						String.format("✓: Trips Exported Successfully\n  Time: %02d:%02d:%02d\n",
 								LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(),
 								LocalDateTime.now().getSecond()) : "Trips Export Failed\n";
@@ -777,14 +777,12 @@ public class Data implements Subject {
 				}
 
 				// count distinct stops which returns number of how much a stop is used by trips
-				int[] i = {0};
 				Arrays.stream(keys).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
 						.entrySet()
 						.forEach(object -> {
 							String stop_id = object.toString().substring(0, object.toString().indexOf('='));
 							int tripCount = Integer.parseInt(object.toString().substring(object.toString().indexOf('=') + 1));
 								items.add(String.format("%s Trips contain Stop ID: %s\n", tripCount, stop_id));
-							i[0] = i[0] + 1;
 							if (stops.getStop(stop_id) != null) {
 								stops.getStop(stop_id).setTripsPerStop(tripCount);
 							}
@@ -807,7 +805,7 @@ public class Data implements Subject {
 	 * @return tripAndDistance The HashMap with all trips with there lengths.
 	 */
 	private HashMap<String, Integer> tripDistances(){
-		HashMap<String, Integer> returnHashMap = new HashMap();
+		HashMap<String, Integer> returnHashMap = new HashMap<>();
 		if(!(stop_times == null | stops == null)){
 			//HashMap<trip_id, first_time--first_stop_id--last_time--last_stop_id>
 			HashMap<String, String> tripStartAndEnd = stop_times.getTripStartAndEnd();
@@ -832,7 +830,7 @@ public class Data implements Subject {
 	 * @return tripAndSpeed The HashMap with all trips with there average speeds.
 	 */
 	private HashMap<String, String> tripSpeeds(){
-		HashMap<String, String> returnHashMap = new HashMap();
+		HashMap<String, String> returnHashMap = new HashMap<>();
 		if(!(stop_times == null | stops == null)){
 			//HashMap<trip_id, first_time--first_stop_id--last_time--last_stop_id>
 			HashMap<String, String> tripStartAndEnd = stop_times.getTripStartAndEnd();
@@ -895,14 +893,12 @@ public class Data implements Subject {
     //START FEATURE 10
 	/**
 	 * returns all of the coordinates of buses
-	 * //TODO: Initialize this
 	 * @return an arraylist of bus location coordinate pairs with longitude first then latitude
 	 * @author Grant Fass, Ryan Becker
 	 */
 	public ArrayList<double[]> getBusCoordinates() {
 
-	    ArrayList<double[]> coordinatePairs = new ArrayList<>();
-	    //Used for initial comparison
+		//Used for initial comparison
 	    final LocalDateTime INITIAL_TIME = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
 		double[] coordinatePair;
 
@@ -935,8 +931,7 @@ public class Data implements Subject {
 			}
 
         }
-		coordinatePairs.addAll(testCoordinates.values());
-		return coordinatePairs;
+		return new ArrayList<>(testCoordinates.values());
 	}
 
 	/**
@@ -1122,7 +1117,7 @@ public class Data implements Subject {
 	private String formatIDs(ArrayList<String> ids){
 		StringBuilder sb = new StringBuilder();
 		for(int i = 0; i < ids.size(); ++i){
-			sb.append((i+1) + ": " + ids.get(i) + "\n");
+			sb.append(i + 1).append(": ").append(ids.get(i)).append("\n");
 		}
 
 		return sb.toString();
@@ -1172,7 +1167,7 @@ public class Data implements Subject {
 	 */
 	@Override
 	public void detach(Observer o) {
-		observerList.remove(observerList.indexOf(o));
+		observerList.remove(o);
 	}
 
 	/**
@@ -1183,8 +1178,7 @@ public class Data implements Subject {
 	 */
 	@Override
 	public void notifyObservers() {
-		for (Iterator<Observer> observerIterator = observerList.iterator(); observerIterator.hasNext();) {
-			Observer o = observerIterator.next();
+		for (Observer o : observerList) {
 			o.update(this);
 		}
 	}

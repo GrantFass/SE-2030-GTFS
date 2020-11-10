@@ -34,17 +34,97 @@ import java.util.Scanner;
  * @created 06-Oct-2020 10:28:39 AM
  */
 public class Trips {
-
+    //region properties
     private HashMap<String, Trip> trips;
     private Headers headers = new Headers();
+    //endregion
 
+    //region constructors
     /**
      * Trips constructor initialized with empty hash map
      *
      * @author Simon Erickson
      */
     public Trips() {
-        trips = new HashMap<String, Trip>();
+        trips = new HashMap<>();
+    }
+    //endregion
+
+    //region getters
+    /**
+     * @param trip_id string identifying requested trip
+     * @return trip associated with the specified trip_id
+     * @author Simon Erickson
+     */
+    public Trip getTrip(String trip_id) {
+        return trips.get(trip_id);
+    }
+
+    /**
+     * output simplified data as a single concatenated string
+     * @return string of data
+     * @author Grant Fass
+     */
+    public HashMap<String, Trip> getTrips() {
+        return trips;
+    }
+
+    /**
+     * Gets every route_id that is paired with the searched trip_id within a given Trip object
+     * @author Ryan Becker
+     * @param trip_id associated with a Trip that is used to search for paired route_id within a given Trip object
+     * @return ArrayList of every route_id that is within a Trip object that also contains the searched trip_id
+     */
+    public ArrayList<String> getRouteIDs_fromTripIDs(String trip_id){
+        ArrayList<String> route_ids = new ArrayList<>();
+        for(Trip trip : trips.values()){
+            if(trip.getTripID().equals(trip_id)){
+                route_ids.add(trip.getRouteID());
+            }
+        }
+        return route_ids;
+    }
+
+    /**
+     * Gets every trip_id that is paired with a given route_id
+     * @author Ryan Becker
+     * @param route_id to be searched for, and find associated trip_ids
+     * @return ArrayList of all trip_ids related to route_id
+     */
+    public ArrayList<String> getTripIDs_fromRouteID(String route_id){
+        ArrayList<String> trip_ids = new ArrayList<>();
+        for(Trip trip : trips.values()){
+            if(trip.getRouteID().equalsIgnoreCase(route_id)){
+                trip_ids.add(trip.getTripID());
+            }
+        }
+        return trip_ids;
+    }
+
+    /**
+     * @author Joy Cross
+     * @return current headers of routes
+     */
+    public Headers getHeaders(){
+        return headers;
+    }
+    //endregion
+
+    //region methods for adjusting data
+    /**
+     * Removes specified Trip object from trips
+     *
+     * @param trip_id Trip to be removed
+     * @return true if deleted, false otherwise
+     * @author Simon Erickson
+     */
+    public boolean removeTrip(String trip_id) {
+        Trip tripRemoved = trips.remove(trip_id);
+        boolean deleted = false;
+        if (tripRemoved != null) {
+            deleted = true;
+        }
+        return deleted;
     }
 
     /**
@@ -73,41 +153,30 @@ public class Trips {
         }
         return added;
     }
+    //endregion
 
+    //region methods for exporting files
     /**
-     * @param trip_id string identifying requested trip
-     * @return trip associated with the specified trip_id
-     * @author Simon Erickson
-     */
-    public Trip getTrip(String trip_id) {
-        return trips.get(trip_id);
-    }
-
-    /**
-     * @author Joy Cross
-     * @return current headers of routes
-     */
-    public Headers getHeaders(){
-        return headers;
-    }
-
-
-    /**
-     * Removes specified Trip object from trips
+     * Method to write Trip data to a trips.txt file
      *
-     * @param trip_id Trip to be removed
-     * @return true if deleted, false otherwise
-     * @author Simon Erickson
+     * @param file the trips.txt file desired location
+     * @return true if the file was exported
+     * @author Simon Erickson, Joy Cross, Grant Fass
      */
-    public boolean removeTrip(String trip_id) {
-        Trip tripRemoved = trips.remove(trip_id);
-        boolean deleted = false;
-        if (tripRemoved != null) {
-            deleted = true;
+    public boolean exportTrips(File file) {
+        try (PrintWriter out = new PrintWriter((new BufferedOutputStream(new FileOutputStream(new File(file, "trips.txt")))))) {
+            out.append(headers.toString());
+            for (String key: trips.keySet()) {
+                out.append(trips.get(key).getDataLine(headers));
+            }
+        } catch (IOException e) {
+            return false;
         }
-        return deleted;
+        return true;
     }
+    //endregion
 
+    //region methods for importing files
     /**
      * Method to parse data from a specified file
      *
@@ -142,51 +211,6 @@ public class Trips {
         }
         String successMessage = String.format("  ✓: Trips Imported Successfully.\n  %s\n  %s\n", emptyPrior ? "New Trips Data Imported" : "Trip Data Overwritten", wasLineSkipped ? "Lines Skipped During Import Of Trips" : "All Lines Imported Successfully");
         return String.format("IMPORT TRIPS:\n%s", wasFileLoaded ? successMessage : failMessage);
-    }
-
-    /**
-     * Method to write Trip data to a trips.txt file
-     *
-     * @param file the trips.txt file desired location
-     * @return true if the file was exported
-     * @author Simon Erickson, Joy Cross, Grant Fass
-     */
-    public boolean exportTrips(File file) {
-        try (PrintWriter out = new PrintWriter((new BufferedOutputStream(new FileOutputStream(new File(file, "trips.txt")))))) {
-            out.append(createHeaderLine(headers));
-            for (String key: trips.keySet()) {
-                out.append(trips.get(key).getDataLine(headers));
-            }
-        } catch (IOException e) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Creates header line from input headers
-     * @param headers headers to put into a String output
-     * @return String
-     * @author Joy Cross
-     */
-    public String createHeaderLine(Headers headers) {
-        StringBuilder sb = new StringBuilder();
-        int i;
-        for(i = 0; i < headers.length()-1; i++){
-            sb.append(headers.getHeaderName(i) + ",");
-        }
-        sb.append(headers.getHeaderName(i) + "\n");
-
-        return sb.toString();
-    }
-
-    /**
-     * output simplified data as a single concatenated string
-     * @return string of data
-     * @author Grant Fass
-     */
-    public HashMap<String, Trip> getTrips() {
-        return trips;
     }
 
     /**
@@ -302,47 +326,5 @@ public class Trips {
         }
         return "";
     }
-
-
-
-    //Start feature five
-
-    /**
-     * Gets every route_id that is paired with the searched trip_id within a given Trip object
-     * @author Ryan Becker
-     * @param trip_id associated with a Trip that is used to search for paired route_id within a given Trip object
-     * @return ArrayList of every route_id that is within a Trip object that also contains the searched trip_id
-     */
-    public ArrayList<String> getRouteIDs_fromTripIDs(String trip_id){
-        ArrayList<String> route_ids = new ArrayList<>();
-        for(Trip trip : trips.values()){
-            if(trip.getTripID().equals(trip_id)){
-                route_ids.add(trip.getRouteID());
-            }
-        }
-        return route_ids;
-    }
-
-    //End feature five
-
-    //Start feature six
-
-    /**
-     * Gets every trip_id that is paired with a given route_id
-     * @author Ryan Becker
-     * @param route_id to be searched for, and find associated trip_ids
-     * @return ArrayList of all trip_ids related to route_id
-     */
-    public ArrayList<String> getTripIDs_fromRouteID(String route_id){
-        ArrayList<String> trip_ids = new ArrayList<>();
-        for(Trip trip : trips.values()){
-            if(trip.getRouteID().equalsIgnoreCase(route_id)){
-                trip_ids.add(trip.getTripID());
-            }
-        }
-        return trip_ids;
-    }
-
-    //End feature six
-
+    //endregion
 }//end Trips

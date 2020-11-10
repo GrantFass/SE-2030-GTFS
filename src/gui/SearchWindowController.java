@@ -139,7 +139,7 @@ public class SearchWindowController {
                 case "trip_id":
                     if (inputType.getValue().equals("stop_id")) {
                         String inputText = (input.getText()).toLowerCase();
-                        List<String> list = mainWindowController.getData().getStopTimes().searchStopDisplayTrips(inputText);
+                        List<String> list = mainWindowController.getData().getStopTimes().getTripsFromStopID(inputText);
                         StringBuilder sb = new StringBuilder();
                         sb.append("***Note:Trips closest to the current time are displayed first***\n");
                         for(int i = 0; i < list.size(); i++){

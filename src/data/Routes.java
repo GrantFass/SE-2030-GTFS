@@ -34,27 +34,12 @@ import java.util.Scanner;
  * @created 06-Oct-2020 10:28:39 AM
  */
 public class Routes {
-
+	//region properties
 	private HashMap<String, Route> routes;
 	private Headers headers = new Headers();
+	//endregion
 
-	/**
-	 * Creates header line from input headers
-	 * @param headers headers to put into a String output
-	 * @return String
-	 * @author Joy Cross
-	 */
-	public String createHeaderLine(Headers headers) {
-		StringBuilder sb = new StringBuilder();
-		int i;
-		for(i = 0; i < headers.length()-1; i++){
-			sb.append(headers.getHeaderName(i) + ",");
-		}
-		sb.append(headers.getHeaderName(i) + "\n");
-
-		return sb.toString();
-	}
-
+	//region constructors
 	/**
 	 * Routes constructor initialized with empty hash map
 	 * @author Ryan Becker
@@ -62,22 +47,9 @@ public class Routes {
 	public Routes(){
 		routes = new HashMap<>();
 	}
+	//endregion
 
-	/**
-	 * adds route parameter to routes hash map with the route_id of route as the key, and route as the value.
-	 * @author Ryan Becker
-	 * @param route Route object to be added to routes
-     * @return true if new route was added, false otherwise
-	 */
-	public boolean addRoute(Route route){
-		Route routeAdded = routes.put(route.getRouteID(), route);
-		boolean added = false;
-		if(routeAdded == null){
-			added = true;
-		}
-		return added;
-	}
-
+	//region getters
 	/**
 	 * @author Joy Cross
 	 * @return current headers of routes
@@ -85,7 +57,6 @@ public class Routes {
 	public Headers getHeaders(){
 		return headers;
 	}
-
 
 	/**
 	 * @author Ryan Becker
@@ -97,20 +68,52 @@ public class Routes {
 	}
 
 	/**
+	 * get the hashmap value
+	 * @return the hashmap value
+	 * @author Grant Fass
+	 */
+	public HashMap<String, Route> getRoutes() {
+		return routes;
+	}
+	//endregion
+
+	//region methods for adjusting data
+	/**
 	 * Removes specified Route object from routes
 	 * @author Ryan Becker
 	 * @param route_id Route to be removed
-     * @return true if deleted, false otherwise
 	 */
-	public boolean removeRoute(String route_id){
+	public void removeRoute(String route_id){
 		Route routeRemoved = routes.remove(route_id);
 		boolean deleted = false;
 		if(routeRemoved != null){
 			deleted = true;
 		}
-		return deleted;
 	}
 
+	/**
+	 * adds route parameter to routes hash map with the route_id of route as the key, and route as the value.
+	 * @author Ryan Becker
+	 * @param route Route object to be added to routes
+	 */
+	public void addRoute(Route route){
+		Route routeAdded = routes.put(route.getRouteID(), route);
+		boolean added = false;
+		if(routeAdded == null){
+			added = true;
+		}
+	}
+
+	/**
+	 * clears the routes data
+	 * @author Grant Fass
+	 */
+	public void clearRoutes() {
+		routes.clear();
+	}
+	//endregion
+
+	//region methods for exporting files
 	/**
 	 * export the routes to a specified output directory
 	 * @param file the directory to save the file to
@@ -119,7 +122,7 @@ public class Routes {
 	 */
 	public boolean exportRoutes(File file) {
 		try (PrintWriter out = new PrintWriter((new BufferedOutputStream(new FileOutputStream(new File(file, "routes.txt")))))) {
-			out.append(createHeaderLine(headers));
+			out.append(headers.toString());
 			for (String key: routes.keySet()) {
 				out.append(routes.get(key).getDataLine(headers));
 			}
@@ -128,7 +131,9 @@ public class Routes {
 		}
 		return true;
 	}
+	//endregion
 
+	//region methods for loading files
 	/**
 	 * Method to parse data from a specified file
 	 *
@@ -163,25 +168,6 @@ public class Routes {
 		}
 		String successMessage = String.format("  ✓: Routes Imported Successfully.\n  %s\n  %s\n", emptyPrior ? "New Routes Data Imported" : "Routes Data Overwritten", wasLineSkipped ? "Lines Skipped During Import Of Routes" : "All Lines Imported Successfully");
 		return String.format("IMPORT ROUTES:\n%s", wasFileLoaded ? successMessage : failMessage);
-	}
-
-	/**
-	 * clears the routes data
-	 * @return true
-	 * @author Grant Fass
-	 */
-	public boolean clearRoutes() {
-		routes.clear();
-		return true;
-	}
-
-	/**
-	 * get the hashmap value
-	 * @return the hashmap value
-	 * @author Grant Fass
-	 */
-	public HashMap<String, Route> getRoutes() {
-		return routes;
 	}
 
 	/**
@@ -270,4 +256,5 @@ public class Routes {
         }
 	    return "";
     }
+    //endregion
 }//end Routes
