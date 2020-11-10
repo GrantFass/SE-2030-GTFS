@@ -33,11 +33,13 @@ import java.util.*;
  * @version 1.0
  */
 public class StopTimes {
-
+	//region properties
 	private HashMap<String, StopTime> stop_times;
 	private HashMap<String, String> tripStartAndEnd;
 	private Headers headers = new Headers();
+	//endregion
 
+	//region constructors
 	/**
 	 * StopTimes Constructor: creates empty instance of stop_times object
 	 * @author Joy Cross
@@ -46,24 +48,9 @@ public class StopTimes {
 		stop_times = new HashMap<String, StopTime>();
 		tripStartAndEnd = new HashMap<String, String>();
 	}
+	//endregion
 
-	/**
-	 * Adds a StopTime object to the hashmap, returns false if could not be added to hashmap
-	 * Key is in format "stopid;tripid"
-	 * @author Joy Cross, Grant Fass
-	 * @param stopTime stopTime to be added
-	 * @return true if added correctly
-	 */
-	public boolean addStopTime(StopTime stopTime){
-		addTripStartAndEnd(stopTime);
-		StopTime stopTimeAdded = stop_times.put(stopTime.getStopID() + ";" + stopTime.getTripID(), stopTime);
-		boolean added = false;
-		if(stopTimeAdded != null){
-			added = true;
-		}
-		return added;
-	}
-
+	//region getters
 	/**
 	 * Gets the stop time from the hashmap by "stop_id;route_id"
 	 * @author Joy Cross
@@ -83,6 +70,163 @@ public class StopTimes {
 		return headers;
 	}
 
+	/**
+	 * Method that returns a HashMap with trip_id, first_time, first_stop_id,
+	 * last_time, and last_stop_id
+	 *
+	 * @author Simon Erickson
+	 * @return tripAndDistance The HashMap with trip_id, first_time, first_stop_id,
+	 * 	 * last_time, and last_stop_id.
+	 */
+	public HashMap<String, String> getTripStartAndEnd(){
+		return tripStartAndEnd;
+	}
+
+	/**
+	 * Gets every trip_id that is paired with the searched stop_id within a given StopTime object
+	 * @author Ryan Becker
+	 * @param stop_id associated with a Stop that is used to search for paired trip_id within a given StopTime object
+	 * @return ArrayList of every trip_id that is within a StopTime object that also contains the searched stop_id
+	 */
+	public ArrayList<String> getTripIDs_fromStop_ID(String stop_id){
+		ArrayList<String> trip_ids = new ArrayList<>();
+		for(StopTime stop_time : stop_times.values()){
+			if(stop_time.getStopID().equals(stop_id)){
+				trip_ids.add(stop_time.getTripID());
+			}
+		}
+		return trip_ids;
+	}
+
+	/**
+	 * Gets every stop_id that is associated with a trip_id
+	 * @param trip_id related to searched route_id
+	 * @return ArrayList of all stop_ids related to trip_id
+	 */
+	public ArrayList<String> getStopIDs_fromTripID(String trip_id){
+		ArrayList<String> stop_ids = new ArrayList<>();
+		for(StopTime stopTime : stop_times.values()){
+			if(stopTime.getTripID().equals(trip_id)){
+				stop_ids.add(stopTime.getStopID());
+			}
+		}
+		return stop_ids;
+	}
+
+	/**
+	 * Gets all trip_ids that are occurring in the future
+	 * @author Ryan Becker
+	 * @param all_trip_ids ArrayList of all trip_ids related to initial route_id
+	 * @return ArrayList of only trip_ids that have a time in the future associated with it
+	 */
+	public ArrayList<String> getFutureTripIDs_fromAllTripIDs(ArrayList<String> all_trip_ids){
+		ArrayList<String> future_trip_ids = new ArrayList<>();
+
+		for(String trip_id : all_trip_ids){
+			if(inFuture(trip_id)){
+				future_trip_ids.add(trip_id);
+			}
+		}
+		return future_trip_ids;
+	}
+
+	/**
+	 * get the hashmap value
+	 * @return the hashmap value
+	 * @author Grant Fass
+	 */
+	public HashMap<String, StopTime> getStop_times() {
+		return stop_times;
+	}
+
+	/**
+	 * Searches through database of stopTimes and returns List<trip_id> related to stop
+	 * @param stop_id stop to search for
+	 * @return trips in order of time that contain that stop
+	 * @author Joy Cross
+	 */
+	public List<String> getTripsFromStopID(String stop_id){
+		// gets current time to compare
+		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+
+		// gets hashmap of trips id and arrival times for comparison
+		HashMap<Timestamp, String> tripsByStop = new HashMap<>();
+		ArrayList<Timestamp> times = new ArrayList<>();
+		Object[] keys = stop_times.keySet().toArray();
+
+		Arrays.stream(keys)
+				.forEach(object -> {
+					if(object.toString().startsWith(stop_id + ";")){
+						tripsByStop.put(stop_times.get(object.toString()).getArrivalTime(),
+								object.toString().replace(stop_id + ";", "").trim());
+						times.add(stop_times.get(object.toString()).getArrivalTime());
+					}
+				});
+
+		// get index of everything after or at current time in sorted list
+		Collections.sort(times);
+		int index = 0;
+		for(int i = 0; i < times.size(); i++){
+			if((times.get(i).getTime() - currentTime.getTime())>=0){
+				index = i;
+				break;
+			}
+		}
+
+		// sort list by comparing to current time
+		ArrayList<String> toReturn = new ArrayList<>();
+		for(int i = index; i < times.size(); i++){
+			toReturn.add(tripsByStop.get(times.get(i)));
+		}
+		for(int i = 0; i < index; i++){
+			toReturn.add(tripsByStop.get(times.get(i)));
+		}
+
+		return toReturn;
+	}
+
+	/**
+	 * Checks if a given trip_id has a time in the future
+	 * @author Ryan Becker
+	 * @param trip_id being checked
+	 * @return boolean indicating future status: True if in the future, false otherwise
+	 */
+	private boolean inFuture(String trip_id){
+		boolean inFuture = false;
+		for(StopTime stopTime : stop_times.values()){
+			if(stopTime.getTripID().equalsIgnoreCase(trip_id)){
+				LocalDateTime currentTime = java.time.LocalDateTime.now();
+
+				LocalTime fileTime = LocalTime.from(stopTime.getDepartureTime().toLocalDateTime());
+				LocalDateTime fileDateTime = LocalDateTime.of(LocalDate.now(), fileTime);
+
+				if(currentTime.isBefore(fileDateTime)){
+					inFuture = true;
+					break;
+				}
+			}
+		}
+		return inFuture;
+	}
+	//endregion
+
+	//region methods for adjusting data
+	/**
+	 * Adds a StopTime object to the hashmap, returns false if could not be added to hashmap
+	 * Key is in format "stopid;tripid"
+	 * @author Joy Cross, Grant Fass
+	 * @param stopTime stopTime to be added
+	 * @return true if added correctly
+	 */
+	public boolean addStopTime(StopTime stopTime){
+		addTripStartAndEnd(stopTime);
+		StopTime stopTimeAdded = stop_times.put(stopTime.getStopID() + ";" + stopTime.getTripID(), stopTime);
+		boolean added = false;
+		if(stopTimeAdded != null){
+			added = true;
+		}
+		return added;
+	}
 
 	/**
 	 * Removes stop from data
@@ -113,6 +257,75 @@ public class StopTimes {
 	}
 
 	/**
+	 * Gets a stop_time from a stop_id and changes its departure/arrival time
+	 * @author Simon Erickson
+	 * @param stop_id for the stop_time
+	 * @param departAndArrivalTime new departure/arrival time
+	 * @return boolean representation of success
+	 */
+	public boolean changeStopTime_fromStop_ID(String stop_id,String departAndArrivalTime){
+		HashMap<String, StopTime> og_stop_time = stop_times;
+		try{
+			for(StopTime stop_time : stop_times.values()){
+				if(stop_time.getStopID().equals(stop_id)){
+					stop_time = new StopTime(departAndArrivalTime,
+							stop_time.getContinuousDropOff()+"",
+							stop_time.getContinuousPickup()+"", departAndArrivalTime,
+							stop_time.getDropOffType()+"",
+							stop_time.getPickupType()+"",
+							stop_time.getShapeDistTraveled()+"",
+							stop_time.getStopHeadsign()+"", stop_id+"",
+							stop_time.getStopSequence()+"",
+							stop_time.getTimepoint()+"", stop_time.getTripID()+"");
+				}
+			}
+			return true;
+		}catch (IllegalArgumentException e){
+			stop_times = og_stop_time;
+			return false;
+		}
+	}
+
+	/**
+	 * Method that creates a HashMap with trip_id, first_time, first_stop_id,
+	 * 	 * last_time, and last_stop_id
+	 *
+	 * @author Simon Erickson
+	 * @param stopTime a StopTime object that holds the information for the HashMap
+	 */
+	private void addTripStartAndEnd(StopTime stopTime) {
+		String valueAtTrip = tripStartAndEnd.get(stopTime.getTripID());
+		long newArrive = stopTime.getArrivalTime().getTime();
+		long newDepart = stopTime.getDepartureTime().getTime();
+		String stop_id = stopTime.getStopID();
+		try {
+			String[] tripValue = valueAtTrip.split("--", -1);
+			long currentFirstArrive = Long.parseLong(tripValue[0]);
+			long currentLastDepart = Long.parseLong(tripValue[2]);
+			String first_stop_id = tripValue[1];
+			String last_stop_id = tripValue[3];
+			if(newArrive < currentFirstArrive){
+				currentFirstArrive = newArrive;
+				first_stop_id = stop_id;
+			}
+			if(newDepart > currentLastDepart){
+				currentLastDepart = newDepart;
+				last_stop_id = stop_id;
+			}
+			tripStartAndEnd.remove(stopTime.getTripID());
+			tripStartAndEnd.put(stopTime.getTripID(),
+					currentFirstArrive + "--" + first_stop_id + "--"
+							+ currentLastDepart + "--" + last_stop_id);
+		} catch (NullPointerException e){
+			tripStartAndEnd.put(stopTime.getTripID(),
+					newArrive + "--" + stopTime.getStopID() + "--"
+							+ newDepart + "--" + stopTime.getStopID());
+		}
+	}
+	//endregion
+
+	//region methods for exporting files
+	/**
 	 * export the stop times to a specified output directory
 	 * @param file the directory to save the file to
 	 * @return true if the file was exported
@@ -120,7 +333,7 @@ public class StopTimes {
 	 */
 	public boolean exportStopTimes(File file) {
 		try (PrintWriter out = new PrintWriter((new BufferedOutputStream(new FileOutputStream(new File(file, "stop_times.txt")))))) {
-			out.append(createHeaderLine(headers));
+			out.append(headers.toString());
 			for (String key: stop_times.keySet()) {
 				out.append(stop_times.get(key).getDataLine(headers));
 			}
@@ -129,7 +342,9 @@ public class StopTimes {
 		}
 		return true;
 	}
+	//endregion
 
+	//region methods for loading files
 	/**
 	 * Method to parse data from a specified file
 	 *
@@ -261,248 +476,5 @@ public class StopTimes {
 		}
 		return "";
 	}
-
-	/**
-	 * get the hashmap value
-	 * @return the hashmap value
-	 * @author Grant Fass
-	 */
-	public HashMap<String, StopTime> getStop_times() {
-		return stop_times;
-	}
-
-	/**
-	 * Creates header line from input headers
-	 * @param headers headers to put into a String output
-	 * @return String
-	 * @author Joy Cross
-	 */
-	public String createHeaderLine(Headers headers) {
-		StringBuilder sb = new StringBuilder();
-		int i;
-		for(i = 0; i < headers.length()-1; i++){
-			sb.append(headers.getHeaderName(i) + ",");
-		}
-		sb.append(headers.getHeaderName(i) + "\n");
-
-		return sb.toString();
-	}
-
-	/**
-	 * Method that creates a HashMap with trip_id, first_time, first_stop_id,
-	 * 	 * last_time, and last_stop_id
-	 *
-	 * @author Simon Erickson
-	 * @param stopTime a StopTime object that holds the information for the HashMap
-	 */
-	private void addTripStartAndEnd(StopTime stopTime) {
-		String valueAtTrip = tripStartAndEnd.get(stopTime.getTripID());
-		long newArrive = stopTime.getArrivalTime().getTime();
-		long newDepart = stopTime.getDepartureTime().getTime();
-		String stop_id = stopTime.getStopID();
-		try {
-			String[] tripValue = valueAtTrip.split("--", -1);
-			long currentFirstArrive = Long.parseLong(tripValue[0]);
-			long currentLastDepart = Long.parseLong(tripValue[2]);
-			String first_stop_id = tripValue[1];
-			String last_stop_id = tripValue[3];
-			if(newArrive < currentFirstArrive){
-				currentFirstArrive = newArrive;
-				first_stop_id = stop_id;
-			}
-			if(newDepart > currentLastDepart){
-				currentLastDepart = newDepart;
-				last_stop_id = stop_id;
-			}
-			tripStartAndEnd.remove(stopTime.getTripID());
-			tripStartAndEnd.put(stopTime.getTripID(),
-					currentFirstArrive + "--" + first_stop_id + "--"
-							+ currentLastDepart + "--" + last_stop_id);
-		} catch (NullPointerException e){
-			tripStartAndEnd.put(stopTime.getTripID(),
-					newArrive + "--" + stopTime.getStopID() + "--"
-							+ newDepart + "--" + stopTime.getStopID());
-		}
-	}
-
-	/**
-	 * Method that returns a HashMap with trip_id, first_time, first_stop_id,
-	 * last_time, and last_stop_id
-	 *
-	 * @author Simon Erickson
-	 * @return tripAndDistance The HashMap with trip_id, first_time, first_stop_id,
-	 * 	 * last_time, and last_stop_id.
-	 */
-	public HashMap<String, String> getTripStartAndEnd(){
-		return tripStartAndEnd;
-	}
-
-
-
-	//Start feature five
-
-	/**
-	 * Gets every trip_id that is paired with the searched stop_id within a given StopTime object
-	 * @author Ryan Becker
-	 * @param stop_id associated with a Stop that is used to search for paired trip_id within a given StopTime object
-	 * @return ArrayList of every trip_id that is within a StopTime object that also contains the searched stop_id
-	 */
-	public ArrayList<String> getTripIDs_fromStop_ID(String stop_id){
-		ArrayList<String> trip_ids = new ArrayList<>();
-		for(StopTime stop_time : stop_times.values()){
-			if(stop_time.getStopID().equals(stop_id)){
-				trip_ids.add(stop_time.getTripID());
-			}
-		}
-		return trip_ids;
-	}
-
-	//End feature five
-
-	//Start feature 6
-
-	/**
-	 * Gets every stop_id that is associated with a trip_id
-	 * @param trip_id related to searched route_id
-	 * @return ArrayList of all stop_ids related to trip_id
-	 */
-	public ArrayList<String> getStopIDs_fromTripID(String trip_id){
-		ArrayList<String> stop_ids = new ArrayList<>();
-		for(StopTime stopTime : stop_times.values()){
-			if(stopTime.getTripID().equals(trip_id)){
-				stop_ids.add(stopTime.getStopID());
-			}
-		}
-		return stop_ids;
-	}
-
-
-	//End feature 6
-
-    //Start feature 7
-
-    /**
-     * Gets all trip_ids that are occurring in the future
-     * @author Ryan Becker
-     * @param all_trip_ids ArrayList of all trip_ids related to initial route_id
-     * @return ArrayList of only trip_ids that have a time in the future associated with it
-     */
-    public ArrayList<String> getFutureTripIDs_fromAllTripIDs(ArrayList<String> all_trip_ids){
-	    ArrayList<String> future_trip_ids = new ArrayList<>();
-
-	    for(String trip_id : all_trip_ids){
-			if(inFuture(trip_id)){
-				future_trip_ids.add(trip_id);
-			}
-		}
-		return future_trip_ids;
-    }
-
-    /**
-     * Checks if a given trip_id has a time in the future
-     * @author Ryan Becker
-     * @param trip_id being checked
-     * @return boolean indicating future status: True if in the future, false otherwise
-     */
-    private boolean inFuture(String trip_id){
-		boolean inFuture = false;
-		for(StopTime stopTime : stop_times.values()){
-			if(stopTime.getTripID().equalsIgnoreCase(trip_id)){
-				LocalDateTime currentTime = java.time.LocalDateTime.now();
-
-				LocalTime fileTime = LocalTime.from(stopTime.getDepartureTime().toLocalDateTime());
-				LocalDateTime fileDateTime = LocalDateTime.of(LocalDate.now(), fileTime);
-
-				if(currentTime.isBefore(fileDateTime)){
-					inFuture = true;
-					break;
-				}
-			}
-		}
-		return inFuture;
-	}
-
-    //End feature 7
-
-
-	/**
-	 * Searches through database of stopTimes and returns List<trip_id> related to stop
-	 * @param stop_id stop to search for
-	 * @return trips in order of time that contain that stop
-	 * @author Joy Cross
-	 */
-	public List<String> searchStopDisplayTrips(String stop_id){
-		// gets current time to compare
-		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-
-		// gets hashmap of trips id and arrival times for comparison
-		HashMap<Timestamp, String> tripsByStop = new HashMap<>();
-		ArrayList<Timestamp> times = new ArrayList<>();
-		Object[] keys = stop_times.keySet().toArray();
-
-		Arrays.stream(keys)
-				.forEach(object -> {
-							if(object.toString().startsWith(stop_id + ";")){
-								tripsByStop.put(stop_times.get(object.toString()).getArrivalTime(),
-										object.toString().replace(stop_id + ";", "").trim());
-								times.add(stop_times.get(object.toString()).getArrivalTime());
-							}
-						});
-
-		// get index of everything after or at current time in sorted list
-		Collections.sort(times);
-		int index = 0;
-		for(int i = 0; i < times.size(); i++){
-			if((times.get(i).getTime() - currentTime.getTime())>=0){
-				index = i;
-				break;
-			}
-		}
-
-		// sort list by comparing to current time
-		ArrayList<String> toReturn = new ArrayList<>();
-		for(int i = index; i < times.size(); i++){
-			toReturn.add(tripsByStop.get(times.get(i)));
-		}
-		for(int i = 0; i < index; i++){
-			toReturn.add(tripsByStop.get(times.get(i)));
-		}
-
-		return toReturn;
-	}
-
-	//start feature 14
-
-	/**
-	 * Gets a stop_time from a stop_id and changes its departure/arrival time
-	 * @author Simon Erickson
-	 * @param stop_id for the stop_time
-	 * @param departAndArrivalTime new departure/arrival time
-	 * @return boolean representation of success
-	 */
-	public boolean changeStopTime_fromStop_ID(String stop_id,String departAndArrivalTime){
-		HashMap<String, StopTime> og_stop_time = stop_times;
-		try{
-			for(StopTime stop_time : stop_times.values()){
-				if(stop_time.getStopID().equals(stop_id)){
-					stop_time = new StopTime(departAndArrivalTime,
-							stop_time.getContinuousDropOff()+"",
-							stop_time.getContinuousPickup()+"", departAndArrivalTime,
-							stop_time.getDropOffType()+"",
-							stop_time.getPickupType()+"",
-							stop_time.getShapeDistTraveled()+"",
-							stop_time.getStopHeadsign()+"", stop_id+"",
-							stop_time.getStopSequence()+"",
-							stop_time.getTimepoint()+"", stop_time.getTripID()+"");
-				}
-			}
-			return true;
-		}catch (IllegalArgumentException e){
-			stop_times = og_stop_time;
-			return false;
-		}
-	}
-
-	//end feature 14
-
+	//endregion
 }//end StopTimes

@@ -31,10 +31,12 @@ import java.util.Scanner;
  * @version 1.0
  */
 public class Stops {
-
+	//region properties
 	private HashMap<String, Stop> stops;
 	private Headers headers = new Headers();
+	//endregion
 
+	//region constructors
 	/**
 	 * Stops Constructor: creates empty instance of stops object
 	 * @author Joy Cross
@@ -42,22 +44,9 @@ public class Stops {
 	public Stops(){
 		stops = new HashMap<String, Stop>();
 	}
+	//endregion
 
-	/**
-	 * Adds a stop object to the hashmap, returns false if could not be added to hashmap
-	 * @param stop stop to be added to stops
-	 * @return true if added correctly
-	 * @author Joy Cross, Grant Fass
-	 */
-	public boolean addStop( Stop stop){
-		Stop stopAdded = stops.put(stop.getStopID(), stop);
-		boolean added = false;
-		if(stopAdded != null){
-			added = true;
-		}
-		return added;
-	}
-
+	//region getters
 	/**
 	 * Gets the stop from the hashmap by stop_id
 	 * @author Joy Cross
@@ -76,7 +65,17 @@ public class Stops {
 		return headers;
 	}
 
+	/**
+	 * get the hashmap value
+	 * @return the hashmap value
+	 * @author Grant Fass
+	 */
+	public HashMap<String, Stop> getStops() {
+		return stops;
+	}
+	//endregion
 
+	//region methods for adjusting data
 	/**
 	 * Removes one stop from data by stop_id
 	 * @author Joy Cross
@@ -92,6 +91,21 @@ public class Stops {
 	}
 
 	/**
+	 * Adds a stop object to the hashmap, returns false if could not be added to hashmap
+	 * @param stop stop to be added to stops
+	 * @return true if added correctly
+	 * @author Joy Cross, Grant Fass
+	 */
+	public boolean addStop( Stop stop){
+		Stop stopAdded = stops.put(stop.getStopID(), stop);
+		boolean added = false;
+		if(stopAdded != null){
+			added = true;
+		}
+		return added;
+	}
+
+	/**
 	 * Removes all stops in database
 	 * @author Joy Cross
 	 * @return true if removed stops
@@ -100,7 +114,29 @@ public class Stops {
 		stops = new HashMap<String, Stop>();
 		return true;
 	}
+	//endregion
 
+	//region methods for exporting files
+	/**
+	 * export the stops to a specified output directory
+	 * @param file the directory to save the file to
+	 * @return true if the file was exported
+	 * @author Grant Fass, Joy Cross
+	 */
+	public boolean exportStops(File file) {
+		try (PrintWriter out = new PrintWriter((new BufferedOutputStream(new FileOutputStream(new File(file, "stops.txt")))))) {
+			out.append(headers.toString());
+			for (String key: stops.keySet()) {
+				out.append(stops.get(key).getDataLine(headers));
+			}
+		} catch (IOException e) {
+			return false;
+		}
+		return true;
+	}
+	//endregion
+
+	//region methods for loading files
 	/**
 	 * Method to parse data from a specified file
 	 *
@@ -135,24 +171,6 @@ public class Stops {
 		}
 		String successMessage = String.format("  ✓: Stops Imported Successfully.\n  %s\n  %s\n", emptyPrior ? "New Stops Data Imported" : "Stops Data Overwritten", wasLineSkipped ? "Lines Skipped During Import Of Stops" : "All Lines Imported Successfully");
 		return String.format("IMPORT STOPS:\n%s", wasFileLoaded ? successMessage : failMessage);
-	}
-
-	/**
-	 * export the stops to a specified output directory
-	 * @param file the directory to save the file to
-	 * @return true if the file was exported
-	 * @author Grant Fass, Joy Cross
-	 */
-	public boolean exportStops(File file) {
-		try (PrintWriter out = new PrintWriter((new BufferedOutputStream(new FileOutputStream(new File(file, "stops.txt")))))) {
-			out.append(createHeaderLine(headers));
-			for (String key: stops.keySet()) {
-				out.append(stops.get(key).getDataLine(headers));
-			}
-		} catch (IOException e) {
-			return false;
-		}
-		return true;
 	}
 
 	/**
@@ -255,30 +273,5 @@ public class Stops {
 		}
 		return "";
 	}
-
-	/**
-	 * get the hashmap value
-	 * @return the hashmap value
-	 * @author Grant Fass
-	 */
-	public HashMap<String, Stop> getStops() {
-		return stops;
-	}
-
-	/**
-	 * Creates header line from input headers
-	 * @param headers headers to put into a String output
-	 * @return String
-	 * @author Joy Cross
-	 */
-	public String createHeaderLine(Headers headers) {
-		StringBuilder sb = new StringBuilder();
-		int i;
-		for(i = 0; i < headers.length()-1; i++){
-			sb.append(headers.getHeaderName(i) + ",");
-		}
-		sb.append(headers.getHeaderName(i) + "\n");
-
-		return sb.toString();
-	}
+	//endregion
 }//end Stops

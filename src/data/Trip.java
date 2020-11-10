@@ -32,7 +32,7 @@ import enumerators.WheelchairAccessibleEnum;
  * @created 06-Oct-2020 10:28:39 AM
  */
 public class Trip {
-
+    //region properties
     private BikesAllowedEnum bikes_allowed;
     private String block_id;
     private DirectionIDEnum direction_id;
@@ -42,7 +42,9 @@ public class Trip {
     private String trip_headsign;
     private String trip_id;
     private WheelchairAccessibleEnum wheelchair_accessible;
+    //endregion
 
+    //region constructors
     /**
      * @param bikes_allowed         Enum for if bikes are allowed
      * @param block_id              The block ID
@@ -78,7 +80,9 @@ public class Trip {
         this.direction_id = DirectionIDEnum.getValue(!direction_id.isEmpty() ? Integer.parseInt(direction_id) : -1);
         this.wheelchair_accessible = WheelchairAccessibleEnum.getValue(!wheelchair_accessible.isEmpty() ? Integer.parseInt(wheelchair_accessible) : -1);
     }
+    //endregion
 
+    //region getters
     /**
      * returns bikes_allowed
      *
@@ -170,35 +174,6 @@ public class Trip {
     }
 
     /**
-     * Method to output data as a single concatenated string
-     *
-     * @return string of data
-     * @author GrantFass, Simon Erickson
-     */
-    @Override
-    public String toString() {
-        return String.format("Trip ID: %s\n\t" +
-                        "Bikes Allowed: %s\n\t" +
-                        "Block ID: %s\n\t" +
-                        "Direction ID: %s\n\t" +
-                        "Route ID: %s\n\t" +
-                        "Service ID: %s\n\t" +
-                        "Shape ID: %s\n\t" +
-                        "Trip Headsign: %s\n\t" +
-                        "Wheelchair Accessible: %s\n", trip_id, bikes_allowed, block_id,
-                direction_id, route_id, service_id, shape_id, trip_headsign, wheelchair_accessible);
-    }
-
-    /**
-     * output simplified data as a single concatenated string
-     * @return string of data
-     * @author Grant Fass
-     */
-    public String toSimpleString() {
-        return String.format("Trip ID: %s | Route ID: %s\n", trip_id, route_id);
-    }
-
-    /**
      * gets the file header for Trips
      * @return file header in a single line header format
      * @author Simon Erickson
@@ -244,4 +219,120 @@ public class Trip {
         sb.append('\n');
         return sb.toString();
     }
+    //endregion
+
+    //region setters
+
+    /**
+     * sets the value of the Bikes Allowed enum
+     * @param bikes_allowed the value to set
+     * @author Grant Fass
+     */
+    public void setBikes_allowed(BikesAllowedEnum bikes_allowed) {
+        this.bikes_allowed = bikes_allowed;
+    }
+
+    /**
+     * sets the value for the block_id
+     * @param block_id the value to set
+     * @author Grant Fass
+     */
+    public void setBlock_id(String block_id) {
+        this.block_id = block_id;
+    }
+
+    /**
+     * sets the value for the direction_id
+     * @param direction_id the value to set
+     * @author Grant Fass
+     */
+    public void setDirection_id(DirectionIDEnum direction_id) {
+        this.direction_id = direction_id;
+    }
+
+    /**
+     * sets the value for the route_id
+     * @param route_id the value to set
+     * @author Grant Fass
+     */
+    public void setRoute_id(String route_id) {
+        this.route_id = route_id;
+    }
+
+    /**
+     * sets the value for the service_id
+     * @param service_id the value to set
+     * @author Grant Fass
+     */
+    public void setService_id(String service_id) {
+        this.service_id = service_id;
+    }
+
+    /**
+     * sets the value for the shape_id
+     * @param shape_id the value to set
+     * @author Grant Fass
+     */
+    public void setShape_id(String shape_id) {
+        this.shape_id = shape_id;
+    }
+
+    /**
+     * sets the value for the trip_headsign
+     * @param trip_headsign the value to set
+     * @author Grant Fass
+     */
+    public void setTrip_headsign(String trip_headsign) {
+        this.trip_headsign = trip_headsign;
+    }
+
+    /**
+     * sets the value for the trip_id
+     * @param trip_id the value to set
+     * @author Grant Fass
+     */
+    public void setTrip_id(String trip_id) {
+        this.trip_id = trip_id;
+    }
+
+    /**
+     * sets the value for wheelchair accessible enum
+     * @param wheelchair_accessible the value to set
+     * @author Grant Fass
+     */
+    public void setWheelchair_accessible(WheelchairAccessibleEnum wheelchair_accessible) {
+        this.wheelchair_accessible = wheelchair_accessible;
+    }
+    //endregion
+
+    //region string outputs
+    /**
+     * Method to output data as a single concatenated string
+     *
+     * @return string of data
+     * @author GrantFass, Simon Erickson
+     */
+    @Override
+    public String toString() {
+        return String.format("Trip ID: %s\n\t" +
+                        "Bikes Allowed: %s\n\t" +
+                        "Block ID: %s\n\t" +
+                        "Direction ID: %s\n\t" +
+                        "Route ID: %s\n\t" +
+                        "Service ID: %s\n\t" +
+                        "Shape ID: %s\n\t" +
+                        "Trip Headsign: %s\n\t" +
+                        "Wheelchair Accessible: %s\n", trip_id, bikes_allowed, block_id,
+                direction_id, route_id, service_id, shape_id, trip_headsign, wheelchair_accessible);
+    }
+
+    /**
+     * output simplified data as a single concatenated string
+     * @return string of data
+     * @author Grant Fass
+     */
+    public String toSimpleString() {
+        return String.format("Trip ID: %s | Route ID: %s\n", trip_id, route_id);
+    }
+    //endregion
 }//end Trip

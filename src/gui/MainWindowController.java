@@ -37,20 +37,13 @@ public class MainWindowController {
 	//region class references
 	private Data data = new Data();
 	private Stage analysisWindowStage;
-	private AnalysisWindowController analysisWindowController;
 	private Stage dataWindowStage;
-	private DataWindowController dataWindowController;
 	private Stage exportWindowStage;
-	private ExportWindowController exportWindowController;
 	private Stage importWindowStage;
-	private ImportWindowController importWindowController;
 	private Stage mainWindowStage;
 	private Stage mapWindowStage;
-	private MapWindowController mapWindowController;
 	private Stage searchWindowStage;
-	private SearchWindowController searchWindowController;
 	private Stage updateWindowStage;
-	private UpdateWindowController updateWindowController;
 	private static final Rectangle2D PRIMARY_SCREEN_BOUNDS = Screen.getPrimary().getVisualBounds();
 	private static final double WINDOW_WIDTH = PRIMARY_SCREEN_BOUNDS.getWidth() / 3.0;
 	private static final double WINDOW_HEIGHT = PRIMARY_SCREEN_BOUNDS.getHeight() / 3.0;
@@ -82,34 +75,6 @@ public class MainWindowController {
 		this.updateWindowStage = updateWindowStage;
 		mainWindowStage.setWidth(WINDOW_WIDTH);
 		mainWindowStage.setHeight(WINDOW_HEIGHT);
-	}
-
-	/**
-	 * Sets the values of the controller associated with the respective files
-	 * Makes sure the same instance of the controller is used everywhere
-	 * @param analysisWindowController reference to the AnalysisWindowController in use
-	 * @param dataWindowController reference to the DataWindowController in use
-	 * @param exportWindowController reference to the ExportWindowController in use
-	 * @param importWindowController reference to the ImportWindowController in use
-	 * @param mapWindowController reference to the MapWindowController in use
-	 * @param searchWindowController reference to the SearchWindowController in use
-	 * @param updateWindowController reference to the UpdateWindowController in use
-	 * @author Grant Fass
-	 */
-	public void setControllers(AnalysisWindowController analysisWindowController,
-								DataWindowController dataWindowController,
-								ExportWindowController exportWindowController,
-								ImportWindowController importWindowController,
-								MapWindowController mapWindowController,
-								SearchWindowController searchWindowController,
-								UpdateWindowController updateWindowController) {
-		this.analysisWindowController = analysisWindowController;
-		this.dataWindowController = dataWindowController;
-		this.exportWindowController = exportWindowController;
-		this.importWindowController = importWindowController;
-		this.mapWindowController = mapWindowController;
-		this.searchWindowController = searchWindowController;
-		this.updateWindowController = updateWindowController;
 	}
 	//endregion
 
@@ -146,6 +111,7 @@ public class MainWindowController {
 	}
 	//endregion
 
+	//region getters
 	/**
 	 * returns a copy of the data object
 	 * should not return the actual data object for security reasons
@@ -153,10 +119,11 @@ public class MainWindowController {
 	 * @author Grant Fass
 	 */
 	public Data getData() {
-		//TODO add copy constructors in all relevant classes so this method returns a deep copy instead of the actual values.
 		return data;
 	}
+	//endregion
 
+	//region static class methods
 	/**
 	 * display an alert with the specified format and values
 	 * @param alertType the type of alert to display
@@ -172,6 +139,7 @@ public class MainWindowController {
 		alert.setContentText(content);
 		alert.showAndWait();
 	}
+	//endregion
 
 	//region methods for toggling stage visibility
 	/**
@@ -185,7 +153,6 @@ public class MainWindowController {
 		if (stage.isShowing()) {
 			stage.hide();
 		} else {
-			final int windowOffset = 15;
 			stage.setX(mainWindowStage.getX() + xOffset);
 			stage.setY(mainWindowStage.getY() + yOffset);
 			stage.setWidth(WINDOW_WIDTH);

@@ -22,10 +22,8 @@ package gui;
 
 import data.Data;
 import interfaces.Observer;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 
 import java.time.LocalDateTime;
 import java.util.ConcurrentModificationException;
@@ -41,11 +39,11 @@ public class DataWindowController implements Observer {
     @FXML
     private TextField lastUpdatedTextField;
     @FXML
-    private ListView stopTimesListView;
-    @FXML
     private TextArea description;
     @FXML
     private ToggleButton expandedToggleButton;
+    @FXML
+    private ListView stopTimesListView;
     @FXML
     private ListView routesListView;
     @FXML
@@ -55,74 +53,17 @@ public class DataWindowController implements Observer {
     //endregion
 
     //region class references
-    private Stage analysisWindowStage;
-    private AnalysisWindowController analysisWindowController;
-    private Stage dataWindowStage;
-    private Stage exportWindowStage;
-    private ExportWindowController exportWindowController;
-    private Stage importWindowStage;
-    private ImportWindowController importWindowController;
-    private Stage mainWindowStage;
     private MainWindowController mainWindowController;
-    private Stage mapWindowStage;
-    private MapWindowController mapWindowController;
-    private Stage searchWindowStage;
-    private SearchWindowController searchWindowController;
-    private Stage updateWindowStage;
-    private UpdateWindowController updateWindowController;
-
-    /**
-     * set the local values of all of the stages.
-     * @param analysisWindowStage the stage for the AnalysisWindow
-     * @param dataWindowStage the stage for the DataWindow
-     * @param exportWindowStage the stage for the ExportWindow
-     * @param importWindowStage the stage for the ImportWindow
-     * @param mainWindowStage the stage for the MainWindow
-     * @param mapWindowStage the stage for the MapWindow
-     * @param searchWindowStage the stage for the SearchWindow
-     * @param updateWindowStage the stage for the UpdateWindow
-     * @author Grant Fass
-     */
-    public void setStages(Stage analysisWindowStage, Stage dataWindowStage,
-                          Stage exportWindowStage, Stage importWindowStage,
-                          Stage mainWindowStage, Stage mapWindowStage,
-                          Stage searchWindowStage, Stage updateWindowStage) {
-        this.analysisWindowStage = analysisWindowStage;
-        this.dataWindowStage = dataWindowStage;
-        this.exportWindowStage = exportWindowStage;
-        this.importWindowStage = importWindowStage;
-        this.mainWindowStage = mainWindowStage;
-        this.mapWindowStage = mapWindowStage;
-        this.searchWindowStage = searchWindowStage;
-        this.updateWindowStage = updateWindowStage;
-    }
 
     /**
      * Sets the values of the controller associated with the respective files
      * Makes sure the same instance of the controller is used everywhere
-     * @param analysisWindowController reference to the AnalysisWindowController in use
-     * @param exportWindowController reference to the ExportWindowController in use
-     * @param importWindowController reference to the ImportWindowController in use
-     * @param mainWindowController reference to the MainWindowController in use
-     * @param mapWindowController reference to the MapWindowController in use
-     * @param searchWindowController reference to the SearchWindowController in use
-     * @param updateWindowController reference to the UpdateWindowController in use
+     *
+     * @param mainWindowController     reference to the MainWindowController in use
      * @author Grant Fass
      */
-    public void setControllers(AnalysisWindowController analysisWindowController,
-                               ExportWindowController exportWindowController,
-                               ImportWindowController importWindowController,
-                               MainWindowController mainWindowController,
-                               MapWindowController mapWindowController,
-                               SearchWindowController searchWindowController,
-                               UpdateWindowController updateWindowController) {
-        this.analysisWindowController = analysisWindowController;
-        this.exportWindowController = exportWindowController;
-        this.importWindowController = importWindowController;
+    public void setControllers(MainWindowController mainWindowController) {
         this.mainWindowController = mainWindowController;
-        this.mapWindowController = mapWindowController;
-        this.searchWindowController = searchWindowController;
-        this.updateWindowController = updateWindowController;
     }
     //endregion
 
@@ -159,23 +100,27 @@ public class DataWindowController implements Observer {
     }
     //endregion
 
+    //region methods to toggle data display format
     /**
      * method to run when one of the toggle buttons is pressed
      * used to make sure that the displayed data is up to date
+     * toggles the format of the data as well
      * @author Grant Fass
      */
     @FXML
     private void buttonToggled() {
         updateData(mainWindowController.getData());
     }
+    //endregion
 
+    //region methods to update displayed information
     /**
      * update the data if a toggle button is clicked to reflect the latest format
      * @param data the data that was changed
      * @author Grant Fass
      */
     private void updateData(Data data) throws ConcurrentModificationException {
-        updateStatus(lastUpdatedTextField, "UPDATE IN PROGRESS");
+        lastUpdatedTextField.setText("UPDATE IN PROGRESS");
         if (expandedToggleButton.isSelected()) {
             data.displayData(0, 1, routesListView);
             data.displayData(1, 1, stopsListView);
@@ -187,9 +132,11 @@ public class DataWindowController implements Observer {
             data.displayData(2, 0, stopTimesListView);
             data.displayData(3, 0, tripsListView);
         }
-        updateStatus(lastUpdatedTextField, String.format("Last Updated at: %s", LocalDateTime.now()));
+        lastUpdatedTextField.setText(String.format("Last Updated at: %s", LocalDateTime.now()));
     }
+    //endregion
 
+    //region observer pattern methods
     /**
      * update the observers when the data is changed
      * Based on a guide from GeeksForGeeks
@@ -202,23 +149,7 @@ public class DataWindowController implements Observer {
      */
     @Override
     public void update(Data data) {
-        updateStatus(lastUpdatedTextField, "UPDATE IN PROGRESS");
         updateData(data);
     }
-
-    /**
-     * sets a message to the specified textField
-     * format changes depending on if a task is running
-     * based on https://stackoverflow.com/questions/36638617/javafx-textarea-update-immediately
-     * @param textField the text field to update
-     * @param message the message to post
-     * @author Grant Fass
-     */
-    private void updateStatus(TextField textField, String message) {
-        if (Platform.isFxApplicationThread()) {
-            textField.setText(message);
-        } else {
-            Platform.runLater(() -> textField.setText(message));
-        }
-    }
+    //endregion
 }

@@ -29,9 +29,12 @@ import java.util.Objects;
  * @version Created on 10/13/2020 at 11:01 AM
  */
 public class Header {
-    private String headerName;
-    private int headerIndex;
+    //region parameters
+    private final String headerName;
+    private final int headerIndex;
+    //endregion
 
+    //region constructors
     /**
      * Constructor for the Headers class
      * @param headerName the name of the header to set
@@ -42,7 +45,9 @@ public class Header {
         this.headerName = headerName;
         this.headerIndex = headerIndex;
     }
+    //endregion
 
+    //region getters
     /**
      * @author Grant Fass
      * @return the value of the headerIndex
@@ -58,7 +63,9 @@ public class Header {
     public String getHeaderName() {
         return headerName;
     }
+    //endregion
 
+    //region overrides
     /**
      * override equals method
      * @param o object to check against this header
@@ -82,4 +89,5 @@ public class Header {
     public int hashCode() {
         return Objects.hash(headerName, headerIndex);
     }
+    //endregion
 }
