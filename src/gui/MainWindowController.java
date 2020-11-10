@@ -1,3 +1,23 @@
+/*
+ * Authors: Becker, Ryan; Cross, Joy; Erickson, Simon; Fass, Grant;
+ * Class: SE 2030 - 021
+ * Team: G
+ * Affiliation: Milwaukee School Of Engineering (MSOE)
+ * Program Name: General Transit Feed Specification Tool
+ * Copyright (C): GNU GPLv3; 9 November 2020
+ *
+ * This file is a part of the General Transit Feed Specification Tool
+ * written by Team G of class SE 2030 - 021 at MSOE.
+ *
+ * This is a free software: it can be redistributed and/or modified
+ * as expressed in the GNU GPLv3 written by the Free Software Foundation.
+ *
+ * This software is distributed in hopes that it is useful but does
+ * not include any warranties, not even implied warranties. There is more
+ * information about this in the GNU GPLv3.
+ *
+ * To view the license go to <gnu.org/licenses/gpl-3.0.en.html>
+ */
 package gui;
 
 import data.Data;
@@ -257,10 +277,12 @@ public class MainWindowController {
 				null, "This program is designed to allow users to import, manipulate, and export" +
 						" GTFS files that are consistent with the specifications from the Google Transit GTFS" +
 						" Reference pages. Files are expected to be named as 'stops.txt', 'stop_times.txt'," +
-						" 'routes.txt', or 'trips.txt'.\nThis program was developed by Group G of the" +
+						" 'routes.txt', or 'trips.txt'.\nThis program was developed by Team G of the" +
 						" Software Engineering Tools And Practices class (SE 2030 - 021) at the Milwaukee School" +
 						" Of Engineering (MSOE) in the Fall term of 2020.\n" +
-						"Members: Grant Fass, Joy Cross, Simon Erickson, & Ryan Becker.");
+						"Members: Grant Fass, Joy Cross, Simon Erickson, & Ryan Becker.\n" +
+						"This program is free software licensed under the GNU GPLv3 and does not come with any " +
+						"warranties.");
 	}
 
 	/**
