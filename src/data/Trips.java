@@ -74,14 +74,23 @@ public class Trips {
     }
 
     /**
+     * @author Joy Cross
+     * @return current headers of routes
+     */
+    public Headers getHeaders(){
+        return headers;
+    }
+
+
+    /**
      * Removes specified Trip object from trips
      *
-     * @param trip Trip to be removed
+     * @param trip_id Trip to be removed
      * @return true if deleted, false otherwise
      * @author Simon Erickson
      */
-    public boolean removeTrip(Trip trip) {
-        Trip tripRemoved = trips.remove(trip.getTripID());
+    public boolean removeTrip(String trip_id) {
+        Trip tripRemoved = trips.remove(trip_id);
         boolean deleted = false;
         if (tripRemoved != null) {
             deleted = true;

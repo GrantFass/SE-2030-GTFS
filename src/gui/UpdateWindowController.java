@@ -1,33 +1,23 @@
 /*
- * Authors: Becker, Ryan; Cross, Joy; Erickson, Simon; Fass, Grant;
- * Class: SE 2030 - 021
- * Team: G
- * Affiliation: Milwaukee School Of Engineering (MSOE)
- * Program Name: General Transit Feed Specification Tool
- * Copyright (C): GNU GPLv3; 9 November 2020
- *
- * This file is a part of the General Transit Feed Specification Tool
- * written by Team G of class SE 2030 - 021 at MSOE.
- *
- * This is a free software: it can be redistributed and/or modified
- * as expressed in the GNU GPLv3 written by the Free Software Foundation.
- *
- * This software is distributed in hopes that it is useful but does
- * not include any warranties, not even implied warranties. There is more
- * information about this in the GNU GPLv3.
- *
- * To view the license go to <gnu.org/licenses/gpl-3.0.en.html>
+ * gui
+ * File Header Contains Class UpdateWindowController
+ * Name: Grant
+ * Created 10/25/2020
  */
 package gui;
 
-import data.Route;
-import data.Stop;
-import data.StopTime;
-import data.Trip;
+import data.*;
+import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * UpdateWindowController Purpose: Controller for the Update Window
@@ -36,12 +26,20 @@ import javafx.stage.Stage;
  * @version Created on 10/25/2020 at 2:14 AM
  */
 public class UpdateWindowController {
-    //region FXML references
     @FXML
     private TextArea description;
-    //endregion
-
-    //region class references
+    @FXML
+    private ComboBox attributes;
+    @FXML
+    private TextField inputAttribute;
+    @FXML
+    private ComboBox pickType;
+    @FXML
+    private TextField inputPickType;
+    @FXML
+    private TextArea output;
+    @FXML
+    private Button updateButton;
     private Stage analysisWindowStage;
     private AnalysisWindowController analysisWindowController;
     private Stage dataWindowStage;
@@ -58,16 +56,20 @@ public class UpdateWindowController {
     private SearchWindowController searchWindowController;
     private Stage updateWindowStage;
 
+    private ArrayList<String> ids = new ArrayList<>();
+    private int update;
+
     /**
      * set the local values of all of the stages.
+     *
      * @param analysisWindowStage the stage for the AnalysisWindow
-     * @param dataWindowStage the stage for the DataWindow
-     * @param exportWindowStage the stage for the ExportWindow
-     * @param importWindowStage the stage for the ImportWindow
-     * @param mainWindowStage the stage for the MainWindow
-     * @param mapWindowStage the stage for the MapWindow
-     * @param searchWindowStage the stage for the SearchWindow
-     * @param updateWindowStage the stage for the UpdateWindow
+     * @param dataWindowStage     the stage for the DataWindow
+     * @param exportWindowStage   the stage for the ExportWindow
+     * @param importWindowStage   the stage for the ImportWindow
+     * @param mainWindowStage     the stage for the MainWindow
+     * @param mapWindowStage      the stage for the MapWindow
+     * @param searchWindowStage   the stage for the SearchWindow
+     * @param updateWindowStage   the stage for the UpdateWindow
      * @author Grant Fass
      */
     public void setStages(Stage analysisWindowStage, Stage dataWindowStage,
@@ -87,13 +89,14 @@ public class UpdateWindowController {
     /**
      * Sets the values of the controller associated with the respective files
      * Makes sure the same instance of the controller is used everywhere
+     *
      * @param analysisWindowController reference to the AnalysisWindowController in use
-     * @param dataWindowController reference to the DataWindowController in use
-     * @param exportWindowController reference to the ExportWindowController in use
-     * @param importWindowController reference to the ImportWindowController in use
-     * @param mainWindowController reference to the MainWindowController in use
-     * @param mapWindowController reference to the MapWindowController in use
-     * @param searchWindowController reference to the SearchWindowController in use
+     * @param dataWindowController     reference to the DataWindowController in use
+     * @param exportWindowController   reference to the ExportWindowController in use
+     * @param importWindowController   reference to the ImportWindowController in use
+     * @param mainWindowController     reference to the MainWindowController in use
+     * @param mapWindowController      reference to the MapWindowController in use
+     * @param searchWindowController   reference to the SearchWindowController in use
      * @author Grant Fass
      */
     public void setControllers(AnalysisWindowController analysisWindowController,
@@ -111,65 +114,151 @@ public class UpdateWindowController {
         this.mapWindowController = mapWindowController;
         this.searchWindowController = searchWindowController;
     }
-    //endregion
 
-    //region displayed help information
     /**
      * set the default values of the description
+     *
      * @author Grant Fass
      */
     public void setDefaultValues() {
-        description.setText("");
+        description.setText("This window is used to update for specific information. " +
+                "Use the 'Pick Type' dropdown to select the data type to search for. Use the 'Update Attribute' " +
+                "dropdown to select the attribute type used to update for. Put your update value into the " +
+                "Update Attribute Text Field then click on the 'Update' button to get started.");
     }
 
     /**
      * display help values to the program
      * Activates when help menu button is clicked
      *
-     * @author Grant Fass
+     * @author Joy Cross
      */
     @FXML
     private void displayHelp() {
         MainWindowController.displayAlert(Alert.AlertType.INFORMATION, "General Transit Feed Specification Tool Information",
-                "Update Window Help", "Not Implemented Yet");
-    }
-    //endregion
-
-    //region methods for setting currently targeted object
-    /**
-     * sets the current object to update in the GUI
-     * @param route the route object to update
-     * @author Grant Fass
-     */
-    public void setObjectToUpdate(Route route) {
-        System.out.println(route);
+                "Import Window Help", "This window is used to update information" +
+                        "\nHow To Use:" +
+                        "\n1. Click on the 'Pick Type' dropdown and select the data type you are updating for" +
+                        "\n2. Click on the 'Pick Type' Text Field and enter the id to search and update" +
+                        "\n3. Click on the 'Add ID' Button to add to update list, repeat 2-3 for every id you wish to update" +
+                        "\n4. Click on the 'Clear' Button to clear current update list to start again" +
+                        "\n1. Click on the 'Update Attribute' dropdown and select the attribute type you are updating for" +
+                        "\n5. Click on the 'Update Attribute' Text Field and enter the text that will update attribute" +
+                        "\n6. Click on the 'Update' Button. The results of the update will be displayed in the 'Output' Text Area." +
+                        "\nNote: StopTime must be entered as 'stop_id, trip_id'");
     }
 
     /**
-     * sets the current object to update in the GUI
-     * @param stop the stop object to update
-     * @author Grant Fass
+     * Adds id into list of ids
+     * @author Joy Cross
      */
-    public void setObjectToUpdate(Stop stop) {
-        System.out.println(stop);
+    @FXML
+    private void addID() {
+        String choiceText = inputPickType.getText().trim();
+        if(update == 1){
+            output.setText("");
+            update = 0;
+        }
+        if (!choiceText.equals("")) {
+            ids.add(choiceText);
+            inputPickType.setText("");
+            output.setText(output.getText() + choiceText + "\n");
+        }
     }
 
     /**
-     * sets the current object to update in the GUI
-     * @param stopTime the stopTime object to update
-     * @author Grant Fass
+     * Clears all text fields and current id list
+     * @author Joy Cross
      */
-    public void setObjectToUpdate(StopTime stopTime) {
-        System.out.println(stopTime);
+    @FXML
+    private void clear() {
+        output.setText("");
+        inputAttribute.setText("");
+        inputPickType.setText("");
+        ids.clear();
     }
 
     /**
-     * sets the current object to update in the GUI
-     * @param trip the trip object to update
-     * @author Grant Fass
+     * Updates fields
+     * @author Joy Cross
      */
-    public void setObjectToUpdate(Trip trip) {
-        System.out.println(trip);
+    @FXML
+    private void update() {
+        String choice = (String) pickType.getValue();
+        String attributeChosen = (String) attributes.getValue();
+        String attributeValue = inputAttribute.getText();
+        output.setText("");
+        if(attributeChosen.equals("Select Attribute")){
+            output.setText("Choose a attribute to change");
+        } else if (attributeValue.equals("")){
+            output.setText("Enter the text you want to update the attribute");
+        } else if (ids.size() == 0){
+            output.setText("Add ids to update");
+        }
+        else {
+            for (String id : ids) {
+                int success = mainWindowController.getData().update(choice, id, attributeChosen, attributeValue);
+                if (success == 0) {
+                    output.setText(output.getText() + "Could not find specified " + choice + ": " + id + "\n");
+                } else {
+                    output.setText(output.getText() + "Updated " + choice + ": " + id + "\n");
+                }
+            }
+            inputAttribute.setText("");
+            inputPickType.setText("");
+            ids.clear();
+            update = 1;
+        }
     }
-    //endregion
+
+    public ArrayList<String> convertHeadersToArray(Headers headers){
+        ArrayList<String> arrayList = new ArrayList<>();
+        for(int i = 0; i < headers.length(); i++){
+            arrayList.add(headers.getHeaderName(i));
+        }
+        return arrayList;
+    }
+
+    /**
+     * Sets the attributes based on pick type
+     * @author Joy Cross
+     */
+    @FXML
+    private void setAttributes() {
+        String choice = (String)pickType.getValue();
+        clear();
+        inputPickType.setDisable(false);
+        Headers headers;
+        if(choice.equals("stop_id")){
+            Stops stops = mainWindowController.getData().getStops();
+            headers = stops.getHeaders();
+        } else if (choice.equals("route_id")){
+            Routes routes = mainWindowController.getData().getRoutes();
+            headers = routes.getHeaders();
+        } else if (choice.equals("trip_id")){
+            Trips trips = mainWindowController.getData().getTrips();
+            headers = trips.getHeaders();
+        } else { // stoptime
+            StopTimes stopTimes = mainWindowController.getData().getStopTimes();
+            headers = stopTimes.getHeaders();
+        }
+        if(headers.length() == 0){
+            output.setText("No available data in import, must import at least one " + choice);
+            attributes.setDisable(true);
+            updateButton.setDisable(true);
+        } else {
+            attributes.setItems(FXCollections.observableArrayList(convertHeadersToArray(headers)));
+            attributes.setDisable(false);
+        }
+    }
+
+    /**
+     * Allows access to GUI features by un-disabling them
+     * @author Joy Cross
+     */
+    @FXML
+    private void unDisableAttribute(){
+        inputAttribute.setDisable(false);
+        updateButton.setDisable(false);
+    }
 }

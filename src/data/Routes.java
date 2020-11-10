@@ -79,6 +79,15 @@ public class Routes {
 	}
 
 	/**
+	 * @author Joy Cross
+	 * @return current headers of routes
+	 */
+	public Headers getHeaders(){
+		return headers;
+	}
+
+
+	/**
 	 * @author Ryan Becker
 	 * @param route_id string identifying requested route
 	 * @return route associated with the specified route_id
@@ -90,11 +99,11 @@ public class Routes {
 	/**
 	 * Removes specified Route object from routes
 	 * @author Ryan Becker
-	 * @param route Route to be removed
+	 * @param route_id Route to be removed
      * @return true if deleted, false otherwise
 	 */
-	public boolean removeRoute(Route route){
-		Route routeRemoved = routes.remove(route.getRouteID());
+	public boolean removeRoute(String route_id){
+		Route routeRemoved = routes.remove(route_id);
 		boolean deleted = false;
 		if(routeRemoved != null){
 			deleted = true;

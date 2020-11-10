@@ -69,6 +69,15 @@ public class Stops {
 	}
 
 	/**
+	 * @author Joy Cross
+	 * @return current headers of routes
+	 */
+	public Headers getHeaders(){
+		return headers;
+	}
+
+
+	/**
 	 * Removes one stop from data by stop_id
 	 * @author Joy Cross
 	 * @param stop_id remove stop by stop_id

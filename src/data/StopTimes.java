@@ -76,6 +76,15 @@ public class StopTimes {
 	}
 
 	/**
+	 * @author Joy Cross
+	 * @return current headers of routes
+	 */
+	public Headers getHeaders(){
+		return headers;
+	}
+
+
+	/**
 	 * Removes stop from data
 	 * @author Joy Cross
 	 * @param stop_id stop_id associated with stoptime
