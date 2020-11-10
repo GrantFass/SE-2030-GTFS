@@ -288,23 +288,28 @@ public class MapWindowController implements Observer {
         HashMap<Route, ArrayList<Stop>> stopsPerRoute = data.getStopsPerRoute();
         displayRouteIDs(stopsPerRoute);
         //Update the displayed route whenever a new route is clicked in the routeListView
-        routeListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+        ChangeListener<String> changeListener = new ChangeListener<String>() {
             CoordinateLine lastCoordinateLine;
-
+            final int routeListViewStartSize = routeListView.getItems().size();
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
-                if (lastCoordinateLine != null) {
-                    removeCoordinateLine(lastCoordinateLine);
-                }
-                Route route = data.getRoutes().getRoute(newValue);
-                if (route != null) {
-                    lastCoordinateLine = getCoordinateLine(route, stopsPerRoute.get(route), useRandomRouteColorsToggle.isSelected());
+                if (routeListViewStartSize != routeListView.getItems().size()) {
+                    routeListView.getSelectionModel().selectedItemProperty().removeListener(this);
+                } else if (newValue != null) {
                     if (lastCoordinateLine != null) {
-                        plotCoordinateLine(lastCoordinateLine);
+                        removeCoordinateLine(lastCoordinateLine);
+                    }
+                    Route route = data.getRoutes().getRoute(newValue);
+                    if (route != null) {
+                        lastCoordinateLine = getCoordinateLine(route, stopsPerRoute.get(route), useRandomRouteColorsToggle.isSelected());
+                        if (lastCoordinateLine != null) {
+                            plotCoordinateLine(lastCoordinateLine);
+                        }
                     }
                 }
             }
-        });
+        };
+        routeListView.getSelectionModel().selectedItemProperty().addListener(changeListener);
     }
     //endregion
 
@@ -335,17 +340,22 @@ public class MapWindowController implements Observer {
         displayBusses(busCoordinates);
         final Marker marker = Marker.createProvided(Marker.Provided.ORANGE).setPosition(msoeAthleticField).setVisible(true);
         map.addMarker(marker);
-        //Update the displayed bus whenever a new bus is clicked in the busListView
-        busListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+        ChangeListener<String> changeListener = new ChangeListener<String>() {
+            final int busListViewStartSize = busListView.getItems().size();
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
-                double[] coordinates = busCoordinates.get(Integer.parseInt(newValue.substring(5).trim()));
-                if (coordinates.length >= 2) {
-                    Coordinate coordinate = new Coordinate(coordinates[0], coordinates[1]);
-                    marker.setPosition(coordinate);
+                if (busListViewStartSize != busListView.getItems().size()) {
+                    busListView.getSelectionModel().selectedItemProperty().removeListener(this);
+                } else if (newValue != null) {
+                    double[] coordinates = busCoordinates.get(Integer.parseInt(newValue.substring(5).trim()));
+                    if (coordinates.length >= 2) {
+                        Coordinate coordinate = new Coordinate(coordinates[0], coordinates[1]);
+                        marker.setPosition(coordinate);
+                    }
                 }
             }
-        });
+        };
+        busListView.getSelectionModel().selectedItemProperty().addListener(changeListener);
     }
     //endregion
 
