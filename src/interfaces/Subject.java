@@ -29,6 +29,7 @@ package interfaces;
  * @version Created on 11/1/2020 at 12:58 PM
  */
 public interface Subject {
+    //region methods to change the number of observers
     /**
      * add an observer to the list of observers to update
      * Based on a guide from GeeksForGeeks
@@ -36,7 +37,8 @@ public interface Subject {
      * @param o the observer to add
      * @author Grant Fass
      */
-    public void attach(Observer o);
+    void attach(Observer o);
+
     /**
      * remove an observer from the list of observers to update
      * Based on a guide from GeeksForGeeks
@@ -44,12 +46,16 @@ public interface Subject {
      * @param o the observer to remove
      * @author Grant Fass
      */
-    public void detach(Observer o);
+    void detach(Observer o);
+    //endregion
+
+    //region methods to notify observers that a change was made
     /**
      * notify all observers that information was changed
      * Based on a guide from GeeksForGeeks
      * found here: https://www.geeksforgeeks.org/observer-pattern-set-2-implementation/
      * @author Grant Fass
      */
-    public void notifyObservers();
+    void notifyObservers();
+    //endregion
 }

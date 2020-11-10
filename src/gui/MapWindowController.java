@@ -25,7 +25,6 @@ import com.sothawo.mapjfx.event.MapViewEvent;
 import data.Data;
 import data.Route;
 import data.Stop;
-import data.StopTime;
 import interfaces.Observer;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -34,7 +33,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,77 +65,21 @@ public class MapWindowController implements Observer {
     private TextArea description;
     //endregion
 
-    //region class references
-    private Stage analysisWindowStage;
-    private AnalysisWindowController analysisWindowController;
-    private Stage dataWindowStage;
-    private DataWindowController dataWindowController;
-    private Stage exportWindowStage;
-    private ExportWindowController exportWindowController;
-    private Stage importWindowStage;
-    private ImportWindowController importWindowController;
-    private Stage mainWindowStage;
-    private MainWindowController mainWindowController;
-    private Stage mapWindowStage;
-    private Stage searchWindowStage;
-    private SearchWindowController searchWindowController;
-    private Stage updateWindowStage;
-    private UpdateWindowController updateWindowController;
+    //region properties
     private static final Coordinate msoeAthleticField = new Coordinate(43.044056044993994, -87.90621316829471);
+    //endregion
 
-    /**
-     * set the local values of all of the stages.
-     *
-     * @param analysisWindowStage the stage for the AnalysisWindow
-     * @param dataWindowStage     the stage for the DataWindow
-     * @param exportWindowStage   the stage for the ExportWindow
-     * @param importWindowStage   the stage for the ImportWindow
-     * @param mainWindowStage     the stage for the MainWindow
-     * @param mapWindowStage      the stage for the MapWindow
-     * @param searchWindowStage   the stage for the SearchWindow
-     * @param updateWindowStage   the stage for the UpdateWindow
-     * @author Grant Fass
-     */
-    public void setStages(Stage analysisWindowStage, Stage dataWindowStage,
-                          Stage exportWindowStage, Stage importWindowStage,
-                          Stage mainWindowStage, Stage mapWindowStage,
-                          Stage searchWindowStage, Stage updateWindowStage) {
-        this.analysisWindowStage = analysisWindowStage;
-        this.dataWindowStage = dataWindowStage;
-        this.exportWindowStage = exportWindowStage;
-        this.importWindowStage = importWindowStage;
-        this.mainWindowStage = mainWindowStage;
-        this.mapWindowStage = mapWindowStage;
-        this.searchWindowStage = searchWindowStage;
-        this.updateWindowStage = updateWindowStage;
-    }
+    //region class references
+    private UpdateWindowController updateWindowController;
 
     /**
      * Sets the values of the controller associated with the respective files
      * Makes sure the same instance of the controller is used everywhere
      *
-     * @param analysisWindowController reference to the AnalysisWindowController in use
-     * @param dataWindowController     reference to the DataWindowController in use
-     * @param exportWindowController   reference to the ExportWindowController in use
-     * @param importWindowController   reference to the ImportWindowController in use
-     * @param mainWindowController     reference to the MainWindowController in use
-     * @param searchWindowController   reference to the SearchWindowController in use
      * @param updateWindowController   reference to the UpdateWindowController in use
      * @author Grant Fass
      */
-    public void setControllers(AnalysisWindowController analysisWindowController,
-                               DataWindowController dataWindowController,
-                               ExportWindowController exportWindowController,
-                               ImportWindowController importWindowController,
-                               MainWindowController mainWindowController,
-                               SearchWindowController searchWindowController,
-                               UpdateWindowController updateWindowController) {
-        this.analysisWindowController = analysisWindowController;
-        this.dataWindowController = dataWindowController;
-        this.exportWindowController = exportWindowController;
-        this.importWindowController = importWindowController;
-        this.mainWindowController = mainWindowController;
-        this.searchWindowController = searchWindowController;
+    public void setControllers(UpdateWindowController updateWindowController) {
         this.updateWindowController = updateWindowController;
     }
     //endregion
@@ -185,13 +127,9 @@ public class MapWindowController implements Observer {
             map.setExtent(event.getExtent());
         });
         // add an observer for the map's center property to adjust the corresponding label
-        map.centerProperty().addListener((observable, oldValue, newValue) -> {
-            labelCenter.setText(newValue == null ? "" : String.format("Center: [lat = %10.6f, long = %10.6f]", newValue.getLatitude(), newValue.getLongitude()));
-        });
+        map.centerProperty().addListener((observable, oldValue, newValue) -> labelCenter.setText(newValue == null ? "" : String.format("Center: [lat = %10.6f, long = %10.6f]", newValue.getLatitude(), newValue.getLongitude())));
         // add an observer to adjust the label
-        map.zoomProperty().addListener((observable, oldValue, newValue) -> {
-            labelZoom.setText(null == newValue ? "" : ("zoom: " + newValue.toString()));
-        });
+        map.zoomProperty().addListener((observable, oldValue, newValue) -> labelZoom.setText(null == newValue ? "" : ("zoom: " + newValue.toString())));
     }
 
     /**
@@ -203,7 +141,12 @@ public class MapWindowController implements Observer {
     @FXML
     private void displayHelp() {
         MainWindowController.displayAlert(Alert.AlertType.INFORMATION, "General Transit Feed Specification Tool Information",
-                "Import Window Help", "Not Implemented Yet");
+                "Map Window Help", "This window is used to display Routes and Busses on a dynamic map.\n" +
+                        "To use the map all files must have data. All of the data should correctly reference the other data" +
+                        "otherwise this window may not work as intended.\nOnce data has been imported click on a route_id" +
+                        "or a bus to plot them on the map.\nTo update a stop click on the 'Enable Update' button then click" +
+                        "on the location of the stop. The update window will then contain the stop_id and a popup will display" +
+                        "to change the arrival and departure time.");
     }
     //endregion
 
@@ -289,9 +232,10 @@ public class MapWindowController implements Observer {
         HashMap<Route, ArrayList<Stop>> stopsPerRoute = data.getStopsPerRoute();
         displayRouteIDs(stopsPerRoute);
         //Update the displayed route whenever a new route is clicked in the routeListView
-        ChangeListener<String> changeListener = new ChangeListener<String>() {
+        ChangeListener<String> changeListener = new ChangeListener<>() {
             CoordinateLine lastCoordinateLine;
             final int routeListViewStartSize = routeListView.getItems().size();
+
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
                 if (routeListViewStartSize != routeListView.getItems().size()) {
@@ -323,7 +267,7 @@ public class MapWindowController implements Observer {
     private void displayBusses(ArrayList<double[]> busLocations) {
         int count = 0;
         ObservableList<String> items = FXCollections.observableArrayList();
-        for (double[] busLocation : busLocations) {
+        for (double[] ignored : busLocations) {
             items.add("Bus: " + count);
             count++;
         }
@@ -341,8 +285,9 @@ public class MapWindowController implements Observer {
         displayBusses(busCoordinates);
         final Marker marker = Marker.createProvided(Marker.Provided.ORANGE).setPosition(msoeAthleticField).setVisible(true);
         map.addMarker(marker);
-        ChangeListener<String> changeListener = new ChangeListener<String>() {
+        ChangeListener<String> changeListener = new ChangeListener<>() {
             final int busListViewStartSize = busListView.getItems().size();
+
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
                 if (busListViewStartSize != busListView.getItems().size()) {

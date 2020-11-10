@@ -34,7 +34,7 @@ import java.util.TimeZone;
  * @version 1.0
  */
 public class Stop {
-
+	//region properties
 	private String level_id;
 	private LocationTypeEnum location_type;
 	private String parent_station;
@@ -49,8 +49,9 @@ public class Stop {
 	private TimeZone stop_timezone;
 	private URL stop_url;
 	private WheelchairBoardingEnum wheelchair_boarding;
-	// private String zone_id; // used if we have fares.txt so I don't think we should include it
+	//endregion
 
+	//region constructors
 	/**
 	 * Stop Constructor
 	 * @author Joy Cross
@@ -113,7 +114,9 @@ public class Stop {
 					" correctly. Skipping!");
 		}
 	}
+	//endregion
 
+	//region getters
 	/**
 	 * gets the file headers
 	 * used for exporting stops
@@ -284,7 +287,9 @@ public class Stop {
 	public WheelchairBoardingEnum getWheelchairBoarding(){
 		return wheelchair_boarding;
 	}
+	//endregion
 
+	//region setters
 	/**
 	 * @author Joy Cross
 	 */
@@ -292,92 +297,92 @@ public class Stop {
 		this.tripsPerStop = tripsPerStop;
 	}
 
-	/*
 	/**
 	 * @author Joy Cross
-	 *
+	 */
 	public void setLevelID(String level_id){
 		this.level_id = level_id;
 	}
 
 	/**
 	 * @author Joy Cross
-	 *
+	 */
 	public void setLocationType(LocationTypeEnum location_type){
 		this.location_type = location_type;
 	}
 
 	/**
 	 * @author Joy Cross
-	 *
+	 */
 	public void setParentStation(String parent_station){
 		this.parent_station = parent_station;
 	}
 
 	/**
 	 * @author Joy Cross
-	 *
+	 */
 	public void setPlatformCode(String platform_code){
 		this.platform_code = platform_code;
 	}
 
 	/**
 	 * @author Joy Cross
-	 *
+	 */
 	public void setStopCode(String stop_code){
 		this.stop_code = stop_code;
 	}
 
 	/**
 	 * @author Joy Cross
-	 *
+	 */
 	public void setStopDescription(String stop_description){
 		this.stop_description = stop_description;
 	}
 
 	/**
 	 * @author Joy Cross
-	 *
+	 */
 	public void setStopLatitude(double stop_latitude){
 		this.stop_latitude = stop_latitude;
 	}
 
 	/**
 	 * @author Joy Cross
-	 *
+	 */
 	public void setStopLongitude(double stop_longitude){
 		this.stop_longitude = stop_longitude;
 	}
 
 	/**
 	 * @author Joy Cross
-	 *
+	 */
 	public void setStopName(String stop_name){
 		this.stop_name = stop_name;
 	}
 
 	/**
 	 * @author Joy Cross
-	 *
+	 */
 	public void setStopTimezone(TimeZone stop_timezone){
 		this.stop_timezone = stop_timezone;
 	}
 
 	/**
 	 * @author Joy Cross
-	 *
+	 */
 	public void setStopURL(URL stop_url){
 		this.stop_url = stop_url;
 	}
 
 	/**
 	 * @author Joy Cross
-	 *
+	 */
 	public void setWheelchairBoarding(WheelchairBoardingEnum wheelchair_boarding){
 		this.wheelchair_boarding = wheelchair_boarding;
 	}
-	*/
+	//endregion
 
+	//region string outputs
 	/**
 	 * Method to output data as a single concatenated string for Stop
 	 * @author Joy Cross, Grant Fass
@@ -410,4 +415,5 @@ public class Stop {
 	public String toSimpleString() {
 		return String.format("Stop ID: %s | Latitude: %s | Longitude: %s\n", stop_id, stop_latitude, stop_longitude);
 	}
+	//endregion
 }//end Stop

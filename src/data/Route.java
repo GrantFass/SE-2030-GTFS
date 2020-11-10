@@ -28,7 +28,6 @@ import javafx.scene.paint.Color;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-
 /**
  * Class for a Route object, which is the path that a Driver will take to various destinations
  * @author Ryan Becker
@@ -36,7 +35,7 @@ import java.net.URL;
  * @created 06-Oct-2020 10:28:37 AM
  */
 public class Route {
-
+	//region properties
 	private String route_id;
 	private String agency_id;
 	private String route_short_name;
@@ -49,9 +48,12 @@ public class Route {
 	private int route_sort_order;
 	private ContinuousPickupEnum continuous_pickup;
 	private ContinuousDropOffEnum continuous_drop_off;
+	//endregion
 
+	//region constructors
 	/**
-	 * Overloaded constructor of Route object, where all parameters are passed initially as Strings
+	 * constructor of Route object, where all parameters are passed initially as Strings
+	 * Creates a new Route object
 	 * @author Ryan Becker
 	 * @param route_id ID of route
 	 * @param agency_id ID of agency
@@ -115,8 +117,9 @@ public class Route {
 			throw new IllegalArgumentException("Data line within routes.txt not formatted correctly.\nSkipping line");
 		}
 	}
+	//endregion
 
-	//Getters
+	//region Getters
 	/**
 	 * returns route_id
 	 * @author Ryan Becker
@@ -220,6 +223,7 @@ public class Route {
 	public ContinuousPickupEnum getContinuousPickup() {
 		return continuous_pickup;
 	}
+
 	/**
 	 * return continuous_drop_off
 	 * @author Ryan Becker
@@ -228,7 +232,6 @@ public class Route {
 	public ContinuousDropOffEnum getContinuousDropOff() {
 		return continuous_drop_off;
 	}
-
 
 	/**
 	 * returns header line to be used for exporting routes.txt
@@ -305,10 +308,9 @@ public class Route {
 		sb.append('\n');
 		return sb.toString();
 	}
+	//endregion
 
-
-	//Setters
-
+	//region Setters
 	/**
 	 * sets route_id
 	 * @author Ryan Becker
@@ -416,7 +418,9 @@ public class Route {
 	public void setContinuousDropOff(ContinuousDropOffEnum continuous_drop_off) {
 		this.continuous_drop_off = continuous_drop_off;
 	}
+	//endregion
 
+	//region string outputs
 	/**
 	 * Method to output data as a single concatenated string
 	 * @author GrantFass, Ryan Becker
@@ -445,4 +449,5 @@ public class Route {
 	public String toSimpleString() {
 		return String.format("Route ID: %s | Route Color: %s\n", route_id, route_color);
 	}
+	//endregion
 }//end Route
