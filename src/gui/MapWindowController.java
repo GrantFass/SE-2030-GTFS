@@ -1,8 +1,22 @@
 /*
- * gui
- * File Header Contains Class MapWindowController
- * Name: Grant
- * Created 10/25/2020
+ * Authors: Becker, Ryan; Cross, Joy; Erickson, Simon; Fass, Grant;
+ * Class: SE 2030 - 021
+ * Team: G
+ * Affiliation: Milwaukee School Of Engineering (MSOE)
+ * Program Name: General Transit Feed Specification Tool
+ * Copyright (C): GNU GPLv3; 9 November 2020
+ *
+ * This file is a part of the General Transit Feed Specification Tool
+ * written by Team G of class SE 2030 - 021 at MSOE.
+ *
+ * This is a free software: it can be redistributed and/or modified
+ * as expressed in the GNU GPLv3 written by the Free Software Foundation.
+ *
+ * This software is distributed in hopes that it is useful but does
+ * not include any warranties, not even implied warranties. There is more
+ * information about this in the GNU GPLv3.
+ *
+ * To view the license go to <gnu.org/licenses/gpl-3.0.en.html>
  */
 package gui;
 
@@ -11,24 +25,19 @@ import com.sothawo.mapjfx.event.MapViewEvent;
 import data.Data;
 import data.Route;
 import data.Stop;
-import data.StopTime;
 import interfaces.Observer;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import java.awt.event.MouseEvent;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**

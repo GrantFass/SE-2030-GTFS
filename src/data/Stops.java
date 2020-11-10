@@ -1,9 +1,29 @@
+/*
+ * Authors: Becker, Ryan; Cross, Joy; Erickson, Simon; Fass, Grant;
+ * Class: SE 2030 - 021
+ * Team: G
+ * Affiliation: Milwaukee School Of Engineering (MSOE)
+ * Program Name: General Transit Feed Specification Tool
+ * Copyright (C): GNU GPLv3; 9 November 2020
+ *
+ * This file is a part of the General Transit Feed Specification Tool
+ * written by Team G of class SE 2030 - 021 at MSOE.
+ *
+ * This is a free software: it can be redistributed and/or modified
+ * as expressed in the GNU GPLv3 written by the Free Software Foundation.
+ *
+ * This software is distributed in hopes that it is useful but does
+ * not include any warranties, not even implied warranties. There is more
+ * information about this in the GNU GPLv3.
+ *
+ * To view the license go to <gnu.org/licenses/gpl-3.0.en.html>
+ */
 package data;
 
 
 import java.io.*;
-import java.util.*;
-import java.util.zip.DataFormatException;
+import java.util.HashMap;
+import java.util.Scanner;
 
 /**
  * Class for a Stops database, which is the main database storing all stop objects
