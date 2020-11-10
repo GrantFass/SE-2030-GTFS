@@ -31,6 +31,7 @@ import javafx.scene.paint.Color;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -230,6 +231,413 @@ public class Data implements Subject {
 			message += "\n" + e.getMessage();
 		}
 		return message;
+	}
+	//endregion
+
+	//region methods for updating files
+	/**
+	 * Updates attribute in specific class based on selection
+	 * @param type stop_id, trip_id, stopTime, route_id
+	 * @param id String of id
+	 * @param attributeType attribute specific to class
+	 * @param value String of value
+	 * @author Joy Cross
+	 * @return 0 if failure 1 if success
+	 */
+	public int update(String type, String id, String attributeType, String value) {
+		int success = 1;
+		switch (type) {
+			case "stop_id":
+				Stops stops = this.stops;
+				Stop stop = stops.getStop(id);
+				if(stop == null){ // check to see if stop exists
+					success = 0;
+					break;
+				}
+
+				stops.removeStop(id);
+				Stop newStop = stop;
+
+				//update stop
+				String timezone = "";
+				if(stop.getStopTimezone() != null){
+					timezone = stop.getStopTimezone().getID();
+				}
+				String url = "";
+				if(stop.getStopURL() != null){
+					url = stop.getStopURL().toString();
+				}
+				switch (attributeType) {
+					case "stop_id":
+						newStop = new Stop(stop.getLevelID(), (stop.getLocationType().getValue() + ""), stop.getParentStation(),
+								stop.getPlatformCode(), stop.getStopCode(), stop.getStopDescription(), value,
+								(stop.getStopLatitude() + ""), (stop.getStopLongitude() + ""), stop.getStopName(),
+								timezone, url, (stop.getWheelchairBoarding().getValue() + ""));
+						break;
+					case "stop_lon":
+					case "stop_longitude":
+						newStop = new Stop(stop.getLevelID(), (stop.getLocationType().getValue() + ""), stop.getParentStation(),
+								stop.getPlatformCode(), stop.getStopCode(), stop.getStopDescription(), stop.getStopID(),
+								(stop.getStopLatitude() + ""), value, stop.getStopName(),
+								timezone, url, (stop.getWheelchairBoarding().getValue() + ""));
+						break;
+					case "stop_latitude":
+					case "stop_lat":
+						newStop = new Stop(stop.getLevelID(), (stop.getLocationType().getValue() + ""), stop.getParentStation(),
+								stop.getPlatformCode(), stop.getStopCode(), stop.getStopDescription(), stop.getStopID(),
+								value, (stop.getStopLongitude() + ""), stop.getStopName(),
+								timezone, url, (stop.getWheelchairBoarding().getValue() + ""));
+						break;
+					case "stop_name":
+						newStop = new Stop(stop.getLevelID(), (stop.getLocationType().getValue() + ""), stop.getParentStation(),
+								stop.getPlatformCode(), stop.getStopCode(), stop.getStopDescription(), stop.getStopID(),
+								(stop.getStopLatitude() + ""), (stop.getStopLongitude() + ""), value,
+								timezone, url, (stop.getWheelchairBoarding().getValue() + ""));
+						break;
+					case "stop_description":
+					case "stop_desc":
+						newStop = new Stop(stop.getLevelID(), (stop.getLocationType().getValue() + ""), stop.getParentStation(),
+								stop.getPlatformCode(), stop.getStopCode(), value, stop.getStopID(),
+								(stop.getStopLatitude() + ""), (stop.getStopLongitude() + ""), stop.getStopName(),
+								timezone, url, (stop.getWheelchairBoarding().getValue() + ""));
+						break;
+					case "stop_code":
+						newStop = new Stop(stop.getLevelID(), (stop.getLocationType().getValue() + ""), stop.getParentStation(),
+								stop.getPlatformCode(), value, stop.getStopDescription(), stop.getStopID(),
+								(stop.getStopLatitude() + ""), (stop.getStopLongitude() + ""), stop.getStopName(),
+								timezone, url, (stop.getWheelchairBoarding().getValue() + ""));
+						break;
+					case "platform_code":
+						newStop = new Stop(stop.getLevelID(), (stop.getLocationType().getValue() + ""), stop.getParentStation(),
+								value, stop.getStopCode(), stop.getStopDescription(), stop.getStopID(),
+								(stop.getStopLatitude() + ""), (stop.getStopLongitude() + ""), stop.getStopName(),
+								timezone, url, (stop.getWheelchairBoarding().getValue() + ""));
+						break;
+					case "level_id":
+						newStop = new Stop(value, (stop.getLocationType().getValue() + ""), stop.getParentStation(),
+								stop.getPlatformCode(), stop.getStopCode(), stop.getStopDescription(), stop.getStopID(),
+								(stop.getStopLatitude() + ""), (stop.getStopLongitude() + ""), stop.getStopName(),
+								timezone, url, (stop.getWheelchairBoarding().getValue() + ""));
+						break;
+					case "location_type":
+						newStop = new Stop(stop.getLevelID(), value, stop.getParentStation(),
+								stop.getPlatformCode(), stop.getStopCode(), stop.getStopDescription(), stop.getStopID(),
+								(stop.getStopLatitude() + ""), (stop.getStopLongitude() + ""), stop.getStopName(),
+								timezone, url, (stop.getWheelchairBoarding().getValue() + ""));
+						break;
+					case "stop_timezone":
+						newStop = new Stop(stop.getLevelID(), (stop.getLocationType().getValue() + ""), stop.getParentStation(),
+								stop.getPlatformCode(), stop.getStopCode(), stop.getStopDescription(), stop.getStopID(),
+								(stop.getStopLatitude() + ""), (stop.getStopLongitude() + ""), stop.getStopName(),
+								value, url, (stop.getWheelchairBoarding().getValue() + ""));
+						break;
+					case "wheelchair_boarding":
+						newStop = new Stop(stop.getLevelID(), (stop.getLocationType().getValue() + ""), stop.getParentStation(),
+								stop.getPlatformCode(), stop.getStopCode(), stop.getStopDescription(), stop.getStopID(),
+								(stop.getStopLatitude() + ""), (stop.getStopLongitude() + ""), stop.getStopName(),
+								timezone, url, (stop.getWheelchairBoarding().getValue() + ""));
+						break;
+					case "stop_url":
+						newStop = new Stop(stop.getLevelID(), (stop.getLocationType().getValue() + ""), stop.getParentStation(),
+								stop.getPlatformCode(), stop.getStopCode(), stop.getStopDescription(), stop.getStopID(),
+								(stop.getStopLatitude() + ""), (stop.getStopLongitude() + ""), stop.getStopName(),
+								timezone, value, (stop.getWheelchairBoarding().getValue() + ""));
+						break;
+					case "parent_station":
+						newStop = new Stop(stop.getLevelID(), (stop.getLocationType().getValue() + ""), value,
+								stop.getPlatformCode(), stop.getStopCode(), stop.getStopDescription(), stop.getStopID(),
+								(stop.getStopLatitude() + ""), (stop.getStopLongitude() + ""), stop.getStopName(),
+								timezone, url, (stop.getWheelchairBoarding().getValue() + ""));
+						break;
+				}
+				stops.addStop(newStop);
+				break;
+			case "route_id":
+				Routes routes = this.routes;
+				Route route = routes.getRoute(id);
+				if(route == null){
+					success = 0;
+					break;
+				}
+				routes.removeRoute(id);
+				Route newRoute = route;
+
+				// update route
+				int r = (int)(route.getRouteColor().getRed()*256);
+				int b = (int)(route.getRouteColor().getBlue()*256);
+				int g = (int)(route.getRouteColor().getGreen()*256);
+				String route_color = String.format("%02x%02x%02x", r, g, b);
+				r = (int)(route.getRouteTextColor().getRed()*256);
+				b = (int)(route.getRouteTextColor().getBlue()*256);
+				g = (int)(route.getRouteTextColor().getGreen()*256);
+				String route_text_color = String.format("%02x%02x%02x", r, g, b);
+				if(route.getRouteURL() != null){
+					url = route.getRouteURL().toString();
+				} else {
+					url = "";
+				}
+				switch (attributeType) {
+					case "route_id":
+						newRoute = new Route(value, route.getAgencyID(), route.getRouteShortName(),
+								route.getRouteLongName(), route.getRouteDesc(), (route.getRouteType().getValue() + ""), url, route_color,
+								route_text_color, (route.getRouteSortOrder() + ""), (route.getContinuousPickup().getValue() + ""),
+								(route.getContinuousDropOff().getValue() + ""));
+						break;
+					case "agency_id":
+						newRoute = new Route(route.getRouteID(), value, route.getRouteShortName(),
+								route.getRouteLongName(), route.getRouteDesc(), (route.getRouteType().getValue() + ""), url, route_color,
+								route_text_color, (route.getRouteSortOrder() + ""), (route.getContinuousPickup().getValue() + ""),
+								(route.getContinuousDropOff().getValue() + ""));
+						break;
+					case "route_short_name":
+						newRoute = new Route(route.getRouteID(), route.getAgencyID(), value,
+								route.getRouteLongName(), route.getRouteDesc(), (route.getRouteType().getValue() + ""), url, route_color,
+								route_text_color, (route.getRouteSortOrder() + ""), (route.getContinuousPickup().getValue() + ""),
+								(route.getContinuousDropOff().getValue() + ""));
+						break;
+					case "route_long_name":
+						newRoute = new Route(route.getRouteID(), route.getAgencyID(), route.getRouteShortName(),
+								value, route.getRouteDesc(), (route.getRouteType().getValue() + ""), url, route_color,
+								route_text_color,(route.getRouteSortOrder() + ""), (route.getContinuousPickup().getValue() + ""),
+								(route.getContinuousDropOff().getValue() + ""));
+						break;
+					case "route_desc":
+					case "route_description":
+						newRoute = new Route(route.getRouteID(), route.getAgencyID(), route.getRouteShortName(),
+								route.getRouteLongName(), value, (route.getRouteType().getValue() + ""), url, route_color,
+								route_text_color, (route.getRouteSortOrder() + ""), (route.getContinuousPickup().getValue() + ""),
+								(route.getContinuousDropOff().getValue() + ""));
+						break;
+					case "route_type":
+						newRoute = new Route(route.getRouteID(), route.getAgencyID(), route.getRouteShortName(),
+								route.getRouteLongName(), route.getRouteDesc(), value, url, route_color,
+								route_text_color, (route.getRouteSortOrder() + ""), (route.getContinuousPickup().getValue() + ""),
+								(route.getContinuousDropOff().getValue() + ""));
+						break;
+					case "route_color":
+						newRoute = new Route(route.getRouteID(), route.getAgencyID(), route.getRouteShortName(),
+								route.getRouteLongName(), route.getRouteDesc(), (route.getRouteType().getValue() + ""), url, value,
+								route_text_color, (route.getRouteSortOrder() + ""), (route.getContinuousPickup().getValue() + ""),
+								(route.getContinuousDropOff().getValue() + ""));
+						break;
+					case "route_text_color":
+						newRoute = new Route(route.getRouteID(), route.getAgencyID(), route.getRouteShortName(),
+								route.getRouteLongName(), route.getRouteDesc(), (route.getRouteType().getValue() + ""), url, route_color,
+								value, (route.getRouteSortOrder() + ""), (route.getContinuousPickup().getValue() + ""),
+								(route.getContinuousDropOff().getValue() + ""));
+						break;
+					case "route_sort_order":
+						newRoute = new Route(route.getRouteID(), route.getAgencyID(), route.getRouteShortName(),
+								route.getRouteLongName(), route.getRouteDesc(), (route.getRouteType().getValue() + ""), url, route_color,
+								route_text_color, value, (route.getContinuousPickup().getValue() + ""),
+								(route.getContinuousDropOff().getValue() + ""));
+						break;
+					case "continuous_pickup":
+						newRoute = new Route(route.getRouteID(), route.getAgencyID(), route.getRouteShortName(),
+								route.getRouteLongName(), route.getRouteDesc(), (route.getRouteType().getValue() + ""), url, route_color,
+								route_text_color, (route.getRouteSortOrder() + ""), value,
+								(route.getContinuousDropOff().getValue() + ""));
+						break;
+					case "route_url":
+						newRoute = new Route(route.getRouteID(), route.getAgencyID(), route.getRouteShortName(),
+								route.getRouteLongName(), route.getRouteDesc(), (route.getRouteType().getValue() + ""), value, route_color,
+								route_text_color, (route.getRouteSortOrder() + ""), (route.getContinuousPickup().getValue() + ""),
+								(route.getContinuousDropOff().getValue() + ""));
+						break;
+					case "continuous_drop_off":
+						newRoute = new Route(route.getRouteID(), route.getAgencyID(), route.getRouteShortName(),
+								route.getRouteLongName(), route.getRouteDesc(), (route.getRouteType().getValue() + ""), url, route_color,
+								route_text_color, (route.getRouteSortOrder() + ""), (route.getContinuousPickup().getValue() + ""),
+								value);
+						break;
+				}
+				routes.addRoute(newRoute);
+				break;
+			case "trip_id":
+				Trips trips = this.trips;
+				Trip trip = trips.getTrip(id);
+				if(trip == null){
+					success = 0;
+					break;
+				}
+				trips.removeTrip(id);
+				Trip newTrip = trip;
+
+				// update trip
+				switch (attributeType) {
+					case "route_id":
+						newTrip = new Trip((trip.getBikesAllowed().getValue() + ""), trip.getBlockID(), (trip.getDirectionID().getValue() + ""),
+								value, trip.getServiceID(), trip.getShapeID(), trip.getTripHeadsign(),
+								trip.getTripID(), (trip.getWheelchairAccessible().getValue() + ""));
+						break;
+					case "service_id":
+						newTrip = new Trip((trip.getBikesAllowed().getValue() + ""), trip.getBlockID(), (trip.getDirectionID().getValue() + ""),
+								trip.getRouteID(), value, trip.getShapeID(), trip.getTripHeadsign(),
+								trip.getTripID(), (trip.getWheelchairAccessible().getValue() + ""));
+						break;
+					case "trip_id":
+						newTrip = new Trip((trip.getBikesAllowed().getValue() + ""), trip.getBlockID(), (trip.getDirectionID().getValue() + ""),
+								trip.getRouteID(), trip.getServiceID(), trip.getShapeID(), trip.getTripHeadsign(),
+								value, (trip.getWheelchairAccessible().getValue() + ""));
+						break;
+					case "trip_headsign":
+						newTrip = new Trip((trip.getBikesAllowed().getValue() + ""), trip.getBlockID(), (trip.getDirectionID().getValue() + ""),
+								trip.getRouteID(), trip.getServiceID(), trip.getShapeID(), value,
+								trip.getTripID(), (trip.getWheelchairAccessible().getValue() + ""));
+						break;
+					case "direction_id":
+						newTrip = new Trip((trip.getBikesAllowed().getValue() + ""), trip.getBlockID(), value,
+								trip.getRouteID(), trip.getServiceID(), trip.getShapeID(), trip.getTripHeadsign(),
+								trip.getTripID(), (trip.getWheelchairAccessible().getValue() + ""));
+						break;
+					case "block_id":
+						newTrip = new Trip((trip.getBikesAllowed().getValue() + ""), value, (trip.getDirectionID().getValue() + ""),
+								trip.getRouteID(), trip.getServiceID(), trip.getShapeID(), trip.getTripHeadsign(),
+								trip.getTripID(), (trip.getWheelchairAccessible().getValue() + ""));
+						break;
+					case "shape_id":
+						newTrip = new Trip((trip.getBikesAllowed().getValue() + ""), trip.getBlockID(), (trip.getDirectionID().getValue() + ""),
+								trip.getRouteID(), trip.getServiceID(), value, trip.getTripHeadsign(),
+								trip.getTripID(), (trip.getWheelchairAccessible().getValue() + ""));
+						break;
+				}
+				trips.addTrip(newTrip);
+				break;
+			case "stopTime":
+				StopTimes stopTimes = this.stop_times;
+				StopTime stopTime;
+				String[] stopTrip = id.split(",");
+				try {
+					stopTime = stopTimes.getStopTime(stopTrip[0], stopTrip[1]);
+					if(stopTime == null) {
+						throw new IndexOutOfBoundsException();
+					}
+				} catch (IndexOutOfBoundsException ibe) {
+					success = 0;
+					break;
+				}
+				stopTimes.removeStopTime(stopTrip[0], stopTrip[1]);
+				StopTime newStopTime = stopTime;
+
+				// update StopTime
+				SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+				switch (attributeType) {
+					case "trip_id":
+						newStopTime = new StopTime(dateFormat.format(stopTime.getArrivalTime()),
+								(stopTime.getContinuousDropOff().getValue() + ""),
+								(stopTime.getContinuousPickup().getValue() + ""), dateFormat.format(stopTime.getDepartureTime()),
+								(stopTime.getDropOffType().getValue() + ""), (stopTime.getPickupType().getValue() + ""),
+								(stopTime.getShapeDistTraveled() + ""), stopTime.getStopHeadsign(), stopTime.getStopID(),
+								(stopTime.getStopSequence() + ""), (stopTime.getTimepoint().getValue() + ""), value);
+						break;
+					case "stop_id":
+						newStopTime = new StopTime(dateFormat.format(stopTime.getArrivalTime()),
+								(stopTime.getContinuousDropOff().getValue() + ""),
+								(stopTime.getContinuousPickup().getValue() + ""), dateFormat.format(stopTime.getDepartureTime()),
+								(stopTime.getDropOffType().getValue() + ""), (stopTime.getPickupType().getValue() + ""),
+								(stopTime.getShapeDistTraveled() + ""), stopTime.getStopHeadsign(), value,
+								(stopTime.getStopSequence() + ""), (stopTime.getTimepoint().getValue() + ""), stopTime.getTripID());
+						break;
+					case "stop_sequence":
+						newStopTime = new StopTime(dateFormat.format(stopTime.getArrivalTime()),
+								(stopTime.getContinuousDropOff().getValue() + ""),
+								(stopTime.getContinuousPickup().getValue() + ""), dateFormat.format(stopTime.getDepartureTime()),
+								(stopTime.getDropOffType().getValue() + ""), (stopTime.getPickupType().getValue() + ""),
+								(stopTime.getShapeDistTraveled() + ""), stopTime.getStopHeadsign(), stopTime.getStopID(),
+								value, (stopTime.getTimepoint().getValue() + ""), stopTime.getTripID());
+						break;
+					case "arrival_time":
+						newStopTime = new StopTime(value,
+								(stopTime.getContinuousDropOff().getValue() + ""),
+								(stopTime.getContinuousPickup().getValue() + ""), dateFormat.format(stopTime.getDepartureTime()),
+								(stopTime.getDropOffType().getValue() + ""), (stopTime.getPickupType().getValue() + ""),
+								(stopTime.getShapeDistTraveled() + ""), stopTime.getStopHeadsign(), stopTime.getStopID(),
+								(stopTime.getStopSequence() + ""), (stopTime.getTimepoint().getValue() + ""), stopTime.getTripID());
+						break;
+					case "departure_time":
+						newStopTime = new StopTime(dateFormat.format(stopTime.getArrivalTime()),
+								(stopTime.getContinuousDropOff().getValue() + ""),
+								(stopTime.getContinuousPickup().getValue() + ""), value,
+								(stopTime.getDropOffType().getValue() + ""), (stopTime.getPickupType().getValue() + ""),
+								(stopTime.getShapeDistTraveled() + ""), stopTime.getStopHeadsign(), stopTime.getStopID(),
+								(stopTime.getStopSequence() + ""), (stopTime.getTimepoint().getValue() + ""), stopTime.getTripID());
+						break;
+					case "continuous_drop_off":
+						newStopTime = new StopTime(dateFormat.format(stopTime.getArrivalTime()),
+								value, (stopTime.getContinuousPickup().getValue() + ""), dateFormat.format(stopTime.getDepartureTime()),
+								(stopTime.getDropOffType().getValue() + ""), (stopTime.getPickupType().getValue() + ""),
+								(stopTime.getShapeDistTraveled() + ""), stopTime.getStopHeadsign(), stopTime.getStopID(),
+								(stopTime.getStopSequence() + ""), (stopTime.getTimepoint().getValue() + ""), stopTime.getTripID());
+						break;
+					case "continuous_pickup":
+						newStopTime = new StopTime(dateFormat.format(stopTime.getArrivalTime()),
+								(stopTime.getContinuousDropOff().getValue() + ""),
+								value, dateFormat.format(stopTime.getDepartureTime()),
+								(stopTime.getDropOffType().getValue() + ""), (stopTime.getPickupType().getValue() + ""),
+								(stopTime.getShapeDistTraveled() + ""), stopTime.getStopHeadsign(), stopTime.getStopID(),
+								(stopTime.getStopSequence() + ""), (stopTime.getTimepoint().getValue() + ""), stopTime.getTripID());
+						break;
+					case "drop_off_type":
+						newStopTime = new StopTime(dateFormat.format(stopTime.getArrivalTime()),
+								(stopTime.getContinuousDropOff().getValue() + ""),
+								(stopTime.getContinuousPickup().getValue() + ""), dateFormat.format(stopTime.getDepartureTime()),
+								value, (stopTime.getPickupType().getValue() + ""),
+								(stopTime.getShapeDistTraveled() + ""), stopTime.getStopHeadsign(), stopTime.getStopID(),
+								(stopTime.getStopSequence() + ""), (stopTime.getTimepoint().getValue() + ""), stopTime.getTripID());
+						break;
+					case "pickup_type":
+						newStopTime = new StopTime(dateFormat.format(stopTime.getArrivalTime()),
+								(stopTime.getContinuousDropOff().getValue() + ""),
+								(stopTime.getContinuousPickup().getValue() + ""), dateFormat.format(stopTime.getDepartureTime()),
+								(stopTime.getDropOffType().getValue() + ""), value,
+								(stopTime.getShapeDistTraveled() + ""), stopTime.getStopHeadsign(), stopTime.getStopID(),
+								(stopTime.getStopSequence() + ""), (stopTime.getTimepoint().getValue() + ""), stopTime.getTripID());
+						break;
+					case "shape_dist_traveled":
+						newStopTime = new StopTime(dateFormat.format(stopTime.getArrivalTime()),
+								(stopTime.getContinuousDropOff().getValue() + ""),
+								(stopTime.getContinuousPickup().getValue() + ""), dateFormat.format(stopTime.getDepartureTime()),
+								(stopTime.getDropOffType().getValue() + ""), (stopTime.getPickupType().getValue() + ""),
+								value, stopTime.getStopHeadsign(), stopTime.getStopID(),
+								(stopTime.getStopSequence() + ""), (stopTime.getTimepoint().getValue() + ""), stopTime.getTripID());
+						break;
+					case "stop_headsign":
+						newStopTime = new StopTime(dateFormat.format(stopTime.getArrivalTime()),
+								(stopTime.getContinuousDropOff().getValue() + ""),
+								(stopTime.getContinuousPickup().getValue() + ""), dateFormat.format(stopTime.getDepartureTime()),
+								(stopTime.getDropOffType().getValue() + ""), (stopTime.getPickupType().getValue() + ""),
+								(stopTime.getShapeDistTraveled() + ""), value, stopTime.getStopID(),
+								(stopTime.getStopSequence() + ""), (stopTime.getTimepoint().getValue() + ""), stopTime.getTripID());
+						break;
+					case "timepoint":
+						newStopTime = new StopTime(dateFormat.format(stopTime.getArrivalTime()),
+								(stopTime.getContinuousDropOff().getValue() + ""),
+								(stopTime.getContinuousPickup().getValue() + ""), dateFormat.format(stopTime.getDepartureTime()),
+								(stopTime.getDropOffType().getValue() + ""), (stopTime.getPickupType().getValue() + ""),
+								(stopTime.getShapeDistTraveled() + ""), stopTime.getStopHeadsign(), stopTime.getStopID(),
+								(stopTime.getStopSequence() + ""), value, stopTime.getTripID());
+						break;
+				}
+				stopTimes.addStopTime(newStopTime);
+				break;
+		}
+		notifyObservers();
+		return success;
+	}
+	//endregion
+
+	//region methods for clearing files
+
+	/**
+	 * clears all of the stored data in all classes
+	 * @author Grant Fass
+	 */
+	public void clearAllData() {
+		stop_times.clearStopTimes();
+		stops.clearStops();
+		routes.clearRoutes();
+		trips.clearTrips();
+		notifyObservers();
 	}
 	//endregion
 
@@ -550,21 +958,20 @@ public class Data implements Subject {
 	 * @return double list where first double is latitude, and second double is longitude
 	 */
 	private double[] getCoordinatePair(Stop stop, LocalDateTime earlierTime, LocalDateTime laterTime){
+		if (stop != null) {
+			LocalDateTime currentTime = LocalDateTime.now();
 
-        LocalDateTime currentTime = LocalDateTime.now();
+			//TESTING PURPOSE
+			//currentTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(9, 0));
+			//TESTING PURPOSE
 
-        //TESTING PURPOSE
-		//currentTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(9, 0));
-		//TESTING PURPOSE
+			if(currentTime.isAfter(earlierTime) && currentTime.isBefore(laterTime)){
+				double latitude = stop.getStopLatitude();
+				double longitude = stop.getStopLongitude();
 
-        if(currentTime.isAfter(earlierTime) && currentTime.isBefore(laterTime)){
-        	double latitude = stop.getStopLatitude();
-        	double longitude = stop.getStopLongitude();
-
-        	return new double[] {latitude, longitude};
+				return new double[] {latitude, longitude};
+			}
 		}
-
-
 	    return null;
     }
 

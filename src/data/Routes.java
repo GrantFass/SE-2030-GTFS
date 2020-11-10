@@ -79,6 +79,15 @@ public class Routes {
 	}
 
 	/**
+	 * @author Joy Cross
+	 * @return current headers of routes
+	 */
+	public Headers getHeaders(){
+		return headers;
+	}
+
+
+	/**
 	 * @author Ryan Becker
 	 * @param route_id string identifying requested route
 	 * @return route associated with the specified route_id
@@ -90,11 +99,11 @@ public class Routes {
 	/**
 	 * Removes specified Route object from routes
 	 * @author Ryan Becker
-	 * @param route Route to be removed
+	 * @param route_id Route to be removed
      * @return true if deleted, false otherwise
 	 */
-	public boolean removeRoute(Route route){
-		Route routeRemoved = routes.remove(route.getRouteID());
+	public boolean removeRoute(String route_id){
+		Route routeRemoved = routes.remove(route_id);
 		boolean deleted = false;
 		if(routeRemoved != null){
 			deleted = true;
@@ -154,6 +163,16 @@ public class Routes {
 		}
 		String successMessage = String.format("  ✓: Routes Imported Successfully.\n  %s\n  %s\n", emptyPrior ? "New Routes Data Imported" : "Routes Data Overwritten", wasLineSkipped ? "Lines Skipped During Import Of Routes" : "All Lines Imported Successfully");
 		return String.format("IMPORT ROUTES:\n%s", wasFileLoaded ? successMessage : failMessage);
+	}
+
+	/**
+	 * clears the routes data
+	 * @return true
+	 * @author Grant Fass
+	 */
+	public boolean clearRoutes() {
+		routes.clear();
+		return true;
 	}
 
 	/**

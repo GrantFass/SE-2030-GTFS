@@ -48,6 +48,16 @@ public class Trips {
     }
 
     /**
+     * clears all trip data
+     * @return true
+     * @author Grant Fass
+     */
+    public boolean clearTrips() {
+        trips.clear();
+        return true;
+    }
+
+    /**
      * adds trip parameter to trips hash map with the trip_id of trip as the key,
      * and trip as the value.
      *
@@ -74,14 +84,23 @@ public class Trips {
     }
 
     /**
+     * @author Joy Cross
+     * @return current headers of routes
+     */
+    public Headers getHeaders(){
+        return headers;
+    }
+
+
+    /**
      * Removes specified Trip object from trips
      *
-     * @param trip Trip to be removed
+     * @param trip_id Trip to be removed
      * @return true if deleted, false otherwise
      * @author Simon Erickson
      */
-    public boolean removeTrip(Trip trip) {
-        Trip tripRemoved = trips.remove(trip.getTripID());
+    public boolean removeTrip(String trip_id) {
+        Trip tripRemoved = trips.remove(trip_id);
         boolean deleted = false;
         if (tripRemoved != null) {
             deleted = true;

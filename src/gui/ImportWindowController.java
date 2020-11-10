@@ -20,6 +20,7 @@
  */
 package gui;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
@@ -380,6 +381,14 @@ public class ImportWindowController {
      */
     private void toggleCheckBox(CheckBox checkBox, VBox vBox) {
         vBox.setDisable(!checkBox.isSelected());
+    }
+
+    /**
+     * clears all stored data
+     */
+    public void clearFiles() {
+        mainWindowController.getData().clearAllData();
+        alertTextArea.setText("All Data Cleared");
     }
     //endregion
 }
